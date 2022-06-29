@@ -1,36 +1,52 @@
 # :man_cook: Open Source MLOps Stack Recipes
 
-A series of Terraform based recipes to provision popular MLOps stacks on the cloud.
-
 [![maintained-by-zenml](https://user-images.githubusercontent.com/3348134/173032050-ad923313-f2ce-4583-b27a-afcaa8b355e2.png)](https://github.com/zenml-io/zenml)
 
-At [ZenML](https://github.com/zenml-io/zenml) we believe that annotation and labeling workflows are a core part of
-the machine learning lifecycle. As an open-source tool, we wanted to highlight
-and recognize the variety of tools that are available to help your workflows
-become more data-centric. We had three core criteria to decide whether a
-particular tool could make it into the list:
+When we first created [ZenML](https://zenml.io) as an extensible MLOps framework for
+creating portable, production-ready MLOps pipelines, we saw many of our users having to
+deal with the pain of deploying infrastructure from scratch to run these pipelines. The 
+community consistently asked questions like:
 
-- The tool has an open-source licence.
-- The tool is actively maintained.
-- The tool is functional and fit for purpose.
+- How do I deploy tool X with tool Y?
+- Does a combination of tool X with Y make sense?
+- Isn't there an easy way to just try these stacks out to make an informed decision?
 
-We welcome contributions to this list, so if you know of a tool that
-we've missed or if you've built one yourself, please do create a PR!
+To address these questions, the ZenML team presents you a series of Terraform based recipes to quickly 
+provision popular combinations of MLOps tools. Thes recipes will be useful for you if:
+
+- You are at the start of your MLOps journey, and would like to explore different tools.
+- You are looking for guidelines for production-grade deployments.
+- You would like to run your pipelines on your chosen [ZenML Stack](https://docs.zenml.io/advanced-guide/stacks-components-flavors).
+
+# 🤝 Association with ZenML
+
+It is not neccessary to use the MLOps stacks recipes presented here alongisde the 
+[ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts 
+directly (see below).
+
+However, ZenML works seamlessly with the infrastructure provisioned through these recipes. To learn 
+more about to seamlessly use these awesome mlops stacks with a unified and simple framework, head 
+over to the [ZenML docs](https://docs.zenml.io).
 
 🔥 **Do you use these tools or do you want to add one to your MLOps stack?** At
-ZenML, we are looking for design partnerships and collaboration to develop the
-integrations and workflows around using annotation within the MLOps lifecycle.
+ZenML, we are looking for design partnerships and collaboration to implement and 
+develop these MLOps stacks in a real-world setting.
+
 If you'd like to learn more, please [join our
 Slack](https://zenml.io/slack-invite/) and leave us a message!
 
+# How To Use
 
-# Acknowledgements
+Describe how to use the recipes generally
 
-Thanks to the creators of
-[these](https://github.com/jsbroks/awesome-dataset-tools)
-[other](https://github.com/doccano/awesome-annotation-tools)
-[repositories](https://github.com/taivop/awesome-data-annotation) (and [this
-one](https://github.com/heartexlabs/awesome-data-labeling)!) for getting us
-going down the path of creating our own. I used these efforts to get started in
-my survey of the space before adding, updating and pruning as per the
-open-source and other criteria specified above.
+
+
+# 🎉 Acknowledgements
+
+Thank you to the folks over at [Fuzzy Labs](https://www.fuzzylabs.ai/) for their support and 
+contributions to this repository.
+
+We'd also like to acknowledge some of the cool inspirations for this project:
+
+- [FuseML](https://fuseml.github.io/)
+- [Combinator.ML](https://combinator.ml/)
