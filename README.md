@@ -1,4 +1,4 @@
-# 🏷 Open Source MLOps Stack Recipes
+# :man_cook: Open Source MLOps Stack Recipes
 
 A series of Terraform based recipes to provision popular MLOps stacks on the cloud.
 
