@@ -29,7 +29,7 @@ Slack](https://zenml.io/slack-invite/) and leave us a message!
 
 | Recipe               | Stack Components                                                                         | Description                                                                       |
 |----------------------|------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| eks-s3-seldon-mlflow | S3, Seldon Experiment, MLflow, EKS | Amazon specific recipe to showcase the power of using MLflow and Seldon together. |
+| eks-s3-seldon-mlflow | S3, Seldon, MLflow, EKS | Amazon specific recipe to showcase the power of using MLflow and Seldon together. |
 
 
 ## ⚗️ How To Use
