@@ -1,2 +1,2 @@
-# mlops-stacks
-A series of Terraform based recipes to provision popular MLOps stacks on the cloud.
+# awesome-mlops-stacks
+Concrete deployment and usage guides of popular MLOps stacks.
