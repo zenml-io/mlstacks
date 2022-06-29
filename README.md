@@ -11,7 +11,7 @@ community consistently asked questions like:
 - Isn't there an easy way to just try these stacks out to make an informed decision?
 
 To address these questions, the ZenML team presents you a series of Terraform based recipes to quickly
-provision popular combinations of MLOps tools. Thes recipes will be useful for you if:
+provision popular combinations of MLOps tools. These recipes will be useful for you if:
 
 - You are at the start of your MLOps journey, and would like to explore different tools.
 - You are looking for guidelines for production-grade deployments.
