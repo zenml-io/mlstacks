@@ -69,3 +69,4 @@ We'd also like to acknowledge some of the cool inspirations for this project:
 
 - [FuseML](https://fuseml.github.io/)
 - [Combinator.ML](https://combinator.ml/)
+- [Building a ML Platform From Scratch](https://www.aporia.com/blog/building-an-ml-platform-from-scratch/)
