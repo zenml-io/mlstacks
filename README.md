@@ -1,6 +1,5 @@
 # :man_cook: Open Source MLOps Stack Recipes
 
-[![maintained-by-zenml](https://user-images.githubusercontent.com/3348134/173032050-ad923313-f2ce-4583-b27a-afcaa8b355e2.png)](https://github.com/zenml-io/zenml)
 
 When we first created [ZenML](https://zenml.io) as an extensible MLOps framework for
 creating portable, production-ready MLOps pipelines, we saw many of our users having to
@@ -26,6 +25,8 @@ If you'd like to learn more, please [join our
 Slack](https://zenml.io/slack-invite/) and leave us a message!
 
 ## 🙏 Association with ZenML
+
+[![maintained-by-zenml](https://user-images.githubusercontent.com/3348134/173032050-ad923313-f2ce-4583-b27a-afcaa8b355e2.png)](https://github.com/zenml-io/zenml)
 
 It is not neccessary to use the MLOps stacks recipes presented here alongisde the
 [ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
