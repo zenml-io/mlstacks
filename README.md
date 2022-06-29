@@ -18,7 +18,14 @@ provision popular combinations of MLOps tools. Thes recipes will be useful for y
 - You are looking for guidelines for production-grade deployments.
 - You would like to run your pipelines on your chosen [ZenML Stack](https://docs.zenml.io/advanced-guide/stacks-components-flavors).
 
-# 🤝 Association with ZenML
+🔥 **Do you use these tools or do you want to add one to your MLOps stack?** At
+ZenML, we are looking for design partnerships and collaboration to implement and 
+develop these MLOps stacks in a real-world setting.
+
+If you'd like to learn more, please [join our
+Slack](https://zenml.io/slack-invite/) and leave us a message!
+
+## 🤝 Association with ZenML
 
 It is not neccessary to use the MLOps stacks recipes presented here alongisde the 
 [ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts 
@@ -28,20 +35,24 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 more about to seamlessly use these awesome mlops stacks with a unified and simple framework, head 
 over to the [ZenML docs](https://docs.zenml.io).
 
-🔥 **Do you use these tools or do you want to add one to your MLOps stack?** At
-ZenML, we are looking for design partnerships and collaboration to implement and 
-develop these MLOps stacks in a real-world setting.
 
-If you'd like to learn more, please [join our
-Slack](https://zenml.io/slack-invite/) and leave us a message!
+## How To Use
 
-# How To Use
+Running a recipe is a matter of two simple commands. You can clone the repository, and for a chosen 
+recipe of your choice execute:
 
-Describe how to use the recipes generally
+> **Note**
+>  You need to have credentials for a chosen cloud provider set up before running.
 
+```
+terraform init
+```
 
+```
+terraform apply
+```
 
-# 🎉 Acknowledgements
+## 🎉 Acknowledgements
 
 Thank you to the folks over at [Fuzzy Labs](https://www.fuzzylabs.ai/) for their support and 
 contributions to this repository.
