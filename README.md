@@ -24,17 +24,6 @@ develop these MLOps stacks in a real-world setting.
 If you'd like to learn more, please [join our
 Slack](https://zenml.io/slack-invite/) and leave us a message!
 
-## 🙏 Association with ZenML
-
-[![maintained-by-zenml](https://user-images.githubusercontent.com/3348134/173032050-ad923313-f2ce-4583-b27a-afcaa8b355e2.png)](https://github.com/zenml-io/zenml)
-
-It is not neccessary to use the MLOps stacks recipes presented here alongisde the
-[ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
-directly (see below).
-
-However, ZenML works seamlessly with the infrastructure provisioned through these recipes. To learn
-more about to seamlessly use these awesome mlops stacks with a unified and simple framework, head
-over to the [ZenML docs](https://docs.zenml.io).
 
 ## 📜 List of Recipes
 
@@ -58,6 +47,18 @@ terraform init
 ```
 terraform apply
 ```
+
+## 🙏 Association with ZenML
+
+[![maintained-by-zenml](https://user-images.githubusercontent.com/3348134/173032050-ad923313-f2ce-4583-b27a-afcaa8b355e2.png)](https://github.com/zenml-io/zenml)
+
+It is not neccessary to use the MLOps stacks recipes presented here alongisde the
+[ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
+directly (see below).
+
+However, ZenML works seamlessly with the infrastructure provisioned through these recipes. To learn
+more about to seamlessly use these awesome mlops stacks with a unified and simple framework, head
+over to the [ZenML docs](https://docs.zenml.io).
 
 ## 🎉 Acknowledgements
 
