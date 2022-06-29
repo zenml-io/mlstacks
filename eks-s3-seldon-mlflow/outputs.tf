@@ -15,7 +15,7 @@ output "s3-bucket-path" {
 }
 
 output "ecr-registry-name" {
-  value = aws_ecr_repository.zenml-ecr-registry[0].name
+  value = aws_ecr_repository.zenml-ecr-repository[0].name
   description = "The ECR registry name for storing your images"
 }
 
