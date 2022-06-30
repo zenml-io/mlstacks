@@ -3,7 +3,7 @@ data "google_client_config" "default" {}
 module "gke" {
   source                     = "terraform-google-modules/kubernetes-engine/google"
   project_id                 = local.project_id
-  name                       = local.gke.cluster_name
+  name                       = "${local.prefix}-${local.gke.cluster_name}"
   region                     = local.region
   zones                      = ["${local.region}-a", "${local.region}-b", "${local.region}-c"]
   # network                    = "${local.prefix}-${local.vpc.name}"
