@@ -16,19 +16,28 @@ module "vpc" {
 
   # enabling MySQL access
   create_database_internet_gateway_route = true
+  manage_default_security_group = true
   default_security_group_ingress = [
     {
       description      = "MySQL traffic from everywhere"
-      from_port        = "all"
+      from_port        = 3306
       to_port          = 3306
       protocol         = "tcp"
-      cidr_blocks      = ["0.0.0.0/0"]
     },
     {
       description      = "All Traffic"
-      from_port        = "all"
-      to_port          = "all"
-      protocol         = "all"
+      from_port        = 0
+      to_port          = 0
+      protocol         = -1
+    }
+  ]
+  default_security_group_egress = [
+    {
+      description      = "All Traffic"
+      from_port        = 0
+      to_port          = 0
+      protocol         = "-1"
+      cidr_blocks      = "0.0.0.0/0"
     }
   ]
 
