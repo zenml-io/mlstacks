@@ -45,6 +45,21 @@ s3-bucket-path | The path of the S3 bucket. Useful while registering the artifac
 ingress-controller-name | Used for getting the ingress URL for the MLflow tracking server|
 ingress-controller-namespace | Used for getting the ingress URL for the MLflow tracking server|
 seldon-core-workload-namespace | Namespace in which seldon workloads will be created|
+metadata-db-host | The host endpoint of the deployed metadata store |
+metadata-db-username | The username for the database user |
+metadata-db-password | The master password for the database |
+
+For outputs that are sensitive, you'll see that they are shown directly on the logs. To view the full list of outputs, run the following command.
+
+```
+terraform output
+```
+
+To view individual sensitive outputs, use the following format. Here, the metadata password is being obtained. 
+
+```
+terraform output metadata-db-password
+```
 
 ## Registering the ZenML Stack
 
