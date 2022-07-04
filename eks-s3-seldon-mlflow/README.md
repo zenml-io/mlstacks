@@ -12,7 +12,7 @@ This is the stack recipe for deploying EKS as the orchestrator, S3 as the artifa
 mlflow-module | A module to start an MLflow tracking server behind an NGINX proxy|
 seldon | Installs Seldon Core along with Istio |
 
-- The `locals` file holds the configuration which is used for provisioning the stack.
+- The `locals` file holds the configuration which is used for provisioning the stack. Please **review the file** before running any commands and make changes as needed to the values pertaining to the resources you want to create.
 
 > **Warning:** 
 > The `prefix` variable you assign should have a unique value for each stack. This ensures that the resources don't interfere with each other.
