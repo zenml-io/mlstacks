@@ -29,4 +29,18 @@ output "ingress-controller-name" {
 output "ingress-controller-namespace" {
   value = module.mlflow.ingress-controller-namespace
 }
+
+# outputs for the metadata store
+output "metadata-db-host" {
+  value = module.metadata_store.db_instance_address
+}
+output "metadata-db-username" {
+  value = module.metadata_store.db_instance_username
+}
+output "metadata-db-password" {
+  value = module.metadata_store.db_instance_password
+  sensitive = true
+}
+
+
   
