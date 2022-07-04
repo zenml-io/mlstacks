@@ -5,14 +5,13 @@ module "metadata_store" {
 
   engine            = local.rds.db_type
   engine_version    = local.rds.db_version
-  instance_class    = "db.t3a.large"
+  instance_class    = "db.t3.micro"
   allocated_storage = 5
 
   db_name  = local.rds.db_name
   username = local.rds.username
   password = local.rds.password
   port     = "3306"
-
 
   # configure access
   publicly_accessible = true
@@ -27,6 +26,11 @@ module "metadata_store" {
   # this sg so we're using it here
   vpc_security_group_ids = [module.vpc.default_security_group_id]
 
+  # DB parameter group
+  family = "mysql8.0"
+
+  # DB option group
+  major_engine_version = "8.0"
 
   tags = {
     Owner       = "user"
