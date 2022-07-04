@@ -32,6 +32,15 @@ locals {
       name = "zenml-kubernetes"
       enable_container_registry = true
   }
+
+    rds = {
+    rds_name = "zenml-rds"
+    db_name = "zenml-db"
+    db_type = "mysql"
+    db_version = "8.0.28"
+    username = "admin"
+    password = "k8szenml"
+  }
   
   tags = {
     "managedBy"   = "terraform"
