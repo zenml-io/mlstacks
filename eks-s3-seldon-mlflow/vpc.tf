@@ -14,5 +14,23 @@ module "vpc" {
   single_nat_gateway   = true
   enable_dns_hostnames = true
 
+  # enabling MySQL access
+  create_database_internet_gateway_route = true
+  default_security_group_ingress = [
+    {
+      description      = "MySQL traffic from everywhere"
+      from_port        = "all"
+      to_port          = 3306
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]
+    },
+    {
+      description      = "All Traffic"
+      from_port        = "all"
+      to_port          = "all"
+      protocol         = "all"
+    }
+  ]
+
   tags = local.tags
 }
