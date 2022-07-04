@@ -35,7 +35,7 @@ locals {
 
     rds = {
     rds_name = "zenml-rds"
-    db_name = "zenml-db"
+    db_name = "zenmldb"
     db_type = "mysql"
     db_version = "8.0.28"
     username = "admin"
