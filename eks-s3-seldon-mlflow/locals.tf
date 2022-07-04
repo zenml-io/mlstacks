@@ -33,7 +33,7 @@ locals {
       enable_container_registry = true
   }
 
-    rds = {
+  rds = {
     rds_name = "zenml-rds"
     db_name = "zenmldb"
     db_type = "mysql"
