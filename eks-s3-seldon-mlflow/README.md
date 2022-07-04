@@ -150,6 +150,8 @@ Usually, the simplest way to delete all resources deployed by Terraform is to ru
 
 To combat this, there's a script in the root directory, by the name `cleanup.sh` which can be run instead. It will internally run the destroy command along with commands to clean up any dangling resources!
 
+> **Note**
+> While deleting the metadata store, the Options Group might not get deleted straight away. If that happens, wait for around 30 mins and run `terraform destroy` again.
 
 ## Known Problems
 
