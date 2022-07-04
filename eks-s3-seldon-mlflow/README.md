@@ -1,6 +1,6 @@
-# EKS, S3, Seldon and MLflow Stack 
+# EKS, S3, RDS, Seldon and MLflow Stack 
 
-This is the stack recipe for having EKS as the orchestrator, S3 as the artifact store, Seldon Core as the model deployer and MLflow as the experiment tracker.
+This is the stack recipe for deploying EKS as the orchestrator, S3 as the artifact store, an AWS RDS MySQL instance as the metadata store, Seldon Core as the model deployer and MLflow as the experiment tracker. 
 
 ## Structure of the directory
 
@@ -64,13 +64,14 @@ terraform output metadata-db-password
 ## Registering the ZenML Stack
 
 1. Set up the local kubectl client using the output values.
-```
+
+```bash
 aws eks --region REGION update-kubeconfig --name <eks-cluster-name> --alias terraform
 ```
 
 2. Register the kubernetes orchestrator. 
 
-```
+```bash
 zenml orchestrator register k8s_orchestrator
     --flavor=kubernetes
     --kubernetes_context=terraform
@@ -78,13 +79,40 @@ zenml orchestrator register k8s_orchestrator
 ```
 
 3. Register the S3 artifact store.
-```
+
+```bash
 zenml artifact-store register s3_store 
     --flavor=s3 
     --path=s3://<s3-bucket-path>
 ```
 
-4. Register the MLflow experiment tracker.
+4. Register the secret store. It comes out of the box with your AWS account so no setup is needed. 
+
+```bash
+zenml secrets-manager register aws_secrets_manager \
+    --flavor=aws \
+    --region_name=<region>
+```
+
+5. Register a ZenML secret to use with the metadata store.
+
+```bash
+zenml secret register rds_authentication \
+    --schema=mysql \
+    --user=<metadata-db-username> \
+    --password=<metadata-db-password>
+```
+
+6. Register the MySQL metadata store on AWS RDS. 
+```
+zenml metadata-store register rds_mysql \
+    --flavor=mysql \
+    --database=zenml \
+    --secret=rds_authentication \
+    --host=<metadata-db-host>
+```
+
+7. Register the MLflow experiment tracker.
 ```
 zenml experiment-tracker register mlflow_tracker
     --type=mlflow
@@ -94,7 +122,7 @@ zenml experiment-tracker register mlflow_tracker
 
 ```
 
-5. Register the Seldon Core model deployer. The Ingress host has to be obtained by using the following command. The exact value couldn't be outputted due to the fact that the ingress is set up using a custom resource.
+8. Register the Seldon Core model deployer. The Ingress host has to be obtained by using the following command. The exact value couldn't be outputted due to the fact that the ingress is set up using a custom resource.
 
 ```
 export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
