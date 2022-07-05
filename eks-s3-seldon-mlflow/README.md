@@ -41,10 +41,10 @@ Before starting, you should know the values that you have to keep ready for use 
       type = string
     }
     ```
-> **Warning:** 
+> **Warning** 
 > The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
 
-> **Warning:**
+> **Warning**
 > The CIDR block used for the VPC needs to be unique too. For example, if `10.10.0.0/16` is already under use by some VPC in your account, you can use `10.11.0.0/16` instead.
 
 ## 🧑‍🍳Cooking the recipe
@@ -62,6 +62,7 @@ terraform apply
 ```
 
 > **Note**
+>
 >  You need to have your AWS credentials saved locally under ~/.aws/credentials
 
 ## 🍜Outputs 
@@ -170,9 +171,11 @@ terraform output metadata-db-password
     ```
 
 > **Note**
+>
 > The tracking username and password should be the same that were used to generate the `.htpasswd` string used to set up the MLflow tracking server.
 
 > **Note**
+>
 > The folowing command can be used to get the tracking URL for the MLflow server. The EXTERNAL_IP field is the IP of the ingress controller and the path "/" is configured already to direct to the MLflow tracking server.
  ```bash
  kubectl get service <ingress-controller-name> -n <ingress-controller-namespace>
@@ -185,6 +188,7 @@ Usually, the simplest way to delete all resources deployed by Terraform is to ru
 To combat this, there's a script in the root directory, by the name `cleanup.sh` which can be run instead. It will internally run the destroy command along with commands to clean up any dangling resources!
 
 > **Note**
+>
 > While deleting the metadata store, the Options Group might not get deleted straight away. If that happens, wait for around 30 mins and run `terraform destroy` again.
 
 ## Known Problems
