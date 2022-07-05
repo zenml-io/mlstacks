@@ -1,6 +1,17 @@
-# EKS, S3, RDS, Seldon and MLflow Stack 
+# 🥗 EKS, S3, RDS, MLflow and Seldon MLOps Stack Recipe 
 
-This is the stack recipe for deploying EKS as the orchestrator, S3 as the artifact store, an AWS RDS MySQL instance as the metadata store, Seldon Core as the model deployer and MLflow as the experiment tracker. 
+Once you have gotten a hang of what ZenML is and how basic pipelines work, it is only natural to have the thought of deploying the pipeline to a cloud environment. There can be many motivations behind this, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
+
+We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](addlink) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS and GCP supported for now). This recipe, however, goes one step further. 
+
+You can have a simple MLOps stack ready for running your pipelines after you execute this recipe. It sets up the following resources: 
+- An EKS cluster that can act as an orchestrator for your pipelines using the Kubernetes **orchestrator** stack component in ZenML. 
+- An S3 **artifact store** that is spun up, which can be used to store all your pipeline artifacts like the model, checkpoints, etc. 
+- An AWS RDS **metadata store** that is essential to track all your metadata and its location in your artifact store.  
+- An MLflow **experiment tracker** which can be used for logging data while running your pipelines. It also has a beautiful UI that you can use to view everything in one place.
+- A Seldon Core **model deployer** to have your trained model deployed on a Kubernetes cluster to run inference on. 
+
+Keep in mind, this is a basic setup to get you up and running on AWS with a minimal MLOps stack and more configuration options for each of the ZenML stack components are coming in the form of new recipes! 👀
 
 ## Structure of the recipe
 
@@ -14,7 +25,7 @@ seldon | Installs Seldon Core along with Istio |
 
 
 
-## Inputs
+## 🍅 Inputs
 
 Before starting, you should know the values that you have to keep ready for use in the script. 
 - Check out the `locals.tf` file to configure basic information about your deployments.
@@ -36,7 +47,7 @@ Before starting, you should know the values that you have to keep ready for use 
 > **Warning:**
 > The CIDR block used for the VPC needs to be unique too. For example, if `10.10.0.0/16` is already under use by some VPC in your account, you can use `10.11.0.0/16` instead.
 
-# Running the script
+# 🧑‍🍳Cooking the recipe
 
 After customizing the script using your values, run the following commands.
 
@@ -53,7 +64,7 @@ terraform apply
 > **Note**
 >  You need to have your AWS credentials saved locally under ~/.aws/credentials
 
-## Outputs
+## 🍜Outputs 
 
 The script, after running, outputs the following.
 | Output | Description |
@@ -79,7 +90,7 @@ To view individual sensitive outputs, use the following format. Here, the metada
 terraform output metadata-db-password
 ```
 
-## Registering the ZenML Stack
+## Registering the ZenML Stack ✨
 
 1. Set up the local `kubectl` client using the output values.
 
@@ -169,7 +180,7 @@ terraform output metadata-db-password
 
 ## Deleting Resources
 
-Usually, the simplest way to delete all resources deployed by Terraform is to run the `terraform destroy` command. In this case, however, due to existing problems with Kubernetes and Terraform, there might be some resources that get stuck in the `Terminating` state forever. 
+Usually, the simplest way to delete all resources deployed by Terraform is to run the `terraform destroy` command 🤯. In this case, however, due to existing problems with Kubernetes and Terraform, there might be some resources that get stuck in the `Terminating` state forever. 
 
 To combat this, there's a script in the root directory, by the name `cleanup.sh` which can be run instead. It will internally run the destroy command along with commands to clean up any dangling resources!
 
@@ -178,22 +189,20 @@ To combat this, there's a script in the root directory, by the name `cleanup.sh`
 
 ## Known Problems
 
-- Running the script for the first time might result in an error with one of the resources - the Istio Ingressway. This is because of a limitation with the resource `kubectl_manifest` that needs the cluster to be set up before it installs its own resources. 
-
-
-    
-Fix - Run `terraform apply` again in a few minutes and this should get resolved.
+* Running the script for the first time might result in an error with one of the resources - the Istio Ingressway. This is because of a limitation with the resource `kubectl_manifest` that needs the cluster to be set up before it installs its own resources.
+\
+    💡 Fix - Run `terraform apply` again in a few minutes and this should get resolved.    
 
 
 
-- `timeout while waiting for plugin to start` 
+*  When executing terraform commands, an error like this one: `timeout while waiting for plugin to start` 
+\
+    💡 Fix - If you encounter this error with `apply`, `plan` or `destroy`, do `terraform init` and run your command again.
 
-Fix - If you encounter this error with `apply`, `plan` or `destroy`, do `terraform init` and run your command again.
+* While running `terraform apply`, an error which says `Failed to construct REST client` 
+\
+    💡 Fix - Run the `aws eks --region REGION update-kubeconfig --name <eks-cluster-name> --alias terraform` command and do `apply` again.
 
-- `Failed to construct REST client` while running `terraform apply`
-
-Fix - Run the `aws eks --region REGION update-kubeconfig --name <eks-cluster-name> --alias terraform` command and do `apply` again.
-
-- `context deadline exceeded`
-
-Fix - This problem could arise due to strained system resources. Try running the command again after some time.
+* While running a terraform command, this error might appear too: `context deadline exceeded`
+\
+    💡 Fix - This problem could arise due to strained system resources. Try running the command again after some time.
