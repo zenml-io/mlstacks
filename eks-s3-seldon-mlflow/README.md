@@ -47,7 +47,7 @@ Before starting, you should know the values that you have to keep ready for use 
 > **Warning:**
 > The CIDR block used for the VPC needs to be unique too. For example, if `10.10.0.0/16` is already under use by some VPC in your account, you can use `10.11.0.0/16` instead.
 
-# 🧑‍🍳Cooking the recipe
+## 🧑‍🍳Cooking the recipe
 
 After customizing the script using your values, run the following commands.
 
