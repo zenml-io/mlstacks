@@ -2,7 +2,7 @@
 
 This is the stack recipe for deploying EKS as the orchestrator, S3 as the artifact store, an AWS RDS MySQL instance as the metadata store, Seldon Core as the model deployer and MLflow as the experiment tracker. 
 
-## Structure of the directory
+## Structure of the recipe
 
 - Every file has a script responsible for creation of its namesake resources.
 - Two modules have been implemented for use within the recipe and in future implementations. These are:
@@ -12,28 +12,46 @@ This is the stack recipe for deploying EKS as the orchestrator, S3 as the artifa
 mlflow-module | A module to start an MLflow tracking server behind an NGINX proxy|
 seldon | Installs Seldon Core along with Istio |
 
-- The `locals` file holds the configuration which is used for provisioning the stack. Please **review the file** before running any commands and make changes as needed to the values pertaining to the resources you want to create.
 
+
+## Inputs
+
+Before starting, you should know the values that you have to keep ready for use in the script. 
+- Check out the `locals.tf` file to configure basic information about your deployments.
+- Take a look at the `variables.tf` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, AWS access keys, etc.
+- If you want to avoid having to type these in, with every  `terraform apply` execution, you can add your values as the `default` inside the definition of each variable. 
+
+    As an example, we've set the default value of `metadata-db-username` as "admin" to avoid having to supply it repeatedly. 
+
+    ```hcl
+    variable "metadata-db-username" {
+      description = "The username for the AWS RDS metadata store"
+      default = "admin"
+      type = string
+    }
+    ```
 > **Warning:** 
-> The `prefix` variable you assign should have a unique value for each stack. This ensures that the resources don't interfere with each other.
+> The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
 
 > **Warning:**
 > The CIDR block used for the VPC needs to be unique too. For example, if `10.10.0.0/16` is already under use by some VPC in your account, you can use `10.11.0.0/16` instead.
 
-## Running the script
+# Running the script
 
 After customizing the script using your values, run the following commands.
 
-> **Note**
->  You need to have your AWS credentials saved locally under ~/.aws/credentials
 
-```
+
+```bash
 terraform init
 ```
 
-```
+```bash
 terraform apply
 ```
+
+> **Note**
+>  You need to have your AWS credentials saved locally under ~/.aws/credentials
 
 ## Outputs
 
@@ -51,98 +69,103 @@ metadata-db-password | The master password for the database |
 
 For outputs that are sensitive, you'll see that they are shown directly on the logs. To view the full list of outputs, run the following command.
 
-```
+```bash
 terraform output
 ```
 
 To view individual sensitive outputs, use the following format. Here, the metadata password is being obtained. 
 
-```
+```bash
 terraform output metadata-db-password
 ```
 
 ## Registering the ZenML Stack
 
-1. Set up the local kubectl client using the output values.
+1. Set up the local `kubectl` client using the output values.
 
-```bash
-aws eks --region REGION update-kubeconfig --name <eks-cluster-name> --alias terraform
-```
+    ```bash
+    aws eks --region REGION update-kubeconfig --name <eks-cluster-name> --alias terraform
+    ```
 
-2. Register the kubernetes orchestrator. 
+2. Register the Kubernetes orchestrator. 
 
-```bash
-zenml orchestrator register k8s_orchestrator
-    --flavor=kubernetes
-    --kubernetes_context=terraform
-    --synchronous=True
-```
+    ```bash
+    zenml orchestrator register k8s_orchestrator
+        --flavor=kubernetes
+        --kubernetes_context=terraform
+        --synchronous=True
+    ```
 
 3. Register the S3 artifact store.
 
-```bash
-zenml artifact-store register s3_store 
-    --flavor=s3 
-    --path=s3://<s3-bucket-path>
-```
+    ```bash
+    zenml artifact-store register s3_store 
+        --flavor=s3 
+        --path=s3://<s3-bucket-path>
+    ```
 
-4. Register the secret store. It comes out of the box with your AWS account so no setup is needed. 
+4. Register the secrets manager. A secrets manager comes out of the box with your AWS account so no setup is needed. 
 
-```bash
-zenml secrets-manager register aws_secrets_manager \
-    --flavor=aws \
-    --region_name=<region>
-```
+    ```bash
+    zenml secrets-manager register aws_secrets_manager \
+        --flavor=aws \
+        --region_name=<region>
+    ```
 
 5. Register a ZenML secret to use with the metadata store.
 
-```bash
-zenml secret register rds_authentication \
-    --schema=mysql \
-    --user=<metadata-db-username> \
-    --password=<metadata-db-password>
-```
+    ```bash
+    zenml secret register rds_authentication \
+        --schema=mysql \
+        --user=<metadata-db-username> \
+        --password=<metadata-db-password>
+    ```
 
-6. Register the MySQL metadata store on AWS RDS. 
-```
-zenml metadata-store register rds_mysql \
-    --flavor=mysql \
-    --database=zenml \
-    --secret=rds_authentication \
-    --host=<metadata-db-host>
-```
+6. Register the AWS RDS metadata store. Here we are using a MySQL store.
+    ```
+    zenml metadata-store register rds_mysql \
+        --flavor=mysql \
+        --database=zenml \
+        --secret=rds_authentication \
+        --host=<metadata-db-host>
+    ```
 
 7. Register the MLflow experiment tracker.
-```
-zenml experiment-tracker register mlflow_tracker
-    --type=mlflow
-    --tracking_uri=""
-    --tracking_username=""
-    --tracking_password=""
+    ```
+    zenml experiment-tracker register mlflow_tracker
+        --type=mlflow
+        --tracking_uri=""
+        --tracking_username=""
+        --tracking_password=""
 
-```
+    ```
 
-8. Register the Seldon Core model deployer. The Ingress host has to be obtained by using the following command. The exact value couldn't be outputted due to the fact that the ingress is set up using a custom resource.
+8. Register the Seldon Core model deployer. 
 
-```
-export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-```
+    The Ingress host has to be obtained by using the following command. The exact value couldn't be outputted due to the fact that the ingress is set up using a custom resource.
 
-Now, register the Seldon Core model deployer.
+    ```bash
+    export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+    ```
 
-```
-zenml model-deployer register seldon_eks --type=seldon \
-  --kubernetes_context=terraform \ --kubernetes_namespace=<seldon-core-workload-namespace> \
-  --base_url=http://$INGRESS_HOST \
-  --secret=""
-```
+
+    Now, register the Seldon Core model deployer.
+
+    ```bash
+    zenml model-deployer register seldon_eks --type=seldon \
+    --kubernetes_context=terraform \ --kubernetes_namespace=<seldon-core-workload-namespace> \
+    --base_url=http://$INGRESS_HOST \
+    --secret=""
+    ```
 
 > **Note**
 > The tracking username and password should be the same that were used to generate the `.htpasswd` string used to set up the MLflow tracking server.
 
 > **Note**
 > The folowing command can be used to get the tracking URL for the MLflow server. The EXTERNAL_IP field is the IP of the ingress controller and the path "/" is configured already to direct to the MLflow tracking server.
- `kubectl get service <ingress-controller-name> -n <ingress-controller-namespace>`
+ ```bash
+ kubectl get service <ingress-controller-name> -n <ingress-controller-namespace>
+ ```
 
 ## Deleting Resources
 
@@ -157,7 +180,11 @@ To combat this, there's a script in the root directory, by the name `cleanup.sh`
 
 - Running the script for the first time might result in an error with one of the resources - the Istio Ingressway. This is because of a limitation with the resource `kubectl_manifest` that needs the cluster to be set up before it installs its own resources. 
 
+
+    
 Fix - Run `terraform apply` again in a few minutes and this should get resolved.
+
+
 
 - `timeout while waiting for plugin to start` 
 
