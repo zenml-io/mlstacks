@@ -9,9 +9,9 @@ module "metadata_store" {
   allocated_storage = 5
 
   db_name  = local.rds.db_name
-  username = local.rds.username
-  password = local.rds.password
-  create_random_password = local.rds.password == "" ? true : false
+  username = var.metadata-db-username
+  password = var.metadata-db-password
+  create_random_password = var.metadata-db-password == "" ? true : false
   port     = "3306"
 
   # configure access
