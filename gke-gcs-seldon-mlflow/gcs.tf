@@ -1,4 +1,4 @@
-resource "google_storage_bucket" "static-site" {
+resource "google_storage_bucket" "artifact-store" {
   name          = "${local.prefix}-${local.gcs.name}"
   project       = local.project_id
   location      = local.gcs.location
