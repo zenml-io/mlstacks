@@ -31,6 +31,12 @@ locals {
     artifact_S3_Secret_Key = "JbtUCfSc211GYkmZ5MmBF1"
   }
 
+  cloudsql = {
+    name = "zenml-metadata-store"
+    authorized_networks = ["0.0.0.0/0"]
+    require_ssl = true
+  }
+
   ecr = {
       name = "zenml-kubernetes"
       enable_container_registry = true
