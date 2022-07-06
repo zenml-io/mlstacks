@@ -19,9 +19,9 @@
 #   description = "The ECR registry name for storing your images"
 # }
 
-# output "eks-cluster-name" {
-#   value = data.aws_eks_cluster.cluster.name
-# }
+output "gke-cluster-name" {
+  value = module.gke.name
+}
 
 # output "ingress-controller-name" {
 #   value = module.mlflow.ingress-controller-name
@@ -29,4 +29,23 @@
 # output "ingress-controller-namespace" {
 #   value = module.mlflow.ingress-controller-namespace
 # }
+
+# outputs for the CloudSQL metadata store
+output "metadata-db-host" {
+  value = module.metadata_store.instance_ip_address
+}
+output "metadata-db-connection-name" {
+  value = module.metadata_store.instance_connection_name
+}
+output "metadata-db-username" {
+  value = var.metadata-db-username
+  sensitive = true
+}
+output "metadata-db-password" {
+  description = "The auto generated default user password if not input password was provided"
+  value       = module.metadata_store.generated_user_password
+  sensitive   = true
+}
+
+
   
