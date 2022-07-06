@@ -34,7 +34,7 @@ locals {
     require_ssl = true
   }
 
-  ecr = {
+  artifact_repository = {
       name = "zenml-kubernetes"
       enable_container_registry = true
   }

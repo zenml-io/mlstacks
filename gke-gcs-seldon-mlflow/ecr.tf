@@ -1,7 +1,10 @@
-# # add an optional container registry
-# resource "aws_ecr_repository" "zenml-ecr-repository" {
-#   name                 = local.ecr.name
-#   image_tag_mutability = "MUTABLE"
-#   count = local.ecr.enable_container_registry ? 1 : 0
-#   tags = local.tags
-# }
+# add an optional artifact repository
+resource "google_artifact_registry_repository" "artifact-repository" {
+  provider = google-beta
+
+  count = local.artifact_repository.enable_container_registry ? 1 : 0
+  location = local.region
+  repository_id = local.artifact_repository.name
+  description = "A repository to host docker container images"
+  format = "DOCKER"
+}
