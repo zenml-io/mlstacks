@@ -7,6 +7,6 @@ module "mlflow" {
 
     # details about the mlflow deployment
     htpasswd = var.htpasswd
-    artifact_GCS = local.mlflow.artifact_S3
+    artifact_GCS = local.mlflow.artifact_GCS
     artifact_GCS_Bucket = local.mlflow.artifact_GCS_Bucket == "" ? google_storage_bucket.artifact-store.name : local.mlflow.artifact_GCS_Bucket
 }
