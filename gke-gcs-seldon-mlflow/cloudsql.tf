@@ -1,6 +1,6 @@
 module "metadata_store" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/mysql"
-  version = "8.0.0"
+  version = "11.0.0"
 
   project_id = local.project_id
   name = "${local.prefix}-${local.cloudsql.name}"
