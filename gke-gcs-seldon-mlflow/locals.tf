@@ -36,7 +36,7 @@ locals {
 
   artifact_repository = {
       name = "zenml-kubernetes"
-      enable_container_registry = true
+      enable_container_registry = false
   }
   
   tags = {
