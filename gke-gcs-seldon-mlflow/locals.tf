@@ -30,7 +30,12 @@ locals {
 
   cloudsql = {
     name = "zenml-metadata-store"
-    authorized_networks = ["0.0.0.0/0"]
+    authorized_networks = [
+      {
+        name = "all",
+        value = "0.0.0.0/0"
+      }
+    ]
     require_ssl = true
   }
 

@@ -4,8 +4,9 @@ module "metadata_store" {
 
   project_id = local.project_id
   name = "${local.prefix}-${local.cloudsql.name}"
-  database_version = "8.0.26"
+  database_version = "MYSQL_8_0"
   region = local.region
+  zone = "${local.region}-c"
 
   user_name = var.metadata-db-username
   user_password = var.metadata-db-password
