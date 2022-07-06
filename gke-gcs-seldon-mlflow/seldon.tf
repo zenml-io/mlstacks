@@ -1,7 +1,7 @@
 # using the seldon module for creating a 
 # seldon + istio deployment
 module "seldon" {
-    source = "./seldon"
+    source = "../eks-s3-seldon-mlflow/seldon"
 
     # run only after the eks cluster is set up
     depends_on = [module.gke]
