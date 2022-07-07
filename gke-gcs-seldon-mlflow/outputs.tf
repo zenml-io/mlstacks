@@ -1,34 +1,13 @@
-# output "seldon-core-workload-namespace" {
-#   value = kubernetes_namespace.seldon-workloads.metadata[0].name
-#   description = "The namespace created for hosting your Seldon workloads"
-# }
-
-# output "seldon-prediction-spec" {
-#   value = module.seldon.ingress-gateway-spec
-#   sensitive = true
-# }
-
-
-# output "s3-bucket-path" {
-#   value = aws_s3_bucket.zenml-artifact-store.bucket
-#   description = "The S3 bucket path for storing your artifacts"
-# }
-
-# output "ecr-registry-name" {
-#   value = aws_ecr_repository.zenml-ecr-registry[0].name
-#   description = "The ECR registry name for storing your images"
-# }
-
+# output for the GKE cluster
 output "gke-cluster-name" {
   value = module.gke.name
 }
 
-# output "ingress-controller-name" {
-#   value = module.mlflow.ingress-controller-name
-# }
-# output "ingress-controller-namespace" {
-#   value = module.mlflow.ingress-controller-namespace
-# }
+# output for the GCS bucket
+output "gcs-bucket-path" {
+  value = google_storage_bucket.artifact-store.name
+  description = "The GCS bucket name for storing your artifacts"
+}
 
 # outputs for the CloudSQL metadata store
 output "metadata-db-host" {
@@ -47,5 +26,27 @@ output "metadata-db-password" {
   sensitive   = true
 }
 
+# output for container registry
+output "artifact-repository-name" {
+  value = google_artifact_registry_repository.artifact-repository.name
+  description = "The artifact registry repository name for storing your images"
+}
 
+# outputs for the MLflow tracking server
+output "ingress-controller-name" {
+  value = module.mlflow.ingress-controller-name
+}
+output "ingress-controller-namespace" {
+  value = module.mlflow.ingress-controller-namespace
+}
+
+# output for seldon model deployer
+output "seldon-core-workload-namespace" {
+  value = kubernetes_namespace.seldon-workloads.metadata[0].name
+  description = "The namespace created for hosting your Seldon workloads"
+}
+output "seldon-prediction-spec" {
+  value = module.seldon.ingress-gateway-spec
+  sensitive = true
+}
   
