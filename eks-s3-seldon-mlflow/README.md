@@ -210,6 +210,5 @@ You can use the resources created above to register a [Stack]() in ZenML. This w
 >
 > The folowing command can be used to get the tracking URL for the MLflow server. The EXTERNAL_IP field is the IP of the ingress controller and the path "/" is configured already to direct to the MLflow tracking server.
  ```bash
- kubectl get service <ingress-controller-name> -n <ingress-controller-namespace>
+ kubectl get service "<ingress-controller-name>-ingress-nginx-controller" -n <ingress-controller-namespace>
  ```
-
