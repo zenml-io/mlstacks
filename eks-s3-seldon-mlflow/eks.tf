@@ -24,7 +24,6 @@ module "eks" {
       max_capacity     = 4
       min_capacity     = 1
 
-      # derived from our current zenhacks cluster
       instance_types = ["t3.medium"]
       update_config = {
         max_unavailable_percentage = 50
@@ -32,11 +31,14 @@ module "eks" {
     }
   }
 
-  # allowing worker nodes access to S3 buckets  
+  # allowing worker nodes access to other resources  
   workers_additional_policies = [
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
     "arn:aws:iam::aws:policy/AutoScalingFullAccess",
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+    "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+    "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
   ]
 }
 data "aws_eks_cluster" "cluster" {
