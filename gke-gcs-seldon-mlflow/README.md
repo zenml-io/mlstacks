@@ -195,7 +195,7 @@ To combat this, there's a script in the root directory, by the name `cleanup.sh`
     The Ingress host has to be obtained by using the following command. The exact value couldn't be outputted due to the fact that the ingress is set up using a custom resource.
 
     ```bash
-    export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+    export INGRESS_HOST=$(kubectl -n istio-ingress get service istio-ingress-seldon -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
     ```
 
 
