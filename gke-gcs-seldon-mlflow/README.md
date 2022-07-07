@@ -121,6 +121,10 @@ To combat this, there's a script in the root directory, by the name `cleanup.sh`
 \
     💡 Fix - This problem could arise due to strained system resources. Try running the command again after some time.
 
+* Error while creating the CloudSQL instance through terraform, `│ Error: Error, failed to create instance jayesh-zenml-metadata-store: googleapi: Error 409: The Cloud SQL instance already exists. When you delete an instance, you can't reuse the name of the deleted instance until one week from the deletion date., instanceAlreadyExists`
+\
+    💡 Fix - Simply change the name of the CloudSQL instance inside the `locals.tf` file and reuse the older name only after a week.
+
 
 ## Registering the ZenML Stack ✨
 
