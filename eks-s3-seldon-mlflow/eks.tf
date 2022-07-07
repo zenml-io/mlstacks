@@ -36,6 +36,7 @@ module "eks" {
   workers_additional_policies = [
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
     "arn:aws:iam::aws:policy/AutoScalingFullAccess",
+    "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
   ]
 }
 data "aws_eks_cluster" "cluster" {
