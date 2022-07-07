@@ -28,7 +28,7 @@ output "metadata-db-password" {
 
 # output for container registry
 output "artifact-repository-name" {
-  value = google_artifact_registry_repository.artifact-repository.name
+  value = local.artifact_repository.enable_container_registry ? google_artifact_registry_repository.artifact-repository[0].name : "not enabled"
   description = "The artifact registry repository name for storing your images"
 }
 
