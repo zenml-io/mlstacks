@@ -1,7 +1,7 @@
 resource "google_service_account" "sa" {
   account_id   = local.service_account.account_id
   project = local.project_id
-  display_name = "A service account for the Vertex AI pipelines"
+  display_name = "${local.prefix}-${local.service_account.account_id}"
 }
 
 resource "google_service_account_iam_binding" "ai-customcode" {
