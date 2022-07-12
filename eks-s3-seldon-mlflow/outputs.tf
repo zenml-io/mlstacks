@@ -35,13 +35,10 @@ output "metadata-db-host" {
   value = module.metadata_store.db_instance_address
 }
 output "metadata-db-username" {
-  value = var.metadata-db-username
+  value = module.metadata_store.db_instance_username
   sensitive = true
 }
 output "metadata-db-password" {
-  value = var.metadata-db-password
+  value = module.metadata_store.db_instance_password
   sensitive = true
 }
-
-
-  
