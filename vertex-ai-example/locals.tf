@@ -20,6 +20,11 @@ locals {
     require_ssl = true
   }
 
+  container_registry = {
+    region = "eu"  # available options: eu, us, asia
+  }
+  
+  # skip this if you're using the container registry
   artifact_repository = {
       name = "zenml-kubernetes"
       enable_container_registry = false

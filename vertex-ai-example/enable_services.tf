@@ -14,9 +14,15 @@ resource "null_resource" "enable-secretmanager" {
   }
 }
 
-resource "null_resource" "enable-artifactregistry" {
+resource "null_resource" "enable-containerregistry" {
   provisioner "local-exec" {
-    command = "gcloud services enable artifactregistry.googleapis.com --project=${local.project_id}"
+    command = "gcloud services enable containerregistry.googleapis.com --project=${local.project_id}"
   }
 }
+
+# resource "null_resource" "enable-artifactregistry" {
+#   provisioner "local-exec" {
+#     command = "gcloud services enable artifactregistry.googleapis.com --project=${local.project_id}"
+#   }
+# }
 

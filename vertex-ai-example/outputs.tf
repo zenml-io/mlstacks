@@ -30,3 +30,14 @@ output "metadata-db-password" {
   value       = module.metadata_store.generated_user_password
   sensitive   = true
 }
+
+# output for container registry
+output "container-registry-URI" {
+  value = "${local.container_registry.region}.gcr.io/${local.project_id}"
+}
+
+# # output for artifact registry repository
+# output "artifact-repository-name" {
+#   value = local.artifact_repository.enable_container_registry ? google_artifact_registry_repository.artifact-repository[0].name : "not enabled"
+#   description = "The artifact registry repository name for storing your images"
+# }
