@@ -5,9 +5,9 @@ There can be many motivations behind taking your ML application setup to a cloud
 We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](addlink) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS and GCP supported for now). This recipe, however, goes one step further. 
 
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
-- An EKS cluster that can act as an [orchestrator]() for your workloads.
-- An S3 bucket as an [artifact store](), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- An AWS RDS MySQL instance as a [metadata store]() that is essential to track all your metadata and its location in your artifact store.  
+- A GKE cluster that can act as an [orchestrator]() for your workloads.
+- A GCS Bucket as an [artifact store](), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
+- An CloudSQL instance as a [metadata store]() that is essential to track all your metadata and its location in your artifact store.  
 - An MLflow tracking server as an [experiment tracker]() which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
 - A Seldon Core deployment as a [model deployer]() to have your trained model deployed on a Kubernetes cluster to run inference on. 
 
