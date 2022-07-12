@@ -10,7 +10,7 @@ output "service-account" {
 
 # output for the GCS bucket
 output "gcs-bucket-path" {
-  value = google_storage_bucket.artifact-store.name
+  value = "gs://${google_storage_bucket.artifact-store.name}"
   description = "The GCS bucket name for storing your artifacts"
 }
 
