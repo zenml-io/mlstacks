@@ -37,6 +37,10 @@ Before starting, you should know the values that you have to keep ready for use 
 > **Warning** 
 > The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
 
+> **Note**
+>
+> To be able to enable services on GCP, you need to have one of the following roles: Owner, Editor or Service Config Editor 
+
 ## 🧑‍🍳 Cooking the recipe
 
 After customizing the script using your values, run the following commands.
