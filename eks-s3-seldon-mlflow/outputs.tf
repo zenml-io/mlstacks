@@ -8,7 +8,6 @@ output "seldon-prediction-spec" {
   sensitive = true
 }
 
-
 output "s3-bucket-path" {
   value = aws_s3_bucket.zenml-artifact-store.bucket
   description = "The S3 bucket path for storing your artifacts"
@@ -23,10 +22,26 @@ output "eks-cluster-name" {
   value = data.aws_eks_cluster.cluster.name
 }
 
+# outputs for the Mlflow tracking server
 output "ingress-controller-name" {
   value = module.mlflow.ingress-controller-name
 }
 output "ingress-controller-namespace" {
   value = module.mlflow.ingress-controller-namespace
 }
+
+# outputs for the metadata store
+output "metadata-db-host" {
+  value = module.metadata_store.db_instance_address
+}
+output "metadata-db-username" {
+  value = module.metadata_store.db_instance_username
+  sensitive = true
+}
+output "metadata-db-password" {
+  value = module.metadata_store.db_instance_password
+  sensitive = true
+}
+
+
   

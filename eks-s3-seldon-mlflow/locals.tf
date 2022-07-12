@@ -20,17 +20,21 @@ locals {
       namespace = "seldon-system"
   }
   mlflow = {
-    htpasswd = "user:$apr1$9gkx2wij$JynUCfSc211GYkmb4MmBF1"
     artifact_S3 = "true"
     # if not set, the bucket created as part of the deployment will be used
     artifact_S3_Bucket = ""
-    artifact_S3_Access_Key = "AKIAJX7X7X7X7X7X7X7X"
-    artifact_S3_Secret_Key = "JbtUCfSc211GYkmZ5MmBF1"
   }
 
   ecr = {
       name = "zenml-kubernetes"
       enable_container_registry = true
+  }
+
+  rds = {
+    rds_name = "zenml-rds"
+    db_name = "zenmldb"
+    db_type = "mysql"
+    db_version = "8.0.28"
   }
   
   tags = {
