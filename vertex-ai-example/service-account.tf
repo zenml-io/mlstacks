@@ -1,10 +1,5 @@
-resource "random_string" "sa_id" {
-  length           = 6
-  special          = false
-}
-
 resource "google_service_account" "sa" {
-  account_id   = random_string.sa_id
+  account_id   = local.service_account.account_id
   project = local.project_id
   display_name = "A service account for the Vertex AI pipelines"
 }

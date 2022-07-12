@@ -10,7 +10,7 @@ locals {
   }
 
   cloudsql = {
-    name = "zenml-metadata-store"
+    name = "zenml-metadata-store-vertex"
     authorized_networks = [
       {
         name = "all",
@@ -18,6 +18,10 @@ locals {
       }
     ]
     require_ssl = true
+  }
+
+  service_account = {
+    account_id = "zenml-vertex-sa"
   }
 
   container_registry = {
