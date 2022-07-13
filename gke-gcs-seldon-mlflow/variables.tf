@@ -1,7 +1,13 @@
 # variables for the MLflow tracking server
-variable "htpasswd" {
-  description = "The htpasswd string for the MLflow Tracking Server"
-  default = ""
+variable "mlflow-username" {
+  description = "The username for the MLflow Tracking Server"
+  default = "admin"
+  type = string
+}
+
+variable "mlflow-password" {
+  description = "The password for the MLflow Tracking Server"
+  default = "supersafepassword"
   type = string
 }
 
