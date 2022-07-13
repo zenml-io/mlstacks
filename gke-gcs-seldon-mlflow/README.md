@@ -216,5 +216,5 @@ To combat this, there's a script in the root directory, by the name `cleanup.sh`
 >
 > The folowing command can be used to get the tracking URL for the MLflow server. The EXTERNAL_IP field is the IP of the ingress controller and the path "/" is configured already to direct to the MLflow tracking server.
  ```bash
- kubectl get service "<ingress-controller-name>-ingress-nginx-controller" -n <ingress-controller-namespace>
+ export TRACKING_URI=$(kubectl get service "<ingress-controller-name>-ingress-nginx-controller" -n <ingress-controller-namespace> -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
  ```
