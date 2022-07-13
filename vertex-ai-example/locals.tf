@@ -2,8 +2,11 @@
 locals {
   prefix = "jayesh"
   region = "us-west1"
-  project_id = "zenml-core"
+  project_id = "jayesh-vertex"
 
+  vertex_ai = {
+    region = "europe-west3"  # the location to run your Vertex AI pipelines in
+  }
   gcs = {
     name = "zenml-artifact-store"
     location = "US-WEST1"
