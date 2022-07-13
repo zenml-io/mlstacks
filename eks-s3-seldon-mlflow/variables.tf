@@ -9,9 +9,14 @@ variable "mlflow-artifact-S3-secret-key" {
   default = "JbtUCfSc211GYkmZ5MmBF1"
   type = string
 }
-variable "htpasswd" {
-  description = "The htpasswd string for the MLflow Tracking Server"
-  default = ""
+variable "mlflow-username" {
+  description = "The username for the MLflow Tracking Server"
+  default = "admin"
+  type = string
+}
+variable "mlflow-password" {
+  description = "The password for the MLflow Tracking Server"
+  default = "supersafepassword"
   type = string
 }
 
@@ -24,5 +29,12 @@ variable "metadata-db-username" {
 variable "metadata-db-password" {
   description = "The password for the AWS RDS metadata store"
   default = ""
+  type = string
+}
+
+# variables for creating a ZenML stack configuration file
+variable "zenml-version" {
+  description = "The version of ZenML being used"
+  default = "0.10.0"
   type = string
 }
