@@ -14,11 +14,11 @@ resource "local_file" "stack_file" {
       container_registry:
         flavor: aws
         name: aws_container_registry
-        uri: ${data.aws_iam_account_alias.current.id}.dkr.ecr.${local.region}.amazonaws.com
+        uri: ${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com
       metadata_store:
         database: zenml_db
         flavor: mysql
-        host: ${module.metadata_store.instance_first_ip_address}
+        host: ${module.metadata_store.db_instance_address}
         name: rds_metadata_store
         port: 3306
         secret: aws_mysql_secret

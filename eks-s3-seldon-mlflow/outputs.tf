@@ -24,7 +24,7 @@ output "metadata-db-password" {
 
 # output for container registry
 output "container-registry-URI" {
-  value = "${data.aws_iam_account_alias.current.id}.dkr.ecr.${local.region}.amazonaws.com"
+  value = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com"
 }
 output "ecr-registry-name" {
   value = aws_ecr_repository.zenml-ecr-repository[0].name
