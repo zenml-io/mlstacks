@@ -6,3 +6,4 @@
 *.tfstate
 kubeconfig_*
 .terraform
+vertex_stack*
