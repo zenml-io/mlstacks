@@ -39,7 +39,7 @@ output "ingress-controller-namespace" {
   value = module.mlflow.ingress-controller-namespace
 }
 output "mlflow-tracking-URL" {
-  value = data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip
+  value = data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.hostname
 }
 
 # output for seldon model deployer
@@ -52,5 +52,5 @@ output "seldon-prediction-spec" {
   sensitive = true
 }
 output "seldon-base-url" {
-  value = data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.ip
+  value = data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.hostname
 }

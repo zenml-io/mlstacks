@@ -35,7 +35,7 @@ resource "local_file" "stack_file" {
       experiment_tracker:
         flavor: mlflow
         name: eks_mlflow_experiment_tracker
-        tracking_uri: ${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip}
+        tracking_uri: ${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.hostname}
         tracking_username: ${var.mlflow-username}
         tracking_password: ${var.mlflow-password}
       model_deployer:
@@ -43,7 +43,7 @@ resource "local_file" "stack_file" {
         name: eks_seldon_model_deployer
         kubernetes_context: terraform
         kubernetes_namespace: ${kubernetes_namespace.seldon-workloads.metadata[0].name}
-        base_url: ${data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.ip}
+        base_url: ${data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.hostname}
         secret: aws_seldon_secret
     ADD
   filename = "./aws_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
