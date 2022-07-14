@@ -20,6 +20,7 @@ module "metadata_store" {
   # DB subnet group
   create_db_subnet_group = true
   subnet_ids             = module.vpc.public_subnets  
+  skip_final_snapshot = true
 
   iam_database_authentication_enabled = false
 
