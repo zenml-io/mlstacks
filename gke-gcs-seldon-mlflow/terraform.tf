@@ -1,13 +1,8 @@
 # defining the providers for the recipe module
 terraform {
   required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-    }
-
-    random = {
-      source  = "hashicorp/random"
-      version = "3.1.0"
+    google = {
+      source  = "hashicorp/google"
     }
 
     local = {
@@ -29,7 +24,7 @@ terraform {
       source = "gavinbunney/kubectl"
       version = "1.14.0"
     }
-    
+
     htpasswd = {
       source = "loafoe/htpasswd"
       version = "1.0.3"

@@ -1,42 +1,42 @@
-# 🥗 EKS, S3, RDS, MLflow and Seldon MLOps Stack Recipe 
+# 🥙 GKE, GCS, CloudSQL, MLflow and Seldon MLOps Stack Recipe 
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
 We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](addlink) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS and GCP supported for now). This recipe, however, goes one step further. 
 
-You can have a simple MLOps stack ready for running your pipelines after you execute this recipe 😍. It sets up the following resources: 
-- An EKS cluster that can act as an [orchestrator]() for your workloads.
-- An S3 bucket as an [artifact store](), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- An AWS RDS MySQL instance as a [metadata store]() that is essential to track all your metadata and its location in your artifact store.  
+You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
+- A GKE cluster that can act as an [orchestrator]() for your workloads.
+- A GCS Bucket as an [artifact store](), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
+- An CloudSQL instance as a [metadata store]() that is essential to track all your metadata and its location in your artifact store.  
 - An MLflow tracking server as an [experiment tracker]() which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
 - A Seldon Core deployment as a [model deployer]() to have your trained model deployed on a Kubernetes cluster to run inference on. 
 
-Keep in mind, this is a basic setup to get you up and running on AWS with a minimal MLOps stack and more configuration options are coming in the form of new recipes! 👀
+Keep in mind, this is a basic setup to get you up and running on GCP with a minimal MLOps stack and more configuration options are coming in the form of new recipes! 👀
 
 ## Structure of the recipe
 
 - Every file has a script responsible for creation of its namesake resources.
-- Two modules have been implemented for use within the recipe and in future implementations. These are:
+- Two custom modules have been used within this recipe. These are:
 
 | Module | Description |
 --- | ---
 mlflow-module | A module to start an MLflow tracking server behind an NGINX proxy|
 seldon | Installs Seldon Core along with Istio |
 
+The definition of them both can be found in the AWS recipe. We will soon publish them as separate modules.
 
-
-## 🍅 Inputs
+## 🍏 Inputs
 
 Before starting, you should know the values that you have to keep ready for use in the script. 
 - Check out the `locals.tf` file to configure basic information about your deployments.
-- Take a look at the `variables.tf` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, AWS access keys, etc.
+- Take a look at the `variables.tf` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, etc.
 - If you want to avoid having to type these in, with every  `terraform apply` execution, you can add your values as the `default` inside the definition of each variable. 
 
     As an example, we've set the default value of `metadata-db-username` as "admin" to avoid having to supply it repeatedly. 
 
     ```hcl
     variable "metadata-db-username" {
-      description = "The username for the AWS RDS metadata store"
+      description = "The username for the CloudSQL metadata store"
       default = "admin"
       type = string
     }
@@ -63,15 +63,15 @@ terraform apply
 
 > **Note**
 >
->  You need to have your AWS credentials saved locally under ~/.aws/credentials
+>  You need to have your GCP credentials saved locally for the `apply` function to work.
 
-## 🍜 Outputs 
+## 🥧 Outputs 
 
 The script, after running, outputs the following.
 | Output | Description |
 --- | ---
-eks-cluster-name | Name of the eks cluster set up. This is helpful when setting up `kubectl` access |
-s3-bucket-path | The path of the S3 bucket. Useful while registering the artifact store|
+gke-cluster-name | Name of the GKE cluster that is created. This is helpful when setting up `kubectl` access |
+gcs-bucket-path | The path of the GCS bucket. Useful while registering the artifact store|
 ingress-controller-name | Used for getting the ingress URL for the MLflow tracking server|
 ingress-controller-namespace | Used for getting the ingress URL for the MLflow tracking server|
 seldon-core-workload-namespace | Namespace in which seldon workloads will be created|
@@ -90,6 +90,7 @@ To view individual sensitive outputs, use the following format. Here, the metada
 ```bash
 terraform output metadata-db-password
 ```
+
 ## Deleting Resources
 
 Usually, the simplest way to delete all resources deployed by Terraform is to run the `terraform destroy` command 🤯. In this case, however, due to existing problems with Kubernetes and Terraform, there might be some resources that get stuck in the `Terminating` state forever. 
@@ -112,65 +113,70 @@ To combat this, there's a script in the root directory, by the name `cleanup.sh`
 \
     💡 Fix - If you encounter this error with `apply`, `plan` or `destroy`, do `terraform init` and run your command again.
 
-* While running `terraform apply`, an error which says `Failed to construct REST client` 
+* While running `terraform init`, an error which says `Failed to query available provider packages... No available releases match the given constraint`
 \
-    💡 Fix - Run the `aws eks --region REGION update-kubeconfig --name <eks-cluster-name> --alias terraform` command and do `apply` again.
+    💡 Fix - First of all, you should create an issue so that we can take a look. Meanwhile, if you know Terraform, make sure all the modules that are being used are on their latest version.
 
 * While running a terraform command, this error might appear too: `context deadline exceeded`
 \
     💡 Fix - This problem could arise due to strained system resources. Try running the command again after some time.
-    
-    
-## Registering a ZenML Stack ✨
 
-You can use the resources created above to register a [Stack]() in ZenML. This will allow you to quickly start running your pipelines without having to worry about setting up the infrastructure yourself.
+* Error while creating the CloudSQL instance through terraform, `│ Error: Error, failed to create instance jayesh-zenml-metadata-store: googleapi: Error 409: The Cloud SQL instance already exists. When you delete an instance, you can't reuse the name of the deleted instance until one week from the deletion date., instanceAlreadyExists`
+\
+    💡 Fix - Simply change the name of the CloudSQL instance inside the `locals.tf` file and reuse the older name only after a week.
 
-1. Set up the local `kubectl` client using the output values.
+
+## Registering the ZenML Stack ✨
+
+1. Set up the local `kubectl` client using the output values. Learn more on the Google Cloud [documentation page](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl).
 
     ```bash
-    aws eks --region REGION update-kubeconfig --name <eks-cluster-name> --alias terraform
+    gcloud container clusters get-credentials <gke-cluster-name>
     ```
 
-2. Register the Kubernetes orchestrator. 
+2. Register the Kubernetes orchestrator.
 
     ```bash
+    # get the kubernetes context corresponding to the gke cluster
+    kubectl config get-contexts
+
     zenml orchestrator register k8s_orchestrator
         --flavor=kubernetes
-        --kubernetes_context=terraform
+        --kubernetes_context=<CONTEXT>
         --synchronous=True
     ```
 
-3. Register the S3 artifact store.
+3. Register the GCS artifact store.
 
     ```bash
-    zenml artifact-store register s3_store 
-        --flavor=s3 
-        --path=s3://<s3-bucket-path>
+    zenml artifact-store register gcs_store 
+        --flavor=gcp 
+        --path=gs://<gcs-bucket-path>
     ```
 
-4. Register the secrets manager. A secrets manager comes out of the box with your AWS account so no setup is needed. 
+4. Register the secrets manager. [Check](https://console.cloud.google.com/marketplace/product/google/secretmanager.googleapis.com) if you have it enabled in your GCP project. 
 
     ```bash
-    zenml secrets-manager register aws_secrets_manager \
-        --flavor=aws \
+    zenml secrets-manager register gcp_secrets_manager \
+        --flavor=gcp \
         --region_name=<region>
     ```
 
 5. Register a ZenML secret to use with the metadata store.
 
     ```bash
-    zenml secret register rds_authentication \
+    zenml secret register cloudsql_authentication \
         --schema=mysql \
         --user=<metadata-db-username> \
         --password=<metadata-db-password>
     ```
 
-6. Register the AWS RDS metadata store. Here we are using a MySQL store.
+6. Register the CloudSQL metadata store. Here we are using a MySQL store.
     ```
-    zenml metadata-store register rds_mysql \
+    zenml metadata-store register cloudsql \
         --flavor=mysql \
         --database=zenml \
-        --secret=rds_authentication \
+        --secret=cloudsql_authentication \
         --host=<metadata-db-host>
     ```
 
@@ -210,5 +216,5 @@ You can use the resources created above to register a [Stack]() in ZenML. This w
 >
 > The folowing command can be used to get the tracking URL for the MLflow server. The EXTERNAL_IP field is the IP of the ingress controller and the path "/" is configured already to direct to the MLflow tracking server.
  ```bash
- kubectl get service "<ingress-controller-name>-ingress-nginx-controller" -n <ingress-controller-namespace>
+ export TRACKING_URI=$(kubectl get service "<ingress-controller-name>-ingress-nginx-controller" -n <ingress-controller-namespace> -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
  ```

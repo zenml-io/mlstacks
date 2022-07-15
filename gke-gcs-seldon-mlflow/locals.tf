@@ -1,18 +1,21 @@
 # config values to use across the module
 locals {
   prefix = "jayesh"
-  region = "us-east-1"
-  eks = {
+  region = "us-west1"
+  project_id = "zenml-core"
+  gke = {
     cluster_name = "zenml-terraform-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
     cluster_version = "1.22"
+    service_account_name = "zenml"
   }
   vpc = {
     name = "zenml-vpc"
   }
 
-  s3 = {
+  gcs = {
     name = "zenml-artifact-store"
+    location = "US-WEST1"
   }
 
   seldon = {
@@ -20,21 +23,29 @@ locals {
       namespace = "seldon-system"
   }
   mlflow = {
-    artifact_S3 = "true"
+    artifact_GCS = "true"
     # if not set, the bucket created as part of the deployment will be used
-    artifact_S3_Bucket = ""
+    artifact_GCS_Bucket = ""
   }
 
-  ecr = {
+  cloudsql = {
+    name = "zenml-metadata-store"
+    authorized_networks = [
+      {
+        name = "all",
+        value = "0.0.0.0/0"
+      }
+    ]
+    require_ssl = true
+  }
+
+  container_registry = {
+    region = "eu"  # available options: eu, us, asia
+  }
+
+  artifact_repository = {
       name = "zenml-kubernetes"
-      enable_container_registry = true
-  }
-
-  rds = {
-    rds_name = "zenml-rds"
-    db_name = "zenmldb"
-    db_type = "mysql"
-    db_version = "8.0.28"
+      enable_container_registry = false
   }
   
   tags = {
