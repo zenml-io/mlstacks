@@ -55,10 +55,34 @@ terraform apply
 
 It is not neccessary to use the MLOps stacks recipes presented here alongisde the
 [ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
-directly (see below).
+directly.
 
-However, ZenML works seamlessly with the infrastructure provisioned through these recipes. To learn
-more about to seamlessly use these awesome mlops stacks with a unified and simple framework, head
+However, ZenML works seamlessly with the infrastructure provisioned through these recipes. The ZenML CLI has an integration with this repository that makes it really simple to pull and deploy these recipes. A simple flow could look like the following:
+
+1. List the available recipes in the repository 📃.
+
+    ```shell
+    zenml stack recipe list
+    ```
+2. Pull the recipe that you wish to deplpoy, to your local system.
+
+    ```shell
+    zenml stack recipe pull <stack-recipe-name>
+    ```
+
+3. Deploy the recipe with this simple command 🚀.
+
+    ```shell
+    zenml stack recipe deploy <stack-recipe-name>
+    ```
+
+4. You'll notice that a ZenML stack configuration file gets created automatically! To use the deployed infrastructure, just run the following command to have all of the resources set as your current stack 🤯.
+
+    ```shell
+    zenml stack import <path-to-the-created-stack-config-yaml>
+    ```
+
+To learn more about ZenML and how it empowers you to develop a stack-agnostic MLOps solution, head
 over to the [ZenML docs](https://docs.zenml.io).
 
 ## 🎉 Acknowledgements
