@@ -59,18 +59,18 @@ directly.
 
 However, ZenML works seamlessly with the infrastructure provisioned through these recipes. The ZenML CLI has an integration with this repository that makes it really simple to pull and deploy these recipes. A simple flow could look like the following:
 
-1. List the available recipes in the repository 📃.
+1. 📃 List the available recipes in the repository.
 
     ```shell
     zenml stack recipe list
     ```
-2. Pull the recipe that you wish to deplpoy, to your local system.
+2. Pull the recipe that you wish to deploy, to your local system.
 
     ```shell
     zenml stack recipe pull <stack-recipe-name>
     ```
 
-3. Deploy the recipe with this simple command 🚀.
+3. 🚀 Deploy the recipe with this simple command.
 
     ```shell
     zenml stack recipe deploy <stack-recipe-name>
