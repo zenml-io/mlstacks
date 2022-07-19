@@ -123,92 +123,34 @@ To combat this, there's a script in the root directory, by the name `cleanup.sh`
     
 ## Registering a ZenML Stack ✨
 
-You can use the resources created above to register a [Stack]() in ZenML. This will allow you to quickly start running your pipelines without having to worry about setting up the infrastructure yourself.
+It is not neccessary to use the MLOps stacks recipes presented here alongisde the
+[ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
+directly.
 
-1. Set up the local `kubectl` client using the output values.
+However, ZenML works seamlessly with the infrastructure provisioned through these recipes. The ZenML CLI has an integration with this repository that makes it really simple to pull and deploy these recipes. A simple flow could look like the following:
 
-    ```bash
-    aws eks --region REGION update-kubeconfig --name <eks-cluster-name> --alias terraform
+1. 📃 List the available recipes in the repository.
+
+    ```shell
+    zenml stack recipe list
+    ```
+2. Pull the recipe that you wish to deploy, to your local system.
+
+    ```shell
+    zenml stack recipe pull <stack-recipe-name>
     ```
 
-2. Register the Kubernetes orchestrator. 
+3. 🚀 Deploy the recipe with this simple command.
 
-    ```bash
-    zenml orchestrator register k8s_orchestrator
-        --flavor=kubernetes
-        --kubernetes_context=terraform
-        --synchronous=True
+    ```shell
+    zenml stack recipe deploy <stack-recipe-name>
     ```
 
-3. Register the S3 artifact store.
+4. You'll notice that a ZenML stack configuration file gets created automatically! To use the deployed infrastructure, just run the following command to have all of the resources set as your current stack 🤯.
 
-    ```bash
-    zenml artifact-store register s3_store 
-        --flavor=s3 
-        --path=s3://<s3-bucket-path>
+    ```shell
+    zenml stack import <path-to-the-created-stack-config-yaml>
     ```
 
-4. Register the secrets manager. A secrets manager comes out of the box with your AWS account so no setup is needed. 
-
-    ```bash
-    zenml secrets-manager register aws_secrets_manager \
-        --flavor=aws \
-        --region_name=<region>
-    ```
-
-5. Register a ZenML secret to use with the metadata store.
-
-    ```bash
-    zenml secret register rds_authentication \
-        --schema=mysql \
-        --user=<metadata-db-username> \
-        --password=<metadata-db-password>
-    ```
-
-6. Register the AWS RDS metadata store. Here we are using a MySQL store.
-    ```
-    zenml metadata-store register rds_mysql \
-        --flavor=mysql \
-        --database=zenml \
-        --secret=rds_authentication \
-        --host=<metadata-db-host>
-    ```
-
-7. Register the MLflow experiment tracker.
-    ```
-    zenml experiment-tracker register mlflow_tracker
-        --type=mlflow
-        --tracking_uri=""
-        --tracking_username=""
-        --tracking_password=""
-
-    ```
-
-8. Register the Seldon Core model deployer. 
-
-    The Ingress host has to be obtained by using the following command. The exact value couldn't be outputted due to the fact that the ingress is set up using a custom resource.
-
-    ```bash
-    export INGRESS_HOST=$(kubectl -n istio-ingress get service istio-ingress-seldon -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-    ```
-
-
-    Now, register the Seldon Core model deployer.
-
-    ```bash
-    zenml model-deployer register seldon_eks --type=seldon \
-    --kubernetes_context=terraform \ --kubernetes_namespace=<seldon-core-workload-namespace> \
-    --base_url=http://$INGRESS_HOST \
-    --secret=""
-    ```
-
-> **Note**
->
-> The tracking username and password should be the same that were used to generate the `.htpasswd` string used to set up the MLflow tracking server.
-
-> **Note**
->
-> The folowing command can be used to get the tracking URL for the MLflow server. The EXTERNAL_IP field is the IP of the ingress controller and the path "/" is configured already to direct to the MLflow tracking server.
- ```bash
- kubectl get service "<ingress-controller-name>-ingress-nginx-controller" -n <ingress-controller-namespace>
- ```
+To learn more about ZenML and how it empowers you to develop a stack-agnostic MLOps solution, head
+over to the [ZenML docs](https://docs.zenml.io).
