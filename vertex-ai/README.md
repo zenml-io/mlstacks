@@ -139,13 +139,20 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     zenml stack recipe pull <stack-recipe-name>
     ```
 
-3. 🚀 Deploy the recipe with this simple command.
+3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file. Make sure you add the correct GCP project in the `project_id` variable.
+
+4. 🚀 Deploy the recipe with this simple command.
 
     ```shell
     zenml stack recipe deploy <stack-recipe-name>
     ```
+    In case you get a `PermissionDenied` error while executing this command, simply make the file mentioned in the error executable by running the following command.
 
-4. You'll notice that a ZenML stack configuration file gets created automatically! To use the deployed infrastructure, just run the following command to have all of the resources set as your current stack 🤯.
+    ```shell
+    sudo chmod +x <path-to-file>
+    ```
+
+5. You'll notice that a ZenML stack configuration file gets created automatically! To use the deployed infrastructure, just run the following command to have all of the resources set as your current stack 🤯.
 
     ```shell
     zenml stack import <path-to-the-created-stack-config-yaml>
