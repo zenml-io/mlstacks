@@ -69,6 +69,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     ```shell
     zenml stack recipe pull <stack-recipe-name>
     ```
+3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
 3. 🚀 Deploy the recipe with this simple command.
 
