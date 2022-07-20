@@ -1,6 +1,6 @@
 # using the mlflow module to create an mlflow deployment
 module "mlflow" {
-    source = "../eks-s3-seldon-mlflow/mlflow-module"
+    source = "./mlflow-module"
 
     # run only after the eks cluster is set up
     depends_on = [module.gke]
