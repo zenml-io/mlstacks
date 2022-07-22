@@ -13,10 +13,10 @@ You can have a simple MLOps stack ready for running your machine learning worklo
 
 Keep in mind, this is a basic setup to get you up and running on Vertex AI with a minimal MLOps stack and more configuration options are coming in the form of new recipes! 👀
 
-## Structure of the recipe
+## Prerequisites
 
-- Every file has a script responsible for creation of its namesake resources.
-
+* You must have a GCP project where you have sufficient permissions to create and destroy resources that will be created as part of this recipe. Supply the name of your project in the `locals.tf` file.
+* Have [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform) and [Helm](https://helm.sh/docs/intro/install/#from-script) installed on your system.
 
 ## 🍏 Inputs
 

@@ -13,16 +13,10 @@ You can have a simple MLOps stack ready for running your pipelines after you exe
 
 Keep in mind, this is a basic setup to get you up and running on AWS with a minimal MLOps stack and more configuration options are coming in the form of new recipes! 👀
 
-## Structure of the recipe
+## Prerequisites
 
-- Every file has a script responsible for creation of its namesake resources.
-- Two modules have been implemented for use within the recipe and in future implementations. These are:
-
-| Module | Description |
---- | ---
-mlflow-module | A module to start an MLflow tracking server behind an NGINX proxy|
-seldon | Installs Seldon Core along with Istio |
-
+* You must have an AWS account where you have sufficient permissions to create and destroy resources that will be created as part of this recipe.
+* Have [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform) and [Helm](https://helm.sh/docs/intro/install/#from-script) installed on your system.
 
 
 ## 🍅 Inputs
