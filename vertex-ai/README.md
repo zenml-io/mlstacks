@@ -22,7 +22,7 @@ Keep in mind, this is a basic setup to get you up and running on Vertex AI with 
 
 Before starting, you should know the values that you have to keep ready for use in the script. 
 - Check out the `locals.tf` file to configure basic information about your deployments.
-- Take a look at the `variables.tf` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, etc.
+- Take a look at the `variables.tf` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, etc. You can add these values in the `values.tfvars` file and make sure you don't commit them!
 - If you want to avoid having to type these in, with every  `terraform apply` execution, you can add your values as the `default` inside the definition of each variable. 
 
     As an example, we've set the default value of `metadata-db-username` as "admin" to avoid having to supply it repeatedly. 
