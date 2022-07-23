@@ -1,4 +1,5 @@
-Thank you for your interest in contributing a recipe to this repository! Here are some things that you should know before getting started. 
+Thank you for your interest in contributing a recipe to this repository! 🥳🙏 
+Here are some things that you should know before getting started. 
 
 ## Principles and the structure of a recipe
 
@@ -33,4 +34,28 @@ The integration with the ZenML stack CLI commands happens in two ways:
 - A script by the name `run_recipe.sh` contains commands that are run when `zenml stack recipe deploy` is executed. This should hold the `terraform init` and `terraform apply` commands and you can take existing recipes as reference for a working script.
 - The `destroy_recipe.sh` file contains the commands that are run when `zenml stack recipe destroy` is called. 
 
-## Adding a dummy recipe - an example (Coming soon)
+## Workflow for adding a new recipe
+
+When creating a new recipe, the first step would be to list out the components that are a part of your stack. Going through each of the abstractions is a handy way to ensure you have a complete stack.
+
+Once the components are identified, take a look at the project `README` to check if any existing recipes cover their creation. 
+
+### Adapting a component from another recipe
+
+- The first step here is to identify the main component file. This is usually the file with the name of the component mentioned explicitly. 
+
+- Some components use resources that are spread across multiple files (secondary files). One way of identifying this is to look for any references made in the main file to the secondary files. 
+
+- One other dependency that you need to look for is the `depends_on` variable for any module. The presence of such a variable hints that the current module will need some parent module to run (as specified by the value of `depends_on`) before it. 
+
+- All of these files taken together compose your component and porting the component would mean copying each of these files into your new recipe.
+
+### Adding new components
+
+- When adding new components, try to use any existing modules as opposed to single resources. This ensures that the main resource and all of its dependencies are created together in a compact way and this also decreases the scope for errors while linking the parent and child resources.
+
+- For every component that you add, make reasonable assumptions about the level of configurability that will be needed by the users of that resource. All customizable values should go into either the `locals.tf` file (non-sensitive) or the `values.tfvars` file (sensitive). 
+
+- For every component, create suitable outputs in the `output.tf` file and the `output_file.tf` file. These outputs should comprise only values that are essential for the user to communicate with the resource (for example, those that are required as inputs for the corresponding ZenML stack component)
+
+This should set you up to create new recipes quickly. If you're still unsure or need help, feel free to connect with us on Slack or create an issue!
