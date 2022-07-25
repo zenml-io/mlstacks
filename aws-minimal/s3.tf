@@ -1,14 +1,14 @@
 # creste s3 bucket for storing artifacts
 resource "aws_s3_bucket" "zenml-artifact-store" {
-  bucket = "${local.prefix}-${local.s3.name}"
+  bucket        = "${local.prefix}-${local.s3.name}"
   force_destroy = true
 
   tags = merge(
-    local.tags,  
+    local.tags,
     {
       name = "zenml-artifact-store"
     }
-  ) 
+  )
 }
 
 resource "aws_s3_bucket_acl" "example" {

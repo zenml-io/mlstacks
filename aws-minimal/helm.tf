@@ -1,4 +1,4 @@
- # A default (non-aliased) provider configuration for "helm"
+# A default (non-aliased) provider configuration for "helm"
 provider "helm" {
   kubernetes {
     host                   = data.aws_eks_cluster.cluster.endpoint
