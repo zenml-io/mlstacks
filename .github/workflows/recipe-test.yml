@@ -30,3 +30,34 @@ jobs:
         uses: dflook/terraform-plan@v1
         with:
           path: ./aws-minimal
+
+  gcp_test:
+    name: gcp_test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      
+      # - name: Setup GCP Service Account
+      #   uses: google-github-actions/setup-gcloud@master
+      #   with:
+      #     version: 'latest'
+      #     service_account_email: ${{ secrets.GCP_SA_EMAIL }}
+      #     service_account_key: ${{ secrets.GCP_SA_KEY }}
+      #     export_default_credentials: true
+
+      - name: terraform validate
+        uses: dflook/terraform-validate@v1
+        with:
+          path: ./gcp-minimal
+
+      - name: terraform fmt
+        uses: dflook/terraform-fmt-check@v1
+        with:
+          path: ./gcp-minimal
+
+      - name: terraform plan
+        uses: dflook/terraform-plan@v1
+        with:
+          path: ./gcp-minimal
