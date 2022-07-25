@@ -1,0 +1,32 @@
+name: Test recipes
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  aws_test:
+    name: aws_test
+    runs-on: ubuntu-latest
+    # env:
+      # AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+      # AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_KEY}}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: terraform validate
+        uses: dflook/terraform-validate@v1
+        with:
+          path: ./aws-minimal
+
+      - name: terraform fmt
+        uses: dflook/terraform-fmt-check@v1
+        with:
+          path: ./aws-minimal
+
+      - name: terraform plan
+        uses: dflook/terraform-plan@v1
+        with:
+          path: ./aws-minimal
