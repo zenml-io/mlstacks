@@ -1,45 +1,45 @@
 variable "htpasswd" {}
 
 variable "artifact_S3" {
-  type = bool
+  type    = bool
   default = false
 }
 variable "artifact_S3_Bucket" {
-  type = string
+  type    = string
   default = ""
 }
 variable "artifact_S3_Access_Key" {
-  type = string
+  type    = string
   default = ""
 }
 variable "artifact_S3_Secret_Key" {
-  type = string
+  type    = string
   default = ""
 }
 
 
 variable "artifact_Azure" {
-  type = bool
+  type    = bool
   default = false
 }
 variable "artifact_Azure_Storage_Account_Name" {
-  type = string
+  type    = string
   default = ""
 }
 variable "artifact_Azure_Container" {
-  type = string
+  type    = string
   default = ""
 }
 variable "artifact_Azure_Access_Key" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "artifact_GCS" {
-  type = bool
+  type    = bool
   default = false
 }
 variable "artifact_GCS_Bucket" {
-  type = string
+  type    = string
   default = ""
 }
