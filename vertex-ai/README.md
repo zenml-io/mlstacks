@@ -2,7 +2,7 @@
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
-We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](addlink) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS and GCP supported for now). This recipe, however, goes one step further. 
+We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). This recipe, however, goes one step further. 
 
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
 - A Vertex AI enabled workspace as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) that you can submit your pipelines to.
