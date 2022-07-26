@@ -37,6 +37,23 @@ locals {
     enable_container_registry = false
   }
 
+  enable_mlflow = true
+  gke = {
+    cluster_name = "zenml-terraform-cluster"
+    # important to use 1.22 or above due to a bug with Istio in older versions
+    cluster_version      = "1.22"
+    service_account_name = "zenml"
+  }
+  vpc = {
+    name = "zenml-vpc"
+  }
+
+  mlflow = {
+    artifact_GCS = "true"
+    # if not set, the bucket created as part of the deployment will be used
+    artifact_GCS_Bucket = ""
+  }
+
   tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix
