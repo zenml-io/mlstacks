@@ -1,5 +1,5 @@
 module "metadata_store" {
-  source  = "terraform-aws-modules/rds/aws"
+  source = "terraform-aws-modules/rds/aws"
 
   identifier = "${local.prefix}-${local.rds.rds_name}"
 
@@ -8,19 +8,19 @@ module "metadata_store" {
   instance_class    = "db.t3.micro"
   allocated_storage = 5
 
-  db_name  = local.rds.db_name
-  username = var.metadata-db-username
-  password = var.metadata-db-password
+  db_name                = local.rds.db_name
+  username               = var.metadata-db-username
+  password               = var.metadata-db-password
   create_random_password = var.metadata-db-password == "" ? true : false
-  port     = "3306"
+  port                   = "3306"
 
   # configure access
   publicly_accessible = true
 
   # DB subnet group
   create_db_subnet_group = true
-  subnet_ids             = module.vpc.public_subnets  
-  skip_final_snapshot = true
+  subnet_ids             = module.vpc.public_subnets
+  skip_final_snapshot    = true
 
   iam_database_authentication_enabled = false
 
@@ -41,11 +41,11 @@ module "metadata_store" {
 
   parameters = [
     {
-      name = "character_set_client"
+      name  = "character_set_client"
       value = "utf8mb4"
     },
     {
-      name = "character_set_server"
+      name  = "character_set_server"
       value = "utf8mb4"
     }
   ]

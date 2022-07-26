@@ -16,8 +16,8 @@ locals {
   }
 
   seldon = {
-      name = "seldon"
-      namespace = "seldon-system"
+    name      = "seldon"
+    namespace = "seldon-system"
   }
   mlflow = {
     artifact_S3 = "true"
@@ -26,17 +26,17 @@ locals {
   }
 
   ecr = {
-      name = "zenml-kubernetes"
-      enable_container_registry = true
+    name                      = "zenml-kubernetes"
+    enable_container_registry = true
   }
 
   rds = {
-    rds_name = "zenml-rds"
-    db_name = "zenmldb"
-    db_type = "mysql"
+    rds_name   = "zenml-rds"
+    db_name    = "zenmldb"
+    db_type    = "mysql"
     db_version = "8.0.28"
   }
-  
+
   tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix
