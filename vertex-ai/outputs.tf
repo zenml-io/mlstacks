@@ -10,7 +10,7 @@ output "service-account" {
 
 # output for the GCS bucket
 output "gcs-bucket-path" {
-  value = "gs://${google_storage_bucket.artifact-store.name}"
+  value       = "gs://${google_storage_bucket.artifact-store.name}"
   description = "The GCS bucket name for storing your artifacts"
 }
 
@@ -22,7 +22,7 @@ output "metadata-db-connection-name" {
   value = module.metadata_store.instance_connection_name
 }
 output "metadata-db-username" {
-  value = var.metadata-db-username
+  value     = var.metadata-db-username
   sensitive = true
 }
 output "metadata-db-password" {
@@ -34,6 +34,11 @@ output "metadata-db-password" {
 # output for container registry
 output "container-registry-URI" {
   value = "${local.container_registry.region}.gcr.io/${local.project_id}"
+}
+
+# output for MLflow URI
+output "mlflow-tracking-URL" {
+  value = local.enable_mlflow ? data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip : "not enabled"
 }
 
 # # output for artifact registry repository
