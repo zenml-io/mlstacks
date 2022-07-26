@@ -2,7 +2,7 @@
 locals {
   prefix     = "jayesh"
   region     = "us-west1"
-  project_id = "zenml-core"
+  project_id = "jayesh-vertex"
   gke = {
     cluster_name = "zenml-terraform-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
