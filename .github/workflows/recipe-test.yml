@@ -8,10 +8,10 @@ jobs:
   aws_test:
     name: aws_test
     runs-on: ubuntu-latest
-    # env:
-      # AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
-      # AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_KEY}}
-
+    env:
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_KEY}}
+      AWS_DEFAULT_REGION: eu-central-1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,13 +39,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       
-      # - name: Setup GCP Service Account
-      #   uses: google-github-actions/setup-gcloud@master
-      #   with:
-      #     version: 'latest'
-      #     service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-      #     service_account_key: ${{ secrets.GCP_SA_KEY }}
-      #     export_default_credentials: true
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
 
       - name: terraform validate
         uses: dflook/terraform-validate@v1
@@ -70,13 +70,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       
-      # - name: Setup GCP Service Account
-      #   uses: google-github-actions/setup-gcloud@master
-      #   with:
-      #     version: 'latest'
-      #     service_account_email: ${{ secrets.GCP_SA_EMAIL }}
-      #     service_account_key: ${{ secrets.GCP_SA_KEY }}
-      #     export_default_credentials: true
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
 
       - name: terraform validate
         uses: dflook/terraform-validate@v1
