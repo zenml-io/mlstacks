@@ -1,4 +1,7 @@
 module "vpc" {
+  depends_on = [
+    google_project_service.compute_engine_api
+  ]
   count   = local.enable_mlflow ? 1 : 0
   source  = "terraform-google-modules/network/google"
   version = "~> 4.0"

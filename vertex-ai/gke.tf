@@ -1,6 +1,9 @@
 data "google_client_config" "default" {}
 
 module "gke" {
+  depends_on = [
+    google_project_service.compute_engine_api
+  ]
   count      = local.enable_mlflow ? 1 : 0
   source     = "terraform-google-modules/kubernetes-engine/google"
   project_id = local.project_id
