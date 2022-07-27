@@ -1,8 +1,8 @@
 # config values to use across the module
 locals {
-  prefix     = "jayesh"
-  region     = "us-west1"
-  project_id = "jayesh-vertex"
+  prefix     = "demo"
+  region     = "europe-west3"
+  project_id = "zenml-demos"
 
   vertex_ai = {
     region = "europe-west3" # the location to run your Vertex AI pipelines in
@@ -13,7 +13,7 @@ locals {
   }
 
   cloudsql = {
-    name = "zenml-metadata-store-vertex"
+    name = "zenml-metadata-store-demo"
     authorized_networks = [
       {
         name  = "all",
@@ -35,6 +35,23 @@ locals {
   artifact_repository = {
     name                      = "zenml-kubernetes"
     enable_container_registry = false
+  }
+
+  enable_mlflow = true
+  gke = {
+    cluster_name = "zenml-terraform-cluster"
+    # important to use 1.22 or above due to a bug with Istio in older versions
+    cluster_version      = "1.22"
+    service_account_name = "zenml"
+  }
+  vpc = {
+    name = "zenml-vpc"
+  }
+
+  mlflow = {
+    artifact_GCS = "true"
+    # if not set, the bucket created as part of the deployment will be used
+    artifact_GCS_Bucket = ""
   }
 
   tags = {

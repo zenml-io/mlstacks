@@ -36,6 +36,11 @@ output "container-registry-URI" {
   value = "${local.container_registry.region}.gcr.io/${local.project_id}"
 }
 
+# output for MLflow URI
+output "mlflow-tracking-URL" {
+  value = local.enable_mlflow ? data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip : "not enabled"
+}
+
 # # output for artifact registry repository
 # output "artifact-repository-name" {
 #   value = local.artifact_repository.enable_container_registry ? google_artifact_registry_repository.artifact-repository[0].name : "not enabled"
