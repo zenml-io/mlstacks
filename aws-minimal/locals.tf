@@ -1,7 +1,7 @@
 # config values to use across the module
 locals {
-  prefix = "jayesh"
-  region = "us-east-1"
+  prefix = "demo"
+  region = "eu-west-1"
   eks = {
     cluster_name = "zenml-terraform-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
