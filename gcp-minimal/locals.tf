@@ -3,6 +3,7 @@ locals {
   prefix     = "demo"
   region     = "europe-west3"
   project_id = "zenml-demos"
+
   gke = {
     cluster_name = "zenml-terraform-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
