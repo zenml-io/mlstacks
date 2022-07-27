@@ -5,7 +5,7 @@ output "gke-cluster-name" {
 
 # output for the GCS bucket
 output "gcs-bucket-path" {
-  value = "gs://${google_storage_bucket.artifact-store.name}"
+  value       = "gs://${google_storage_bucket.artifact-store.name}"
   description = "The GCS bucket path for storing your artifacts"
 }
 
@@ -17,7 +17,7 @@ output "metadata-db-connection-name" {
   value = module.metadata_store.instance_connection_name
 }
 output "metadata-db-username" {
-  value = var.metadata-db-username
+  value     = var.metadata-db-username
   sensitive = true
 }
 output "metadata-db-password" {
@@ -50,11 +50,11 @@ output "mlflow-tracking-URL" {
 
 # output for seldon model deployer
 output "seldon-core-workload-namespace" {
-  value = kubernetes_namespace.seldon-workloads.metadata[0].name
+  value       = kubernetes_namespace.seldon-workloads.metadata[0].name
   description = "The namespace created for hosting your Seldon workloads"
 }
 output "seldon-prediction-spec" {
-  value = module.seldon.ingress-gateway-spec
+  value     = module.seldon.ingress-gateway-spec
   sensitive = true
 }
 output "seldon-base-url" {

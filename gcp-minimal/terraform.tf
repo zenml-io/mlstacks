@@ -2,7 +2,7 @@
 terraform {
   required_providers {
     google = {
-      source  = "hashicorp/google"
+      source = "hashicorp/google"
     }
 
     local = {
@@ -21,12 +21,12 @@ terraform {
     }
 
     kubectl = {
-      source = "gavinbunney/kubectl"
+      source  = "gavinbunney/kubectl"
       version = "1.14.0"
     }
 
     htpasswd = {
-      source = "loafoe/htpasswd"
+      source  = "loafoe/htpasswd"
       version = "1.0.3"
     }
   }

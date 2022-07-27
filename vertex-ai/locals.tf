@@ -1,14 +1,14 @@
 # config values to use across the module
 locals {
-  prefix = "jayesh"
-  region = "us-west1"
+  prefix     = "jayesh"
+  region     = "us-west1"
   project_id = "jayesh-vertex"
 
   vertex_ai = {
-    region = "europe-west3"  # the location to run your Vertex AI pipelines in
+    region = "europe-west3" # the location to run your Vertex AI pipelines in
   }
   gcs = {
-    name = "zenml-artifact-store"
+    name     = "zenml-artifact-store"
     location = "US-WEST1"
   }
 
@@ -16,7 +16,7 @@ locals {
     name = "zenml-metadata-store-vertex"
     authorized_networks = [
       {
-        name = "all",
+        name  = "all",
         value = "0.0.0.0/0"
       }
     ]
@@ -28,15 +28,15 @@ locals {
   }
 
   container_registry = {
-    region = "eu"  # available options: eu, us, asia
+    region = "eu" # available options: eu, us, asia
   }
-  
+
   # skip this if you're using the container registry
   artifact_repository = {
-      name = "zenml-kubernetes"
-      enable_container_registry = false
+    name                      = "zenml-kubernetes"
+    enable_container_registry = false
   }
-  
+
   tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix

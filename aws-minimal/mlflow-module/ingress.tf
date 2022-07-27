@@ -7,9 +7,9 @@ resource "kubernetes_namespace" "nginx-ns" {
 }
 
 resource "helm_release" "nginx-controller" {
-  name = "nginx-controller"
+  name       = "nginx-controller"
   repository = "https://kubernetes.github.io/ingress-nginx"
-  chart = "ingress-nginx"
+  chart      = "ingress-nginx"
   # dependency on nginx-ns
   namespace = kubernetes_namespace.nginx-ns.metadata[0].name
 }
@@ -18,9 +18,9 @@ resource "kubernetes_ingress_v1" "mlflow-ingress" {
   metadata {
     name = "mlflow-ingress"
     annotations = {
-      "nginx.ingress.kubernetes.io/auth-type" = "basic"
+      "nginx.ingress.kubernetes.io/auth-type"   = "basic"
       "nginx.ingress.kubernetes.io/auth-secret" = "basic-auth"
-      "nginx.ingress.kubernetes.io/auth-realm" = "Authentication Required - mlflow"
+      "nginx.ingress.kubernetes.io/auth-realm"  = "Authentication Required - mlflow"
     }
   }
   spec {
@@ -28,7 +28,7 @@ resource "kubernetes_ingress_v1" "mlflow-ingress" {
     rule {
       http {
         path {
-          path = "/"
+          path      = "/"
           path_type = "Prefix"
           backend {
             service {
@@ -38,8 +38,8 @@ resource "kubernetes_ingress_v1" "mlflow-ingress" {
               }
             }
           }
-        }  
-      } 
+        }
+      }
     }
   }
 }

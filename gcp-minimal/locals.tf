@@ -1,12 +1,12 @@
 # config values to use across the module
 locals {
-  prefix = "jayesh"
-  region = "us-west1"
+  prefix     = "jayesh"
+  region     = "us-west1"
   project_id = "zenml-core"
   gke = {
     cluster_name = "zenml-terraform-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
-    cluster_version = "1.22"
+    cluster_version      = "1.22"
     service_account_name = "zenml"
   }
   vpc = {
@@ -14,13 +14,13 @@ locals {
   }
 
   gcs = {
-    name = "zenml-artifact-store"
+    name     = "zenml-artifact-store"
     location = "US-WEST1"
   }
 
   seldon = {
-      name = "seldon"
-      namespace = "seldon-system"
+    name      = "seldon"
+    namespace = "seldon-system"
   }
   mlflow = {
     artifact_GCS = "true"
@@ -32,7 +32,7 @@ locals {
     name = "zenml-metadata-store"
     authorized_networks = [
       {
-        name = "all",
+        name  = "all",
         value = "0.0.0.0/0"
       }
     ]
@@ -40,14 +40,14 @@ locals {
   }
 
   container_registry = {
-    region = "eu"  # available options: eu, us, asia
+    region = "eu" # available options: eu, us, asia
   }
 
   artifact_repository = {
-      name = "zenml-kubernetes"
-      enable_container_registry = false
+    name                      = "zenml-kubernetes"
+    enable_container_registry = false
   }
-  
+
   tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix
