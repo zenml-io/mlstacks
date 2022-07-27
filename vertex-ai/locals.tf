@@ -1,8 +1,8 @@
 # config values to use across the module
 locals {
-  prefix     = "jayesh"
-  region     = "us-west1"
-  project_id = "jayesh-vertex"
+  prefix     = "demo"
+  region     = "europe-west3"
+  project_id = "zenml-demos"
 
   vertex_ai = {
     region = "europe-west3" # the location to run your Vertex AI pipelines in
@@ -13,7 +13,7 @@ locals {
   }
 
   cloudsql = {
-    name = "zenml-metadata-store-vertex"
+    name = "zenml-metadata-store-demo"
     authorized_networks = [
       {
         name  = "all",

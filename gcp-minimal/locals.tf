@@ -1,8 +1,8 @@
 # config values to use across the module
 locals {
-  prefix     = "jayesh"
-  region     = "us-west1"
-  project_id = "jayesh-vertex"
+  prefix     = "demo"
+  region     = "europe-west3"
+  project_id = "zenml-demos"
   gke = {
     cluster_name = "zenml-terraform-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
@@ -29,7 +29,7 @@ locals {
   }
 
   cloudsql = {
-    name = "zenml-metadata-store"
+    name = "zenml-metadata-store-demo"
     authorized_networks = [
       {
         name  = "all",
