@@ -4,16 +4,17 @@ module "seldon" {
   source = "./seldon"
 
   # run only after the eks cluster is set up
-  depends_on = [module.gke]
+  depends_on = [module.aks]
 
   # details about the seldon deployment
   seldon_name      = local.seldon.name
   seldon_namespace = local.seldon.namespace
 
-  # details about the cluster
-  cluster_endpoint       = "https://${module.gke.endpoint}"
-  cluster_ca_certificate = data.google_client_config.default.access_token
-  cluster_token          = base64decode(module.gke.ca_certificate)
+  # details about the cluster (not required since the configuration 
+  # in the caller is inherited into the seldon module)
+  cluster_endpoint       = ""
+  cluster_ca_certificate = ""
+  cluster_token          = ""
 }
 
 resource "kubernetes_namespace" "seldon-workloads" {

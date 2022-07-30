@@ -1,21 +1,29 @@
 # config values to use across the module
 locals {
-  prefix     = "jayesh"
+  prefix     = "demo"
   region     = "us-west1"
-  project_id = "zenml-core"
-  gke = {
+  
+  resource_group = {
+    name     = "zenml"
+    location = "West Europe"
+  }
+  aks = {
     cluster_name = "zenml-terraform-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
-    cluster_version      = "1.22"
-    service_account_name = "zenml"
+    cluster_version      = "1.23.5"
+    orchestrator_version = "1.23.5"
   }
   vpc = {
     name = "zenml-vpc"
   }
 
-  gcs = {
-    name     = "zenml-artifact-store"
-    location = "US-WEST1"
+  blob_storage = {
+    account_name     = "zenml-account"
+    container_name   = "zenml-artifact-store"
+  }
+
+  acr = {
+    name = "zenml-container-registry"
   }
 
   seldon = {
@@ -23,9 +31,11 @@ locals {
     namespace = "seldon-system"
   }
   mlflow = {
-    artifact_GCS = "true"
-    # if not set, the bucket created as part of the deployment will be used
-    artifact_GCS_Bucket = ""
+    artifact_Azure = "true"
+    # if not set, the container created as part of the deployment will be used
+    artifact_Azure_Storage_Account_Name = ""
+    # this field is considered only when the storage account above is set
+    artifact_Azure_Container = ""
   }
 
   cloudsql = {

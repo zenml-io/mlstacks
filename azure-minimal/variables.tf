@@ -11,6 +11,14 @@ variable "mlflow-password" {
   type        = string
 }
 
+# this variable only needs to be set if you're using a 
+# pre-exisiting storage account (outside the scope of this recipe).
+variable "mlflow-artifact-Azure-Access-Key" {
+  description = "The access key for your Azure Storage account that you wish to use with MLflow"
+  default = ""
+  type = string
+}
+
 # Variables for the CloudSQL metadata store
 variable "metadata-db-username" {
   description = "The username for the CloudSQL metadata store"
@@ -26,6 +34,6 @@ variable "metadata-db-password" {
 # variables for creating a ZenML stack configuration file
 variable "zenml-version" {
   description = "The version of ZenML being used"
-  default     = "0.10.0"
+  default     = "0.11.0"
   type        = string
 }

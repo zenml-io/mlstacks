@@ -5,18 +5,15 @@ data "azuread_group" "aks_cluster_admins" {
 module "aks" {
   source                           = "Azure/aks/azurerm"
   resource_group_name              = azurerm_resource_group.rg.name
-  kubernetes_version               = "1.23.5"
-  orchestrator_version             = "1.23.5"
-  prefix                           = local.prefix
-  cluster_name                     = local.aks.name
+  kubernetes_version               = local.aks.cluster_version
+  orchestrator_version             = local.aks.orchestrator_version
+  cluster_name                     = "${local.prefix}-${local.aks.cluster_name}"
   network_plugin                   = "azure"
   vnet_subnet_id                   = module.network.vnet_subnets[0]
   os_disk_size_gb                  = 50
   sku_tier                         = "Free"
   enable_role_based_access_control = true
-  rbac_aad_admin_group_object_ids  = [data.azuread_group.aks_cluster_admins.id]
-  rbac_aad_managed                 = true
-  private_cluster_enabled          = true # default value
+
   enable_http_application_routing  = true
   enable_azure_policy              = true
   enable_auto_scaling              = true
@@ -48,4 +45,12 @@ module "aks" {
   net_profile_service_cidr       = "10.0.0.0/16"
 
   depends_on = [module.network]
+}
+
+data "azurerm_kubernetes_cluster" "cluster" {
+  name                = module.aks.cluster_name
+  resource_group_name = azurerm_resource_group.rg.name
+  depends_on = [
+    module.aks
+  ]
 }

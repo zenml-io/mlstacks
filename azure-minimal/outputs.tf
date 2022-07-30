@@ -1,20 +1,26 @@
-# output for the GKE cluster
-output "gke-cluster-name" {
-  value = module.gke.name
+# Resource Group
+output "resource-group-name" {
+  value = azurerm_resource_group.rg.name
 }
 
-# output for the GCS bucket
-output "gcs-bucket-path" {
-  value       = "gs://${google_storage_bucket.artifact-store.name}"
-  description = "The GCS bucket path for storing your artifacts"
+# output for the AKS cluster
+output "aks-cluster-name" {
+  value = module.aks.cluster_name
 }
 
-# outputs for the CloudSQL metadata store
+# output for the Blob Storage Container
+output "blobstorage-container-path" {
+  value       = "az://${azurerm_storage_container.artifact-store.name}"
+  description = "The Azure Blob Storage Container path for storing your artifacts"
+}
+output "storage-account-key" {
+  value = data.azurerm_storage_account.zenml-account.primary_access_key
+  sensitive = true
+}
+
+# outputs for the Flexible MySQL metadata store
 output "metadata-db-host" {
-  value = module.metadata_store.instance_first_ip_address
-}
-output "metadata-db-connection-name" {
-  value = module.metadata_store.instance_connection_name
+  value = "${azurerm_mysql_flexible_server.mysql.name}.mysql.database.azure.com"
 }
 output "metadata-db-username" {
   value     = var.metadata-db-username
@@ -22,19 +28,13 @@ output "metadata-db-username" {
 }
 output "metadata-db-password" {
   description = "The auto generated default user password if not input password was provided"
-  value       = module.metadata_store.generated_user_password
+  value       = azurerm_mysql_flexible_server.mysql.administrator_password
   sensitive   = true
 }
 
-# # output for container registry
-# output "artifact-repository-name" {
-#   value = local.artifact_repository.enable_container_registry ? google_artifact_registry_repository.artifact-repository[0].name : "not enabled"
-#   description = "The artifact registry repository name for storing your images"
-# }
-
 # output for container registry
-output "container-registry-URI" {
-  value = "${local.container_registry.region}.gcr.io/${local.project_id}"
+output "container-registry-URL" {
+  value = azurerm_container_registry.container_registry.login_server
 }
 
 # outputs for the MLflow tracking server

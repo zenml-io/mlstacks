@@ -1,8 +1,9 @@
 # defining the providers for the recipe module
 terraform {
   required_providers {
-    google = {
-      source = "hashicorp/google"
+    azurerm = {
+      source = "hashicorp/azurerm"
+      version = "3.16.0"
     }
 
     local = {
