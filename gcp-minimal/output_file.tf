@@ -16,35 +16,35 @@ resource "local_file" "stack_file" {
         name: gcr_container_registry
         uri: ${local.container_registry.region}.gcr.io/${local.project_id}
       metadata_store:
-        database: zenml_db
+        database: zenml
         flavor: mysql
-        host: ${module.metadata_store.instance_first_ip_address}
-        name: cloudsql_metadata_store
+        host: ${azurerm_mysql_flexible_server.mysql.name}.mysql.database.azure.com}
+        name: azure_mysql_metadata_store
         port: 3306
-        secret: gcp_mysql_secret
+        secret: azure_mysql_secret
         upgrade_migration_enabled: true
       orchestrator:
         flavor: kubernetes
-        name: gke_kubernetes_orchestrator
+        name: aks_kubernetes_orchestrator
         synchronous: True
-        kubernetes_context: gke_${local.project_id}_${local.region}_${module.gke.name}
+        kubernetes_context: terraform-${module.aks.cluster_name}
       secrets_manager:
-        flavor: gcp_secrets_manager
-        name: gcp_secrets_manager
-        project_id: ${local.project_id}
+        flavor: azure
+        name: azure_secrets_manager
+        region_name: ${azurerm_resource_group.rg.location}
       experiment_tracker:
         flavor: mlflow
-        name: gke_mlflow_experiment_tracker
+        name: aks_mlflow_experiment_tracker
         tracking_uri: ${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip}
         tracking_username: ${var.mlflow-username}
         tracking_password: ${var.mlflow-password}
       model_deployer:
         flavor: seldon
-        name: gke_seldon_model_deployer
-        kubernetes_context: gke_${local.project_id}_${local.region}_${module.gke.name}
+        name: aks_seldon_model_deployer
+        kubernetes_context: terraform-${module.aks.cluster_name}
         kubernetes_namespace: ${kubernetes_namespace.seldon-workloads.metadata[0].name}
         base_url: ${data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.ip}
-        secret: gcp_seldon_secret
+        secret: azure_seldon_secret
     ADD
-  filename = "./gcp_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
+  filename = "./azure_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
 }
