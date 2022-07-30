@@ -29,9 +29,9 @@ Slack](https://zenml.io/slack-invite/) and leave us a message!
 
 | Recipe               | Tools installed                                                | Description                                                                       |
 |----------------------|------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| aws-minimal | EKS, S3, ECR, RDS, MLflow Tracking, Seldon  | AWS specific recipe to showcase a production-grade MLOps Stack with an EKS orchestrator, S3 artifact store, ECR container registry, RDS MySQL metadata store,  MLFlow experiment tracker and Seldon Core model deployer |
-| gcp-minimal | GKE, GCS, GCR, CloudSQL, MLflow Tracking, Seldon | GCP specific recipe to showcase a production-grade MLOps Stack with a GKE orchestrator, GCS artifact store, GCR container repository, CloudSQL MySQL metadata store,  MLFlow experiment tracker and Seldon Core model deployer |
-| vertex-ai | Vertex AI Pipelines, GCS, GCR and CloudSQL | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry and CloudSQL MySQL metadata store |
+| aws-minimal | EKS, S3, ECR, RDS, MLflow Tracking, Seldon  | AWS specific recipe to showcase a production-grade MLOps Stack with an EKS orchestrator, S3 artifact store, ECR container registry, RDS MySQL metadata store,  MLflow experiment tracker and Seldon Core model deployer |
+| gcp-minimal | GKE, GCS, GCR, CloudSQL, MLflow Tracking, Seldon | GCP specific recipe to showcase a production-grade MLOps Stack with a GKE orchestrator, GCS artifact store, GCR container repository, CloudSQL MySQL metadata store,  MLflow experiment tracker and Seldon Core model deployer |
+| vertex-ai | Vertex AI Pipelines, GCS, GCR, CloudSQL and (optional) MLflow Tracking | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry, CloudSQL MySQL metadata store and an optional MLflow experiment tracker |
 
 ## ⚗️ How To Use
 

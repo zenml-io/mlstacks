@@ -2,14 +2,15 @@
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
-We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](addlink) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS and GCP supported for now). This recipe, however, goes one step further. 
+We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). This recipe, however, goes one step further. 
 
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
-- A Vertex AI enabled workspace that you can submit your pipelines to.
+- A Vertex AI enabled workspace as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) that you can submit your pipelines to.
 - A service account with all the necessary permissions needed to execute your pipelines.
-- A GCS bucket as an [artifact store](), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- A CloudSQL instance as a [metadata store]() that is essential to track all your metadata and its location in your artifact store.  
-- An Artifact Registry repository as [container registry]() for hosting your docker images.
+- A GCS bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
+- A CloudSQL instance as a [metadata store](https://docs.zenml.io/mlops-stacks/metadata-stores) that is essential to track all your metadata and its location in your artifact store.  
+- A Container Registry repository as [container registry](https://docs.zenml.io/mlops-stacks/container-registries) for hosting your docker images.
+- An optional MLflow Tracking server deployed on a GKE cluster as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers). 
 
 Keep in mind, this is a basic setup to get you up and running on Vertex AI with a minimal MLOps stack and more configuration options are coming in the form of new recipes! 👀
 
@@ -22,6 +23,7 @@ Keep in mind, this is a basic setup to get you up and running on Vertex AI with 
 
 Before starting, you should know the values that you have to keep ready for use in the script. 
 - Check out the `locals.tf` file to configure basic information about your deployments.
+- If you want an MLflow tracking server deployed on a GKE cluster, set the `enable_mlflow` variable to `true` in the `locals.tf` file.
 - Take a look at the `variables.tf` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, etc. You can add these values in the `values.tfvars` file and make sure you don't commit them!
 - If you want to avoid having to type these in, with every  `terraform apply` execution, you can add your values as the `default` inside the definition of each variable. 
 
@@ -72,6 +74,7 @@ seldon-core-workload-namespace | Namespace in which seldon workloads will be cre
 metadata-db-host | The host endpoint of the deployed metadata store |
 metadata-db-username | The username for the database user |
 metadata-db-password | The master password for the database |
+mlflow-tracking-URL  | The MLflow tracking server URL |
 
 For outputs that are sensitive, you'll see that they are not shown directly on the logs. To view the full list of outputs, run the following command.
 

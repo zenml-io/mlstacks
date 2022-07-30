@@ -12,8 +12,8 @@ module "seldon" {
 
   # details about the cluster
   cluster_endpoint       = "https://${module.gke.endpoint}"
-  cluster_ca_certificate = base64decode(module.gke.ca_certificate)
-  cluster_token          = data.google_client_config.default.access_token
+  cluster_ca_certificate = data.google_client_config.default.access_token
+  cluster_token          = base64decode(module.gke.ca_certificate)
 }
 
 resource "kubernetes_namespace" "seldon-workloads" {

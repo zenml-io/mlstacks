@@ -2,14 +2,14 @@
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
-We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](addlink) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS and GCP supported for now). This recipe, however, goes one step further. 
+We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). This recipe, however, goes one step further. 
 
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
-- A GKE cluster that can act as an [orchestrator]() for your workloads.
-- A GCS Bucket as an [artifact store](), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- An CloudSQL instance as a [metadata store]() that is essential to track all your metadata and its location in your artifact store.  
-- An MLflow tracking server as an [experiment tracker]() which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
-- A Seldon Core deployment as a [model deployer]() to have your trained model deployed on a Kubernetes cluster to run inference on. 
+- A GKE cluster that can act as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) for your workloads.
+- A GCS Bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
+- An CloudSQL instance as a [metadata store](https://docs.zenml.io/mlops-stacks/metadata-stores) that is essential to track all your metadata and its location in your artifact store.  
+- An MLflow tracking server as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
+- A Seldon Core deployment as a [model deployer](https://docs.zenml.io/mlops-stacks/model-deployers) to have your trained model deployed on a Kubernetes cluster to run inference on. 
 
 Keep in mind, this is a basic setup to get you up and running on GCP with a minimal MLOps stack and more configuration options are coming in the form of new recipes! 👀
 
