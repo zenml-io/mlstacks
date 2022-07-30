@@ -14,7 +14,7 @@ output "blobstorage-container-path" {
   description = "The Azure Blob Storage Container path for storing your artifacts"
 }
 output "storage-account-key" {
-  value = data.azurerm_storage_account.zenml-account.primary_access_key
+  value     = data.azurerm_storage_account.zenml-account.primary_access_key
   sensitive = true
 }
 

@@ -53,7 +53,7 @@ locals {
     # if not set, the bucket created as part of the deployment will be used
     artifact_GCS_Bucket = ""
   }
-  
+
   tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix

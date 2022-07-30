@@ -18,6 +18,6 @@ resource "azurerm_mysql_flexible_server_firewall_rule" "allow_IPs" {
 }
 
 resource "random_password" "mysql_password" {
-  length           = 12
-  special          = false
+  length  = 12
+  special = false
 }

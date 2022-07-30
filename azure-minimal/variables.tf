@@ -15,8 +15,8 @@ variable "mlflow-password" {
 # pre-exisiting storage account (outside the scope of this recipe).
 variable "mlflow-artifact-Azure-Access-Key" {
   description = "The access key for your Azure Storage account that you wish to use with MLflow"
-  default = ""
-  type = string
+  default     = ""
+  type        = string
 }
 
 # Variables for the CloudSQL metadata store

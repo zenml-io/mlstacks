@@ -1,8 +1,8 @@
 # config values to use across the module
 locals {
-  prefix     = "demo"
-  region     = "us-west1"
-  
+  prefix = "demo"
+  region = "us-west1"
+
   resource_group = {
     name     = "zenml"
     location = "West Europe"
@@ -18,8 +18,8 @@ locals {
   }
 
   blob_storage = {
-    account_name     = "zenml-account"
-    container_name   = "zenml-artifact-store"
+    account_name   = "zenml-account"
+    container_name = "zenml-artifact-store"
   }
 
   acr = {

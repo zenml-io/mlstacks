@@ -14,20 +14,20 @@ module "aks" {
   sku_tier                         = "Free"
   enable_role_based_access_control = true
 
-  enable_http_application_routing  = true
-  enable_azure_policy              = true
-  enable_auto_scaling              = true
-  enable_host_encryption           = true
-  agents_min_count                 = 1
-  agents_max_count                 = 2
-  agents_count                     = null # Please set `agents_count` `null` while `enable_auto_scaling` is `true` to avoid possible `agents_count` changes.
-  agents_max_pods                  = 100
-  agents_pool_name                 = "zenml-nodepool"
-  agents_availability_zones        = ["1", "2"]
-  agents_type                      = "VirtualMachineScaleSets"
+  enable_http_application_routing = true
+  enable_azure_policy             = true
+  enable_auto_scaling             = true
+  enable_host_encryption          = true
+  agents_min_count                = 1
+  agents_max_count                = 2
+  agents_count                    = null # Please set `agents_count` `null` while `enable_auto_scaling` is `true` to avoid possible `agents_count` changes.
+  agents_max_pods                 = 100
+  agents_pool_name                = "zenml-nodepool"
+  agents_availability_zones       = ["1", "2"]
+  agents_type                     = "VirtualMachineScaleSets"
 
   agents_labels = {
-    "nodepool"   : "defaultnodepool"
+    "nodepool" : "defaultnodepool"
     "managed_by" : "terraform"
   }
 
@@ -35,8 +35,8 @@ module "aks" {
     "Agent" : "defaultnodepoolagent"
   }
 
-  enable_ingress_application_gateway = true
-  ingress_application_gateway_name = "aks-agw"
+  enable_ingress_application_gateway      = true
+  ingress_application_gateway_name        = "aks-agw"
   ingress_application_gateway_subnet_cidr = "10.52.1.0/24"
 
   network_policy                 = "azure"
