@@ -27,7 +27,7 @@ resource "local_file" "stack_file" {
         flavor: kubernetes
         name: aks_kubernetes_orchestrator
         synchronous: True
-        kubernetes_context: terraform-${module.aks.cluster_name}
+        kubernetes_context: terraform-${local.prefix}-${local.aks.cluster_name}
       secrets_manager:
         flavor: azure
         name: azure_secrets_manager
@@ -41,7 +41,7 @@ resource "local_file" "stack_file" {
       model_deployer:
         flavor: seldon
         name: aks_seldon_model_deployer
-        kubernetes_context: terraform-${module.aks.cluster_name}
+        kubernetes_context: terraform-${local.prefix}-${local.aks.cluster_name}
         kubernetes_namespace: ${kubernetes_namespace.seldon-workloads.metadata[0].name}
         base_url: ${data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.ip}
         secret: azure_seldon_secret

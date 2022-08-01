@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "zenml-account" {
-  name                     = "${local.prefix}-${local.blob_storage.account_name}"
+  name                     = "${local.prefix}${local.blob_storage.account_name}"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"

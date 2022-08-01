@@ -1,8 +1,8 @@
 resource "azurerm_container_registry" "container_registry" {
-  name                = "${local.prefix}-${local.acr.name}"
+  name                = "${local.prefix}${local.acr.name}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
-  sku                 = "Free"
+  sku                 = "Standard"
 }
 
 resource "azurerm_role_assignment" "aks_acr_access" {

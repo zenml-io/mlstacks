@@ -5,7 +5,7 @@ output "resource-group-name" {
 
 # output for the AKS cluster
 output "aks-cluster-name" {
-  value = module.aks.cluster_name
+  value = "${local.prefix}-${local.aks.cluster_name}"
 }
 
 # output for the Blob Storage Container

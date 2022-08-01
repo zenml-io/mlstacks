@@ -14,16 +14,20 @@ locals {
     orchestrator_version = "1.23.5"
   }
   vpc = {
-    name = "zenml-vpc"
+    name = "zenmlvpc"
   }
 
   blob_storage = {
-    account_name   = "zenml-account"
-    container_name = "zenml-artifact-store"
+    account_name   = "zenmlaccount"
+    container_name = "zenmlartifactstore"
   }
 
   acr = {
-    name = "zenml-container-registry"
+    name = "zenmlcontainerregistry"
+  }
+
+  mysql = {
+    name = "zenmlmetadata"
   }
 
   seldon = {
@@ -36,26 +40,6 @@ locals {
     artifact_Azure_Storage_Account_Name = ""
     # this field is considered only when the storage account above is set
     artifact_Azure_Container = ""
-  }
-
-  cloudsql = {
-    name = "zenml-metadata-store"
-    authorized_networks = [
-      {
-        name  = "all",
-        value = "0.0.0.0/0"
-      }
-    ]
-    require_ssl = true
-  }
-
-  container_registry = {
-    region = "eu" # available options: eu, us, asia
-  }
-
-  artifact_repository = {
-    name                      = "zenml-kubernetes"
-    enable_container_registry = false
   }
 
   tags = {

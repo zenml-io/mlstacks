@@ -22,7 +22,7 @@ variable "mlflow-artifact-Azure-Access-Key" {
 # Variables for the CloudSQL metadata store
 variable "metadata-db-username" {
   description = "The username for the CloudSQL metadata store"
-  default     = "admin"
+  default     = "zenmladmin"
   type        = string
 }
 variable "metadata-db-password" {
