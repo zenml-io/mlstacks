@@ -43,7 +43,7 @@ output "mlflow-tracking-URL" {
 
 # output the name of the stack YAML file created
 output "stack-yaml-path" {
-  value = local.enable_mlflow ? local_file.stack_file_mlflow.filename : local_file.stack_file.filename
+  value = local.enable_mlflow ? local_file.stack_file_mlflow[0].filename : local_file.stack_file[0].filename
 }
 
 # # output for artifact registry repository
