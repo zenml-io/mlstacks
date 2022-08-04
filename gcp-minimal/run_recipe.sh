@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 set -eo pipefail
 
 # Initialise the configuration
