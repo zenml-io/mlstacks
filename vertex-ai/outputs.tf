@@ -41,6 +41,11 @@ output "mlflow-tracking-URL" {
   value = local.enable_mlflow ? data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip : "not enabled"
 }
 
+# output the name of the stack YAML file created
+output "stack-yaml-path" {
+  value = local.enable_mlflow ? local_file.stack_file_mlflow.filename : local_file.stack_file.filename
+}
+
 # # output for artifact registry repository
 # output "artifact-repository-name" {
 #   value = local.artifact_repository.enable_container_registry ? google_artifact_registry_repository.artifact-repository[0].name : "not enabled"
