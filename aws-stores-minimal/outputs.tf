@@ -25,3 +25,8 @@ output "ecr-registry-name" {
   value       = aws_ecr_repository.zenml-ecr-repository[0].name
   description = "The ECR registry repository for storing your images"
 }
+
+# output the name of the stack YAML file created
+output "stack-yaml-path" {
+  value = local_file.stack_file.filename
+}

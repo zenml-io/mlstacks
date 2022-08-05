@@ -24,6 +24,9 @@ main() {
 
   # create a plan and apply automatically
   terraform apply -input=false -auto-approve -var-file="values.tfvars"
+
+  # write the path to the stack YAML file into stack_info.txt
+  terraform output stack-yaml-path > stack_info.txt
 }
 
 msg() {
