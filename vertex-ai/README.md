@@ -10,7 +10,9 @@ You can have a simple MLOps stack ready for running your machine learning worklo
 - A GCS bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
 - A CloudSQL instance as a [metadata store](https://docs.zenml.io/mlops-stacks/metadata-stores) that is essential to track all your metadata and its location in your artifact store.  
 - A Container Registry repository as [container registry](https://docs.zenml.io/mlops-stacks/container-registries) for hosting your docker images.
+- A [secrets manager](https://docs.zenml.io/mlops-stacks/secrets-managers) enabled for storing your secrets. 
 - An optional MLflow Tracking server deployed on a GKE cluster as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers). 
+
 
 Keep in mind, this is a basic setup to get you up and running on Vertex AI with a minimal MLOps stack and more configuration options are coming in the form of new recipes! 👀
 
