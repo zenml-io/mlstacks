@@ -47,6 +47,7 @@ resource "local_file" "stack_file" {
         secret: gcp_kserve_secret
       step_operator:
         flavor: vertex
+        name: gcp_step_op
         project: ${local.project_id}
         region: ${local.region}
     ADD
