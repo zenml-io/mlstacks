@@ -5,16 +5,15 @@ module kserve {
     workloads_namespace = local.kserve.workloads_namespace
 
     depends_on = [
-        module.gke,
+        google_container_cluster.gke,
         null_resource.configure-local-kubectl,
     ]
 }
 
 # add role to allow kubeflow to access kserve
-resource "kubernetes_role_v1" "kflow" {
+resource "kubernetes_cluster_role_v1" "kflow" {
   metadata {
     name = "kserve-permission"
-    namespace = "kubeflow"
     labels = {
         app = "zenml"
     }
@@ -33,15 +32,14 @@ resource "kubernetes_role_v1" "kflow" {
 }
 
 # assign role to kubeflow pipeline runner
-resource "kubernetes_role_binding_v1" "example" {
+resource "kubernetes_cluster_role_binding_v1" "example" {
   metadata {
     name = "kserve-permission-binding"
-    namespace = "kubeflow"
   }
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    kind      = "Role"
-    name      = kubernetes_role_v1.kflow.metadata[0].name
+    kind      = "ClusterRole"
+    name      = kubernetes_cluster_role_v1.kflow.metadata[0].name
   }
   subject {
     kind      = "ServiceAccount"
