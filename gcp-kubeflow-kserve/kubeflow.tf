@@ -28,6 +28,6 @@ resource "null_resource" "kubeflow" {
 
   depends_on = [
     null_resource.configure-local-kubectl,
-    module.gke,
+    google_container_cluster.gke,
   ]
 }

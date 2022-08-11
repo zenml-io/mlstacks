@@ -3,7 +3,7 @@ module "mlflow" {
   source = "./mlflow-module"
 
   # run only after the eks cluster is set up
-  depends_on = [module.gke]
+  depends_on = [google_container_cluster.gke]
 
   # details about the mlflow deployment
   htpasswd            = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"

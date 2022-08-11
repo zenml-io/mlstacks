@@ -27,7 +27,7 @@ resource "local_file" "stack_file" {
         flavor: kubeflow
         name: gke_kubeflow_orchestrator
         synchronous: True
-        kubernetes_context: gke_${local.project_id}_${local.region}_${module.gke.name}
+        kubernetes_context: gke_${local.project_id}_${local.region}_${google_container_cluster.gke.name}
       secrets_manager:
         flavor: gcp_secrets_manager
         name: gcp_secrets_manager
@@ -41,7 +41,7 @@ resource "local_file" "stack_file" {
       model_deployer:
         flavor: kserve
         name: gke_kserve
-        kubernetes_context: gke_${local.project_id}_${local.region}_${module.gke.name}
+        kubernetes_context: gke_${local.project_id}_${local.region}_${google_container_cluster.gke.name}
         kubernetes_namespace: ${local.kserve.workloads_namespace}
         base_url: http://${data.kubernetes_service.kserve_ingress.status.0.load_balancer.0.ingress.0.ip}:${data.kubernetes_service.kserve_ingress.spec.0.port.1.port}
         secret: gcp_kserve_secret
