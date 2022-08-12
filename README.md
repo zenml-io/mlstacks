@@ -72,16 +72,19 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     ```
 3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
-3. 🚀 Deploy the recipe with this simple command.
+4. 🚀 Deploy the recipe with this simple command.
 
     ```shell
     zenml stack recipe deploy <stack-recipe-name>
     ```
-
-4. You'll notice that a ZenML stack configuration file gets created automatically! To use the deployed infrastructure, just run the following command to have all of the resources set as your current stack 🤯.
+    > **Note**
+    > You'll notice that a ZenML stack configuration file gets created 🤯!
+    This command will also import this YAML file as a ZenML stack, using the stack recipe's name by default. You can set your own name by using the `--stack-name` option. 
+    
+5. If you wish to prevent this behaviour and prefer making any modifications to the generated configuration file before importing, pass the `--no-import` flag with the `deploy` command. You can then run the following command to import the resources set as your current stack, manually.
 
     ```shell
-    zenml stack import <path-to-the-created-stack-config-yaml>
+    zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
     ```
 
 To learn more about ZenML and how it empowers you to develop a stack-agnostic MLOps solution, head
