@@ -1,7 +1,6 @@
 *.exe
 *.hcl
 *.info
-*.json
 *.backup
 *.tfstate
 kubeconfig_*
