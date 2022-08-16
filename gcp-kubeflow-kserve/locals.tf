@@ -22,7 +22,7 @@ locals {
     location = "US-WEST1"
   }
 
-    cloudsql = {
+  cloudsql = {
     name = "zenml-kubeflow-metadata-store"
     authorized_networks = [
       {
@@ -40,7 +40,8 @@ locals {
   }
 
   kserve = {
-    workloads_namespace = "zenml-workloads"
+    workloads_namespace  = "zenml-workloads"
+    service_account_name = "kserve-sa"
   }
 
   container_registry = {

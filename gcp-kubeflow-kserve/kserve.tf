@@ -1,13 +1,13 @@
 # create kserve module
-module kserve {
-    source = "./kserve-module"
+module "kserve" {
+  source = "./kserve-module"
 
-    workloads_namespace = local.kserve.workloads_namespace
+  workloads_namespace = local.kserve.workloads_namespace
 
-    depends_on = [
-        google_container_cluster.gke,
-        null_resource.configure-local-kubectl,
-    ]
+  depends_on = [
+    google_container_cluster.gke,
+    null_resource.configure-local-kubectl,
+  ]
 }
 
 # add role to allow kubeflow to access kserve
@@ -15,7 +15,7 @@ resource "kubernetes_cluster_role_v1" "kflow" {
   metadata {
     name = "kserve-permission"
     labels = {
-        app = "zenml"
+      app = "zenml"
     }
   }
 
@@ -46,4 +46,39 @@ resource "kubernetes_cluster_role_binding_v1" "example" {
     name      = "pipeline-runner"
     namespace = "kubeflow"
   }
+}
+
+# service account for Kserve
+resource "google_service_account" "kserve-service-account" {
+  account_id   = local.kserve.service_account_name
+  project      = local.project_id
+  display_name = "Kserve SA"
+}
+resource "google_project_iam_binding" "kserve-storageadmin" {
+  project = local.project_id
+  role    = "roles/storage.admin"
+
+  members = [
+    "serviceAccount:${google_service_account.kserve-service-account.email}",
+  ]
+}
+resource "google_project_iam_binding" "kserve-container-registry" {
+  project = local.project_id
+  role    = "roles/containerregistry.ServiceAgent"
+
+  members = [
+    "serviceAccount:${google_service_account.kserve-service-account.email}",
+  ]
+}
+
+# creating a sa key
+resource "google_service_account_key" "kserve_sa_key" {
+  service_account_id = google_service_account.kserve-service-account.name
+  public_key_type    = "TYPE_X509_PEM_FILE"
+}
+
+# create the credentials file JSON
+resource "local_file" "sa_key_file" {
+  content  = base64decode(google_service_account_key.kserve_sa_key.private_key)
+  filename = "./kserve_sa_key.json"
 }

@@ -49,7 +49,7 @@ output "kserve-workload-namespace" {
 }
 output "kserve-base-url" {
   value = "http://${data.kubernetes_service.kserve_ingress.status.0.load_balancer.0.ingress.0.ip}:${data.kubernetes_service.kserve_ingress.spec.0.port.1.port}"
-  
+
 }
 
 # output the name of the stack YAML file created
