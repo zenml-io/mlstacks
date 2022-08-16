@@ -42,7 +42,7 @@ locals {
     cluster_name = "zenml-terraform-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
     cluster_version      = "1.22"
-    service_account_name = "zenml"
+    service_account_name = "zenml-sa"
   }
   vpc = {
     name = "zenml-vpc"
