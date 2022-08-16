@@ -25,7 +25,7 @@ resource "google_service_account" "gke-service-account" {
   display_name = "Terraform GKE SA"
 }
 
-resource "google_project_iam_binding" "container-registry" {
+resource "google_project_iam_binding" "gke-container-registry" {
   project = local.project_id
   role    = "roles/containerregistry.ServiceAgent"
 
@@ -34,7 +34,7 @@ resource "google_project_iam_binding" "container-registry" {
   ]
 }
 
-resource "google_project_iam_binding" "secret-manager" {
+resource "google_project_iam_binding" "gke-secret-manager" {
   project = local.project_id
   role    = "roles/secretmanager.admin"
 
@@ -43,7 +43,7 @@ resource "google_project_iam_binding" "secret-manager" {
   ]
 }
 
-resource "google_project_iam_binding" "cloudsql" {
+resource "google_project_iam_binding" "gke-cloudsql" {
   project = local.project_id
   role    = "roles/cloudsql.admin"
 
@@ -52,7 +52,7 @@ resource "google_project_iam_binding" "cloudsql" {
   ]
 }
 
-resource "google_project_iam_binding" "storageadmin" {
+resource "google_project_iam_binding" "gke-storageadmin" {
   project = local.project_id
   role    = "roles/storage.admin"
 
