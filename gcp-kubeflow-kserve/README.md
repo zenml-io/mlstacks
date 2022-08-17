@@ -143,24 +143,27 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     ```shell
     zenml stack recipe pull <stack-recipe-name>
     ```
+3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
-3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file. Make sure you add the correct GCP project in the `project_id` variable.
+4. ⚙️ Make sure that have the `gcp`, `kubeflow`, `kserve` and `mlflow` integrations installed, without which the stack import would fail.
 
-4. 🚀 Deploy the recipe with this simple command.
+    ```shell
+    zenml integration install gcp kubeflow kserve mlflow
+    ```
+
+5. 🚀 Deploy the recipe with this simple command.
 
     ```shell
     zenml stack recipe deploy <stack-recipe-name>
     ```
-    In case you get a `PermissionDenied` error while executing this command, simply make the file mentioned in the error executable by running the following command.
+    > **Note**
+    > You'll notice that a ZenML stack configuration file gets created 🤯!
+    This command will also import this YAML file as a ZenML stack, using the stack recipe's name by default. You can set your own name by using the `--stack-name` option. 
+    
+6. If you wish to prevent this behaviour and prefer making any modifications to the generated configuration file before importing, pass the `--no-import` flag with the `deploy` command. You can then run the following command to import the resources set as your current stack, manually.
 
     ```shell
-    sudo chmod +x <path-to-file>
-    ```
-
-5. You'll notice that a ZenML stack configuration file gets created automatically! To use the deployed infrastructure, just run the following command to have all of the resources set as your current stack 🤯.
-
-    ```shell
-    zenml stack import <path-to-the-created-stack-config-yaml>
+    zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
     ```
 
 To learn more about ZenML and how it empowers you to develop a stack-agnostic MLOps solution, head
