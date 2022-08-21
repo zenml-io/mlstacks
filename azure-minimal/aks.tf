@@ -33,12 +33,11 @@ module "aks" {
 
   enable_ingress_application_gateway      = true
   ingress_application_gateway_name        = "aks-agw"
-  ingress_application_gateway_subnet_cidr = "10.0.6.0/24"
+  ingress_application_gateway_subnet_cidr = "10.14.0.0/16"
 
-  network_policy                 = "azure"
-  net_profile_dns_service_ip     = "10.1.6.0"
-  net_profile_docker_bridge_cidr = "170.10.0.1/16"
-  net_profile_service_cidr       = "10.1.0.0/16"
+  net_profile_dns_service_ip              = "10.10.0.10"
+  net_profile_docker_bridge_cidr          = "170.10.0.1/16"
+  net_profile_service_cidr                = "10.10.0.0/16"
 
   depends_on = [module.network]
 }
