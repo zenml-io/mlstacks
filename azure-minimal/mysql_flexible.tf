@@ -8,6 +8,9 @@ resource "azurerm_mysql_flexible_server" "mysql" {
   delegated_subnet_id    = azurerm_subnet.mysql_vnet.id
   private_dns_zone_id    = azurerm_private_dns_zone.mysql_dns.id
   sku_name               = "B_Standard_B1s"
+  depends_on = [
+    azurerm_private_dns_zone_virtual_network_link.dns_link
+  ]
 }
 
 resource "azurerm_mysql_flexible_server_firewall_rule" "allow_IPs" {
