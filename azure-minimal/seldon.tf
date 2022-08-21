@@ -3,7 +3,7 @@
 module "seldon" {
   source = "./seldon"
 
-  # run only after the eks cluster is set up
+  # run only after the aks cluster is set up
   depends_on = [module.aks]
 
   # details about the seldon deployment
