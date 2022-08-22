@@ -29,13 +29,13 @@ resource "local_file" "stack_file" {
         synchronous: True
         kubernetes_context: ${local.kubectl_context}
       secrets_manager:
-        flavor: azure
+        flavor: azure_key_vault
         name: azure_secrets_manager
-        region_name: ${azurerm_resource_group.rg.location}
+        key_vault_name: ${azurerm_key_vault.secret_manager.name}
       experiment_tracker:
         flavor: mlflow
         name: aks_mlflow_experiment_tracker
-        tracking_uri: ${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip}
+        tracking_uri: http://${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip}
         tracking_username: ${var.mlflow-username}
         tracking_password: ${var.mlflow-password}
       model_deployer:

@@ -37,6 +37,11 @@ output "container-registry-URL" {
   value = azurerm_container_registry.container_registry.login_server
 }
 
+# key-vault name
+output "key-vault-name" {
+  value = azurerm_key_vault.secret_manager.name
+}
+
 # outputs for the MLflow tracking server
 output "ingress-controller-name" {
   value = module.mlflow.ingress-controller-name

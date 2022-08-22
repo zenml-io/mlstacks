@@ -30,6 +30,10 @@ locals {
     name = "zenmlmetadata"
   }
 
+  key_vault = {
+    name = "zenmlsecrets"
+  }
+
   seldon = {
     name      = "seldon"
     namespace = "seldon-system"
