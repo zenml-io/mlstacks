@@ -1,5 +1,4 @@
 # a default (non-aliased) provider configuration for "kubernetes"
-# not defining the kubernetes provider throws an error while running the eks module
 provider "kubernetes" {
   host = data.azurerm_kubernetes_cluster.cluster.kube_config.0.host
 

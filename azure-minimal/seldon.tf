@@ -4,7 +4,7 @@ module "seldon" {
   source = "./seldon"
 
   # run only after the aks cluster is set up
-  depends_on = [module.aks]
+  depends_on = [azurerm_kubernetes_cluster.aks]
 
   # details about the seldon deployment
   seldon_name      = local.seldon.name

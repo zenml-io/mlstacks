@@ -4,7 +4,7 @@ resource "null_resource" "configure-local-kubectl" {
     command = "az aks get-credentials --resource-group ${azurerm_resource_group.rg.name} --name ${local.prefix}-${local.aks.cluster_name} --context ${local.kubectl_context} --overwrite-existing"
   }
   depends_on = [
-    module.aks
+    azurerm_kubernetes_cluster.aks
   ]
 }
 

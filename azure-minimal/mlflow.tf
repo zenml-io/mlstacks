@@ -3,7 +3,7 @@ module "mlflow" {
   source = "./mlflow-module"
 
   # run only after the eks cluster is set up
-  depends_on = [module.aks]
+  depends_on = [azurerm_kubernetes_cluster.aks]
 
   # details about the mlflow deployment
   htpasswd                            = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
