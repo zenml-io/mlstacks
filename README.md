@@ -73,18 +73,21 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     ```
 3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
-4. 🚀 Deploy the recipe with this simple command.
+4. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
 
-    ```shell
+5. 🚀 Deploy the recipe with this simple command.
+
+    ```
     zenml stack recipe deploy <stack-recipe-name>
     ```
-    > **Note**
-    > You'll notice that a ZenML stack configuration file gets created 🤯!
-    This command will also import this YAML file as a ZenML stack, using the stack recipe's name by default. You can set your own name by using the `--stack-name` option. 
-    
-5. If you wish to prevent this behaviour and prefer making any modifications to the generated configuration file before importing, pass the `--no-import` flag with the `deploy` command. You can then run the following command to import the resources set as your current stack, manually.
 
-    ```shell
+    > **Note**
+    > If you want to allow ZenML to automatically import the created resources as a ZenML stack, pass the `--import` flag to the command above. By default, the imported stack will have the same name as the stack recipe and you can provide your own with the `--stack-name` option.
+    
+
+6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
+
+    ```
     zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
     ```
 
