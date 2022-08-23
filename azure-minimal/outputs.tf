@@ -13,9 +13,14 @@ output "blobstorage-container-path" {
   value       = "az://${azurerm_storage_container.artifact-store.name}"
   description = "The Azure Blob Storage Container path for storing your artifacts"
 }
+output "storage-account-name" {
+  value = local.blob_storage.account_name
+  description = "The name of the Azure Blob Storage account name"
+}
 output "storage-account-key" {
   value     = data.azurerm_storage_account.zenml-account.primary_access_key
   sensitive = true
+  description = "The Azure Blob Storage account key"
 }
 
 # outputs for the Flexible MySQL metadata store
