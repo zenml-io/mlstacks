@@ -16,7 +16,7 @@ variable "mlflow-username" {
 }
 variable "mlflow-password" {
   description = "The password for the MLflow Tracking Server"
-  default     = ""
+  default     = "supersafepassword"
   type        = string
 }
 
