@@ -10,6 +10,7 @@ resource "local_file" "stack_file" {
       artifact_store:
         flavor: azure
         name: azure_artifact_store
+        authentication_secret: azure-storage-secret
         path: az://${azurerm_storage_container.artifact-store.name}
       container_registry:
         flavor: azure
@@ -21,7 +22,7 @@ resource "local_file" "stack_file" {
         host: ${azurerm_mysql_flexible_server.mysql.name}.mysql.database.azure.com}
         name: azure_mysql_metadata_store
         port: 3306
-        secret: azure_mysql_secret
+        secret: azure-mysql-secret
         upgrade_migration_enabled: true
       orchestrator:
         flavor: kubernetes
@@ -44,7 +45,7 @@ resource "local_file" "stack_file" {
         kubernetes_context: ${local.kubectl_context}
         kubernetes_namespace: ${kubernetes_namespace.seldon-workloads.metadata[0].name}
         base_url: ${data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.ip}
-        secret: azure_seldon_secret
+        secret: azure-seldon-secret
     ADD
   filename = "./azure_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
 }
