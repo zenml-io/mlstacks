@@ -1,14 +1,14 @@
 # config values to use across the module
 locals {
-  prefix = "demo"
+  prefix = "kflow"
   region = "eu-west-1"
   eks = {
-    cluster_name = "zenml-terraform-cluster"
+    cluster_name = "zenml-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
     cluster_version = "1.22"
   }
   vpc = {
-    name = "zenml-vpc"
+    name = "vpc"
   }
 
   kubeflow = {
@@ -16,7 +16,7 @@ locals {
   }
 
   s3 = {
-    name = "zenml-artifact-store"
+    name = "artifact-store"
   }
 
   kserve = {
@@ -30,12 +30,12 @@ locals {
   }
 
   ecr = {
-    name                      = "zenml-kubernetes"
+    name                      = "zenml-kubeflow"
     enable_container_registry = true
   }
 
   rds = {
-    rds_name   = "zenml-rds"
+    rds_name   = "rds"
     db_name    = "zenmldb"
     db_type    = "mysql"
     db_version = "8.0.28"
