@@ -163,3 +163,19 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 
 To learn more about ZenML and how it empowers you to develop a stack-agnostic MLOps solution, head
 over to the [ZenML docs](https://docs.zenml.io).
+
+terraform output storage-account-name
+terraform output storage-account-key
+
+terraform output metadata-db-username
+terraform output metadata-db-password
+
+
+zenml secrets-manager secret register azure-storage-secret --schema=azure --account_name=zenmlaccount --account_key=0vLRIDTCLqejqNmWFSzX95EIyQhPZzoEvE7fLyA6WPHhzNy0/Fb8Ehdx87Mroix87rcImSbWwaOa+AStauXEgA==
+
+//  Download certificate from portal under flexible server
+zenml secrets-manager secret register azure-mysql-secret --schema=mysql --user=zenmladmin --password=C46V1FzTRRjQ --ssl_ca=@"/mnt/c/Users/wjaye/Downloads/DigiCertGlobalRootCA.crt.pem"
+
+zenml secrets-manager secret register -s seldon_azure azure-seldon-secret --rclone_config_azureblob_account=zenmlaccount --rclone_config_azureblob_key=0vLRIDTCLqejqNmWFSzX95EIyQhPZzoEvE7fLyA6WPHhzNy0/Fb8Ehdx87Mroix87rcImSbWwaOa+AStauXEgA==
+
+az keyvault set-policy --name zenmlsecrets --object-id 46fdd839-56a0-4571-bf15-fb38657d7c26 --secret-permissions get list set delete --key-permissions create delete get list
