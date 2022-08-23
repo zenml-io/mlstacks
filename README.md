@@ -29,9 +29,10 @@ Slack](https://zenml.io/slack-invite/) and leave us a message!
 
 | Recipe               | Tools installed                                                | Description                                                                       |
 |----------------------|------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| aws-kubeflow-kserve | Kubeflow on EKS, S3, ECR, RDS, MLflow Tracking, Kserve | A recipe that creates a Kubeflow pipelines cluster as orchestrator, S3 artifact store, ECR container registry, RDS MySQL metadata store,  MLflow experiment tracker and Kserve model deployer |
 | aws-minimal | EKS, S3, ECR, RDS, MLflow Tracking, Seldon  | AWS specific recipe to showcase a production-grade MLOps Stack with an EKS orchestrator, S3 artifact store, ECR container registry, RDS MySQL metadata store,  MLflow experiment tracker and Seldon Core model deployer |
 | aws-stores-minimal | S3, RDS, ECR | A simple recipe to spin up an RDS MySQL metadata store, S3 artifact store and an ECR container registry |
-| gcp-kubeflow-kserve | Kubeflow on GKE, S3, RDS, ECR, MLflow Tracking, Kserve, Vertex | A recipe that creates a Kubeflow pipelines cluster as orchestrator, S3 artifact store, ECR container registry, RDS MySQL metadata store,  MLflow experiment tracker, Kserve model deployer and option for Vertex AI as a step operator |
+| gcp-kubeflow-kserve | Kubeflow on GKE, GCS, CloudSQL, GCR, MLflow Tracking, Kserve, Vertex | A recipe that creates a Kubeflow pipelines cluster as orchestrator, GCS artifact store, GCR container registry, CloudSQL MySQL metadata store,  MLflow experiment tracker, Kserve model deployer and option for Vertex AI as a step operator |
 | gcp-minimal | GKE, GCS, GCR, CloudSQL, MLflow Tracking, Seldon | GCP specific recipe to showcase a production-grade MLOps Stack with a GKE orchestrator, GCS artifact store, GCR container repository, CloudSQL MySQL metadata store,  MLflow experiment tracker and Seldon Core model deployer |
 | vertex-ai | Vertex AI Pipelines, GCS, GCR, CloudSQL and (optional) MLflow Tracking | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry, CloudSQL MySQL metadata store and an optional MLflow experiment tracker |
 
