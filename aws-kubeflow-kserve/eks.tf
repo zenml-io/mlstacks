@@ -20,7 +20,7 @@ module "eks" {
 
   node_groups = {
     main = {
-      desired_capacity = 1
+      desired_capacity = 2
       max_capacity     = 4
       min_capacity     = 1
 
@@ -39,6 +39,10 @@ module "eks" {
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
     "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
     "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+  ]
+
+  depends_on = [
+    module.vpc
   ]
 }
 data "aws_eks_cluster" "cluster" {
