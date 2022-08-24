@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+permissions:
+      id-token: write
+      contents: read
+
 jobs:
   aws_test:
     name: aws_test
@@ -99,4 +103,30 @@ jobs:
         uses: dflook/terraform-plan@v1
         with:
           path: ./vertex-ai
+          add_github_comment: false
+
+  azure-test:
+    name: azure-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+            client-id: ${{ secrets.AZURE_CLIENT_ID }}
+            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: terraform validate
+        uses: dflook/terraform-validate@v1
+        with:
+          path: ./azure-minimal
+
+      - name: terraform fmt
+        uses: dflook/terraform-fmt-check@v1
+        with:
+          path: ./azure-minimal
+
+      - name: terraform plan
+        uses: dflook/terraform-plan@v1
+        with:
+          path: ./azure-minimal
           add_github_comment: false
