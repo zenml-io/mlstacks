@@ -25,13 +25,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: terraform validate
-        uses: dflook/terraform-validate@v1
+      - name: terraform fmt
+        uses: dflook/terraform-fmt-check@v1
         with:
           path: ./aws-minimal
 
-      - name: terraform fmt
-        uses: dflook/terraform-fmt-check@v1
+      - name: terraform validate
+        uses: dflook/terraform-validate@v1
         with:
           path: ./aws-minimal
 
@@ -57,13 +57,13 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
 
-      - name: terraform validate
-        uses: dflook/terraform-validate@v1
-        with:
-          path: ./gcp-minimal
-
       - name: terraform fmt
         uses: dflook/terraform-fmt-check@v1
+        with:
+          path: ./gcp-minimal      
+      
+      - name: terraform validate
+        uses: dflook/terraform-validate@v1
         with:
           path: ./gcp-minimal
 
@@ -89,13 +89,13 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
 
-      - name: terraform validate
-        uses: dflook/terraform-validate@v1
+      - name: terraform fmt
+        uses: dflook/terraform-fmt-check@v1
         with:
           path: ./vertex-ai
 
-      - name: terraform fmt
-        uses: dflook/terraform-fmt-check@v1
+      - name: terraform validate
+        uses: dflook/terraform-validate@v1
         with:
           path: ./vertex-ai
 
@@ -109,19 +109,23 @@ jobs:
     name: azure-test
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
       - name: 'Az CLI login'
         uses: azure/login@v1
         with:
             client-id: ${{ secrets.AZURE_CLIENT_ID }}
             tenant-id: ${{ secrets.AZURE_TENANT_ID }}
             subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      - name: terraform validate
-        uses: dflook/terraform-validate@v1
-        with:
-          path: ./azure-minimal
 
       - name: terraform fmt
         uses: dflook/terraform-fmt-check@v1
+        with:
+          path: ./azure-minimal
+
+      - name: terraform validate
+        uses: dflook/terraform-validate@v1
         with:
           path: ./azure-minimal
 
