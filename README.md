@@ -37,22 +37,6 @@ Slack](https://zenml.io/slack-invite/) and leave us a message!
 | gcp-minimal | GKE, GCS, GCR, CloudSQL, MLflow Tracking, Seldon | GCP specific recipe to showcase a production-grade MLOps Stack with a GKE orchestrator, GCS artifact store, GCR container repository, CloudSQL MySQL metadata store,  MLflow experiment tracker and Seldon Core model deployer |
 | vertex-ai | Vertex AI Pipelines, GCS, GCR, CloudSQL and (optional) MLflow Tracking | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry, CloudSQL MySQL metadata store and an optional MLflow experiment tracker |
 
-## ⚗️ How To Use
-
-Running a recipe is a matter of two simple commands. You can clone the repository, and for a chosen
-recipe of your choice execute:
-
-> **Note**
-> You need to have credentials for a chosen cloud provider set up before running.
-
-```
-terraform init
-```
-
-```
-terraform apply
-```
-
 ## 🙏 Association with ZenML
 
 [![maintained-by-zenml](https://user-images.githubusercontent.com/3348134/173032050-ad923313-f2ce-4583-b27a-afcaa8b355e2.png)](https://github.com/zenml-io/zenml)
@@ -61,7 +45,7 @@ It is not neccessary to use the MLOps stacks recipes presented here alongisde th
 [ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
 directly.
 
-However, ZenML works seamlessly with the infrastructure provisioned through these recipes. The ZenML CLI has an integration with this repository that makes it really simple to pull and deploy these recipes. A simple flow could look like the following:
+However, ZenML works seamlessly with the infrastructure provisioned through these recipes. The ZenML CLI has an integration with this repository that makes it really simple to pull and deploy these recipes. Detailed steps are available in the READMEs of respective recipes but a simple flow could look like the following:
 
 1. 📃 List the available recipes in the repository.
 
@@ -71,7 +55,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 2. Pull the recipe that you wish to deploy, to your local system.
 
     ```shell
-    zenml stack recipe pull <stack-recipe-name>
+    zenml stack recipe pull <STACK_RECIPE_NAME>
     ```
 3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
@@ -80,7 +64,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 5. 🚀 Deploy the recipe with this simple command.
 
     ```
-    zenml stack recipe deploy <stack-recipe-name>
+    zenml stack recipe deploy <STACK_RECIPE_NAME>
     ```
 
     > **Note**
@@ -90,11 +74,28 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
 
     ```
-    zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
+    zenml stack import <STACK_NAME> <PATH_TO_THE_CREATED_STACK_CONFIG_YAML>
     ```
 
 To learn more about ZenML and how it empowers you to develop a stack-agnostic MLOps solution, head
 over to the [ZenML docs](https://docs.zenml.io).
+
+## ⚗️ Using recipes with Terraform
+
+Running a recipe is a matter of two simple commands. You can clone the repository, and for a chosen
+recipe of your choice execute:
+
+```
+terraform init
+```
+
+```
+terraform apply
+```
+
+> **Note**
+> You need to have credentials for a chosen cloud provider set up before running.
+
 
 ## 🎉 Acknowledgements
 
