@@ -37,3 +37,11 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dns_link" {
   private_dns_zone_name = azurerm_private_dns_zone.mysql_dns.name
   virtual_network_id    = module.network.vnet_id
 }
+
+# download SSL certificate
+resource "null_resource" "download-SSL-certificate" {
+  provisioner "local-exec" {
+    command = "wget https://dl.cacerts.digicert.com/DigiCertGlobalRootCA.crt.pem"
+  }
+
+}
