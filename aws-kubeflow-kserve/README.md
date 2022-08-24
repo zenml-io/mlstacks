@@ -76,6 +76,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 
 To make the imported ZenML stack work, you'll have to create secrets that some stack components need. If you inspect the generated YAML file, you can figure out that two secrets should be created:
 - `aws_mysql_secret` - for allowing access to the RDS MySQL instance.
+
     - Go into your imported recipe directory. It should be under `zenml_stack_recipes/aws-kubeflow-kserve`.
     - Run the following commands to get the username and password for the RDS instance.
         ```
@@ -88,6 +89,7 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
         zenml secrets-manager secret register aws_mysql_secret --schema=mysql --user=<USERNAME> --password=<PASSWORD>
         ```
 - `aws_kserve_secret` - for allowing KServe access to your S3 bucket.
+ 
     - We're going to use an AWS credentials file for this. Make sure that the credentials you have in your file have access to S3.
     - Locate the file and note its path. Also, make sure it has a "[default]" section. If not, rename the section to "default". The file should look like the following.
         ```
@@ -97,7 +99,7 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
         ```
     - Create the ZenML secret using this command. The path is usually `~/.aws/credentials` in Linux and under the `%UserProfile%` directory in Windows with the same name.
         ```
-        zenml secrets-manager secret register -s kserve_s3 aws_kserve_secret --credentials="@<PATH-TO-CREDENTIALS-FILE>"
+        zenml secrets-manager secret register -s kserve_s3 aws_kserve_secret --credentials=@"<PATH-TO-CREDENTIALS-FILE>"
         ```
 
 
