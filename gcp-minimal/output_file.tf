@@ -16,7 +16,7 @@ resource "local_file" "stack_file" {
         name: gcr_container_registry
         uri: ${local.container_registry.region}.gcr.io/${local.project_id}
       metadata_store:
-        database: zenml_db
+        database: zenml
         flavor: mysql
         host: ${module.metadata_store.instance_first_ip_address}
         name: cloudsql_metadata_store
