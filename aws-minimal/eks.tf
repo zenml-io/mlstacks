@@ -40,6 +40,10 @@ module "eks" {
     "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
     "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
   ]
+
+  depends_on = [
+    module.vpc
+  ]
 }
 data "aws_eks_cluster" "cluster" {
   name = module.eks.cluster_id

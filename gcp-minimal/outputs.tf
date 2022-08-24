@@ -1,6 +1,6 @@
 # output for the GKE cluster
 output "gke-cluster-name" {
-  value = module.gke.name
+  value = google_container_cluster.gke.name
 }
 
 # output for the GCS bucket
@@ -59,5 +59,10 @@ output "seldon-prediction-spec" {
 }
 output "seldon-base-url" {
   value = data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.ip
+}
+
+# output the name of the stack YAML file created
+output "stack-yaml-path" {
+  value = local_file.stack_file.filename
 }
   

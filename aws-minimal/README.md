@@ -10,6 +10,7 @@ You can have a simple MLOps stack ready for running your pipelines after you exe
 - An AWS RDS MySQL instance as a [metadata store](https://docs.zenml.io/mlops-stacks/metadata-stores) that is essential to track all your metadata and its location in your artifact store.  
 - An MLflow tracking server as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
 - A Seldon Core deployment as a [model deployer](https://docs.zenml.io/mlops-stacks/model-deployers) to have your trained model deployed on a Kubernetes cluster to run inference on. 
+- A [secrets manager](https://docs.zenml.io/mlops-stacks/secrets-managers) enabled for storing your secrets. 
 
 Keep in mind, this is a basic setup to get you up and running on AWS with a minimal MLOps stack and more configuration options are coming in the form of new recipes! 👀
 
@@ -23,18 +24,8 @@ Keep in mind, this is a basic setup to get you up and running on AWS with a mini
 
 Before starting, you should know the values that you have to keep ready for use in the script. 
 - Check out the `locals.tf` file to configure basic information about your deployments.
-- Take a look at the `variables.tf` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, AWS access keys, etc. You can add these values in the `values.tfvars` file and make sure you don't commit them!
-- If you want to avoid having to type these in, with every  `terraform apply` execution, you can add your values as the `default` inside the definition of each variable. 
+- Take a look at the `values.tfvars.json` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, AWS access keys, etc. Make sure you don't commit them!
 
-    As an example, we've set the default value of `metadata-db-username` as "admin" to avoid having to supply it repeatedly. 
-
-    ```hcl
-    variable "metadata-db-username" {
-      description = "The username for the AWS RDS metadata store"
-      default = "admin"
-      type = string
-    }
-    ```
 > **Warning** 
 > The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
 
@@ -43,17 +34,37 @@ Before starting, you should know the values that you have to keep ready for use 
 
 ## 🧑‍🍳 Cooking the recipe
 
-After customizing the script using your values, run the following commands.
+It is not neccessary to use the MLOps stacks recipes presented here alongisde the
+[ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
+directly.
 
+However, ZenML works seamlessly with the infrastructure provisioned through these recipes. The ZenML CLI has an integration with this repository that makes it really simple to pull and deploy these recipes. A simple flow could look like the following:
 
+1. Pull this recipe to your local system.
 
-```bash
-terraform init
-```
+    ```shell
+    zenml stack recipe pull aws-minimal
+    ```
+2. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
-```bash
-terraform apply
-```
+3. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
+
+5. 🚀 Deploy the recipe with this simple command.
+
+    ```
+    zenml stack recipe deploy aws-minimal
+    ```
+
+    > **Note**
+    > If you want to allow ZenML to automatically import the created resources as a ZenML stack, pass the `--import` flag to the command above. By default, the imported stack will have the same name as the stack recipe and you can provide your own with the `--stack-name` option.
+    
+
+6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
+
+    ```
+    zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
+    ```
+
 
 > **Note**
 >
@@ -88,20 +99,67 @@ terraform output metadata-db-password
 ```
 ## Deleting Resources
 
-Usually, the simplest way to delete all resources deployed by Terraform is to run the `terraform destroy` command 🤯. In this case, however, due to existing problems with Kubernetes and Terraform, there might be some resources that get stuck in the `Terminating` state forever. 
+Using the ZenML stack recipe CLI commands, you can run the following commands to delete your resources and optionally clean up the recipe files that you had downloaded to your local system.
 
-To combat this, there's a script in the root directory, by the name `cleanup.sh` which can be run instead. It will internally run the destroy command along with commands to clean up any dangling resources!
+1. 🗑️ Run the destroy command which removes all resources and their dependencies from the cloud.
 
-> **Note**
->
-> While deleting the metadata store, the Options Group might not get deleted straight away. If that happens, wait for around 30 mins and run `terraform destroy` again.
+    ```shell
+    zenml stack recipe destroy aws-minimal
+    ```
 
-## Known Problems
+2. (Optional) 🧹 Clean up all stack recipe files that you had pulled to your local system.
+
+    ```shell
+    zenml stack recipe clean
+    ```
+
+
+In the case of this recipe, due to existing problems with Kubernetes and Terraform, there might be some resources that get stuck in the `Terminating` state forever. 
+
+To combat this, either delete the Kubernetes nodes from the cloud console directly (recommended) or run the following command after double-checking that your local `kubectl` client is configured to talk to the created cluster. 
+
+```bash
+# WARNING: only run this when you are sure that kubectl points to the right cluster.
+kubectl delete node --all
+```
+
+## Using the recipes without the ZenML CLI
+
+As mentioned above, you can still use the recipe without having using the `zenml stack recipe` CLI commands or even without installing ZenML. Since each recipe is a group of Terraform modules, you can simply employ the terraform CLI to perform `apply` and `destroy` operations.
+
+### Create the resources
+
+1. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
+
+2. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
+
+3. Initiliaze Terraform modules and download provider definitions.
+    ```bash
+    terraform init
+    ```
+
+4. Apply the recipe.
+    ```bash
+    terraform apply
+    ```
+
+### Deleting resources
+
+1. 🗑️ Run the destroy function to clean up all resources.
+
+    ```
+    terraform destroy
+    ```
+
+
+## Troubleshoot Known Problems
+
+These are some known problems that might arise out of running this recipe. Some of these 
+are terraform commands but running `zenml stack recipe apply` would also achieve similar results as `terraform init` and `terraform apply`.
 
 * Running the script for the first time might result in an error with one of the resources - the Istio Ingressway. This is because of a limitation with the resource `kubectl_manifest` that needs the cluster to be set up before it installs its own resources.
 \
     💡 Fix - Run `terraform apply` again in a few minutes and this should get resolved.    
-
 
 
 *  When executing terraform commands, an error like this one: `timeout while waiting for plugin to start` 
@@ -117,42 +175,3 @@ To combat this, there's a script in the root directory, by the name `cleanup.sh`
     💡 Fix - This problem could arise due to strained system resources. Try running the command again after some time.
     
     
-## Registering a ZenML Stack ✨
-
-It is not neccessary to use the MLOps stacks recipes presented here alongisde the
-[ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
-directly.
-
-However, ZenML works seamlessly with the infrastructure provisioned through these recipes. The ZenML CLI has an integration with this repository that makes it really simple to pull and deploy these recipes. A simple flow could look like the following:
-
-1. 📃 List the available recipes in the repository.
-
-    ```shell
-    zenml stack recipe list
-    ```
-2. Pull the recipe that you wish to deploy, to your local system.
-
-    ```shell
-    zenml stack recipe pull <stack-recipe-name>
-    ```
-3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
-
-4. 🚀 Deploy the recipe with this simple command.
-
-    ```shell
-    zenml stack recipe deploy <stack-recipe-name>
-    ```
-    In case you get a `PermissionDenied` error while executing this command, simply make the file mentioned in the error executable by running the following command.
-
-    ```shell
-    sudo chmod +x <path-to-file>
-    ```
-
-5. You'll notice that a ZenML stack configuration file gets created automatically! To use the deployed infrastructure, just run the following command to have all of the resources set as your current stack 🤯.
-
-    ```shell
-    zenml stack import <path-to-the-created-stack-config-yaml>
-    ```
-
-To learn more about ZenML and how it empowers you to develop a stack-agnostic MLOps solution, head
-over to the [ZenML docs](https://docs.zenml.io).

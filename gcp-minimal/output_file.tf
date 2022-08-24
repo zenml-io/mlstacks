@@ -27,7 +27,7 @@ resource "local_file" "stack_file" {
         flavor: kubernetes
         name: gke_kubernetes_orchestrator
         synchronous: True
-        kubernetes_context: gke_${local.project_id}_${local.region}_${module.gke.name}
+        kubernetes_context: gke_${local.project_id}_${local.region}_${google_container_cluster.gke.name}
       secrets_manager:
         flavor: gcp_secrets_manager
         name: gcp_secrets_manager
@@ -35,13 +35,13 @@ resource "local_file" "stack_file" {
       experiment_tracker:
         flavor: mlflow
         name: gke_mlflow_experiment_tracker
-        tracking_uri: ${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip}
+        tracking_uri: http://${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip}
         tracking_username: ${var.mlflow-username}
         tracking_password: ${var.mlflow-password}
       model_deployer:
         flavor: seldon
         name: gke_seldon_model_deployer
-        kubernetes_context: gke_${local.project_id}_${local.region}_${module.gke.name}
+        kubernetes_context: gke_${local.project_id}_${local.region}_${google_container_cluster.gke.name}
         kubernetes_namespace: ${kubernetes_namespace.seldon-workloads.metadata[0].name}
         base_url: ${data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.ip}
         secret: gcp_seldon_secret

@@ -29,7 +29,10 @@ Slack](https://zenml.io/slack-invite/) and leave us a message!
 
 | Recipe               | Tools installed                                                | Description                                                                       |
 |----------------------|------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| aws-kubeflow-kserve | Kubeflow on EKS, S3, ECR, RDS, MLflow Tracking, Kserve | A recipe that creates a Kubeflow pipelines cluster as orchestrator, S3 artifact store, ECR container registry, RDS MySQL metadata store,  MLflow experiment tracker and Kserve model deployer |
 | aws-minimal | EKS, S3, ECR, RDS, MLflow Tracking, Seldon  | AWS specific recipe to showcase a production-grade MLOps Stack with an EKS orchestrator, S3 artifact store, ECR container registry, RDS MySQL metadata store,  MLflow experiment tracker and Seldon Core model deployer |
+| aws-stores-minimal | S3, RDS, ECR | A simple recipe to spin up an RDS MySQL metadata store, S3 artifact store and an ECR container registry |
+| gcp-kubeflow-kserve | Kubeflow on GKE, GCS, CloudSQL, GCR, MLflow Tracking, Kserve, Vertex | A recipe that creates a Kubeflow pipelines cluster as orchestrator, GCS artifact store, GCR container registry, CloudSQL MySQL metadata store,  MLflow experiment tracker, Kserve model deployer and option for Vertex AI as a step operator |
 | gcp-minimal | GKE, GCS, GCR, CloudSQL, MLflow Tracking, Seldon | GCP specific recipe to showcase a production-grade MLOps Stack with a GKE orchestrator, GCS artifact store, GCR container repository, CloudSQL MySQL metadata store,  MLflow experiment tracker and Seldon Core model deployer |
 | vertex-ai | Vertex AI Pipelines, GCS, GCR, CloudSQL and (optional) MLflow Tracking | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry, CloudSQL MySQL metadata store and an optional MLflow experiment tracker |
 
@@ -71,16 +74,22 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     ```
 3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
-3. 🚀 Deploy the recipe with this simple command.
+4. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
 
-    ```shell
+5. 🚀 Deploy the recipe with this simple command.
+
+    ```
     zenml stack recipe deploy <stack-recipe-name>
     ```
 
-4. You'll notice that a ZenML stack configuration file gets created automatically! To use the deployed infrastructure, just run the following command to have all of the resources set as your current stack 🤯.
+    > **Note**
+    > If you want to allow ZenML to automatically import the created resources as a ZenML stack, pass the `--import` flag to the command above. By default, the imported stack will have the same name as the stack recipe and you can provide your own with the `--stack-name` option.
+    
 
-    ```shell
-    zenml stack import <path-to-the-created-stack-config-yaml>
+6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
+
+    ```
+    zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
     ```
 
 To learn more about ZenML and how it empowers you to develop a stack-agnostic MLOps solution, head
