@@ -62,13 +62,44 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
 
     ```
-    zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
-    ```
+    zenml stack import <STACK-NAME> <PATH-TO-THE-CREATED-STACK-CONFIG-YAML>
 
+    # set the stack as an active stack
+    zenml stack set <STACK-NAME>
+    ```
 
 > **Note**
 >
 >  You need to have your AWS credentials saved locally under ~/.aws/credentials
+
+### Configuring your secrets
+
+To make the imported ZenML stack work, you'll have to create secrets that some stack components need. If you inspect the generated YAML file, you can figure out that two secrets should be created:
+- `aws_mysql_secret` - for allowing access to the RDS MySQL instance.
+    - Go into your imported recipe directory. It should be under `zenml_stack_recipes/aws-kubeflow-kserve`.
+    - Run the following commands to get the username and password for the RDS instance.
+        ```
+        terraform output metadata-db-username
+
+        terraform output metadata-db-password
+        ```
+    - Now, register the ZenML secret using the following command.
+        ```
+        zenml secrets-manager secret register aws_mysql_secret --schema=mysql --user=<USERNAME> --password=<PASSWORD>
+        ```
+- `aws_kserve_secret` - for allowing KServe access to your S3 bucket.
+    - We're going to use an AWS credentials file for this. Make sure that the credentials you have in your file have access to S3.
+    - Locate the file and note its path. Also, make sure it has a "[default]" section. If not, rename the section to "default". The file should look like the following.
+        ```
+        [default]
+        aws_access_key_id = ...
+        aws_secret_access_key = ...
+        ```
+    - Create the ZenML secret using this command. The path is usually `~/.aws/credentials` in Linux and under the `%UserProfile%` directory in Windows with the same name.
+        ```
+        zenml secrets-manager secret register -s kserve_s3 aws_kserve_secret --credentials="@<PATH-TO-CREDENTIALS-FILE>"
+        ```
+
 
 ## 🍜 Outputs 
 
