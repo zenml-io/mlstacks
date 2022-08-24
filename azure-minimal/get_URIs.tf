@@ -16,7 +16,7 @@ data "kubernetes_service" "seldon_ingress" {
     name      = "istio-ingress-seldon"
     namespace = "istio-ingress"
   }
-  
+
   depends_on = [
     module.seldon
   ]

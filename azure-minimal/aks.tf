@@ -13,13 +13,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix          = local.prefix
 
   default_node_pool {
-    name       = "default"
-    vm_size    = "Standard_D2_v2"
+    name    = "default"
+    vm_size = "Standard_D2_v2"
 
     enable_auto_scaling = true
-    max_count = 3
-    min_count = 1
-    node_count = 2
+    max_count           = 3
+    min_count           = 1
+    node_count          = 2
   }
 
   identity {
