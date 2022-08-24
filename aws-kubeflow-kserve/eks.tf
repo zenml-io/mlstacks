@@ -20,11 +20,11 @@ module "eks" {
 
   node_groups = {
     main = {
-      desired_capacity = 1
+      desired_capacity = 3
       max_capacity     = 4
       min_capacity     = 1
 
-      instance_types = ["t3.medium"]
+      instance_types = ["t3.xlarge"]
       update_config = {
         max_unavailable_percentage = 50
       }
