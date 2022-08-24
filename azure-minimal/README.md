@@ -24,18 +24,8 @@ Keep in mind, this is a basic setup to get you up and running on GCP with a mini
 
 Before starting, you should know the values that you have to keep ready for use in the script. 
 - Check out the `locals.tf` file to configure basic information about your deployments.
-- Take a look at the `variables.tf` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, etc. You can add these values in the `values.tfvars` file and make sure you don't commit them!
-- If you want to avoid having to type these in, with every  `terraform apply` execution, you can add your values as the `default` inside the definition of each variable. 
+- Take a look at the `values.tfvars.json` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, AWS access keys, etc. Make sure you don't commit them!
 
-    As an example, we've set the default value of `metadata-db-username` as "admin" to avoid having to supply it repeatedly. 
-
-    ```hcl
-    variable "metadata-db-username" {
-      description = "The username for the CloudSQL metadata store"
-      default = "admin"
-      type = string
-    }
-    ```
 > **Warning** 
 > The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
 
@@ -44,37 +34,122 @@ Before starting, you should know the values that you have to keep ready for use 
 
 ## 🧑‍🍳 Cooking the recipe
 
-After customizing the script using your values, run the following commands.
+It is not neccessary to use the MLOps stacks recipes presented here alongisde the
+[ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
+directly.
 
+However, ZenML works seamlessly with the infrastructure provisioned through these recipes. The ZenML CLI has an integration with this repository that makes it really simple to pull and deploy these recipes. A simple flow could look like the following:
 
+1. Pull this recipe to your local system.
 
-```bash
-terraform init
-```
+    ```shell
+    zenml stack recipe pull azure-minimal
+    ```
+2. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
-```bash
-terraform apply
-```
+3. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
+
+5. 🚀 Deploy the recipe with this simple command.
+
+    ```
+    zenml stack recipe deploy azure-minimal
+    ```
+
+    > **Note**
+    > If you want to allow ZenML to automatically import the created resources as a ZenML stack, pass the `--import` flag to the command above. By default, the imported stack will have the same name as the stack recipe and you can provide your own with the `--stack-name` option.
+    
+
+6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
+
+    ```
+    zenml stack import <STACK-NAME> <PATH-TO-THE-CREATED-STACK-CONFIG-YAML>
+
+    # set the stack as an active stack
+    zenml stack set <STACK-NAME>
+    ```
 
 > **Note**
 >
->  You need to have your GCP credentials saved locally for the `apply` function to work.
+>  You need to have your local `az` client logged in. Run `az login` if not done already.
+
+### Configuring your secrets
+
+To make the imported ZenML stack work, you'll have to create secrets that some stack components need. If you inspect the generated YAML file, you can figure out that three secrets should be created:
+
+- `azure-storage-secret` - for allowing access to the Azure Blob Storage Container.
+
+    - Go into your imported recipe directory. It should be under `zenml_stack_recipes/azure-minimal`.
+    - Run the following commands to get the storage account name and key.
+        ```
+        terraform output storage-account-name
+
+        terraform output storage-account-key
+        ```
+    - Now, register your ZenML secret.
+        ```
+        zenml secrets-manager secret register azure-storage-secret --schema=azure --account_name=<ACCOUNT_NAME> --account_key=<ACCOUNT_KEY>
+        ```
+
+- `azure_seldon_secret` - for allowing Seldon access to the Azure Blob Storage container.
+
+    - We will re-use the storage account name and the storage account key from the storage secret.
+    - Now, register the ZenML secret.
+        ```
+        zenml secrets-manager secret register -s seldon_azure azure-seldon-secret --rclone_config_azureblob_account=<ACCOUNT_NAME> --rclone_config_azureblob_key=<ACCOUNT_KEY>
+        ```
+
+- `azure-mysql-secret` - for allowing access to the Flexible MySQL instance.
+
+    - Go into your imported recipe directory. It should be under `zenml_stack_recipes/azure-minimal`.
+    - Run the following commands to get the username and password for the MySQL instance.
+        ```
+        terraform output metadata-db-username
+
+        terraform output metadata-db-password
+        ```
+    
+    - An SSL certificate is already downloaded as part of recipe execution and will be available in the recipe directory with name `DigiCertGlobalRootCA.crt.pem`
+    - Now, register the ZenML secret using the following command.
+        ```
+        zenml secrets-manager secret register azure-mysql-secret --schema=mysql --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@"<PATH-TO-THE-CERTIFICATE"
+        ```
+
+
+If you face a `ClientAuthorizationError` while trying to create secrets, add the relevant permissions to your account using the following command. 
+
+- Get the key vault name by running the command:
+    ```
+    terraform output key-vault-name
+    ```
+
+- Find your Azure object ID. You can also get it from the error message you see.
+    ```
+    az ad user show --id <YOUR_AZURE_EMAIL>
+    ```
+- Set permissions for your object ID.
+    ```
+    az keyvault set-policy --name <KEY_VAULT_NAME> --object-id <YOUR_OBJECT_ID> --secret-permissions get list set delete --key-permissions create delete get list`
+    ```
+
 
 ## 🥧 Outputs 
 
 The script, after running, outputs the following.
 | Output | Description |
 --- | ---
-gke-cluster-name | Name of the GKE cluster that is created. This is helpful when setting up `kubectl` access |
-gcs-bucket-path | The path of the GCS bucket. Useful while registering the artifact store|
-ingress-controller-name | Used for getting the ingress URL for the MLflow tracking server|
-ingress-controller-namespace | Used for getting the ingress URL for the MLflow tracking server|
+aks-cluster-name | Name of the AKS cluster that is created. This is helpful when setting up `kubectl` access |
+blobstorage-container-path | The Azure Blob Storage Container path for storing your artifacts|
+storage-account-name | The name of the Azure Blob Storage account name|
+storage-account-key | The Azure Blob Storage account key |
 mlflow-tracking-URI | The URL for the MLflow tracking server |
 seldon-core-workload-namespace | Namespace in which seldon workloads will be created |
 seldon-base-url | The URL to use for your Seldon deployment |
 metadata-db-host | The host endpoint of the deployed metadata store |
 metadata-db-username | The username for the database user |
 metadata-db-password | The master password for the database |
+container-registry-URL | Container registry URL |
+key-vault-name | The name of the Azure Key Vault created |
+
 
 For outputs that are sensitive, you'll see that they are not shown directly on the logs. To view the full list of outputs, run the following command.
 
@@ -90,92 +165,46 @@ terraform output metadata-db-password
 
 ## Deleting Resources
 
-Usually, the simplest way to delete all resources deployed by Terraform is to run the `terraform destroy` command 🤯. In this case, however, due to existing problems with Kubernetes and Terraform, there might be some resources that get stuck in the `Terminating` state forever. 
+Using the ZenML stack recipe CLI commands, you can run the following commands to delete your resources and optionally clean up the recipe files that you had downloaded to your local system.
 
-To combat this, there's a script in the root directory, by the name `cleanup.sh` which can be run instead. It will internally run the destroy command along with commands to clean up any dangling resources!
-
-> **Note**
->
-> While deleting the metadata store, the Options Group might not get deleted straight away. If that happens, wait for around 30 mins and run `terraform destroy` again.
-
-## Known Problems
-
-* Running the script for the first time might result in an error with one of the resources - the Istio Ingressway. This is because of a limitation with the resource `kubectl_manifest` that needs the cluster to be set up before it installs its own resources.
-\
-    💡 Fix - Run `terraform apply` again in a few minutes and this should get resolved.    
-
-
-
-*  When executing terraform commands, an error like this one: `timeout while waiting for plugin to start` 
-\
-    💡 Fix - If you encounter this error with `apply`, `plan` or `destroy`, do `terraform init` and run your command again.
-
-* While running `terraform init`, an error which says `Failed to query available provider packages... No available releases match the given constraint`
-\
-    💡 Fix - First of all, you should create an issue so that we can take a look. Meanwhile, if you know Terraform, make sure all the modules that are being used are on their latest version.
-
-* While running a terraform command, this error might appear too: `context deadline exceeded`
-\
-    💡 Fix - This problem could arise due to strained system resources. Try running the command again after some time.
-
-* Error while creating the CloudSQL instance through terraform, `│ Error: Error, failed to create instance jayesh-zenml-metadata-store: googleapi: Error 409: The Cloud SQL instance already exists. When you delete an instance, you can't reuse the name of the deleted instance until one week from the deletion date., instanceAlreadyExists`
-\
-    💡 Fix - Simply change the name of the CloudSQL instance inside the `locals.tf` file and reuse the older name only after a week.
-
-
-## Registering the ZenML Stack ✨
-
-It is not neccessary to use the MLOps stacks recipes presented here alongisde the
-[ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
-directly.
-
-However, ZenML works seamlessly with the infrastructure provisioned through these recipes. The ZenML CLI has an integration with this repository that makes it really simple to pull and deploy these recipes. A simple flow could look like the following:
-
-1. 📃 List the available recipes in the repository.
+1. 🗑️ Run the destroy command which removes all resources and their dependencies from the cloud.
 
     ```shell
-    zenml stack recipe list
+    zenml stack recipe destroy azure-minimal
     ```
-2. Pull the recipe that you wish to deploy, to your local system.
+
+2. (Optional) 🧹 Clean up all stack recipe files that you had pulled to your local system.
 
     ```shell
-    zenml stack recipe pull <stack-recipe-name>
+    zenml stack recipe clean
     ```
 
-3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file. Make sure you add the correct GCP project in the `project_id` variable.
 
-4. 🚀 Deploy the recipe with this simple command.
+## Using the recipes without the ZenML CLI
 
-    ```shell
-    zenml stack recipe deploy <stack-recipe-name>
-    ```
-    In case you get a `PermissionDenied` error while executing this command, simply make the file mentioned in the error executable by running the following command.
+As mentioned above, you can still use the recipe without having using the `zenml stack recipe` CLI commands or even without installing ZenML. Since each recipe is a group of Terraform modules, you can simply employ the terraform CLI to perform `apply` and `destroy` operations.
 
-    ```shell
-    sudo chmod +x <path-to-file>
-    ```
+### Create the resources
 
-5. You'll notice that a ZenML stack configuration file gets created automatically! To use the deployed infrastructure, just run the following command to have all of the resources set as your current stack 🤯.
+1. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
-    ```shell
-    zenml stack import <path-to-the-created-stack-config-yaml>
+2. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
+
+3. Initiliaze Terraform modules and download provider definitions.
+    ```bash
+    terraform init
     ```
 
-To learn more about ZenML and how it empowers you to develop a stack-agnostic MLOps solution, head
-over to the [ZenML docs](https://docs.zenml.io).
+4. Apply the recipe.
+    ```bash
+    terraform apply
+    ```
 
-terraform output storage-account-name
-terraform output storage-account-key
+### Deleting resources
 
-terraform output metadata-db-username
-terraform output metadata-db-password
+1. 🗑️ Run the destroy function to clean up all resources.
 
+    ```
+    terraform destroy
+    ```
 
-zenml secrets-manager secret register azure-storage-secret --schema=azure --account_name=zenmlaccount --account_key=0vLRIDTCLqejqNmWFSzX95EIyQhPZzoEvE7fLyA6WPHhzNy0/Fb8Ehdx87Mroix87rcImSbWwaOa+AStauXEgA==
-
-//  Download certificate from portal under flexible server
-zenml secrets-manager secret register azure-mysql-secret --schema=mysql --user=zenmladmin --password=C46V1FzTRRjQ --ssl_ca=@"/mnt/c/Users/wjaye/Downloads/DigiCertGlobalRootCA.crt.pem"
-
-zenml secrets-manager secret register -s seldon_azure azure-seldon-secret --rclone_config_azureblob_account=zenmlaccount --rclone_config_azureblob_key=0vLRIDTCLqejqNmWFSzX95EIyQhPZzoEvE7fLyA6WPHhzNy0/Fb8Ehdx87Mroix87rcImSbWwaOa+AStauXEgA==
-
-az keyvault set-policy --name zenmlsecrets --object-id 46fdd839-56a0-4571-bf15-fb38657d7c26 --secret-permissions get list set delete --key-permissions create delete get list
