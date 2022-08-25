@@ -3,7 +3,7 @@ module "mlflow" {
   source = "./mlflow-module"
 
   # run only after the eks cluster is set up
-  depends_on = [google_container_cluster.gke]
+  depends_on = [module.gke]
   count      = local.enable_mlflow ? 1 : 0
 
   # details about the mlflow deployment
