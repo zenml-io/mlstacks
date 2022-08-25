@@ -23,7 +23,7 @@ resource "local_file" "stack_file_mlflow" {
         host: ${module.metadata_store.instance_first_ip_address}
         name: cloudsql_metadata_store
         port: 3306
-        secret: mysql_secret
+        secret: gcp_mysql_secret
         upgrade_migration_enabled: true
       orchestrator:
         flavor: vertex
