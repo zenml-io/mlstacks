@@ -26,7 +26,7 @@ resource "google_project_iam_member" "roles-custom-sa" {
 # create custom code service agent by trigerring a dummy run
 resource "null_resource" "vertex-dummy-run" {
   provisioner "local-exec" {
-    command = "gcloud beta ai custom-jobs create --display-name dummy --region ${local.region} --worker-pool-spec=replica-count=1,machine-type=n1-highmem-2,container-image-uri=gcr.io/google-appengine/python"
+    command = "gcloud beta ai custom-jobs create --display-name dummy --region ${local.region} --worker-pool-spec=replica-count=1,machine-type=n1-highmem-2,container-image-uri=gcr.io/google-appengine/python --project ${local.project_id}"
   }
 }
 # add iam policy binding
