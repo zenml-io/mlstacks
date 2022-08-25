@@ -4,47 +4,87 @@ resource "google_service_account" "sa" {
   display_name = "${local.prefix}-${local.service_account.account_id}"
 }
 
-resource "google_project_iam_binding" "ai-customcode" {
-  project = local.project_id
-  role    = "roles/aiplatform.customCodeServiceAgent"
-
-  members = [
-    "serviceAccount:${google_service_account.sa.email}",
+locals {
+  roles_to_grant_to_custom_service_account = [
+    "roles/aiplatform.customCodeServiceAgent",
+    "roles/aiplatform.serviceAgent",
+    "roles/containerregistry.ServiceAgent",
+    "roles/secretmanager.admin",
+    "roles/iam.serviceAccountUser"
   ]
 }
 
-resource "google_project_iam_binding" "ai-serviceagent" {
+resource "google_project_iam_member" "roles-custom-sa" {
   project = local.project_id
-  role    = "roles/aiplatform.serviceAgent"
 
-  members = [
-    "serviceAccount:${google_service_account.sa.email}",
+  member = "serviceAccount:${google_service_account.sa.email}"
+  for_each = toset(local.roles_to_grant_to_custom_service_account)
+  role     = each.value
+}
+
+
+# create custom code service agent by trigerring a dummy run
+resource "null_resource" "vertex-dummy-run" {
+  provisioner "local-exec" {
+    command = "gcloud beta ai custom-jobs create --display-name dummy --region ${local.region} --worker-pool-spec=replica-count=1,machine-type=n1-highmem-2,container-image-uri=gcr.io/google-appengine/python"
+  }
+}
+# add iam policy binding
+resource "null_resource" "add-admin-policy-cc" {
+  provisioner "local-exec" {
+    command = "gcloud iam service-accounts add-iam-policy-binding --role=roles/iam.serviceAccountAdmin --member=serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform-cc.iam.gserviceaccount.com ${google_service_account.sa.email} --project ${local.project_id}"
+  }
+
+  depends_on = [
+    null_resource.vertex-dummy-run
+  ]
+}
+# add permissions to the service agent
+locals {
+  roles_to_grant_to_service_agent = [
+    "roles/aiplatform.customCodeServiceAgent",
+    "roles/containerregistry.ServiceAgent",
+    "roles/secretmanager.admin",
+  ]
+}
+resource "google_project_iam_member" "roles-service-agent-cc" {
+  project = local.project_id
+
+  member = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform-cc.iam.gserviceaccount.com"
+  for_each = toset(local.roles_to_grant_to_service_agent)
+  role     = each.value
+
+  depends_on = [
+    null_resource.vertex-dummy-run
   ]
 }
 
-resource "google_project_iam_binding" "container-registry" {
-  project = local.project_id
-  role    = "roles/containerregistry.ServiceAgent"
 
-  members = [
-    "serviceAccount:${google_service_account.sa.email}",
+# get service agent for Vertex
+resource "null_resource" "get-vertex-agent" {
+  provisioner "local-exec" {
+    command = "gcloud beta services identity create --service aiplatform.googleapis.com --project ${local.project_id}"
+  }
+}
+# add iam policy binding
+resource "null_resource" "add-admin-policy" {
+  provisioner "local-exec" {
+    command = "gcloud iam service-accounts add-iam-policy-binding --role=roles/iam.serviceAccountAdmin --member=serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform.iam.gserviceaccount.com ${google_service_account.sa.email} --project ${local.project_id}"
+  }
+
+  depends_on = [
+    null_resource.get-vertex-agent
   ]
 }
-
-resource "google_project_iam_binding" "secret-manager" {
+# add permissions to the service agent
+resource "google_project_iam_member" "roles-service-agent" {
   project = local.project_id
-  role    = "roles/secretmanager.admin"
 
-  members = [
-    "serviceAccount:${google_service_account.sa.email}",
-  ]
-}
+  member = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform.iam.gserviceaccount.com"
+  for_each = toset(local.roles_to_grant_to_service_agent)
+  role     = each.value
 
-resource "google_project_iam_binding" "serviceaccount-user" {
-  project = local.project_id
-  role    = "roles/iam.serviceAccountUser"
-
-  members = [
-    "serviceAccount:${google_service_account.sa.email}",
+  depends_on = [
+    null_resource.get-vertex-agent
   ]
 }
