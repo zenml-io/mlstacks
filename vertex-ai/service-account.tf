@@ -17,7 +17,7 @@ locals {
 resource "google_project_iam_member" "roles-custom-sa" {
   project = local.project_id
 
-  member = "serviceAccount:${google_service_account.sa.email}"
+  member   = "serviceAccount:${google_service_account.sa.email}"
   for_each = toset(local.roles_to_grant_to_custom_service_account)
   role     = each.value
 }
@@ -26,8 +26,12 @@ resource "google_project_iam_member" "roles-custom-sa" {
 # create custom code service agent by trigerring a dummy run
 resource "null_resource" "vertex-dummy-run" {
   provisioner "local-exec" {
-    command = "gcloud beta ai custom-jobs create --display-name dummy --region ${local.region} --worker-pool-spec=replica-count=1,machine-type=n1-highmem-2,container-image-uri=gcr.io/google-appengine/python --project ${local.project_id}"
+    command = "gcloud beta ai custom-jobs create --display-name dummy --region ${local.region} --worker-pool-spec=replica-count=1,machine-type=e2-standard-4,container-image-uri=gcr.io/google-appengine/python --project ${local.project_id}"
   }
+
+  depends_on = [
+    google_project_service.vertex_ai
+  ]
 }
 # add iam policy binding
 resource "null_resource" "add-admin-policy-cc" {
@@ -50,7 +54,7 @@ locals {
 resource "google_project_iam_member" "roles-service-agent-cc" {
   project = local.project_id
 
-  member = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform-cc.iam.gserviceaccount.com"
+  member   = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform-cc.iam.gserviceaccount.com"
   for_each = toset(local.roles_to_grant_to_service_agent)
   role     = each.value
 
@@ -80,7 +84,7 @@ resource "null_resource" "add-admin-policy" {
 resource "google_project_iam_member" "roles-service-agent" {
   project = local.project_id
 
-  member = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform.iam.gserviceaccount.com"
+  member   = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform.iam.gserviceaccount.com"
   for_each = toset(local.roles_to_grant_to_service_agent)
   role     = each.value
 

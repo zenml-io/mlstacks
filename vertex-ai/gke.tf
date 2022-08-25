@@ -4,12 +4,12 @@ module "gke" {
   depends_on = [
     google_project_service.compute_engine_api
   ]
-  count      = local.enable_mlflow ? 1 : 0
-  source     = "terraform-google-modules/kubernetes-engine/google"
-  project_id = local.project_id
-  name       = "${local.prefix}-${local.gke.cluster_name}"
-  region     = local.region
-  zones      = ["${local.region}-a", "${local.region}-b", "${local.region}-c"]
+  count             = local.enable_mlflow ? 1 : 0
+  source            = "terraform-google-modules/kubernetes-engine/google"
+  project_id        = local.project_id
+  name              = "${local.prefix}-${local.gke.cluster_name}"
+  region            = local.region
+  zones             = ["${local.region}-a", "${local.region}-b", "${local.region}-c"]
   network           = module.vpc[0].network_name
   subnetwork        = module.vpc[0].subnets_names[0]
   ip_range_pods     = "gke-pods"
@@ -35,7 +35,7 @@ module "gke" {
       auto_repair     = true
       auto_upgrade    = true
       service_account = google_service_account.gke-service-account.email
-      
+
       preemptible        = false
       initial_node_count = 1
     },
@@ -77,7 +77,7 @@ locals {
 resource "google_project_iam_member" "roles-gke-sa" {
   project = local.project_id
 
-  member = "serviceAccount:${google_service_account.gke-service-account.email}"
+  member   = "serviceAccount:${google_service_account.gke-service-account.email}"
   for_each = toset(local.roles_to_grant_to_gke_service_account)
   role     = each.value
 }
