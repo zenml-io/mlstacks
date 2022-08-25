@@ -45,11 +45,6 @@ resource "local_file" "stack_file" {
         kubernetes_namespace: ${local.kserve.workloads_namespace}
         base_url: http://${data.kubernetes_service.kserve_ingress.status.0.load_balancer.0.ingress.0.ip}:${data.kubernetes_service.kserve_ingress.spec.0.port.1.port}
         secret: gcp_kserve_secret
-      step_operator:
-        flavor: vertex
-        name: gcp_step_op
-        project: ${local.project_id}
-        region: ${local.region}
     ADD
   filename = "./gcp_kubeflow_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
 }
