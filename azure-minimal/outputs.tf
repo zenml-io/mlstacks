@@ -71,3 +71,7 @@ output "seldon-base-url" {
   value = data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.ip
 }
   
+# output the name of the stack YAML file created
+output "stack-yaml-path" {
+  value = local_file.stack_file.filename
+}
