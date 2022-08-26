@@ -48,6 +48,7 @@ resource "null_resource" "add-admin-policy-cc" {
 locals {
   roles_to_grant_to_service_agent = [
     "roles/aiplatform.customCodeServiceAgent",
+    "roles/aiplatform.serviceAgent",
     "roles/containerregistry.ServiceAgent",
     "roles/secretmanager.admin",
   ]
