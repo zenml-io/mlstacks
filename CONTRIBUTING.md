@@ -1,6 +1,13 @@
 Thank you for your interest in contributing a recipe to this repository! 🥳🙏 
 Here are some things that you should know before getting started. 
 
+
+## Get Started Quickly ⏩
+If you're a visual learner, here's a video showing how the `aws-kubeflow-kserve` recipe was built by extending components across existing recipes.
+
+[![Extend a stack recipe](https://img.youtube.com/vi/lNnWaKjP3I4/0.jpg)](https://www.youtube.com/watch?v=lNnWaKjP3I4)
+
+
 ## Principles and the structure of a recipe
 
 ### Modularity
