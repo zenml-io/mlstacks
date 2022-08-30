@@ -3,6 +3,7 @@
 *.info
 *.backup
 *.tfstate
+*.pem
 kubeconfig_*
 .terraform
 vertex_stack*

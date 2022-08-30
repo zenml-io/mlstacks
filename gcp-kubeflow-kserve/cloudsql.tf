@@ -21,3 +21,23 @@ module "metadata_store" {
     allocated_ip_range  = null
   }
 }
+
+# create the client certificate for CloudSQL
+resource "google_sql_ssl_cert" "client_cert" {
+  common_name = "sql-cert"
+  instance    = module.metadata_store.instance_name
+}
+
+# create the certificate files
+resource "local_file" "server-ca" {
+  content  = google_sql_ssl_cert.client_cert.server_ca_cert
+  filename = "./server-ca.pem"
+}
+resource "local_file" "client-cert" {
+  content  = google_sql_ssl_cert.client_cert.cert
+  filename = "./client-cert.pem"
+}
+resource "local_file" "client-key" {
+  content  = google_sql_ssl_cert.client_cert.private_key
+  filename = "./client-key.pem"
+}

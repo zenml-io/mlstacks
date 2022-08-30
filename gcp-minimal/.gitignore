@@ -3,5 +3,6 @@
 *.info
 *.backup
 *.tfstate
+*.pem
 kubeconfig_*
 .terraform
