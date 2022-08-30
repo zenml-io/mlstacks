@@ -71,6 +71,32 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 >
 >  You need to have your GCP credentials saved locally for the `apply` function to work.
 
+### Configuring your secrets
+
+To make the imported ZenML stack work, you'll have to create secrets that some stack components need. If you inspect the generated YAML file, you can figure out that two secrets should be created:
+- `gcp_mysql_secret` - for allowing access to the CloudSQL instance.
+
+    - Go into your imported recipe directory. It should be under `zenml_stack_recipes/gcp-kubeflow-kserve`.
+    - You will notice that the certificate files for your CloudSQL instance are already created and downloaded as `server-ca.pem`, `client-cert.pem` and `client-key.pem`.
+    - Run the following commands to get the username and password for the RDS instance.
+        ```
+        terraform output metadata-db-username
+
+        terraform output metadata-db-password
+        ```
+    - Now, register the ZenML secret using the following command:
+        ```
+        zenml secrets-manager secret register gcp_mysql_secret --schema=mysql --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@<PATH-TO-server-ca.pem> --ssl_cert=@<PATH-TO-client-cert.pem> --ssl_key=@<PATH-TO-client-key.pem>
+        ```
+- `gcp_seldon_secret` - for allowing Seldon access to your GCS bucket.
+ 
+    - The cluster that Seldon is running on already has access to your buckets so you wouldn't need to supply any credentials here.
+    - Just create a dummy ZenML secret using this command:
+        ```
+        zenml secrets-manager secret register -s seldon_gs gcp_seldon_secret --rclone_config_gs_type="google cloud storage"
+        ```
+
+
 ## 🥧 Outputs 
 
 The script, after running, outputs the following.
