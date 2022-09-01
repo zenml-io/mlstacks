@@ -17,11 +17,15 @@ Output | Description
 ingress-controller-name | Used for getting the ingress URL for the MLflow tracking server|
 ingress-controller-namespace | Used for getting the ingress URL for the MLflow tracking server|
 
-The folowing command can be used to get the tracking URL for the MLflow server. The EXTERNAL_IP field is the IP of the ingress controller and the path "/" is configured already to direct to the MLflow tracking server.
+The tracking URI is obtained by querying the relevant Kubernetes service that exposes the tracking server. This is done automatically when you execute any recipe. You can use the `mlflow-tracking-URL` output to get this value.
+
+However, you can also manually query the URL by using the folowing command.
 
 ```
-kubectl get service <ingress-controller-name> -n <ingress-controller-namespace>
+kubectl get service <ingress-controller-name>-ingress-nginx-controller -n <ingress-controller-namespace>
 ```
+
+In the output of this command, the EXTERNAL_IP field is the IP of the ingress controller and the path "/" is configured already to direct to the MLflow tracking server.
 
 
 
