@@ -5,6 +5,13 @@ resource "helm_release" "mlflow-tracking" {
   repository = "https://community-charts.github.io/helm-charts"
   chart      = "mlflow"
 
+  # set workload identity annotations for the mlflow 
+  # kubernetes service account
+  set {
+    name  = "serviceAccount.annotations.iam\\.gke\\.io/gcp-service-account"
+    value = var.kubernetes_sa
+  }  
+
   # set proxied access to artifact storage
   set {
     name  = "artifactRoot.proxiedArtifactStorage"
