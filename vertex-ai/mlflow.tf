@@ -7,11 +7,11 @@ module "mlflow" {
   count      = local.enable_mlflow ? 1 : 0
 
   # details about the mlflow deployment
-  htpasswd            = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
+  htpasswd                = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
   artifact_Proxied_Access = local.mlflow.artifact_Proxied_Access
-  artifact_GCS        = local.mlflow.artifact_GCS
-  artifact_GCS_Bucket = local.mlflow.artifact_GCS_Bucket == "" ? google_storage_bucket.artifact-store.name : local.mlflow.artifact_GCS_Bucket
-  
+  artifact_GCS            = local.mlflow.artifact_GCS
+  artifact_GCS_Bucket     = local.mlflow.artifact_GCS_Bucket == "" ? google_storage_bucket.artifact-store.name : local.mlflow.artifact_GCS_Bucket
+
   # set workload identity annotations for mlflow kubernetes sa
   kubernetes_sa = google_service_account.gke-service-account.email
 }

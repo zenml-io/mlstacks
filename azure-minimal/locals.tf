@@ -40,7 +40,7 @@ locals {
   }
   mlflow = {
     artifact_Proxied_Access = "false"
-    artifact_Azure = "true"
+    artifact_Azure          = "true"
     # if not set, the container created as part of the deployment will be used
     artifact_Azure_Storage_Account_Name = ""
     # this field is considered only when the storage account above is set
