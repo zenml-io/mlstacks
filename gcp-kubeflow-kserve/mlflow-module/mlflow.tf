@@ -10,13 +10,13 @@ resource "helm_release" "mlflow-tracking" {
   set {
     name  = "serviceAccount.annotations.iam\\.gke\\.io/gcp-service-account"
     value = var.kubernetes_sa
-  }  
+  }
 
   # set proxied access to artifact storage
   set {
     name  = "artifactRoot.proxiedArtifactStorage"
     value = var.artifact_Proxied_Access
-  }  
+  }
 
   # set values for S3 artifact store
   set {

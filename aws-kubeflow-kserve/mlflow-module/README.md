@@ -26,7 +26,3 @@ kubectl get service <ingress-controller-name>-ingress-nginx-controller -n <ingre
 ```
 
 In the output of this command, the EXTERNAL_IP field is the IP of the ingress controller and the path "/" is configured already to direct to the MLflow tracking server.
-
-
-
-
