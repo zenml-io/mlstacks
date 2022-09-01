@@ -24,7 +24,8 @@ locals {
     service_account_name = "kserve-sa"
   }
   mlflow = {
-    artifact_S3 = "true"
+    artifact_Proxied_Access = "false"
+    artifact_S3             = "true"
     # if not set, the bucket created as part of the deployment will be used
     artifact_S3_Bucket = ""
   }

@@ -5,6 +5,12 @@ resource "helm_release" "mlflow-tracking" {
   repository = "https://community-charts.github.io/helm-charts"
   chart      = "mlflow"
 
+  # set proxied access to artifact storage
+  set {
+    name  = "artifactRoot.proxiedArtifactStorage"
+    value = var.artifact_Proxied_Access
+  }  
+
   # set values for S3 artifact store
   set {
     name  = "artifactRoot.s3.enabled"
