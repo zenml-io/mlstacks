@@ -26,4 +26,7 @@ resource "google_service_account_iam_member" "mlflow-storage-access" {
   service_account_id = google_service_account.gke-service-account.name
   role               = "roles/iam.workloadIdentityUser"
   member             = "serviceAccount:${local.project_id}.svc.id.goog[default/mlflow-tracking]"
+  depends_on = [
+    module.mlflow
+  ]
 }
