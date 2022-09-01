@@ -1,6 +1,6 @@
 # output for the GKE cluster
 output "gke-cluster-name" {
-  value = google_container_cluster.gke.name
+  value = module.gke.name
 }
 
 # output for the GCS bucket
