@@ -54,7 +54,8 @@ locals {
   }
 
   mlflow = {
-    artifact_GCS = "true"
+    artifact_Proxied_Access = "false"
+    artifact_GCS            = "true"
     # if not set, the bucket created as part of the deployment will be used
     artifact_GCS_Bucket = ""
   }

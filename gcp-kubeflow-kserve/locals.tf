@@ -1,6 +1,6 @@
 # config values to use across the module
 locals {
-  prefix     = "demo"
+  prefix = "demo"
 
   # if you're using europe-west1, please make the following modification in
   # the gke.tf file:
@@ -39,7 +39,8 @@ locals {
   }
 
   mlflow = {
-    artifact_GCS = "true"
+    artifact_Proxied_Access = "false"
+    artifact_GCS            = "true"
     # if not set, the bucket created as part of the deployment will be used
     artifact_GCS_Bucket = ""
   }

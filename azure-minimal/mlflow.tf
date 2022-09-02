@@ -7,6 +7,7 @@ module "mlflow" {
 
   # details about the mlflow deployment
   htpasswd                            = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
+  artifact_Proxied_Access             = local.mlflow.artifact_Proxied_Access
   artifact_Azure                      = local.mlflow.artifact_Azure
   artifact_Azure_Storage_Account_Name = local.mlflow.artifact_Azure_Storage_Account_Name == "" ? azurerm_storage_account.zenml-account.name : local.mlflow.artifact_Azure_Storage_Account_Name
   artifact_Azure_Container            = local.mlflow.artifact_Azure_Storage_Account_Name == "" ? azurerm_storage_container.artifact-store.name : local.mlflow.artifact_Azure_Container

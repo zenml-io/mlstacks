@@ -5,7 +5,7 @@ module "kserve" {
   workloads_namespace = local.kserve.workloads_namespace
 
   depends_on = [
-    google_container_cluster.gke,
+    module.gke,
     null_resource.configure-local-kubectl,
   ]
 }

@@ -1,5 +1,15 @@
 variable "htpasswd" {}
 
+variable "kubernetes_sa" {
+  type    = string
+  default = ""
+}
+
+variable "artifact_Proxied_Access" {
+  type    = bool
+  default = false
+}
+
 variable "artifact_S3" {
   type    = bool
   default = false
