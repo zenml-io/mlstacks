@@ -18,6 +18,10 @@ locals {
     region = "eu" # available options: eu, us, asia
   }
 
+  storage_service_account = {
+    account_id = "bucket_access"
+  }
+
   tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix
