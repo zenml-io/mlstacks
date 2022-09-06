@@ -59,6 +59,16 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     zenml stack import <STACK_NAME> <PATH-TO-THE-CREATED-STACK-CONFIG-YAML>
     ```
 
+7. Note that this YAML file has a placeholder metadata store and will have to be replaced by your default local metadata store. Follow the instructions below:
+
+    ```
+    zenml stack copy default <NEW_STACK_NAME>
+
+    zenml stack set <NEW_STACK_NAME>
+
+    zenml stack update <NEW_STACK_NAME> -x gcp_secrets_manager -a gcs_artifact_store -an labelstudio_annotator
+
+    ```
 
 
 > **Note**
