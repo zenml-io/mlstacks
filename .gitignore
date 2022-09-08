@@ -131,3 +131,6 @@ dmypy.json
 # stack yaml files
 *.yaml
 *.yml
+
+# not the metadata file
+!metadata.yaml

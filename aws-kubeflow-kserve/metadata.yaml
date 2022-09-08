@@ -1,0 +1,8 @@
+Description: |
+  A recipe that creates a Kubeflow pipelines cluster as orchestrator, 
+  S3 artifact store, ECR container registry, RDS MySQL metadata store,  
+  MLflow experiment tracker and KServe model deployer.
+
+Prerequisites: |
+  * The AWS CLI on your local machine must be configured with 
+    the account you want to deploy resources to. Run `aws configure`.
