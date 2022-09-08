@@ -50,7 +50,7 @@ resource "kubernetes_cluster_role_binding_v1" "example" {
 
 # service account for Kserve
 resource "google_service_account" "kserve-service-account" {
-  account_id   = local.kserve.service_account_name
+  account_id   = "${local.prefix}-${local.kserve.service_account_name}"
   project      = local.project_id
   display_name = "Kserve SA"
 }
