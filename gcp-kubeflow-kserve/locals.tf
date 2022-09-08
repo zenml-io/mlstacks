@@ -13,7 +13,7 @@ locals {
     cluster_name = "terraform-kubeflow-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
     cluster_version      = "1.22"
-    service_account_name = "zenml-kubeflow"
+    service_account_name = "kubeflow"
   }
   vpc = {
     name = "kubeflow-vpc"
@@ -28,7 +28,7 @@ locals {
   }
 
   cloudsql = {
-    name = "zenml-kubeflow-metadata-store"
+    name = "kubeflow-metadata-store"
     authorized_networks = [
       {
         name  = "all",
@@ -47,7 +47,7 @@ locals {
 
   kserve = {
     workloads_namespace  = "zenml-workloads"
-    service_account_name = "kserve-sa"
+    service_account_name = "kserve"
   }
 
   container_registry = {

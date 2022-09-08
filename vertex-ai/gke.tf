@@ -60,7 +60,7 @@ module "gke" {
 
 # service account for GKE nodes
 resource "google_service_account" "gke-service-account" {
-  account_id   = local.gke.service_account_name
+  account_id   = "${local.prefix}-${local.gke.service_account_name}"
   project      = local.project_id
   display_name = "Terraform GKE SA"
 }

@@ -44,7 +44,7 @@ module "vpc" {
 
   routes = [
     {
-      name              = "egress-kubeflow"
+      name              = "${local.prefix}-kubeflow"
       description       = "route through IGW to access internet"
       destination_range = "0.0.0.0/0"
       tags              = "egress-inet"
