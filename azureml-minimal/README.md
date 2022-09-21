@@ -1,4 +1,4 @@
-# 🥙 Azure Minimal MLOps Stack Recipe
+# 🥙 AzureML Minimal MLOps Stack Recipe
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
