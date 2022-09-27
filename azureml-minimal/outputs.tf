@@ -63,7 +63,8 @@ output "service-principal-client-id" {
 }
 
 output "service-principal-client-secret" {
-  value = azuread_service_principal_password.sp-pass.value
+  value     = azuread_service_principal_password.sp-pass.value
+  sensitive = true
 }
 
 # output the name of the stack YAML file created
