@@ -146,6 +146,10 @@ metadata-db-host | The host endpoint of the deployed metadata store |
 metadata-db-username | The username for the database user |
 metadata-db-password | The master password for the database |
 key-vault-name | The name of the Azure Key Vault created |
+service-principal-id| The ID for created service principal |
+service-principal-client-id | The client ID for created service principal |
+service-principal-tenant-id | The tenant ID for created service principal |
+service-principal-client-secret | The password for created service principal |
 
 For outputs that are sensitive, you'll see that they are not shown directly on the logs. To view the full list of outputs, run the following command.
 

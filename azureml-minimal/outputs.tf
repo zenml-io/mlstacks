@@ -47,7 +47,23 @@ output "key-vault-name" {
 
 # outputs for the MLflow tracking server
 output "mlflow-tracking-URL" {
-  value = "azureml://${azurerm_resource_group.rg.location}.api.azureml.ms/mlflow/v1.0/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${azurerm_resource_group.rg.name}/providers/Microsoft.MachineLearningServices/workspaces/${local.prefix}-${local.azureml.cluster_name}-mlw"
+  value = "https://${azurerm_resource_group.rg.location}.api.azureml.ms/mlflow/v1.0/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${azurerm_resource_group.rg.name}/providers/Microsoft.MachineLearningServices/workspaces/${local.prefix}-${local.azureml.cluster_name}-mlw"
+}
+
+output "service-principal-id" {
+  value = azuread_service_principal.sp.id
+}
+
+output "service-principal-tenant-id" {
+  value = azuread_service_principal.sp.application_tenant_id
+}
+
+output "service-principal-client-id" {
+  value = azuread_service_principal.sp.application_id
+}
+
+output "service-principal-client-secret" {
+  value = azuread_service_principal_password.sp-pass.value
 }
 
 # output the name of the stack YAML file created

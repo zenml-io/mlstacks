@@ -33,7 +33,7 @@ resource "local_file" "stack_file" {
       experiment_tracker:
         flavor: mlflow
         name: azureml_mlflow_experiment_tracker
-        tracking_uri: "azureml://${azurerm_resource_group.rg.location}.api.azureml.ms/mlflow/v1.0/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${azurerm_resource_group.rg.name}/providers/Microsoft.MachineLearningServices/workspaces/${local.prefix}-${local.azureml.cluster_name}-mlw"
+        tracking_uri: "https://${azurerm_resource_group.rg.location}.api.azureml.ms/mlflow/v1.0/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${azurerm_resource_group.rg.name}/providers/Microsoft.MachineLearningServices/workspaces/${local.prefix}-${local.azureml.cluster_name}-mlw"
     ADD
   filename = "./azureml_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
 }
