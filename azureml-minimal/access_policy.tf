@@ -1,5 +1,8 @@
 # create a access role based on service principal created in compute cluster
 data "azurerm_client_config" "config" {
+  depends_on = [
+    azurerm_machine_learning_compute_cluster.cluster
+  ]
 }
 
 resource "azurerm_role_assignment" "ra" {
@@ -9,7 +12,7 @@ resource "azurerm_role_assignment" "ra" {
 }
 
 
-resource "azurerm_key_vault_access_policy" "example" {
+resource "azurerm_key_vault_access_policy" "kv-access" {
   key_vault_id = azurerm_key_vault.secret_manager.id
   tenant_id    = azurerm_machine_learning_compute_cluster.cluster.identity[0].tenant_id
   object_id    = data.azurerm_client_config.config.object_id
