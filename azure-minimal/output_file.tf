@@ -19,7 +19,7 @@ resource "local_file" "stack_file" {
       metadata_store:
         database: zenml
         flavor: mysql
-        host: ${azurerm_mysql_flexible_server.mysql.name}.mysql.database.azure.com}
+        host: ${azurerm_mysql_flexible_server.mysql.name}.mysql.database.azure.com
         name: azure_mysql_metadata_store
         port: 3306
         secret: azure-mysql-secret
