@@ -29,3 +29,22 @@ resource "azurerm_key_vault_access_policy" "kv-access" {
     "Get", "List", "Set", "Delete", "Update"
   ]
 }
+
+resource "azurerm_key_vault_access_policy" "kv-access-user" {
+  key_vault_id = azurerm_key_vault.secret_manager.id
+  tenant_id    = azurerm_machine_learning_compute_cluster.cluster.identity[0].tenant_id
+  object_id    = data.azurerm_client_config.config.object_id
+
+  key_permissions = [
+    "Get", "List", "Create", "Delete", "Update"
+  ]
+
+  secret_permissions = [
+    "Get", "List", "Set", "Delete"
+  ]
+
+  storage_permissions = [
+    "Get", "List", "Set", "Delete", "Update"
+  ]
+}
+
