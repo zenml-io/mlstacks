@@ -22,9 +22,10 @@ resource "local_file" "stack_file" {
         upgrade_migration_enabled: true
       step_operator:
         flavor: azureml
-        name: azureml_step_orchestrator
+        name: azureml_step_operator
         subscription_id: ${data.azurerm_client_config.current.subscription_id}
         resource_group_name: ${azurerm_resource_group.rg.name}
+        workspace_name: ${azurerm_machine_learning_workspace.mlw.name}
         compute_target_name: ${azurerm_machine_learning_compute_cluster.cluster.name}
       secrets_manager:
         flavor: azure_key_vault

@@ -130,6 +130,30 @@ If you face a `ClientAuthorizationError` while trying to create secrets, add the
     az keyvault set-policy --name <KEY_VAULT_NAME> --object-id <YOUR_OBJECT_ID> --secret-permissions get list set delete --key-permissions create delete get list`
     ```
 
+To get `tracking_token` for Azure MLFlow, you can run the following command.
+
+```bash
+export CLIENT_ID=""
+export CLIENT_SECRET=""
+export TENANT_ID=""
+TOKEN="$(curl -i -X POST \
+  -d "client_id=${CLIENT_ID}" \
+  -d "client_secret=${CLIENT_SECRET}" \
+  -d "grant_type=client_credentials" \
+  -d "resource=https://management.azure.com" \
+  "https://login.microsoftonline.com/${TENANT_ID}/oauth2/token"
+  | jq -r .access_token)"
+
+echo $TOKEN
+```
+
+While registering the experiment tracker, we can add the tracking token obtained from above step.
+
+```bash
+echo TRACKING_URI=""
+zenml experiment-tracker register mlflow_experiment_tracker --flavor=mlflow --tracking_uri=$TRACKING_URI --tracking_token=$TOKEN
+```
+
 ## 🥧 Outputs
 
 The script, after running, outputs the following.

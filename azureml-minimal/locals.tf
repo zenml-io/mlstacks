@@ -1,11 +1,11 @@
 # config values to use across the module
 locals {
   prefix = "demo"
-  region = "us-west1"
+  region = "uksouth"
 
   resource_group = {
     name     = "zenml"
-    location = "West Europe"
+    location = "uksouth"
   }
 
   azureml = {

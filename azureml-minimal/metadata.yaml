@@ -1,7 +1,7 @@
 Description: |
   A recipe that creates an MLOps stack with an Azure Machine Learning Studio 
-  using AzureML compute cluster as step operator, Azure Blob Storage container artifact store, 
-  Flexible MySQL server as metadata store, and Azure MLflow experiment tracker.
+  using AzureML as step operator, Azure Blob Storage container as artifact store, 
+  Flexible MySQL server as metadata store, and Azure MLflow as experiment tracker.
 
 Prerequisites: |
   * The Az CLI on your local machine must be configured with 
