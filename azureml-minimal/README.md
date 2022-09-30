@@ -133,9 +133,9 @@ If you face a `ClientAuthorizationError` while trying to create secrets, add the
 To get `tracking_token` for Azure MLFlow, you can run the following command.
 
 ```bash
-export CLIENT_ID=""
-export CLIENT_SECRET=""
-export TENANT_ID=""
+export CLIENT_ID=$(terraform output service-principal-client-id)
+export CLIENT_SECRET=$(terraform output service-principal-client-secret)
+export TENANT_ID=$(terraform output service-principal-tenant-id)
 TOKEN="$(curl -i -X POST \
   -d "client_id=${CLIENT_ID}" \
   -d "client_secret=${CLIENT_SECRET}" \
@@ -150,7 +150,7 @@ echo $TOKEN
 While registering the experiment tracker, we can add the tracking token obtained from above step.
 
 ```bash
-echo TRACKING_URI=""
+export TRACKING_URI=$(terraform output mlflow-tracking-URL)
 zenml experiment-tracker register mlflow_experiment_tracker --flavor=mlflow --tracking_uri=$TRACKING_URI --tracking_token=$TOKEN
 ```
 
@@ -159,12 +159,14 @@ zenml experiment-tracker register mlflow_experiment_tracker --flavor=mlflow --tr
 The script, after running, outputs the following.
 | Output | Description |
 --- | ---
+subscription-id | Subscription ID of Azure |
 resource-group-name | Name of the resource group that is created. |
+resource-group-location | Location of the resource group that is created. |
 azureml-compute-cluster-name | Name of the compute cluster that is created in AzureML workspace. |
 azureml-workspace-name | Name of the AzureML workspace that is created. |
 blobstorage-container-path | The Azure Blob Storage Container path for storing your artifacts|
 storage-account-name | The name of the Azure Blob Storage account name|
-storage-account-key | The Azure Blob Storage account key |
+storage-account-connection-string | The Azure Blob Storage account connection string |
 mlflow-tracking-URI | The URL for the MLflow tracking server |
 metadata-db-host | The host endpoint of the deployed metadata store |
 metadata-db-username | The username for the database user |
@@ -232,3 +234,92 @@ As mentioned above, you can still use the recipe without having using the `zenml
     ```
     terraform destroy
     ```
+
+## Running on Azure
+
+Create stack to run on Azure
+
+```shell
+# zenml setup
+export STACK_PROFILE="azureml-mlflow"
+
+# azure credentials
+export SUBSCRIPTION_ID=$(terraform output subscription-id)
+export CLIENT_ID=$(terraform output service-principal-client-id)
+export CLIENT_SECRET=$(terraform output service-principal-client-secret)
+export TENANT_ID=$(terraform output service-principal-tenant-id)
+
+# azure resource group
+export RESOURCE_GROUP=$(terraform output resource-group-name)
+export REGION=$(terraform output resource-group-location)
+
+# azure storage
+export AZURE_STORAGE_CONNECTION_STRING=$(terraform output storage-account-connection-string)
+export CONTAINER_PATH=$(terraform output blobstorage-container-path)
+
+# azureml
+export WORKSPACE_NAME=$(terraform output azureml-workpsace-name)
+export CLUSTER_NAME=$(terraform output azureml-compute-cluster-name)
+export KEY_VAULT_NAME=$(terraform output key-vault-name)
+
+# azure mysql
+export MYSQL_USERNAME=$(terraform output metadata-db-username)
+export MYSQL_PASSWORD=$(terraform output metadata-db-password)
+export MYSQL_SERVER_NAME=$(terraform output metadata-db-host)
+
+# azure mlflow
+export TRACKING_URI=$(terraform output mlflow-tracking-URL)
+
+TOKEN="$(curl -i -X POST \
+  -d "client_id=${CLIENT_ID}" \
+  -d "client_secret=${CLIENT_SECRET}" \
+  -d "grant_type=client_credentials" \
+  -d "resource=https://management.azure.com" \
+  "https://login.microsoftonline.com/${TENANT_ID}/oauth2/token"
+  | jq -r .access_token)"
+
+echo $TOKEN
+
+zenml clean
+zenml init
+zenml profile create $STACK_PROFILE
+zenml profile set azure-mlflow
+
+zenml artifact-store register azure_store \
+    --flavor=azure \
+    --path=$CONTAINER_PATH
+
+zenml secrets-manager register azure_secrets_manager \
+    --flavor=azure_key_vault \
+    --key_vault_name=$KEY_VAULT_NAME
+
+zenml experiment-tracker register mlflow_experiment_tracker --flavor=mlflow --tracking_uri=$TRACKING_URI --tracking_token=$TOKEN
+
+
+zenml metadata-store register azure_mysql \
+    --flavor=mysql \
+    --database=zenml \
+    --secret=azureauthentication \
+    --host=$MYSQL_SERVER_NAME
+
+zenml step-operator register azureml \
+    --flavor=azureml \
+    --subscription_id=$SUBSCRIPTION_ID \
+    --resource_group=$RESOURCE_GROUP\
+    --workspace_name=$WORKSPACE_NAME \
+    --compute_target_name=$CLUSTER_NAME
+
+zenml stack register azureml_stack \
+    -m azure_mysql \
+    -o default \
+    -a azure_store \
+    -s azureml \
+    -x azure_secrets_manager \
+    -e mlflow_experiment_tracker \
+    --set
+
+zenml secrets-manager secret register azureauthentication \
+    --schema=mysql \
+    --user=$MYSQL_USERNAME \
+    --password=$MYSQL_PASSWORD
+```

@@ -1,6 +1,16 @@
+# subscription id
+output "subscription-id" {
+  value     = data.azurerm_client_config.current.subscription_id
+  sensitive = true
+}
+
 # Resource Group
 output "resource-group-name" {
   value = azurerm_resource_group.rg.name
+}
+
+output "resource-group-location" {
+  value = azurerm_resource_group.rg.location
 }
 
 # output for the AzureML workspace
@@ -20,10 +30,10 @@ output "storage-account-name" {
   value       = local.blob_storage.account_name
   description = "The name of the Azure Blob Storage account name"
 }
-output "storage-account-key" {
-  value       = azurerm_storage_account.zenml-account.primary_access_key
+output "storage-account-connection-string" {
+  value       = azurerm_storage_account.zenml-account.primary_connection_string
   sensitive   = true
-  description = "The Azure Blob Storage account key"
+  description = "The Azure Blob Storage account connection string"
 }
 
 # outputs for the Flexible MySQL metadata store
