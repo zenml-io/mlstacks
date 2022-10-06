@@ -12,37 +12,23 @@ resource "local_file" "stack_file_mlflow" {
       artifact_store:
         flavor: gcp
         name: gcs_artifact_store
-        path: gs://${google_storage_bucket.artifact-store.name}
+        configuration: {"path": "gs://${google_storage_bucket.artifact-store.name}"}
       container_registry:
         flavor: gcp
         name: gcr_container_registry
-        uri: ${local.container_registry.region}.gcr.io/${local.project_id}
-      metadata_store:
-        database: zenml_db
-        flavor: mysql
-        host: ${module.metadata_store.instance_first_ip_address}
-        name: cloudsql_metadata_store
-        port: 3306
-        secret: gcp_mysql_secret
-        upgrade_migration_enabled: true
+        configuration: {"uri": "${local.container_registry.region}.gcr.io/${local.project_id}"}
       orchestrator:
         flavor: vertex
-        labels: {}
-        location: ${local.vertex_ai.region}
         name: vertex_ai_orchestrator
-        project: ${local.project_id}
-        synchronous: false
-        workload_service_account: ${google_service_account.sa.email}
+        configuration: {"workload_service_account": "${google_service_account.sa.email}", "project": "${local.project_id}", "location": "${local.vertex_ai.region}", "labels": "{}"}
       secrets_manager:
         flavor: gcp_secrets_manager
         name: gcp_secrets_manager
-        project_id: ${local.project_id}
+        configuration: {"project_id": "${local.project_id}"}
       experiment_tracker:
         flavor: mlflow
         name: gke_mlflow_experiment_tracker
-        tracking_uri: http://${data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip}
-        tracking_username: ${var.mlflow-username}
-        tracking_password: ${var.mlflow-password}
+        configuration: {"tracking_uri": "http://${data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
     ADD
   filename = "./vertex_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
 }
@@ -59,31 +45,19 @@ resource "local_file" "stack_file" {
       artifact_store:
         flavor: gcp
         name: gcs_artifact_store
-        path: gs://${google_storage_bucket.artifact-store.name}
+        configuration: {"path": "gs://${google_storage_bucket.artifact-store.name}"}
       container_registry:
         flavor: gcp
         name: gcr_container_registry
-        uri: ${local.container_registry.region}.gcr.io/${local.project_id}
-      metadata_store:
-        database: zenml_db
-        flavor: mysql
-        host: ${module.metadata_store.instance_first_ip_address}
-        name: cloudsql_metadata_store
-        port: 3306
-        secret: mysql_secret
-        upgrade_migration_enabled: true
+        configuration: {"uri": "${local.container_registry.region}.gcr.io/${local.project_id}"}
       orchestrator:
         flavor: vertex
-        labels: {}
-        location: ${local.vertex_ai.region}
         name: vertex_ai_orchestrator
-        project: ${local.project_id}
-        synchronous: false
-        workload_service_account: ${google_service_account.sa.email}
+        configuration: {"workload_service_account": "${google_service_account.sa.email}", "project": "${local.project_id}", "location": "${local.vertex_ai.region}", "labels": "{}"}
       secrets_manager:
         flavor: gcp_secrets_manager
         name: gcp_secrets_manager
-        project_id: ${local.project_id}
+        configuration: {"project_id": "${local.project_id}"}
     ADD
   filename = "./vertex_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
 }
