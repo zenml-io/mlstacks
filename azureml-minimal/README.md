@@ -239,6 +239,8 @@ As mentioned above, you can still use the recipe without having using the `zenml
 
 Create stack to run on Azure
 
+> **_NOTE:_**: The recommended approach to register all the resources we deployed here, as a ZenML stack is to import the generated YAML file. However, since we are fetching the token after registration, we have to now update our experiment tracking stack component to include it.
+
 ```shell
 # zenml setup
 export STACK_PROFILE="azureml-mlflow"
@@ -293,8 +295,7 @@ zenml secrets-manager register azure_secrets_manager \
     --flavor=azure_key_vault \
     --key_vault_name=$KEY_VAULT_NAME
 
-zenml experiment-tracker register mlflow_experiment_tracker --flavor=mlflow --tracking_uri=$TRACKING_URI --tracking_token=$TOKEN
-
+zenml experiment-tracker register azureml_mlflow_experiment_tracker --flavor=mlflow --tracking_uri=$TRACKING_URI --tracking_token=$TOKEN
 
 zenml metadata-store register azure_mysql \
     --flavor=mysql \
@@ -315,7 +316,7 @@ zenml stack register azureml_stack \
     -a azure_store \
     -s azureml \
     -x azure_secrets_manager \
-    -e mlflow_experiment_tracker \
+    -e azureml_mlflow_experiment_tracker \
     --set
 
 zenml secrets-manager secret register azureauthentication \

@@ -11,37 +11,6 @@ resource "azurerm_application_insights" "ai" {
   application_type    = "web"
 }
 
-# workspace keyvault
-resource "azurerm_key_vault" "secret_manager" {
-  name                        = local.key_vault.name
-  location                    = azurerm_resource_group.rg.location
-  resource_group_name         = azurerm_resource_group.rg.name
-  enabled_for_disk_encryption = true
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  soft_delete_retention_days  = 7
-  purge_protection_enabled    = false
-
-  sku_name = "standard"
-}
-
-# workspace storage account
-resource "azurerm_storage_account" "zenml-account" {
-  name                     = "${local.prefix}${local.blob_storage.account_name}"
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-
-  tags = local.tags
-}
-
-# workspace storage container
-resource "azurerm_storage_container" "artifact-store" {
-  name                  = "${local.prefix}-${local.blob_storage.container_name}"
-  storage_account_name  = azurerm_storage_account.zenml-account.name
-  container_access_type = "private"
-}
-
 # workspace
 resource "azurerm_machine_learning_workspace" "mlw" {
   name                    = "${local.prefix}-${local.azureml.cluster_name}-mlw"
