@@ -13,23 +13,15 @@ resource "local_file" "stack_file" {
       artifact_store:
         flavor: s3
         name: s3_artifact_store
-        path: s3://${aws_s3_bucket.zenml-artifact-store.bucket}
+        configuration: {"path": "s3://${aws_s3_bucket.zenml-artifact-store.bucket}"}
       container_registry:
         flavor: aws
         name: aws_container_registry
-        uri: ${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com
-      metadata_store:
-        database: zenmldb
-        flavor: mysql
-        host: ${module.metadata_store.db_instance_address}
-        name: rds_metadata_store
-        port: 3306
-        secret: aws_mysql_secret
-        upgrade_migration_enabled: true
+        configuration: {"uri": "${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com"}
       secrets_manager:
         flavor: aws
         name: aws_secrets_manager
-        region_name: ${local.region}
+        configuration: {"region_name": "${local.region}"}
     ADD
   filename = "./aws_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
 }

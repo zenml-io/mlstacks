@@ -10,41 +10,27 @@ resource "local_file" "stack_file" {
       artifact_store:
         flavor: s3
         name: s3_artifact_store
-        path: s3://${aws_s3_bucket.zenml-artifact-store.bucket}
+        configuration: {"path": "s3://${aws_s3_bucket.zenml-artifact-store.bucket}"}
       container_registry:
         flavor: aws
         name: aws_container_registry
-        uri: ${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com
-      metadata_store:
-        database: zenml_db
-        flavor: mysql
-        host: ${module.metadata_store.db_instance_address}
-        name: rds_metadata_store
-        port: 3306
-        secret: aws_mysql_secret
-        upgrade_migration_enabled: true
+        configuration: {"uri": "${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com"}
       orchestrator:
         flavor: kubernetes
         name: eks_kubernetes_orchestrator
-        synchronous: True
-        kubernetes_context: terraform
+        configuration: {"kubernetes_context": "terraform", "synchronous": True}
       secrets_manager:
         flavor: aws
         name: aws_secrets_manager
-        region_name: ${local.region}
+        configuration: {"region_name": "${local.region}"}
       experiment_tracker:
         flavor: mlflow
         name: eks_mlflow_experiment_tracker
-        tracking_uri: http://${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.hostname}
-        tracking_username: ${var.mlflow-username}
-        tracking_password: ${var.mlflow-password}
+        configuration: {"tracking_uri": "http://${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.hostname}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
       model_deployer:
         flavor: seldon
         name: eks_seldon_model_deployer
-        kubernetes_context: terraform
-        kubernetes_namespace: ${kubernetes_namespace.seldon-workloads.metadata[0].name}
-        base_url: ${data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.hostname}
-        secret: aws_seldon_secret
+        configuration: {"kubernetes_context": "terraform", "kubernetes_namespace": "${kubernetes_namespace.seldon-workloads.metadata[0].name}", "base_url": "${data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.hostname}", "secret": "aws_seldon_secret"}
     ADD
   filename = "./aws_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
 }

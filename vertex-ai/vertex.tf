@@ -1,6 +1,6 @@
 # workload service account for Vertex pipelines
 resource "google_service_account" "sa" {
-  account_id   = local.service_account.account_id
+  account_id   = "${local.prefix}-${local.service_account.account_id}"
   project      = local.project_id
   display_name = "${local.prefix}-${local.service_account.account_id}"
 }
