@@ -8,17 +8,21 @@ resource "local_file" "stack_file" {
     stack_name: aws_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}
     components:
       orchestrator:
+        id: ${uuid()}
         flavor: local
         name: default
       artifact_store:
+        id: ${uuid()}
         flavor: s3
         name: s3_artifact_store
         configuration: {"path": "s3://${aws_s3_bucket.zenml-artifact-store.bucket}"}
       container_registry:
+        id: ${uuid()}
         flavor: aws
         name: aws_container_registry
         configuration: {"uri": "${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com"}
       secrets_manager:
+        id: ${uuid()}
         flavor: aws
         name: aws_secrets_manager
         configuration: {"region_name": "${local.region}"}
