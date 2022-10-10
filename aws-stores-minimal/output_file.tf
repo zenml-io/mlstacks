@@ -11,6 +11,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: local
         name: default
+        configuration: {}
       artifact_store:
         id: ${uuid()}
         flavor: s3

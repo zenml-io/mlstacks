@@ -7,6 +7,11 @@ resource "local_file" "stack_file" {
     zenml_version: ${var.zenml-version}
     stack_name: azureml_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}
     components:
+      orchestrator:
+        id: ${uuid()}
+        flavor: local
+        name: default
+        configuration: {}
       artifact_store:
         id: ${uuid()}
         flavor: azure
