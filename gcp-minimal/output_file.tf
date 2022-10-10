@@ -32,5 +32,5 @@ resource "local_file" "stack_file" {
         name: gke_seldon_model_deployer
         configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke.name}", "kubernetes_namespace": "${kubernetes_namespace.seldon-workloads.metadata[0].name}", "base_url": "${data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.ip}", "secret": "gcp_seldon_secret"}
     ADD
-  filename = "./gcp_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
+  filename = "./gcp_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }

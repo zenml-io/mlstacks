@@ -30,7 +30,7 @@ resource "local_file" "stack_file_mlflow" {
         name: gke_mlflow_experiment_tracker
         configuration: {"tracking_uri": "http://${data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
     ADD
-  filename = "./vertex_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
+  filename = "./vertex_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }
 
 resource "local_file" "stack_file" {
@@ -59,5 +59,5 @@ resource "local_file" "stack_file" {
         name: gcp_secrets_manager
         configuration: {"project_id": "${local.project_id}"}
     ADD
-  filename = "./vertex_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
+  filename = "./vertex_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }

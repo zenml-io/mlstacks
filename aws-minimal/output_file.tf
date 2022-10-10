@@ -32,5 +32,5 @@ resource "local_file" "stack_file" {
         name: eks_seldon_model_deployer
         configuration: {"kubernetes_context": "terraform", "kubernetes_namespace": "${kubernetes_namespace.seldon-workloads.metadata[0].name}", "base_url": "${data.kubernetes_service.seldon_ingress.status.0.load_balancer.0.ingress.0.hostname}", "secret": "aws_seldon_secret"}
     ADD
-  filename = "./aws_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
+  filename = "./aws_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }

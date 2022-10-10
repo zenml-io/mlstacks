@@ -32,5 +32,5 @@ resource "local_file" "stack_file" {
         name: eks_kserve_model_deployer
         configuration: {"kubernetes_context": "terraform", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "http://${data.kubernetes_service.kserve_ingress.status.0.load_balancer.0.ingress.0.hostname}:${data.kubernetes_service.kserve_ingress.spec.0.port.1.port}", "secret": "aws_kserve_secret"}
     ADD
-  filename = "./aws_kflow_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
+  filename = "./aws_kflow_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }

@@ -24,5 +24,5 @@ resource "local_file" "stack_file" {
         name: azureml_mlflow_experiment_tracker
         configuration: {"tracking_uri": "https://${azurerm_resource_group.rg.location}.api.azureml.ms/mlflow/v1.0/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${azurerm_resource_group.rg.name}/providers/Microsoft.MachineLearningServices/workspaces/${local.prefix}-${local.azureml.cluster_name}-mlw", "tracking_token": "REPLACE_ME"}
     ADD
-  filename = "./azureml_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
+  filename = "./azureml_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }

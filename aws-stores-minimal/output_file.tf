@@ -23,5 +23,5 @@ resource "local_file" "stack_file" {
         name: aws_secrets_manager
         configuration: {"region_name": "${local.region}"}
     ADD
-  filename = "./aws_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yml"
+  filename = "./aws_minimal_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }
