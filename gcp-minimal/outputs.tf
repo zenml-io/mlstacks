@@ -14,23 +14,6 @@ output "gcs-bucket-path" {
   description = "The GCS bucket path for storing your artifacts"
 }
 
-# outputs for the CloudSQL metadata store
-output "metadata-db-host" {
-  value = module.metadata_store.instance_first_ip_address
-}
-output "metadata-db-connection-name" {
-  value = module.metadata_store.instance_connection_name
-}
-output "metadata-db-username" {
-  value     = var.metadata-db-username
-  sensitive = true
-}
-output "metadata-db-password" {
-  description = "The auto generated default user password if not input password was provided"
-  value       = module.metadata_store.generated_user_password
-  sensitive   = true
-}
-
 # # output for container registry
 # output "artifact-repository-name" {
 #   value = local.artifact_repository.enable_container_registry ? google_artifact_registry_repository.artifact-repository[0].name : "not enabled"

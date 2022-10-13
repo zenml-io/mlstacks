@@ -1,4 +1,4 @@
-# 🥗 S3 and RDS MLOps Stack Recipe 
+# 🥗 S3 and Secrets Manager MLOps Stack Recipe 
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
@@ -7,7 +7,6 @@ We know that the process to set up an MLOps stack can be daunting. There are man
 You can have a simple MLOps stack ready for running your pipelines after you execute this recipe 😍. It sets up the following resources: 
 - A local [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) for your workloads.
 - An S3 bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- An AWS RDS MySQL instance as a [metadata store](https://docs.zenml.io/mlops-stacks/metadata-stores) that is essential to track all your metadata and its location in your artifact store.  
 - A [secrets manager](https://docs.zenml.io/mlops-stacks/secrets-managers) enabled for storing secrets for the metadata store. 
 
 Keep in mind, this is a basic setup to get you up and running on AWS with a minimal MLOps stack and more configuration options are coming in the form of new recipes! 👀
@@ -68,9 +67,6 @@ The script, after running, outputs the following.
 --- | ---
 
 s3-bucket-path | The path of the S3 bucket. Useful while registering the artifact store|
-metadata-db-host | The host endpoint of the deployed metadata store |
-metadata-db-username | The username for the database user |
-metadata-db-password | The master password for the database |
 container-registry-URI | The URI for your ECR |
 
 For outputs that are sensitive, you'll see that they are not shown directly on the logs. To view the full list of outputs, run the following command.

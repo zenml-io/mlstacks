@@ -4,19 +4,6 @@ output "s3-bucket-path" {
   description = "The S3 bucket path for storing your artifacts"
 }
 
-# outputs for the metadata store
-output "metadata-db-host" {
-  value = module.metadata_store.db_instance_address
-}
-output "metadata-db-username" {
-  value     = module.metadata_store.db_instance_username
-  sensitive = true
-}
-output "metadata-db-password" {
-  value     = module.metadata_store.db_instance_password
-  sensitive = true
-}
-
 # output for container registry
 output "container-registry-URI" {
   value = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com"

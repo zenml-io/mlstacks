@@ -35,17 +35,6 @@ locals {
     artifact_GCS_Bucket = ""
   }
 
-  cloudsql = {
-    name = "zenml-metadata-store-demo"
-    authorized_networks = [
-      {
-        name  = "all",
-        value = "0.0.0.0/0"
-      }
-    ]
-    require_ssl = true
-  }
-
   container_registry = {
     region = "eu" # available options: eu, us, asia
   }

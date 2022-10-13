@@ -1,5 +1,5 @@
 Description: |
-  A simple recipe to spin up an RDS MySQL metadata store, 
+  A simple recipe to spin up an  
   S3 artifact store and an ECR container registry.
 
 Prerequisites: |

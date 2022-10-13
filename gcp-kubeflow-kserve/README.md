@@ -1,4 +1,4 @@
-# 🍭 Kubeflow, Vertex, GCS, CloudSQL, MLflow and Kserve MLOps Stack Recipe 
+# 🍭 Kubeflow, Vertex, GCS, MLflow and Kserve MLOps Stack Recipe 
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
@@ -7,7 +7,6 @@ We know that the process to set up an MLOps stack can be daunting. There are man
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
 - A GKE cluster with Kubeflow installed that can act as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) for your workloads.
 - A GCS Bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- An CloudSQL instance as a [metadata store](https://docs.zenml.io/mlops-stacks/metadata-stores) that is essential to track all your metadata and its location in your artifact store.  
 - An MLflow tracking server as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
 - A Kserve serverless deployment as a [model deployer](https://docs.zenml.io/mlops-stacks/model-deployers) to have your trained model deployed on a Kubernetes cluster to run inference on. 
 - A [secrets manager](https://docs.zenml.io/mlops-stacks/secrets-managers) enabled for storing your secrets. 
@@ -76,20 +75,6 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 ### Configuring your secrets
 
 To make the imported ZenML stack work, you'll have to create secrets that some stack components need. If you inspect the generated YAML file, you can figure out that two secrets should be created:
-- `gcp_mysql_secret` - for allowing access to the CloudSQL instance.
-
-    - Go into your imported recipe directory. It should be under `zenml_stack_recipes/gcp-kubeflow-kserve`.
-    - You will notice that the certificate files for your CloudSQL instance are already created and downloaded as `server-ca.pem`, `client-cert.pem` and `client-key.pem`.
-    - Run the following commands to get the username and password for the RDS instance.
-        ```
-        terraform output metadata-db-username
-
-        terraform output metadata-db-password
-        ```
-    - Now, register the ZenML secret using the following command:
-        ```
-        zenml secrets-manager secret register gcp_mysql_secret --schema=mysql --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@<PATH-TO-server-ca.pem> --ssl_cert=@<PATH-TO-client-cert.pem> --ssl_key=@<PATH-TO-client-key.pem>
-        ```
 - `gcp_kserve_secret` - for allowing KServe access to your GCS bucket.
  
     - You will need the credentials for a service account that has access to your GCS buckets. As before, this account is already created for you and the credentials file is available inside the recipe directory as `kserve_sa_key.json`.
@@ -111,9 +96,6 @@ ingress-controller-namespace | Used for getting the ingress URL for the MLflow t
 mlflow-tracking-URL | The URL for the MLflow tracking server |
 kserve-workload-namespace | Namespace in which kserve workloads will be created |
 kserve-base-url | The URL to use for your Kserve deployment |
-metadata-db-host | The host endpoint of the deployed metadata store |
-metadata-db-username | The username for the database user |
-metadata-db-password | The master password for the database |
 container-registry-URI | The URI of your container registry |
 stack-yaml-path | The path to the ZenML stack configuration YAML file which gets created |
 
@@ -196,7 +178,3 @@ are terraform commands but running `zenml stack recipe apply` would also achieve
 * While running a terraform command, this error might appear too: `context deadline exceeded`
 \
     💡 Fix - This problem could arise due to strained system resources. Try running the command again after some time.
-
-* Error while creating the CloudSQL instance through terraform, `│ Error: Error, failed to create instance jayesh-zenml-metadata-store: googleapi: Error 409: The Cloud SQL instance already exists. When you delete an instance, you can't reuse the name of the deleted instance until one week from the deletion date., instanceAlreadyExists`
-\
-    💡 Fix - Simply change the name of the CloudSQL instance inside the `locals.tf` file and reuse the older name only after a week.

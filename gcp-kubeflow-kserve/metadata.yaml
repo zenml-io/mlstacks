@@ -1,8 +1,8 @@
 Description: |
   A recipe that creates a Kubeflow pipelines cluster 
   as orchestrator, GCS artifact store, GCR container registry, 
-  CloudSQL MySQL metadata store,  MLflow experiment tracker, 
-  KServe model deployer and option for Vertex AI as a step operator.
+  MLflow experiment tracker, KServe model deployer 
+  and option for Vertex AI as a step operator.
 
 Prerequisites: |
   * The gcloud CLI on your local machine must be configured with 

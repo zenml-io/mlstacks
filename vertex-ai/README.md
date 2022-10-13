@@ -8,7 +8,6 @@ You can have a simple MLOps stack ready for running your machine learning worklo
 - A Vertex AI enabled workspace as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) that you can submit your pipelines to.
 - A service account with all the necessary permissions needed to execute your pipelines.
 - A GCS bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- A CloudSQL instance as a [metadata store](https://docs.zenml.io/mlops-stacks/metadata-stores) that is essential to track all your metadata and its location in your artifact store.  
 - A Container Registry repository as [container registry](https://docs.zenml.io/mlops-stacks/container-registries) for hosting your docker images.
 - A [secrets manager](https://docs.zenml.io/mlops-stacks/secrets-managers) enabled for storing your secrets. 
 - An optional MLflow Tracking server deployed on a GKE cluster as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers). 
@@ -79,20 +78,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 
 ### Configuring your secrets
 
-To make the imported ZenML stack work, you'll have to create secrets that some stack components need. If you inspect the generated YAML file, you can figure out that one secret should be created:
-- `gcp_mysql_secret` - for allowing access to the CloudSQL instance.
-
-    - Go into your imported recipe directory. It should be under `zenml_stack_recipes/vertex-ai`.
-    - You will notice that the certificate files for your CloudSQL instance are already created and downloaded as `server-ca.pem`, `client-cert.pem` and `client-key.pem`.
-    - Run the following commands to get the username and password for the RDS instance.
-        ```
-        terraform output metadata-db-username
-
-        terraform output metadata-db-password
-        ```
-    - Now, register the ZenML secret using the following command:
-        ```
-        zenml secrets-manager secret register gcp_mysql_secret --schema=mysql --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@<PATH-TO-server-ca.pem> --ssl_cert=@<PATH-TO-client-cert.pem> --ssl_key=@<PATH-TO-client-key.pem>
+No secrets need to be configured for this stack.
 
 ## 🥧 Outputs 
 
@@ -188,7 +174,3 @@ are terraform commands but running `zenml stack recipe apply` would also achieve
 * While running a terraform command, this error might appear too: `context deadline exceeded`
 \
     💡 Fix - This problem could arise due to strained system resources. Try running the command again after some time.
-
-* Error while creating the CloudSQL instance through terraform, `│ Error: Error, failed to create instance jayesh-zenml-metadata-store: googleapi: Error 409: The Cloud SQL instance already exists. When you delete an instance, you can't reuse the name of the deleted instance until one week from the deletion date., instanceAlreadyExists`
-\
-    💡 Fix - Simply change the name of the CloudSQL instance inside the `locals.tf` file and reuse the older name only after a week.

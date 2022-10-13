@@ -27,17 +27,6 @@ locals {
     location = "US-WEST1"
   }
 
-  cloudsql = {
-    name = "kubeflow-metadata-store"
-    authorized_networks = [
-      {
-        name  = "all",
-        value = "0.0.0.0/0"
-      }
-    ]
-    require_ssl = true
-  }
-
   mlflow = {
     artifact_Proxied_Access = "false"
     artifact_GCS            = "true"

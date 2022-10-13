@@ -1,4 +1,4 @@
-# 🍭 Kubeflow, S3, RDS, MLflow and Kserve MLOps Stack Recipe 
+# 🍭 Kubeflow, S3, MLflow and Kserve MLOps Stack Recipe 
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
@@ -7,7 +7,6 @@ We know that the process to set up an MLOps stack can be daunting. There are man
 You can have a simple MLOps stack ready for running your pipelines after you execute this recipe 😍. It sets up the following resources: 
 - An EKS cluster with Kubeflow installed that can act as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) for your workloads.
 - An S3 bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- An AWS RDS MySQL instance as a [metadata store](https://docs.zenml.io/mlops-stacks/metadata-stores) that is essential to track all your metadata and its location in your artifact store.  
 - An MLflow tracking server as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
 - A Kserve serverless deployment as a [model deployer](https://docs.zenml.io/mlops-stacks/model-deployers) to have your trained model deployed on a Kubernetes cluster to run inference on. 
 - A [secrets manager](https://docs.zenml.io/mlops-stacks/secrets-managers) enabled for storing your secrets. 
@@ -77,20 +76,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 
 ### Configuring your secrets
 
-To make the imported ZenML stack work, you'll have to create secrets that some stack components need. If you inspect the generated YAML file, you can figure out that two secrets should be created:
-- `aws_mysql_secret` - for allowing access to the RDS MySQL instance.
-
-    - Go into your imported recipe directory. It should be under `zenml_stack_recipes/aws-kubeflow-kserve`.
-    - Run the following commands to get the username and password for the RDS instance.
-        ```
-        terraform output metadata-db-username
-
-        terraform output metadata-db-password
-        ```
-    - Now, register the ZenML secret using the following command.
-        ```
-        zenml secrets-manager secret register aws_mysql_secret --schema=mysql --user=<USERNAME> --password=<PASSWORD>
-        ```
+To make the imported ZenML stack work, you'll have to create secrets that some stack components need. If you inspect the generated YAML file, you can figure out that one secret should be created:
 - `aws_kserve_secret` - for allowing KServe access to your S3 bucket.
  
     - We're going to use an AWS credentials file for this. Make sure that the credentials you have in your file have access to S3.
@@ -118,9 +104,6 @@ ingress-controller-namespace | Used for getting the ingress URL for the MLflow t
 mlflow-tracking-URI | The URL for the MLflow tracking server |
 kserve-workload-namespace | Namespace in which kserve workloads will be created |
 kserve-base-url | The URL to use for your Kserve deployment |
-metadata-db-host | The host endpoint of the deployed metadata store |
-metadata-db-username | The username for the database user |
-metadata-db-password | The master password for the database |
 container-registry-URI | The URI of your container registry |
 stack-yaml-path | The path to the ZenML stack configuration YAML file which gets created |
 

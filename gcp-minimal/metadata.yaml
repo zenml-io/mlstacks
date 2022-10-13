@@ -1,7 +1,7 @@
 Description: |
   A recipe that creates a GKE orchestrator, GCS artifact store, 
-  GCR container repository, CloudSQL MySQL metadata store,  
-  MLflow experiment tracker and Seldon Core model deployer.
+  GCR container repository, MLflow experiment tracker and 
+  Seldon Core model deployer.
 
 Prerequisites: |
   * The gcloud CLI on your local machine must be configured with 

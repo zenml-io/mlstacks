@@ -36,14 +36,14 @@ Watch it below:
 
 | Recipe               | Tools installed                                                | Description                                                                       |
 |----------------------|------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| [aws-kubeflow-kserve](https://github.com/zenml-io/mlops-stacks/tree/main/aws-kubeflow-kserve) | Kubeflow on EKS, S3, ECR, RDS, MLflow Tracking, KServe | A recipe that creates a Kubeflow pipelines cluster as orchestrator, S3 artifact store, ECR container registry, RDS MySQL metadata store,  MLflow experiment tracker and KServe model deployer |
-| [aws-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/aws-minimal) | EKS, S3, ECR, RDS, MLflow Tracking, Seldon  | AWS specific recipe to showcase a production-grade MLOps Stack with an EKS orchestrator, S3 artifact store, ECR container registry, RDS MySQL metadata store,  MLflow experiment tracker and Seldon Core model deployer |
-| [aws-stores-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/aws-stores-minimal) | S3, RDS, ECR | A simple recipe to spin up an RDS MySQL metadata store, S3 artifact store and an ECR container registry |
-| [azure-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/azure-minimal) | AKS, Blob Storage, ACR, Flexible MySQL, MLflow Tracking, Key Vault, Seldon | Azure specific recipe that creates an MLOps stack with an AKS cluster as orchestrator, Azure Blob Storage container artifact store. ACR container registry, Flexible MySQL server as metadata store, MLflow experiment tracker and Seldon Core model deployer |
-| [azureml-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/azureml-minimal) | AzureML Workspace, Blob Storage, ACR, Flexible MySQL, MLflow Tracking, Key Vault | A recipe that creates a AzureML workspace with MLflow Tracking enabled and adds a compute cluster with access to MySQL server, Blob Storage, and Key Vault |
-| [gcp-kubeflow-kserve](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-kubeflow-kserve) | Kubeflow on GKE, GCS, CloudSQL, GCR, MLflow Tracking, KServe, Vertex | A recipe that creates a Kubeflow pipelines cluster as orchestrator, GCS artifact store, GCR container registry, CloudSQL MySQL metadata store,  MLflow experiment tracker, KServe model deployer and option for Vertex AI as a step operator |
-| [gcp-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-minimal) | GKE, GCS, GCR, CloudSQL, MLflow Tracking, Seldon | GCP specific recipe to showcase a production-grade MLOps Stack with a GKE orchestrator, GCS artifact store, GCR container repository, CloudSQL MySQL metadata store,  MLflow experiment tracker and Seldon Core model deployer |
-| [vertex-ai](https://github.com/zenml-io/mlops-stacks/tree/main/vertex-ai) | Vertex AI Pipelines, GCS, GCR, CloudSQL and (optional) MLflow Tracking | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry, CloudSQL MySQL metadata store and an optional MLflow experiment tracker |
+| [aws-kubeflow-kserve](https://github.com/zenml-io/mlops-stacks/tree/main/aws-kubeflow-kserve) | Kubeflow on EKS, S3, ECR, MLflow Tracking, KServe | A recipe that creates a Kubeflow pipelines cluster as orchestrator, S3 artifact store, ECR container registry,  MLflow experiment tracker and KServe model deployer |
+| [aws-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/aws-minimal) | EKS, S3, ECR, MLflow Tracking, Seldon  | AWS specific recipe to showcase a production-grade MLOps Stack with an EKS orchestrator, S3 artifact store, ECR container registry,  MLflow experiment tracker and Seldon Core model deployer |
+| [aws-stores-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/aws-stores-minimal) | S3, ECR | A simple recipe to spin up an S3 artifact store and an ECR container registry |
+| [azure-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/azure-minimal) | AKS, Blob Storage, ACR, MLflow Tracking, Key Vault, Seldon | Azure specific recipe that creates an MLOps stack with an AKS cluster as orchestrator, Azure Blob Storage container artifact store. ACR container registry, MLflow experiment tracker and Seldon Core model deployer |
+| [azureml-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/azureml-minimal) | AzureML Workspace, Blob Storage, ACR, MLflow Tracking, Key Vault | A recipe that creates a AzureML workspace with MLflow Tracking enabled and adds a compute cluster with access to Blob Storage, and Key Vault |
+| [gcp-kubeflow-kserve](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-kubeflow-kserve) | Kubeflow on GKE, GCS, GCR, MLflow Tracking, KServe, Vertex | A recipe that creates a Kubeflow pipelines cluster as orchestrator, GCS artifact store, GCR container registry,  MLflow experiment tracker, KServe model deployer and option for Vertex AI as a step operator |
+| [gcp-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-minimal) | GKE, GCS, GCR, MLflow Tracking, Seldon | GCP specific recipe to showcase a production-grade MLOps Stack with a GKE orchestrator, GCS artifact store, GCR container repository, MLflow experiment tracker and Seldon Core model deployer |
+| [vertex-ai](https://github.com/zenml-io/mlops-stacks/tree/main/vertex-ai) | Vertex AI Pipelines, GCS, GCR and (optional) MLflow Tracking | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry and an optional MLflow experiment tracker |
 
 ## 🙏 Association with ZenML
 
@@ -67,7 +67,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     ```
 3. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
-4. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
+4. 🔐 Add your secret information like keys and pass into the `values.tfvars.json` file which is not committed and only exists locally.
 
 5. 🚀 Deploy the recipe with this simple command.
 

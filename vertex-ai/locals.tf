@@ -17,17 +17,6 @@ locals {
     location = "US-WEST1"
   }
 
-  cloudsql = {
-    name = "zenml-metadata-store-demo"
-    authorized_networks = [
-      {
-        name  = "all",
-        value = "0.0.0.0/0"
-      }
-    ]
-    require_ssl = true
-  }
-
   service_account = {
     account_id = "zenml-vertex-sa"
   }

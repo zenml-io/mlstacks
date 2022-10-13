@@ -1,6 +1,6 @@
 Description: |
   A recipe that creates a Kubeflow pipelines cluster as orchestrator, 
-  S3 artifact store, ECR container registry, RDS MySQL metadata store,  
+  S3 artifact store, ECR container registry, 
   MLflow experiment tracker and KServe model deployer.
 
 Prerequisites: |
