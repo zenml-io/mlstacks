@@ -47,6 +47,11 @@ output "key-vault-name" {
   value = azurerm_key_vault.secret_manager.name
 }
 
+# ingress controller hostname
+output "ingress-controller-host" {
+  value = data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip
+}
+
 # outputs for the MLflow tracking server
 output "ingress-controller-name" {
   value = module.mlflow.ingress-controller-name
@@ -55,7 +60,7 @@ output "ingress-controller-namespace" {
   value = module.mlflow.ingress-controller-namespace
 }
 output "mlflow-tracking-URL" {
-  value = data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip
+  value = "${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip}/mlflow/"
 }
 
 # output for seldon model deployer

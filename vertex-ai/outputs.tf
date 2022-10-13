@@ -40,9 +40,14 @@ output "container-registry-URI" {
   value = "${local.container_registry.region}.gcr.io/${local.project_id}"
 }
 
+# ingress controller hostname
+output "ingress-controller-host" {
+  value = data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip
+}
+
 # output for MLflow URI
 output "mlflow-tracking-URL" {
-  value = local.enable_mlflow ? data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip : "not enabled"
+  value = local.enable_mlflow ? "${data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip}/mlflow/" : "not enabled"
 }
 
 # output the name of the stack YAML file created

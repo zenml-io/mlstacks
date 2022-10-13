@@ -18,9 +18,10 @@ resource "kubernetes_ingress_v1" "mlflow-ingress" {
   metadata {
     name = "mlflow-ingress"
     annotations = {
-      "nginx.ingress.kubernetes.io/auth-type"   = "basic"
-      "nginx.ingress.kubernetes.io/auth-secret" = "basic-auth"
-      "nginx.ingress.kubernetes.io/auth-realm"  = "Authentication Required - mlflow"
+      "nginx.ingress.kubernetes.io/auth-type"      = "basic"
+      "nginx.ingress.kubernetes.io/auth-secret"    = "basic-auth"
+      "nginx.ingress.kubernetes.io/auth-realm"     = "Authentication Required - mlflow"
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/$1"
     }
   }
   spec {
@@ -28,7 +29,7 @@ resource "kubernetes_ingress_v1" "mlflow-ingress" {
     rule {
       http {
         path {
-          path      = "/"
+          path      = "/mlflow/?(.*)"
           path_type = "Prefix"
           backend {
             service {

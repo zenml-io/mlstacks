@@ -31,6 +31,11 @@ output "ecr-registry-name" {
   description = "The ECR registry repository for storing your images"
 }
 
+# ingress controller hostname
+output "ingress-controller-host" {
+  value = data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.hostname
+}
+
 # outputs for the Mlflow tracking server
 output "ingress-controller-name" {
   value = module.mlflow.ingress-controller-name
@@ -39,7 +44,7 @@ output "ingress-controller-namespace" {
   value = module.mlflow.ingress-controller-namespace
 }
 output "mlflow-tracking-URL" {
-  value = data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.hostname
+  value = "${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.hostname}/mlflow/"
 }
 
 # output for seldon model deployer

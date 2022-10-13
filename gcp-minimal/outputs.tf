@@ -42,6 +42,11 @@ output "container-registry-URI" {
   value = "${local.container_registry.region}.gcr.io/${local.project_id}"
 }
 
+# ingress controller hostname
+output "ingress-controller-host" {
+  value = data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip
+}
+
 # outputs for the MLflow tracking server
 output "ingress-controller-name" {
   value = module.mlflow.ingress-controller-name
@@ -50,7 +55,7 @@ output "ingress-controller-namespace" {
   value = module.mlflow.ingress-controller-namespace
 }
 output "mlflow-tracking-URL" {
-  value = data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip
+  value = "${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip}/mlflow/"
 }
 
 # output for seldon model deployer
