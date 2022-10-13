@@ -2,6 +2,10 @@
 output "project-number" {
   value = data.google_project.project.number
 }
+# project id
+output "project-id" {
+  value = local.project_id
+}
 
 # service account for vertex AI
 output "service-account" {

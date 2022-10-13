@@ -1,3 +1,8 @@
+# project id
+output "project-id" {
+  value = local.project_id
+}
+
 # output for the GKE cluster
 output "gke-cluster-name" {
   value = module.gke.name
