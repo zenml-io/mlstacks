@@ -47,12 +47,12 @@ output "ingress-controller-host" {
 
 # output for MLflow URI
 output "mlflow-tracking-URL" {
-  value = local.enable_mlflow ? "${data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip}/mlflow/" : "not enabled"
+  value = var.enable_mlflow ? "${data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip}/mlflow/" : "not enabled"
 }
 
 # output the name of the stack YAML file created
 output "stack-yaml-path" {
-  value = local.enable_mlflow ? local_file.stack_file_mlflow[0].filename : local_file.stack_file[0].filename
+  value = var.enable_mlflow ? local_file.stack_file_mlflow[0].filename : local_file.stack_file[0].filename
 }
 
 # # output for artifact registry repository

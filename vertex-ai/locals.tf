@@ -42,7 +42,6 @@ locals {
     enable_container_registry = false
   }
 
-  enable_mlflow = true
   gke = {
     cluster_name = "zenml-terraform-cluster"
     # important to use 1.22 or above due to a bug with Istio in older versions

@@ -4,7 +4,7 @@ module "mlflow" {
 
   # run only after the eks cluster is set up
   depends_on = [module.gke]
-  count      = local.enable_mlflow ? 1 : 0
+  count      = var.enable_mlflow ? 1 : 0
 
   # details about the mlflow deployment
   htpasswd                = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"

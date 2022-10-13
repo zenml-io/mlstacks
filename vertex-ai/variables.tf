@@ -1,4 +1,9 @@
 # variables for the MLflow tracking server
+variable "enable_mlflow" {
+  description = "Whether to deploy MLflow"
+  default     = true
+}
+
 variable "mlflow-username" {
   description = "The username for the MLflow Tracking Server"
   default     = "admin"
