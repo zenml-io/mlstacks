@@ -16,15 +16,18 @@ Keep in mind, this is a basic setup to get you up and running on Azure with a mi
 
 ## Prerequisites
 
-- You must have a Azure account where you have sufficient permissions to create and destroy resources that will be created as part of this recipe. Supply the name of your project in the `locals.tf` file.
-- Have [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform) and [Helm](https://helm.sh/docs/intro/install/#from-script) installed on your system.
+- You must have a Azure account where you have sufficient permissions to create and destroy resources that will be created as part of this recipe. 
+- Have [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform), [Helm](https://helm.sh/docs/intro/install/#from-script), [Kubectl](https://kubernetes.io/docs/tasks/tools/) and [azure-cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) installed on your system.
 
 ## 🍏 Inputs
 
-Before starting, you should know the values that you have to keep ready for use in the script.
+Before starting, you should know the values that you need to modify to run this recipe.
 
-- Check out the `locals.tf` file to configure basic information about your deployments.
-- Take a look at the `values.tfvars.json` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, AWS access keys, etc. Make sure you don't commit them!
+- Check out the `locals.tf` file to configure basic information about your deployments. You can use existing default values for various resources or provide your own. 
+- Take a look at the `values.tfvars.json` file to know what values have to be supplied for the execution of this recipe. These are mostly sensitive values like passwords, access keys, etc. Make sure you don't commit them!
+For this recipe, please ensure to provide values for: 
+    1. `metadata-db-username`: This value will be used as a username for the MySQL server. Avoid using `azure_superuser`, `admin`, `administrator`, `root`, `guest` or `public` as usernames as it may lead to an error. 
+    2. `metadata-db-password`: This value will be used as a password for the MySQL server. This value should be a combination of at least 3 of the following types - lowercase, uppercase, numbers, non-alphanumeric characters for e.g. `zenMLpass1`
 
 > **Warning**
 > The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
