@@ -2,6 +2,8 @@ Description: |
   A recipe that creates a Vertex AI orchestrator, GCS artifact store, 
   GCR container registry and an optional MLflow experiment tracker.
 
+Cloud: gcp
+
 Prerequisites: |
   * The gcloud CLI on your local machine must be configured with 
     the account you want to deploy resources to. Run `gcloud auth login`.

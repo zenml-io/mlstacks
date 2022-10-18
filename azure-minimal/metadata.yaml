@@ -4,6 +4,8 @@ Description: |
   ACR container registry, Flexible MySQL server as metadata store, 
   MLflow experiment tracker and Seldon Core model deployer.
 
+Cloud: azure
+
 Prerequisites: |
   * The Az CLI on your local machine must be configured with 
     the account you want to deploy resources to. Run `az login`.
