@@ -26,7 +26,7 @@ resource "local_file" "stack_file_mlflow" {
         configuration: {"workload_service_account": "${google_service_account.sa.email}", "project": "${local.project_id}", "location": "${local.vertex_ai.region}", "labels": "{}"}
       secrets_manager:
         id: ${uuid()}
-        flavor: gcp_secrets_manager
+        flavor: gcp
         name: gcp_secrets_manager
         configuration: {"project_id": "${local.project_id}"}
       experiment_tracker:
@@ -64,7 +64,7 @@ resource "local_file" "stack_file" {
         configuration: {"workload_service_account": "${google_service_account.sa.email}", "project": "${local.project_id}", "location": "${local.vertex_ai.region}", "labels": "{}"}
       secrets_manager:
         id: ${uuid()}
-        flavor: gcp_secrets_manager
+        flavor: gcp
         name: gcp_secrets_manager
         configuration: {"project_id": "${local.project_id}"}
     ADD

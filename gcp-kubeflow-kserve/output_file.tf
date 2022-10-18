@@ -24,7 +24,7 @@ resource "local_file" "stack_file" {
         configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke.name}", "synchronous": True}
       secrets_manager:
         id: ${uuid()}
-        flavor: gcp_secrets_manager
+        flavor: gcp
         name: gcp_secrets_manager
         configuration: {"project_id": "${local.project_id}"}
       experiment_tracker:
