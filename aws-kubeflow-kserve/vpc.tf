@@ -8,6 +8,7 @@ module "vpc" {
 
   azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
   private_subnets = ["10.10.8.0/21", "10.10.16.0/21", "10.10.24.0/21"]
+  public_subnets  = ["10.10.128.0/21", "10.10.136.0/21", "10.10.144.0/21"]
 
   enable_nat_gateway   = true
   single_nat_gateway   = true
