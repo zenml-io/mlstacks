@@ -22,3 +22,41 @@ resource "kubernetes_namespace" "seldon-workloads" {
     name = "zenml-seldon-workloads"
   }
 }
+
+
+# add role to allow kubeflow to access kserve
+resource "kubernetes_cluster_role_v1" "seldon" {
+  metadata {
+    name = "seldon-permission"
+    labels = {
+      app = "zenml"
+    }
+  }
+
+  rule {
+    api_groups = ["*"]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
+
+  depends_on = [
+    module.seldon,
+  ]
+}
+
+# assign role to kubeflow pipeline runner
+resource "kubernetes_cluster_role_binding_v1" "binding" {
+  metadata {
+    name = "seldon-permission-binding"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = kubernetes_cluster_role_v1.seldon.metadata[0].name
+  }
+  subject {
+    kind      = "User"
+    name      = "system:serviceaccount:kubeflow:pipeline-runner"
+  }
+}
+
