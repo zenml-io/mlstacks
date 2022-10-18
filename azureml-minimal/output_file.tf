@@ -21,10 +21,10 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: azureml
         name: azureml_step_operator
-        configuration: {"subscription_id": "${data.azurerm_client_config.current.subscription_id}", "resource_group_name": "${azurerm_resource_group.rg.name}", "workspace_name": "${azurerm_machine_learning_workspace.mlw.name}", "compute_target_name": "${azurerm_machine_learning_compute_cluster.cluster.name}"}
+        configuration: {"subscription_id": "${data.azurerm_client_config.current.subscription_id}", "resource_group": "${azurerm_resource_group.rg.name}", "workspace_name": "${azurerm_machine_learning_workspace.mlw.name}", "compute_target_name": "${azurerm_machine_learning_compute_cluster.cluster.name}"}
       secrets_manager:
         id: ${uuid()}
-        flavor: azure_key_vault
+        flavor: azure
         name: azureml_secrets_manager
         configuration: {"key_vault_name": "${azurerm_key_vault.secret_manager.name}"}
       experiment_tracker:

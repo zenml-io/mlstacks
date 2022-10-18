@@ -24,7 +24,7 @@ resource "local_file" "stack_file" {
         configuration: {"kubernetes_context": "${local.kubectl_context}", "synchronous": True}
       secrets_manager:
         id: ${uuid()}
-        flavor: azure_key_vault
+        flavor: azure
         name: azure_secrets_manager
         configuration: {"key_vault_name": "${azurerm_key_vault.secret_manager.name}"}
       experiment_tracker:
