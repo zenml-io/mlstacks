@@ -95,7 +95,7 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
     - We will re-use the storage account name and the storage account key from the storage secret.
     - Now, register the ZenML secret.
         ```
-        zenml secrets-manager secret register -s seldon_azure azure-seldon-secret --rclone_config_azureblob_account=<ACCOUNT_NAME> --rclone_config_azureblob_key=<ACCOUNT_KEY>
+        zenml secrets-manager secret register -s seldon_az azure-seldon-secret --rclone_config_azureblob_account=<ACCOUNT_NAME> --rclone_config_azureblob_key=<ACCOUNT_KEY>
         ```
 
 - `azure-mysql-secret` - for allowing access to the Flexible MySQL instance.
