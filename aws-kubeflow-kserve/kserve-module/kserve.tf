@@ -23,7 +23,7 @@ resource "null_resource" "kserve" {
 }
 
 resource "kubernetes_namespace" "workloads" {
-   metadata {
+  metadata {
     name = var.workloads_namespace
-  } 
+  }
 }

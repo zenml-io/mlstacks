@@ -55,8 +55,8 @@ resource "kubernetes_cluster_role_binding_v1" "binding" {
     name      = kubernetes_cluster_role_v1.seldon.metadata[0].name
   }
   subject {
-    kind      = "User"
-    name      = "system:serviceaccount:kubeflow:pipeline-runner"
+    kind = "User"
+    name = "system:serviceaccount:kubeflow:pipeline-runner"
   }
 }
 
