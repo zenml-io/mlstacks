@@ -292,7 +292,7 @@ zenml artifact-store register azure_store \
     --path=$CONTAINER_PATH
 
 zenml secrets-manager register azure_secrets_manager \
-    --flavor=azure_key_vault \
+    --flavor=azure \
     --key_vault_name=$KEY_VAULT_NAME
 
 zenml experiment-tracker register azureml_mlflow_experiment_tracker --flavor=mlflow --tracking_uri=$TRACKING_URI --tracking_token=$TOKEN
