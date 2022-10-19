@@ -17,7 +17,7 @@ Keep in mind, this is a basic setup to get you up and running on Azure with a mi
 ## Prerequisites
 
 - You must have a Azure account where you have sufficient permissions to create and destroy resources that will be created as part of this recipe. 
-For running this recipe in particular, your account should have the permission to provision at least 1 `LowPriority` vCPU of type `Standard_DS2_v2`. In case, your account doesn't have this permission, you can refer this guide on how to increase [workspace quota](https://learn.microsoft.com/en-gb/azure/machine-learning/how-to-manage-quotas#workspace-level-quotas) for Azure ML workspace. You can also modify the values for `vm_size` and `vm_priority` in `cluster.tf` to provision VM of your choice before running the recipe.
+- For running this recipe in particular, your account should have the permission to provision at least 1 `LowPriority` vCPU of type `Standard_DS2_v2`. In case, your account doesn't have this permission, you can refer this guide on how to increase [workspace quota](https://learn.microsoft.com/en-gb/azure/machine-learning/how-to-manage-quotas#workspace-level-quotas) for Azure ML workspace. You can also modify the values for `vm_size` and `vm_priority` in `cluster.tf` to provision VM of your choice before running the recipe.
 - Have [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform), [Helm](https://helm.sh/docs/intro/install/#from-script) and [Kubectl](https://kubernetes.io/docs/tasks/tools/) installed on your system.
 - Install all azure specific dependencies using - `zenml integration install azure`
 - Install [azure-cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) and login to your Azure account using `az login`.
@@ -32,10 +32,8 @@ Before starting, you should know the values that you need to modify to run this 
 - Take a look at the `values.tfvars.json` file to know what values have to be supplied for the execution of this recipe. These are mostly sensitive values like passwords, access keys, etc. Make sure you don't commit them!
 
 For this recipe, please ensure to provide values for:
-
-    1. **metadata-db-username**: This value will be used as a username for the MySQL server. Avoid using `azure_superuser`, `admin`, `administrator`, `root`, `guest` or `public` as usernames as it may lead to an error. 
-
-    2. **metadata-db-password**: This value will be used as a password for the MySQL server. This value should be a combination of at least 3 of the following types - lowercase, uppercase, numbers, non-alphanumeric characters for e.g. `zenMLpass1`
+    **metadata-db-username**: This value will be used as a username for the MySQL server. Avoid using `azure_superuser`, `admin`, `administrator`, `root`, `guest` or `public` as usernames as it may lead to an error. 
+    **metadata-db-password**: This value will be used as a password for the MySQL server. This value should be a combination of at least 3 of the following types - lowercase, uppercase, numbers, non-alphanumeric characters for e.g. `zenMLpass1`
 
 > **Warning**
 > The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
@@ -95,41 +93,41 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
   - Go into your imported recipe directory. It should be under `zenml_stack_recipes/azureml-minimal`.
   - Run the following command to get the storage account name
 
-        ```shell
-        terraform output storage-account-name
-        ```
+    ```shell
+    terraform output storage-account-name
+    ```
 
     And below command to get your storage key. You can also get the key corresponding to your storage account from the [Azure portal](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal#view-account-access-keys).
 
-        ```shell
-        terraform output storage-account-key
-        ```
+    ```shell
+    terraform output storage-account-key
+    ```
   - Now, register your ZenML secret.
 
-        ```shell
-        zenml secrets-manager secret register azureml-storage-secret --schema=azure --account_name=<ACCOUNT_NAME> --account_key=<ACCOUNT_KEY>
-        ```
+    ```shell
+    zenml secrets-manager secret register azureml-storage-secret --schema=azure --account_name=<ACCOUNT_NAME> --account_key=<ACCOUNT_KEY>
+    ```
 
 - `azure-mysql-secret` - for allowing access to the Flexible MySQL instance.
 
   - Go into your imported recipe directory. It should be under `zenml_stack_recipes/azure-minimal`.
   - Run the following command to get your username for the MySQL instance
 
-        ```shell
-        terraform output metadata-db-username
-        ```
+    ```shell
+    terraform output metadata-db-username
+    ```
     Now, run this command to get your password:
         
-        ```shell
-        terraform output metadata-db-password
-        ```
+    ```shell
+    terraform output metadata-db-password
+    ```
 
   - An SSL certificate is already downloaded as part of recipe execution and will be available in the recipe directory with name `DigiCertGlobalRootCA.crt.pem`
   - Now, register the ZenML secret using the following command.
 
-        ```shell
-        zenml secrets-manager secret register azureml-mysql-secret --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@"<PATH-TO-THE-CERTIFICATE"
-        ```
+    ```shell
+    zenml secrets-manager secret register azureml-mysql-secret --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@"<PATH-TO-THE-CERTIFICATE"
+    ```
 
 If you face a `ClientAuthorizationError` or `HTTPRequestError-(Forbidden)` while trying to create secrets, add the relevant permissions to your account using the following command.
 
