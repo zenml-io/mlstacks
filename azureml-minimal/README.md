@@ -19,7 +19,7 @@ Keep in mind, this is a basic setup to get you up and running on Azure with a mi
 - You must have a Azure account where you have sufficient permissions to create and destroy resources that will be created as part of this recipe. 
 - For running this recipe in particular, your account should have the permission to provision at least 1 `LowPriority` vCPU of type `Standard_DS2_v2`. In case, your account doesn't have this permission, you can refer this guide on how to increase [workspace quota](https://learn.microsoft.com/en-gb/azure/machine-learning/how-to-manage-quotas#workspace-level-quotas) for Azure ML workspace. You can also modify the values for `vm_size` and `vm_priority` in `cluster.tf` to provision VM of your choice before running the recipe.
 - Have [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform), [Helm](https://helm.sh/docs/intro/install/#from-script) and [Kubectl](https://kubernetes.io/docs/tasks/tools/) installed on your system.
-- Install all azure specific dependencies using - `zenml integration install azure`
+- Install all azure specific dependencies using `zenml integration install azure`
 - Install [azure-cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) and login to your Azure account using `az login`.
 - Setup these system level environment variables to avoid any authentication issues while running this recipe - `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `AZURE_TENANT_ID`. You can refer this section on [Authenticate using Azure CLI](https://learn.hashicorp.com/tutorials/terraform/azure-build?in=terraform/azure-get-started#authenticate-using-the-azure-cli) to understand how to do it.
 
@@ -32,8 +32,8 @@ Before starting, you should know the values that you need to modify to run this 
 - Take a look at the `values.tfvars.json` file to know what values have to be supplied for the execution of this recipe. These are mostly sensitive values like passwords, access keys, etc. Make sure you don't commit them!
 
 For this recipe, please ensure to provide values for:
-    **metadata-db-username**: This value will be used as a username for the MySQL server. Avoid using `azure_superuser`, `admin`, `administrator`, `root`, `guest` or `public` as usernames as it may lead to an error. 
-    **metadata-db-password**: This value will be used as a password for the MySQL server. This value should be a combination of at least 3 of the following types - lowercase, uppercase, numbers, non-alphanumeric characters for e.g. `zenMLpass1`
+        - **metadata-db-username**: This value will be used as a username for the MySQL server. Avoid using `azure_superuser`, `admin`, `administrator`, `root`, `guest` or `public` as usernames as it may lead to an error. 
+        - **metadata-db-password**: This value will be used as a password for the MySQL server. This value should be a combination of at least 3 of the following types - lowercase, uppercase, numbers, non-alphanumeric characters for e.g. `zenMLpass1`
 
 > **Warning**
 > The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
