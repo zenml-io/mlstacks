@@ -17,7 +17,12 @@ Keep in mind, this is a basic setup to get you up and running on Azure with a mi
 ## Prerequisites
 
 - You must have a Azure account where you have sufficient permissions to create and destroy resources that will be created as part of this recipe. 
-- Have [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform), [Helm](https://helm.sh/docs/intro/install/#from-script), [Kubectl](https://kubernetes.io/docs/tasks/tools/) and [azure-cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) installed on your system.
+For running this recipe in particular, your account should have the permission to provision at least 1 `LowPriority` vCPU of type `Standard_DS2_v2`. In case, your account doesn't have this permission, you can refer this guide on how to increase [workspace quota](https://learn.microsoft.com/en-gb/azure/machine-learning/how-to-manage-quotas#workspace-level-quotas) for Azure ML workspace. You can also modify the values for `vm_size` and `vm_priority` in `cluster.tf` to provision VM of your choice before running the recipe.
+- Have [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform), [Helm](https://helm.sh/docs/intro/install/#from-script) and [Kubectl](https://kubernetes.io/docs/tasks/tools/) installed on your system.
+- Install all azure specific dependencies using - `zenml integration install azure`
+- Install [azure-cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) and login to your Azure account using `az login`.
+- Setup these system level environment variables to avoid any authentication issues while running this recipe - `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `AZURE_TENANT_ID`. You can refer this section on [Authenticate using Azure CLI](https://learn.hashicorp.com/tutorials/terraform/azure-build?in=terraform/azure-get-started#authenticate-using-the-azure-cli) to understand how to do it.
+
 
 ## 🍏 Inputs
 
@@ -25,9 +30,12 @@ Before starting, you should know the values that you need to modify to run this 
 
 - Check out the `locals.tf` file to configure basic information about your deployments. You can use existing default values for various resources or provide your own. 
 - Take a look at the `values.tfvars.json` file to know what values have to be supplied for the execution of this recipe. These are mostly sensitive values like passwords, access keys, etc. Make sure you don't commit them!
-For this recipe, please ensure to provide values for: 
-    1. `metadata-db-username`: This value will be used as a username for the MySQL server. Avoid using `azure_superuser`, `admin`, `administrator`, `root`, `guest` or `public` as usernames as it may lead to an error. 
-    2. `metadata-db-password`: This value will be used as a password for the MySQL server. This value should be a combination of at least 3 of the following types - lowercase, uppercase, numbers, non-alphanumeric characters for e.g. `zenMLpass1`
+
+For this recipe, please ensure to provide values for:
+
+    1. **metadata-db-username**: This value will be used as a username for the MySQL server. Avoid using `azure_superuser`, `admin`, `administrator`, `root`, `guest` or `public` as usernames as it may lead to an error. 
+
+    2. **metadata-db-password**: This value will be used as a password for the MySQL server. This value should be a combination of at least 3 of the following types - lowercase, uppercase, numbers, non-alphanumeric characters for e.g. `zenMLpass1`
 
 > **Warning**
 > The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
@@ -53,7 +61,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 
 3. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
 
-4. 🚀 Deploy the recipe with this simple command.
+4. 🚀 Deploy the recipe with this simple command. Once the recipe has been deployed, you can check out your available resources in the Azure Portal.
 
     ```shell
     zenml stack recipe deploy azureml-minimal
@@ -66,7 +74,8 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 
     ```shell
     zenml stack import <STACK-NAME> <PATH-TO-THE-CREATED-STACK-CONFIG-YAML>
-
+    ```
+    ```shell
     # set the stack as an active stack
     zenml stack set <STACK-NAME>
     ```
@@ -82,16 +91,18 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
 - `azure-storage-secret` - for allowing access to the Azure Blob Storage Container.
 
   - Go into your imported recipe directory. It should be under `zenml_stack_recipes/azureml-minimal`.
-  - Run the following commands to get the storage account name and key.
+  - Run the following commands to get the storage account name and key. 
 
-        ```
+        ```shell
         terraform output storage-account-name
+        ```
 
+        ```shell
         terraform output storage-account-key
         ```
   - Now, register your ZenML secret.
 
-        ```
+        ```shell
         zenml secrets-manager secret register azureml-storage-secret --schema=azure --account_name=<ACCOUNT_NAME> --account_key=<ACCOUNT_KEY>
         ```
 
@@ -100,36 +111,38 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
   - Go into your imported recipe directory. It should be under `zenml_stack_recipes/azure-minimal`.
   - Run the following commands to get the username and password for the MySQL instance.
 
-        ```
+        ```shell
         terraform output metadata-db-username
-
+        ```
+        
+        ```shell
         terraform output metadata-db-password
         ```
 
   - An SSL certificate is already downloaded as part of recipe execution and will be available in the recipe directory with name `DigiCertGlobalRootCA.crt.pem`
   - Now, register the ZenML secret using the following command.
 
-        ```
-        zenml secrets-manager secret register azureml-mysql-secret --schema=mysql --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@"<PATH-TO-THE-CERTIFICATE"
+        ```shell
+        zenml secrets-manager secret register azureml-mysql-secret --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@"<PATH-TO-THE-CERTIFICATE"
         ```
 
 If you face a `ClientAuthorizationError` while trying to create secrets, add the relevant permissions to your account using the following command.
 
 - Get the key vault name by running the command:
 
-    ```
+    ```shell
     terraform output key-vault-name
     ```
 
 - Find your Azure object ID. You can also get it from the error message you see.
 
-    ```
+    ```shell
     az ad user show --id <YOUR_AZURE_EMAIL>
     ```
 
 - Set permissions for your object ID.
 
-    ```
+    ```shell
     az keyvault set-policy --name <KEY_VAULT_NAME> --object-id <YOUR_OBJECT_ID> --secret-permissions get list set delete --key-permissions create delete get list`
     ```
 
