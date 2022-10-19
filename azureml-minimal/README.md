@@ -75,8 +75,10 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     ```shell
     zenml stack import <STACK-NAME> <PATH-TO-THE-CREATED-STACK-CONFIG-YAML>
     ```
+    Now, set the stack as an active stack
+
     ```shell
-    # set the stack as an active stack
+    
     zenml stack set <STACK-NAME>
     ```
 
@@ -91,11 +93,13 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
 - `azure-storage-secret` - for allowing access to the Azure Blob Storage Container.
 
   - Go into your imported recipe directory. It should be under `zenml_stack_recipes/azureml-minimal`.
-  - Run the following commands to get the storage account name and key. 
+  - Run the following command to get the storage account name
 
         ```shell
         terraform output storage-account-name
         ```
+
+    And below command to get your storage key. You can also get the key corresponding to your storage account from the [Azure portal](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?tabs=azure-portal#view-account-access-keys).
 
         ```shell
         terraform output storage-account-key
@@ -109,11 +113,12 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
 - `azure-mysql-secret` - for allowing access to the Flexible MySQL instance.
 
   - Go into your imported recipe directory. It should be under `zenml_stack_recipes/azure-minimal`.
-  - Run the following commands to get the username and password for the MySQL instance.
+  - Run the following command to get your username for the MySQL instance
 
         ```shell
         terraform output metadata-db-username
         ```
+    Now, run this command to get your password:
         
         ```shell
         terraform output metadata-db-password
@@ -126,7 +131,7 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
         zenml secrets-manager secret register azureml-mysql-secret --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@"<PATH-TO-THE-CERTIFICATE"
         ```
 
-If you face a `ClientAuthorizationError` while trying to create secrets, add the relevant permissions to your account using the following command.
+If you face a `ClientAuthorizationError` or `HTTPRequestError-(Forbidden)` while trying to create secrets, add the relevant permissions to your account using the following command.
 
 - Get the key vault name by running the command:
 
