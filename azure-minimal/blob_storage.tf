@@ -20,7 +20,6 @@ data "azurerm_storage_account" "zenml-account" {
 }
 
 resource "azurerm_role_assignment" "storage" {
-  name                 = "aks-storage-access"
   scope                = azurerm_storage_account.zenml-account.id
   role_definition_name = "Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.identity[0].principal_id
