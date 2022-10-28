@@ -7,7 +7,6 @@ We know that the process to set up an MLOps stack can be daunting. There are man
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
 - An AKS cluster that can act as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) for your workloads.
 - An Azure Blob Storage Container as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- A MySQL Flexible server instance as a [metadata store](https://docs.zenml.io/mlops-stacks/metadata-stores) that is essential to track all your metadata and its location in your artifact store.  
 - An Azure Container Registry instance for storing your docker images. 
 - An MLflow tracking server as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
 - A Seldon Core deployment as a [model deployer](https://docs.zenml.io/mlops-stacks/model-deployers) to have your trained model deployed on a Kubernetes cluster to run inference on. 
@@ -98,22 +97,6 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
         zenml secrets-manager secret register -s seldon_az azure-seldon-secret --rclone_config_azureblob_account=<ACCOUNT_NAME> --rclone_config_azureblob_key=<ACCOUNT_KEY>
         ```
 
-- `azure-mysql-secret` - for allowing access to the Flexible MySQL instance.
-
-    - Go into your imported recipe directory. It should be under `zenml_stack_recipes/azure-minimal`.
-    - Run the following commands to get the username and password for the MySQL instance.
-        ```
-        terraform output metadata-db-username
-
-        terraform output metadata-db-password
-        ```
-    
-    - An SSL certificate is already downloaded as part of recipe execution and will be available in the recipe directory with name `DigiCertGlobalRootCA.crt.pem`
-    - Now, register the ZenML secret using the following command.
-        ```
-        zenml secrets-manager secret register azure-mysql-secret --schema=mysql --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@"<PATH-TO-THE-CERTIFICATE"
-        ```
-
 
 If you face a `ClientAuthorizationError` while trying to create secrets, add the relevant permissions to your account using the following command. 
 
@@ -144,9 +127,6 @@ storage-account-key | The Azure Blob Storage account key |
 mlflow-tracking-URI | The URL for the MLflow tracking server |
 seldon-core-workload-namespace | Namespace in which seldon workloads will be created |
 seldon-base-url | The URL to use for your Seldon deployment |
-metadata-db-host | The host endpoint of the deployed metadata store |
-metadata-db-username | The username for the database user |
-metadata-db-password | The master password for the database |
 container-registry-URL | Container registry URL |
 key-vault-name | The name of the Azure Key Vault created |
 

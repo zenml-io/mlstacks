@@ -20,11 +20,6 @@ locals {
     container_name = "zenmlartifactstore"
   }
 
-
-  mysql = {
-    name = "zenmlmetadata"
-  }
-
   key_vault = {
     name = "zenmlsecrets"
   }

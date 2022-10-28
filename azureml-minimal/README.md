@@ -8,7 +8,6 @@ You can have a simple MLOps stack ready for running your machine learning worklo
 
 - An Azure ML Workspace and cluster that can act as an [step operator](https://docs.zenml.io/mlops-stacks/step-operators) for your workloads.
 - An Azure Blob Storage Container as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc.
-- A MySQL Flexible server instance as a [metadata store](https://docs.zenml.io/mlops-stacks/metadata-stores) that is essential to track all your metadata and its location in your artifact store.  
 
 For each AzureML Worskpace, azureml automatically provisions a storage account, application insights, key vault, container registry and mlflow server.  
 
@@ -92,24 +91,6 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
         zenml secrets-manager secret register azureml-storage-secret --schema=azure --account_name=<ACCOUNT_NAME> --account_key=<ACCOUNT_KEY>
         ```
 
-- `azure-mysql-secret` - for allowing access to the Flexible MySQL instance.
-
-  - Go into your imported recipe directory. It should be under `zenml_stack_recipes/azure-minimal`.
-  - Run the following commands to get the username and password for the MySQL instance.
-
-        ```
-        terraform output metadata-db-username
-
-        terraform output metadata-db-password
-        ```
-
-  - An SSL certificate is already downloaded as part of recipe execution and will be available in the recipe directory with name `DigiCertGlobalRootCA.crt.pem`
-  - Now, register the ZenML secret using the following command.
-
-        ```
-        zenml secrets-manager secret register azureml-mysql-secret --schema=mysql --user=<USERNAME> --password=<PASSWORD> --ssl_ca=@"<PATH-TO-THE-CERTIFICATE"
-        ```
-
 If you face a `ClientAuthorizationError` while trying to create secrets, add the relevant permissions to your account using the following command.
 
 - Get the key vault name by running the command:
@@ -168,9 +149,6 @@ blobstorage-container-path | The Azure Blob Storage Container path for storing y
 storage-account-name | The name of the Azure Blob Storage account name|
 storage-account-connection-string | The Azure Blob Storage account connection string |
 mlflow-tracking-URI | The URL for the MLflow tracking server |
-metadata-db-host | The host endpoint of the deployed metadata store |
-metadata-db-username | The username for the database user |
-metadata-db-password | The master password for the database |
 key-vault-name | The name of the Azure Key Vault created |
 service-principal-id| The ID for created service principal |
 service-principal-client-id | The client ID for created service principal |

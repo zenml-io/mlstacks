@@ -36,20 +36,6 @@ output "storage-account-connection-string" {
   description = "The Azure Blob Storage account connection string"
 }
 
-# outputs for the Flexible MySQL metadata store
-output "metadata-db-host" {
-  value = "${azurerm_mysql_flexible_server.mysql.name}.mysql.database.azure.com"
-}
-output "metadata-db-username" {
-  value     = var.metadata-db-username
-  sensitive = true
-}
-output "metadata-db-password" {
-  description = "The auto generated default user password if not input password was provided"
-  value       = azurerm_mysql_flexible_server.mysql.administrator_password
-  sensitive   = true
-}
-
 # key-vault name
 output "key-vault-name" {
   value = azurerm_key_vault.secret_manager.name

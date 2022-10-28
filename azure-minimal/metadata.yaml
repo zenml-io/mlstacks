@@ -1,8 +1,8 @@
 Description: |
   A recipe that creates an MLOps stack with an AKS cluster as 
   orchestrator, Azure Blob Storage container artifact store,
-  ACR container registry, Flexible MySQL server as metadata store, 
-  MLflow experiment tracker and Seldon Core model deployer.
+  ACR container registry, MLflow experiment tracker and 
+  Seldon Core model deployer.
 
 Cloud: azure
 

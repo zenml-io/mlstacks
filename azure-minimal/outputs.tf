@@ -23,20 +23,6 @@ output "storage-account-key" {
   description = "The Azure Blob Storage account key"
 }
 
-# outputs for the Flexible MySQL metadata store
-output "metadata-db-host" {
-  value = "${azurerm_mysql_flexible_server.mysql.name}.mysql.database.azure.com"
-}
-output "metadata-db-username" {
-  value     = var.metadata-db-username
-  sensitive = true
-}
-output "metadata-db-password" {
-  description = "The auto generated default user password if not input password was provided"
-  value       = azurerm_mysql_flexible_server.mysql.administrator_password
-  sensitive   = true
-}
-
 # output for container registry
 output "container-registry-URL" {
   value = azurerm_container_registry.container_registry.login_server

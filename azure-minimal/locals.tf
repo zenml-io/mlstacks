@@ -26,10 +26,6 @@ locals {
     name = "zenmlcontainerregistry"
   }
 
-  mysql = {
-    name = "zenmlmetadata"
-  }
-
   key_vault = {
     name = "zenmlsecrets"
   }
