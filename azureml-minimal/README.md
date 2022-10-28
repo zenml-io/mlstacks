@@ -91,7 +91,7 @@ To make the imported ZenML stack work, you'll have to create secrets that some s
         zenml secrets-manager secret register azureml-storage-secret --schema=azure --account_name=<ACCOUNT_NAME> --account_key=<ACCOUNT_KEY>
         ```
 
-If you face a `ClientAuthorizationError` while trying to create secrets, add the relevant permissions to your account using the following command.
+If you face a `ClientAuthorizationError` or `HTTPRequestError-(Forbidden)` while trying to create secrets, add the relevant permissions to your account using the following command.
 
 - Get the key vault name by running the command:
 
@@ -242,11 +242,6 @@ export WORKSPACE_NAME=$(terraform output azureml-workpsace-name)
 export CLUSTER_NAME=$(terraform output azureml-compute-cluster-name)
 export KEY_VAULT_NAME=$(terraform output key-vault-name)
 
-# azure mysql
-export MYSQL_USERNAME=$(terraform output metadata-db-username)
-export MYSQL_PASSWORD=$(terraform output metadata-db-password)
-export MYSQL_SERVER_NAME=$(terraform output metadata-db-host)
-
 # azure mlflow
 export TRACKING_URI=$(terraform output mlflow-tracking-URL)
 
@@ -262,8 +257,6 @@ echo $TOKEN
 
 zenml clean
 zenml init
-zenml profile create $STACK_PROFILE
-zenml profile set azure-mlflow
 
 zenml artifact-store register azure_store \
     --flavor=azure \
@@ -275,12 +268,6 @@ zenml secrets-manager register azure_secrets_manager \
 
 zenml experiment-tracker register azureml_mlflow_experiment_tracker --flavor=mlflow --tracking_uri=$TRACKING_URI --tracking_token=$TOKEN
 
-zenml metadata-store register azure_mysql \
-    --flavor=mysql \
-    --database=zenml \
-    --secret=azureauthentication \
-    --host=$MYSQL_SERVER_NAME
-
 zenml step-operator register azureml \
     --flavor=azureml \
     --subscription_id=$SUBSCRIPTION_ID \
@@ -289,7 +276,6 @@ zenml step-operator register azureml \
     --compute_target_name=$CLUSTER_NAME
 
 zenml stack register azureml_stack \
-    -m azure_mysql \
     -o default \
     -a azure_store \
     -s azureml \
@@ -297,8 +283,4 @@ zenml stack register azureml_stack \
     -e azureml_mlflow_experiment_tracker \
     --set
 
-zenml secrets-manager secret register azureauthentication \
-    --schema=mysql \
-    --user=$MYSQL_USERNAME \
-    --password=$MYSQL_PASSWORD
 ```
