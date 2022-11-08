@@ -13,6 +13,10 @@ output "airflow-uri" {
   value = google_composer_environment.zenml-airflow.config[0].airflow_uri
 }
 
+output "dag-gcs-uri" {
+  value = google_composer_environment.zenml-airflow.config[0].dag_gcs_prefix
+}
+
 # output for the GCS bucket
 output "gcs-bucket-path" {
   value       = "gs://${google_storage_bucket.artifact-store.name}"
