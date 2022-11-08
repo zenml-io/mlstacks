@@ -15,7 +15,10 @@ locals {
     environment_size = "ENVIRONMENT_SIZE_SMALL"
     # other options are: 
     # ENVIRONMENT_SIZE_MEDIUM and ENVIRONMENT_SIZE_LARGE
-    environment_service_account = "zenml-composer"
+    environment_service_account = "zen"
+
+    # location for the airflow DAG zip file
+    dag_output_dir = null
   }
 
   gcs = {
