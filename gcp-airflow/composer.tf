@@ -19,7 +19,8 @@ resource "google_composer_environment" "zenml-airflow" {
   }
 
   depends_on = [
-    google_project_service.enable_services
+    google_project_service.enable_services,
+    google_service_account_iam_member.cc-sa-extension
   ]
 }
 
@@ -50,7 +51,7 @@ resource "google_project_iam_member" "roles-env-sa" {
 # allow cloud composer service account access to env sa to add k8s bindings
 resource "google_service_account_iam_member" "cc-sa-extension" {
   provider           = google-beta
-  service_account_id = google_service_account.env-sa.email
+  service_account_id = google_service_account.env-sa.name
   role               = "roles/composer.ServiceAgentV2Ext"
   member             = "serviceAccount:service-${data.google_project.project.number}@cloudcomposer-accounts.iam.gserviceaccount.com"
 
