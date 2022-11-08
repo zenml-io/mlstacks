@@ -1,0 +1,12 @@
+Description: |
+  A recipe that creates a GKE orchestrator, GCS artifact store, 
+  GCR container repository, MLflow experiment tracker and 
+  Seldon Core model deployer.
+
+Cloud: gcp
+
+Prerequisites: |
+  * The gcloud CLI on your local machine must be configured with 
+    the account you want to deploy resources to. Run `gcloud auth login`.
+  * Install the gcloud beta component by running `gcloud components install beta`.
+  * You must have the project already setup and with billing enabled.
