@@ -9,6 +9,9 @@ resource "google_composer_environment" "zenml-airflow" {
 
     software_config {
       image_version = "composer-2-airflow-2"
+      pypi_packages = {
+        pydantic = "~=1.9.2"
+      }
     }
 
     environment_size = local.airflow.environment_size
