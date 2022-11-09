@@ -21,7 +21,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: airflow
         name: gcp_composer_airflow
-        configuration: {"dag_output_dir": ${local.airflow.dag_output_dir == null? "~" : local.airflow.dag_output_dir}}
+        configuration: {"dag_output_dir": ${local.airflow.dag_output_dir == null? "~" : local.airflow.dag_output_dir}, "local": False}
       secrets_manager:
         id: ${uuid()}
         flavor: gcp
