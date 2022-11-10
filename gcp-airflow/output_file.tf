@@ -21,7 +21,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: airflow
         name: gcp_composer_airflow
-        configuration: {"dag_output_dir": ${local.airflow.dag_output_dir == null? "~" : local.airflow.dag_output_dir}, "local": False}
+        configuration: {"local": False, "operator": "kubernetes_pod", "operator_args": {"namespace": "composer-user-workloads", "service_account_name": "default"}}
       secrets_manager:
         id: ${uuid()}
         flavor: gcp
