@@ -53,7 +53,7 @@ Before starting, you should know the values that you have to keep ready for use 
 6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
 
     ```
-    zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
+    zenml stack import <STACK_NAME> -f <PATH_TO_THE_CREATED_STACK_CONFIG_YAML>
     ```
 
 > **Note**
