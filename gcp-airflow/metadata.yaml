@@ -1,7 +1,7 @@
 Description: |
-  A recipe that creates a GKE orchestrator, GCS artifact store, 
-  GCR container repository, MLflow experiment tracker and 
-  Seldon Core model deployer.
+  A recipe that creates a Cloud Composer environment that 
+  enables a managed Airflow environment as orchestrator, 
+  a GCS artifact store and a GCR container registry
 
 Cloud: gcp
 
