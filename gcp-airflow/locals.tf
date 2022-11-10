@@ -16,9 +16,6 @@ locals {
     # other options are: 
     # ENVIRONMENT_SIZE_MEDIUM and ENVIRONMENT_SIZE_LARGE
     environment_service_account = "zen"
-
-    # location for the airflow DAG zip file
-    dag_output_dir = null
   }
 
   gcs = {
