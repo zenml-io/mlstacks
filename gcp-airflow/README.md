@@ -1,17 +1,14 @@
-# 🥙 GKE, GCS, MLflow and Seldon MLOps Stack Recipe 
+# 🥙 GCP Cloud Composer Airflow Stack Recipe
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
 We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). This recipe, however, goes one step further. 
 
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
-- A GKE cluster that can act as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) for your workloads.
+- A managed Airflow deployment on GCP using Cloud Composer as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) for your workloads.
 - A GCS Bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- An MLflow tracking server as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
-- A Seldon Core deployment as a [model deployer](https://docs.zenml.io/mlops-stacks/model-deployers) to have your trained model deployed on a Kubernetes cluster to run inference on. 
 - A [secrets manager](https://docs.zenml.io/mlops-stacks/secrets-managers) enabled for storing your secrets. 
 
-Keep in mind, this is a basic setup to get you up and running on GCP with a minimal MLOps stack and more configuration options are coming in the form of new recipes! 👀
 
 ## Prerequisites
 
@@ -28,9 +25,6 @@ Before starting, you should know the values that you have to keep ready for use 
 > **Warning** 
 > The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
 
-> **Warning**
-> The CIDR block used for the VPC (inside the vpc.tf file) needs to be unique too, preferably. For example, if `10.10.0.0/16` is already under use by some VPC in your account, you can use `10.11.0.0/16` instead. However, this is not required.
-
 ## 🧑‍🍳 Cooking the recipe
 
 It is not neccessary to use the MLOps stacks recipes presented here alongisde the
@@ -42,7 +36,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 1. Pull this recipe to your local system.
 
     ```shell
-    zenml stack recipe pull gcp-minimal
+    zenml stack recipe pull gcp-airflow
     ```
 2. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
@@ -51,7 +45,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 5. 🚀 Deploy the recipe with this simple command.
 
     ```
-    zenml stack recipe deploy gcp-minimal
+    zenml stack recipe deploy gcp-airflow
     ```
 
     > **Note**
@@ -61,7 +55,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
 
     ```
-    zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
+    zenml stack import <stack-name> -f <path-to-the-created-stack-config-yaml>
     ```
 
 
@@ -70,30 +64,17 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 >
 >  You need to have your GCP credentials saved locally for the `apply` function to work.
 
-### Configuring your secrets
-
-To make the imported ZenML stack work, you'll have to create secrets that some stack components need. If you inspect the generated YAML file, you can figure out that one secret should be created:
-- `gcp_seldon_secret` - for allowing Seldon access to your GCS bucket.
- 
-    - The cluster that Seldon is running on already has access to your buckets so you wouldn't need to supply any credentials here.
-    - Just create a dummy ZenML secret using this command:
-        ```
-        zenml secrets-manager secret register -s seldon_gs gcp_seldon_secret --rclone_config_gs_type="google cloud storage"
-        ```
-
 
 ## 🥧 Outputs 
 
 The script, after running, outputs the following.
 | Output | Description |
 --- | ---
-gke-cluster-name | Name of the GKE cluster that is created. This is helpful when setting up `kubectl` access |
+gke-cluster-name | Name of the GKE cluster that is created as part of the Cloud Composer environment |
+airflow-uri | The URI to access the Airflow UI on GCP |
+dag-gcs-uri | The URI to the GCS bucket that the Cloud Composer environment uses. Upload the zip file created by ZenML to the DAGs folder here |
 gcs-bucket-path | The path of the GCS bucket. Useful while registering the artifact store|
-ingress-controller-name | Used for getting the ingress URL for the MLflow tracking server|
-ingress-controller-namespace | Used for getting the ingress URL for the MLflow tracking server|
-mlflow-tracking-URI | The URL for the MLflow tracking server |
-seldon-core-workload-namespace | Namespace in which seldon workloads will be created |
-seldon-base-url | The URL to use for your Seldon deployment |
+container-registry-URI | The GCP Container Registry URI |
 
 For outputs that are sensitive, you'll see that they are not shown directly on the logs. To view the full list of outputs, run the following command.
 
@@ -114,7 +95,7 @@ Using the ZenML stack recipe CLI commands, you can run the following commands to
 1. 🗑️ Run the destroy command which removes all resources and their dependencies from the cloud.
 
     ```shell
-    zenml stack recipe destroy gcp-minimal
+    zenml stack recipe destroy gcp-airflow
     ```
 
 2. (Optional) 🧹 Clean up all stack recipe files that you had pulled to your local system.
@@ -156,12 +137,6 @@ As mentioned above, you can still use the recipe without having using the `zenml
 
 These are some known problems that might arise out of running this recipe. Some of these 
 are terraform commands but running `zenml stack recipe apply` would also achieve similar results as `terraform init` and `terraform apply`.
-
-* Running the script for the first time might result in an error with one of the resources - the Istio Ingressway. This is because of a limitation with the resource `kubectl_manifest` that needs the cluster to be set up before it installs its own resources.
-\
-    💡 Fix - Run `terraform apply` again in a few minutes and this should get resolved.    
-
-
 
 *  When executing terraform commands, an error like this one: `timeout while waiting for plugin to start` 
 \
