@@ -41,9 +41,10 @@ Watch it below:
 | [aws-stores-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/aws-stores-minimal) | S3, ECR | A simple recipe to spin up an S3 artifact store and an ECR container registry |
 | [azure-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/azure-minimal) | AKS, Blob Storage, ACR, MLflow Tracking, Key Vault, Seldon | Azure specific recipe that creates an MLOps stack with an AKS cluster as orchestrator, Azure Blob Storage container artifact store. ACR container registry, MLflow experiment tracker and Seldon Core model deployer |
 | [azureml-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/azureml-minimal) | AzureML Workspace, Blob Storage, ACR, MLflow Tracking, Key Vault | A recipe that creates a AzureML workspace with MLflow Tracking enabled and adds a compute cluster with access to Blob Storage, and Key Vault |
-| [gcp-kubeflow-kserve](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-kubeflow-kserve) | Kubeflow on GKE, GCS, GCR, MLflow Tracking, KServe, Vertex | A recipe that creates a Kubeflow pipelines cluster as orchestrator, GCS artifact store, GCR container registry,  MLflow experiment tracker, KServe model deployer and option for Vertex AI as a step operator |
-| [gcp-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-minimal) | GKE, GCS, GCR, MLflow Tracking, Seldon | GCP specific recipe to showcase a production-grade MLOps Stack with a GKE orchestrator, GCS artifact store, GCR container repository, MLflow experiment tracker and Seldon Core model deployer |
-| [vertex-ai](https://github.com/zenml-io/mlops-stacks/tree/main/vertex-ai) | Vertex AI Pipelines, GCS, GCR and (optional) MLflow Tracking | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry and an optional MLflow experiment tracker |
+| [gcp-airflow](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-airflow) | Managed Airflow using GCP Cloud Composer, GCS Bucket, GCR | A recipe that creates a Cloud Composer environment that enables a managed Airflow environment as orchestrator, a GCS artifact store and a GCR container registry |
+| [gcp-kubeflow-kserve](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-kubeflow-kserve) | Kubeflow on GKE, GCS Bucket, GCR, MLflow Tracking, KServe, Vertex | A recipe that creates a Kubeflow pipelines cluster as orchestrator, GCS artifact store, GCR container registry,  MLflow experiment tracker, KServe model deployer and option for Vertex AI as a step operator |
+| [gcp-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-minimal) | GKE, GCS Bucket, GCR, MLflow Tracking, Seldon | GCP specific recipe to showcase a production-grade MLOps Stack with a GKE orchestrator, GCS artifact store, GCR container repository, MLflow experiment tracker and Seldon Core model deployer |
+| [vertex-ai](https://github.com/zenml-io/mlops-stacks/tree/main/vertex-ai) | Vertex AI Pipelines, GCS Bucket, GCR and (optional) MLflow Tracking | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry and an optional MLflow experiment tracker |
 
 ## 🙏 Association with ZenML
 
@@ -82,7 +83,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
 
     ```
-    zenml stack import <STACK_NAME> <PATH_TO_THE_CREATED_STACK_CONFIG_YAML>
+    zenml stack import <STACK_NAME> -f <PATH_TO_THE_CREATED_STACK_CONFIG_YAML>
     ```
 
 To learn more about ZenML and how it empowers you to develop a stack-agnostic MLOps solution, head

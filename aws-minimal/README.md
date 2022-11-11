@@ -61,7 +61,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
 
     ```
-    zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
+    zenml stack import <STACK_NAME> -f <PATH_TO_THE_CREATED_STACK_CONFIG_YAML>
     ```
 
 
