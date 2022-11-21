@@ -1,0 +1,10 @@
+Description: |
+  A recipe that creates an AWS MWAA instance that 
+  enables a managed Airflow environment as orchestrator, 
+  a S3 artifact store and a ECR container registry
+
+Cloud: aws
+
+Prerequisites: |
+  * The AWS CLI on your local machine must be configured with 
+    the account you want to deploy resources to. Run `aws configure`.`
