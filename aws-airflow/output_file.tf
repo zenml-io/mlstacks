@@ -21,7 +21,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: airflow
         name: aws_mwaa_airflow
-        configuration: {"local": False, "operator": "docker", "operator_args": {"image": ""}}
+        configuration: {"local": False, "operator": "docker", "operator_args": {}}
       secrets_manager:
         id: ${uuid()}
         flavor: aws
