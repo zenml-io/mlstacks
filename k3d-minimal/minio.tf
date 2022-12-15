@@ -1,11 +1,12 @@
 # set up kubeflow
 resource "docker_container" "minio_server" {
-  name  = "minio-server"
+  name  = "minio-server-${random_string.cluster_id.result}"
   image = "quay.io/minio/minio"
-  restart = "on-failurec"
 
   env = ["MINIO_ROOT_USER=${var.zenml-minio-store-access-key}", "MINIO_ROOT_PASSWORD=${var.zenml-minio-store-secret-key}"]
 
+  command = ["server", "/data", "--console-address" , ":9001"]
+  
   ports {
     internal = "9000"
     external = "9000"
@@ -14,6 +15,14 @@ resource "docker_container" "minio_server" {
     internal = "9001"
     external = "9001"
   }
+
+  networks_advanced {
+    name = k3d_cluster.zenml-cluster.network
+  }
+
+  depends_on = [
+    k3d_cluster.zenml-cluster,
+  ]
 }
 
 provider "minio" {

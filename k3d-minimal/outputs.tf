@@ -5,7 +5,7 @@ output "k3d-clutser-name" {
 
 # output for container registry
 output "container-registry-URI" {
-  value = "${k3d_cluster.zenml-cluster.registries[0].create[0].host}:${k3d_cluster.zenml-cluster.registries[0].create[0].host_port}"
+  value = "${local.k3d_registry.host}:${local.k3d_registry.port}"
 }
 
 # output the name of the stack YAML file created

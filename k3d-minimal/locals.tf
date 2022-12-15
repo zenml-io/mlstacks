@@ -4,11 +4,11 @@ locals {
 
   k3d = {
     cluster_name = "minimal-zenml-cluster"
-    image      = "rancher/k3s:v1.24.8-k3s1"
+    image      = "rancher/k3s:v1.24.4-k3s1"
   }
 
   k3d_registry = {
-    name = "minimal-registry"
+    name = "k3d-registry"
     host = "localhost"
     port = "5001"
   }
