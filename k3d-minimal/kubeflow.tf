@@ -1,7 +1,7 @@
 # set up kubeflow
 resource "null_resource" "kubeflow" {
   provisioner "local-exec" {
-    command = "kubectl apply -k 'github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=1.8.3'"
+    command = "kubectl apply -k 'github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=1.8.3' --request-timeout=120"
     environment = {
       PIPELINE_VERSION = local.kubeflow.pipeline_version
     }
@@ -26,7 +26,7 @@ resource "null_resource" "kubeflow" {
   }
   provisioner "local-exec" {
     when    = destroy
-    command = "kubectl delete -k 'github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=1.8.3'"
+    command = "kubectl delete -k 'github.com/kubeflow/pipelines/manifests/kustomize/cluster-scoped-resources?ref=1.8.3' --request-timeout=120"
   }
 
   depends_on = [

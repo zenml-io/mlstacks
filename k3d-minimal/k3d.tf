@@ -5,7 +5,7 @@ resource "random_string" "cluster_id" {
 }
 
 resource "k3d_registry" "zenml-registry" {
-  name = "${local.k3d_registry.name}-${random_string.cluster_id.result}.${local.k3d_registry.host}"
+  name = "${local.k3d_registry.name}-${random_string.cluster_id.result}"
   image = "docker.io/registry:2"
 
   port {
