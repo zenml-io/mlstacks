@@ -5,7 +5,7 @@ resource "random_string" "cluster_id" {
 }
 
 resource "k3d_registry" "zenml-registry" {
-  name = "${local.k3d_registry.name}-${random_string.cluster_id.result}"
+  name = "${local.k3d_registry.name}-${random_string.cluster_id.result}.${local.k3d_registry.host}"
   image = "docker.io/registry:2"
 
   port {
@@ -26,14 +26,8 @@ resource "k3d_cluster" "zenml-cluster" {
 
   image   = "${local.k3d.image}"
   registries {
-    use = ["${local.k3d_registry.name}-${random_string.cluster_id.result}.${local.k3d_registry.host}:${k3d_registry.zenml-registry.port[0].host_port}"]
-    config = <<EOF
-      mirrors:
-        "${local.k3d_registry.host}:${local.k3d_registry.port}":
-          endpoint:
-            - http://${local.k3d_registry.name}-${random_string.cluster_id.result}.${local.k3d_registry.host}:${local.k3d_registry.port}
-      EOF
-    }
+    use = ["${k3d_registry.zenml-registry.name}:${k3d_registry.zenml-registry.port[0].host_port}"]
+  }
 
   k3d {
     disable_load_balancer     = false

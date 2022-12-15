@@ -38,9 +38,18 @@ provider "minio" {
   ssl = false
 }
 
-# Create a bucket.
+# Create a bucket for ZenML to use
 resource "minio_bucket" "zenml_bucket" {
   name = "${local.minio.name}"
+
+  depends_on = [
+    docker_container.minio_server,
+  ]
+}
+
+# Create a bucket for MLFlow to use
+resource "minio_bucket" "mlflow_bucket" {
+  name = "${local.mlflow.artifact_S3_Bucket}"
 
   depends_on = [
     docker_container.minio_server,

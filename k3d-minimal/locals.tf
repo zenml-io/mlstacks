@@ -1,14 +1,12 @@
 # config values to use across the module
 locals {
-  prefix = "k3d"
-
   k3d = {
     cluster_name = "minimal-zenml-cluster"
     image      = "rancher/k3s:v1.24.4-k3s1"
   }
 
   k3d_registry = {
-    name = "k3d-registry"
+    name = "zenml-registry"
     host = "localhost"
     port = "5001"
   }
@@ -28,10 +26,10 @@ locals {
   }
 
   mlflow = {
-    artifact_Proxied_Access = "true"
-    artifact_GCS            = "true"
+    artifact_Proxied_Access = "false"
+    artifact_S3             = "true"
     # if not set, the bucket created as part of the deployment will be used
-    artifact_GCS_Bucket = ""
+    artifact_S3_Bucket = "zenml-mlflow-store"
   }
 
   seldon = {
@@ -45,6 +43,6 @@ locals {
 
   tags = {
     "managedBy"   = "terraform"
-    "application" = local.prefix
+    "environment" = "dev"
   }
 }

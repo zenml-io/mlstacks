@@ -20,7 +20,7 @@ resource "local_file" "stack_file" {
       container_registry:
         id: ${uuid()}
         flavor: default
-        name: ${k3d_registry.zenml-registry.name}
+        name: k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}
         configuration: {"uri": "${local.k3d_registry.host}:${local.k3d_registry.port}"}
       orchestrator:
         id: ${uuid()}
