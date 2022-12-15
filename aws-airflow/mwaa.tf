@@ -163,10 +163,12 @@ resource "aws_iam_role_policy_attachment" "iam_role_policy_attachment" {
 # create bucket, create an empty dir called dags, upload requirements.txt file with pydantic
 
 resource "aws_mwaa_environment" "mwaa" {
-  dag_s3_path           = "dags/"
   execution_role_arn    = aws_iam_role.mwaa_role.arn
   name                  = "${local.prefix}-${local.airflow.environment_name}"
   webserver_access_mode = "PUBLIC_ONLY"
+  
+  dag_s3_path           = "dags/"
+  requirements_s3_path  = "requirements.txt"
 
   environment_class = local.airflow.environment_class
   max_workers       = local.airflow.max_workers
