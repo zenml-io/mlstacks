@@ -11,7 +11,9 @@ locals {
     "roles/aiplatform.serviceAgent",
     "roles/containerregistry.ServiceAgent",
     "roles/secretmanager.admin",
-    "roles/iam.serviceAccountUser"
+    "roles/iam.serviceAccountUser",
+    "roles/cloudfunctions.serviceAgent",
+    "roles/cloudscheduler.jobRunner",
   ]
 }
 
