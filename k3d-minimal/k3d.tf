@@ -29,6 +29,14 @@ resource "k3d_cluster" "zenml-cluster" {
     use = ["${k3d_registry.zenml-registry.name}:${k3d_registry.zenml-registry.port[0].host_port}"]
   }
 
+  port {
+    host_port      = 8080
+    container_port = 80
+    node_filters = [
+      "loadbalancer",
+    ]
+  }
+
   k3d {
     disable_load_balancer     = false
     disable_image_volume      = false
