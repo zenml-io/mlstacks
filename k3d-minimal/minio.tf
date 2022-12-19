@@ -7,10 +7,16 @@ resource "docker_container" "minio_server" {
 
   command = ["server", "/data", "--console-address" , ":9001"]
   
+  volumes {
+    container_path = "/data"
+    host_path = "/${var.zenml-local-stores}"
+  }
+  
   ports {
     internal = "9000"
     external = "9000"
   }
+
   ports {
     internal = "9001"
     external = "9001"
@@ -37,10 +43,10 @@ provider "minio" {
   # If true, the server will be contacted via https://
   ssl = false
 }
-
 # Create a bucket for ZenML to use
 resource "minio_bucket" "zenml_bucket" {
   name = "${local.minio.name}"
+  count = var.create-buckets ? 1 : 0
 
   depends_on = [
     docker_container.minio_server,
@@ -50,6 +56,7 @@ resource "minio_bucket" "zenml_bucket" {
 # Create a bucket for MLFlow to use
 resource "minio_bucket" "mlflow_bucket" {
   name = "${local.mlflow.artifact_S3_Bucket}"
+  count = var.create-buckets ? 1 : 0
 
   depends_on = [
     docker_container.minio_server,

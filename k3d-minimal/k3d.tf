@@ -28,6 +28,11 @@ resource "k3d_cluster" "zenml-cluster" {
   registries {
     use = ["${k3d_registry.zenml-registry.name}:${k3d_registry.zenml-registry.port[0].host_port}"]
   }
+  
+  volume {
+    source      = "/${var.zenml-local-stores}"
+    destination = "/${var.zenml-local-stores}"
+  }
 
   port {
     host_port      = 8080

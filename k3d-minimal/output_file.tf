@@ -12,7 +12,7 @@ resource "local_file" "stack_file" {
         flavor: s3
         name: minio_artifact_store
         configuration: {
-          "path": "s3://${minio_bucket.zenml_bucket.name}", 
+          "path": "s3://${local.minio.name}", 
           "key": "${var.zenml-minio-store-access-key}", 
           "secret": "${var.zenml-minio-store-secret-key}",
           "client_kwargs" : '{"endpoint_url":"http://${docker_container.minio_server.network_data[0].ip_address}:${local.minio.port}", "region_name":"us-east-1"}'

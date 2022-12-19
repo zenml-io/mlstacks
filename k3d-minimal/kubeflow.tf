@@ -18,7 +18,9 @@ resource "null_resource" "kubeflow" {
   provisioner "local-exec" {
     command = "kubectl wait deployment -n kubeflow ml-pipeline-visualizationserver --for condition=Available=True --timeout=900s"
   }
-
+  provisioner "local-exec" {
+    command = "kubectl apply -f kubeflow-ui.yaml"
+  }
   # destroy-time provisioners
   provisioner "local-exec" {
     when    = destroy
