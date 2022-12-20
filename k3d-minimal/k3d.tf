@@ -41,7 +41,20 @@ resource "k3d_cluster" "zenml-cluster" {
       "loadbalancer",
     ]
   }
-
+  port {
+    host_port      = 9000
+    container_port = 9000
+    node_filters = [
+      "loadbalancer",
+    ]
+  }
+  port {
+    host_port      = 9001
+    container_port = 9001
+    node_filters = [
+      "loadbalancer",
+    ]
+  }
   k3d {
     disable_load_balancer     = false
     disable_image_volume      = false

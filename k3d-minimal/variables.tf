@@ -32,8 +32,3 @@ variable "zenml-local-stores" {
   description = "ZenML local store path"
   type        = string
 }
-
-variable "create-buckets" {
-  description = "ZenML local store path"
-  type        = bool
-}

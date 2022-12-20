@@ -18,9 +18,6 @@ resource "null_resource" "kubeflow" {
   provisioner "local-exec" {
     command = "kubectl wait deployment -n kubeflow ml-pipeline-visualizationserver --for condition=Available=True --timeout=900s"
   }
-  provisioner "local-exec" {
-    command = "kubectl apply -f kubeflow-ui.yaml"
-  }
   # destroy-time provisioners
   provisioner "local-exec" {
     when    = destroy
@@ -33,5 +30,32 @@ resource "null_resource" "kubeflow" {
 
   depends_on = [
     k3d_cluster.zenml-cluster,
+  ]
+}
+
+# Expose Kubeflow UI
+resource "kubectl_manifest" "Ingress" {
+  yaml_body = <<YAML
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ml-pipeline-ui
+  namespace: kubeflow
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ml-pipeline-ui
+            port:
+              number: 80
+YAML    
+  depends_on = [
+    null_resource.kubeflow,
   ]
 }

@@ -20,9 +20,9 @@ locals {
   }
 
   minio = {
-    name = "zenml-minio-store"
-    host = "localhost"
-    port = "9000"
+    storage_size = "10Gi"
+    zenml_minio_store_bucket = "zenml-minio-store"
+    mlflow_minio_store_bucket = "mlflow-minio-store"
   }
 
   mlflow = {
