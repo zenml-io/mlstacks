@@ -1,6 +1,6 @@
 
 module "minio_server" {
-  source = "./minio-module"
+  source = "../modules/minio-module"
 
   # run only after the eks cluster is set up
   depends_on = [
