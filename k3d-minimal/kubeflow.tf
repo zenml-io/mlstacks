@@ -34,28 +34,35 @@ resource "null_resource" "kubeflow" {
 }
 
 # Expose Kubeflow UI
-resource "kubectl_manifest" "Ingress" {
-  yaml_body = <<YAML
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ml-pipeline-ui
-  namespace: kubeflow
-  annotations:
-    ingress.kubernetes.io/ssl-redirect: "false"
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: ml-pipeline-ui
-            port:
-              number: 80
-YAML    
+resource "kubernetes_ingress_v1" "kubeflow-ui-ingress" {
+  metadata {
+    name = "kubeflow-ui-ingress"
+    namespace = "kubeflow"
+    annotations = {
+      "nginx.ingress.kubernetes.io/rewrite-target" = "/$1"
+    }
+  }
+  spec {
+    ingress_class_name = "nginx"
+    rule {
+      http {
+        path {
+          path      = "/kubeflow/?(.*)"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "ml-pipeline-ui"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   depends_on = [
     null_resource.kubeflow,
+    module.minio_server,
   ]
 }

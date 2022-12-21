@@ -109,26 +109,3 @@ resource "kubernetes_deployment" "minio-deployment" {
     kubernetes_persistent_volume_claim.minio-pvc,
   ]
 }
-
-# Create minio service
-resource "kubernetes_service" "minio-service" {
-  metadata {
-    name      = "minio-service"
-    namespace = "zenml-minio"
-  }
-
-  spec {
-    type = "LoadBalancer"
-
-    selector = {
-      app = "zenml-minio-server"
-    }
-    port {
-      port        = 9000
-      target_port = 9000
-    }
-  }
-  depends_on = [
-    kubernetes_deployment.minio-deployment,
-  ]
-}

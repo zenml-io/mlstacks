@@ -19,34 +19,3 @@ resource "helm_release" "nginx-controller" {
   # dependency on nginx-ns
   namespace = kubernetes_namespace.nginx-ns.metadata[0].name
 }
-
-resource "kubernetes_ingress_v1" "minio-ingress" {
-  metadata {
-    name = "minio-ingress"
-    annotations = {
-      "nginx.ingress.kubernetes.io/rewrite-target" = "/$1"
-    }
-  }
-  spec {
-    ingress_class_name = "nginx"
-    rule {
-      http {
-        path {
-          path      = "/minio/?(.*)"
-          path_type = "Prefix"
-          backend {
-            service {
-              name = "minio-tracking"
-              port {
-                number = 9000
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  depends_on = [
-    kubernetes_service.minio-service,
-  ]
-}
