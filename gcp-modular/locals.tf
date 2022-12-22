@@ -85,6 +85,7 @@ locals {
 
   zenml = {
     enable                  = true
+    version                 = ""
     database_ssl_ca         = ""
     database_ssl_cert       = ""
     database_ssl_key        = ""

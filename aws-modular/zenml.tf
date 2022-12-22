@@ -13,6 +13,7 @@ module "zenml" {
   ]
 
   # details about the zenml deployment
+  chart_version           = local.zenml.version
   username                = var.zenml-username
   password                = var.zenml-password
   database_url            = var.zenml-database-url

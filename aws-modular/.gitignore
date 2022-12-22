@@ -6,3 +6,4 @@
 *.pem
 kubeconfig_*
 .terraform
+helm

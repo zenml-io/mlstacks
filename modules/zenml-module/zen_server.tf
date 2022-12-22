@@ -9,11 +9,11 @@ resource "kubernetes_namespace" "zen-server" {
 resource "null_resource" "fetch_chart" {
 
   triggers = {
-    zenml_branch = var.chart_version == "" ? "master" : (length(regexall("^([0-9]+)\\.([0-9]+)\\.([0-9]+)$", var.chart_version)) == 0 ? var.chart_version : "release/${var.chart_version}")
+    zenml_branch = var.chart_version == "" ? "main" : (length(regexall("^([0-9]+)\\.([0-9]+)\\.([0-9]+)$", var.chart_version)) == 0 ? var.chart_version : "release/${var.chart_version}")
   }
 
   provisioner "local-exec" {
-    command = "git clone --depth 1 --branch ${self.trigers.zenml_branch} https://github.com/zenml-io/zenml.git ${path.root}/helm"
+    command = "git clone --depth 1 --branch ${self.triggers.zenml_branch} https://github.com/zenml-io/zenml.git ${path.root}/helm"
   }
 
   provisioner "local-exec" {
@@ -22,10 +22,46 @@ resource "null_resource" "fetch_chart" {
   }
 }
 
+resource "local_file" "db_ca_cert" {
+
+  count = (var.database_url != "" && var.database_ssl_ca != "") ? 1 : 0
+
+  source      = var.database_ssl_ca
+  filename = "${path.root}/helm/src/zenml/zen_server/deploy/helm/ssl_ca.pem"
+
+  depends_on = [
+    null_resource.fetch_chart,
+  ]
+}
+
+resource "local_file" "db_client_cert" {
+
+  count = (var.database_url != "" && var.database_ssl_cert != "") ? 1 : 0
+
+  source      = var.database_ssl_cert
+  filename = "${path.root}/helm/src/zenml/zen_server/deploy/helm/ssl_cert.pem"
+
+  depends_on = [
+    null_resource.fetch_chart,
+  ]
+}
+
+resource "local_file" "db_client_key" {
+
+  count = (var.database_url != "" && var.database_ssl_key != "") ? 1 : 0
+
+  source      = var.database_ssl_key
+  filename = "${path.root}/helm/src/zenml/zen_server/deploy/helm/ssl_key.pem"
+
+  depends_on = [
+    null_resource.fetch_chart,
+  ]
+}
+
 resource "helm_release" "zen-server" {
 
   name             = "zenml-server"
-  chart            = "${path.root}/helm/src/zenml/zenml_server/deploy/helm"
+  chart            = "${path.root}/helm/src/zenml/zen_server/deploy/helm"
   namespace        = kubernetes_namespace.zen-server.metadata[0].name
 
 
@@ -89,17 +125,17 @@ resource "helm_release" "zen-server" {
   }
   set {
     name  = "zenml.database.sslCa"
-    value = var.database_ssl_ca
+    value = (var.database_url != "" && var.database_ssl_ca != "") ? "ssl_ca.pem" : ""
     type = "string"
   }
   set {
     name  = "zenml.database.sslCert"
-    value = var.database_ssl_cert
+    value = (var.database_url != "" && var.database_ssl_cert != "") ? "ssl_cert.pem" : ""
     type = "string"
   }
   set {
     name  = "zenml.database.sslKey"
-    value = var.database_ssl_key
+    value = (var.database_url != "" && var.database_ssl_key != "") ? "ssl_key.pem" : ""
     type = "string"
   }
   set {
@@ -108,6 +144,10 @@ resource "helm_release" "zen-server" {
     type = "auto"
   }
   depends_on = [
+    null_resource.fetch_chart,
+    local_file.db_ca_cert,
+    local_file.db_client_cert,
+    local_file.db_client_key,
     resource.kubernetes_namespace.zen-server
   ]
 }
