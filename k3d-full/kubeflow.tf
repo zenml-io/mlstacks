@@ -13,5 +13,5 @@ module "kubeflow-pipelines" {
   ]
 
   pipeline_version = local.kubeflow.version
-  ingress_host = "kubeflow.localhost"
+  ingress_host = "${local.kubeflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
 }

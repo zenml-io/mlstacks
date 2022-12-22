@@ -42,6 +42,13 @@ resource "k3d_cluster" "zenml-cluster" {
     ]
   }
   port {
+    host_port      = 4443
+    container_port = 443
+    node_filters = [
+      "loadbalancer",
+    ]
+  }
+  port {
     host_port      = 9000
     container_port = 9000
     node_filters = [

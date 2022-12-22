@@ -13,7 +13,7 @@ module "mlflow" {
 
   # details about the mlflow deployment
   chart_version           = local.mlflow.version
-  ingress_host            = "mlflow.localhost"
+  ingress_host            = "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   htpasswd                = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
   artifact_Proxied_Access = local.mlflow.artifact_Proxied_Access
   artifact_S3             = local.mlflow.artifact_S3
