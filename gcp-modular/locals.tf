@@ -91,7 +91,7 @@ locals {
     database_ssl_verify_server_cert = false  
     ingress_host_prefix     = "zenml"
     ingress_tls             = true
-    image_tag               = "ci"
+    image_tag               = ""
   }
 
   tags = {

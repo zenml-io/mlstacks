@@ -5,10 +5,27 @@ resource "kubernetes_namespace" "zen-server" {
   }
 }
 
+# pull the ZenML helm chart from github
+resource "null_resource" "fetch_chart" {
+
+  triggers = {
+    zenml_branch = var.chart_version == "" ? "master" : (length(regexall("^([0-9]+)\\.([0-9]+)\\.([0-9]+)$", var.chart_version)) == 0 ? var.chart_version : "release/${var.chart_version}")
+  }
+
+  provisioner "local-exec" {
+    command = "git clone --depth 1 --branch ${self.trigers.zenml_branch} https://github.com/zenml-io/zenml.git ${path.root}/helm"
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "rm -rf ${path.root}/helm"
+  }
+}
+
 resource "helm_release" "zen-server" {
 
   name             = "zenml-server"
-  chart            = "${path.module}/helm"
+  chart            = "${path.root}/helm/src/zenml/zenml_server/deploy/helm"
   namespace        = kubernetes_namespace.zen-server.metadata[0].name
 
 

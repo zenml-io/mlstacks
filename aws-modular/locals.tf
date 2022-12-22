@@ -82,7 +82,7 @@ locals {
     database_ssl_verify_server_cert = false  
     ingress_host            = "zenml.example.com"
     ingress_tls             = true
-    image_tag               = "ci"
+    image_tag               = ""
   }
 
   tags = {
