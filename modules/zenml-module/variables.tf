@@ -1,4 +1,10 @@
 
+variable "chart_version" {
+  description = "The ZenML chart version to use. Leave empty to use the latest."
+  default     = ""
+  type        = string
+}
+
 variable "namespace" {
   description = "The namespace to install the ZenML server Helm chart in"
   default     = "zenml-server"
