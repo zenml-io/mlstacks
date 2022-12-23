@@ -95,12 +95,12 @@ resource "helm_release" "mlflow-tracking" {
     value = var.artifact_S3_Bucket
     type = "string"
   }
-  set {
+  set_sensitive {
     name  = "artifactRoot.s3.awsAccessKeyId"
     value = var.artifact_S3_Access_Key
     type = "string"
   }
-  set {
+  set_sensitive {
     name  = "artifactRoot.s3.awsSecretAccessKey"
     value = var.artifact_S3_Secret_Key
     type = "string"
@@ -122,7 +122,7 @@ resource "helm_release" "mlflow-tracking" {
     value = var.artifact_Azure_Container
     type = "string"
   }
-  set {
+  set_sensitive {
     name  = "artifactRoot.azureBlob.accessKey"
     value = var.artifact_Azure_Access_Key
     type = "string"

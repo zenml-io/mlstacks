@@ -80,7 +80,7 @@ resource "helm_release" "zen-server" {
     value = var.username
     type = "string"
   }
-  set {
+  set_sensitive {
     name  = "zenml.defaultPassword"
     value = var.password
     type = "string"
@@ -118,7 +118,7 @@ resource "helm_release" "zen-server" {
   }
 
   # set parameters for the mysql database
-  set {
+  set_sensitive {
     name  = "zenml.database.url"
     value = var.database_url
     type = "string"
