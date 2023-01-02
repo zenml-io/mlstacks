@@ -38,6 +38,8 @@ locals {
     storage_size = "10Gi"
     zenml_minio_store_bucket = "zenml-minio-store"
     mlflow_minio_store_bucket = "mlflow-minio-store"
+    ingress_host_prefix = "minio.zenml-ci"
+    ingress_console_host_prefix = "minio-console.zenml-ci"
   }
 
   mlflow = {

@@ -15,7 +15,7 @@ resource "local_file" "stack_file" {
           "path": "s3://${local.minio.zenml_minio_store_bucket}", 
           "key": "${var.zenml-minio-store-access-key}", 
           "secret": "${var.zenml-minio-store-secret-key}",
-          "client_kwargs" : '{"endpoint_url":"http://localhost:9000", "region_name":"us-east-1"}'
+          "client_kwargs" : '{"endpoint_url":"https://${local.minio.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io", "region_name":"us-east-1"}'
         }
       container_registry:
         id: ${uuid()}
@@ -27,6 +27,11 @@ resource "local_file" "stack_file" {
         flavor: kubeflow
         name: k3d_kubeflow_orchestrator
         configuration: {"kubernetes_context": "k3d-${k3d_cluster.zenml-cluster.name}", "synchronous": True, "skip_local_validations" : True}
+      experiment_tracker:
+        id: ${uuid()}
+        flavor: mlflow
+        name: gke_mlflow_experiment_tracker
+        configuration: {"tracking_uri": "${local.mlflow.enable ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
     ADD
   filename = "./k3d_kubeflow_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }

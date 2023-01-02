@@ -35,29 +35,8 @@ resource "k3d_cluster" "zenml-cluster" {
   }
 
   port {
-    host_port      = 8080
-    container_port = 80
-    node_filters = [
-      "loadbalancer",
-    ]
-  }
-  port {
-    host_port      = 4443
-    container_port = 443
-    node_filters = [
-      "loadbalancer",
-    ]
-  }
-  port {
     host_port      = 9000
     container_port = 9000
-    node_filters = [
-      "loadbalancer",
-    ]
-  }
-  port {
-    host_port      = 9001
-    container_port = 9001
     node_filters = [
       "loadbalancer",
     ]
@@ -70,6 +49,13 @@ resource "k3d_cluster" "zenml-cluster" {
   kubeconfig {
     update_default_kubeconfig = true
     switch_current_context    = true
+  }
+
+  k3s {
+      extra_args {
+        arg = "--disable=traefik"
+       node_filters = ["server:*"]
+      }
   }
 
   depends_on = [

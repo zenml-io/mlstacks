@@ -19,3 +19,11 @@ variable "mlflow_minio_store_bucket" {
   description = "The name of the bucket to use for MLFlow"
   type        = string
 }
+variable "ingress_host" {
+  type    = string
+  default = ""
+}
+variable "ingress_console_host" {
+  type    = string
+  default = ""
+}

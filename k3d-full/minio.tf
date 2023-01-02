@@ -13,6 +13,8 @@ module "minio_server" {
   minio_secret_key          = var.zenml-minio-store-secret-key
   zenml_minio_store_bucket  = local.minio.zenml_minio_store_bucket
   mlflow_minio_store_bucket = local.minio.mlflow_minio_store_bucket
+  ingress_host = "${local.minio.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_console_host = "${local.minio.ingress_console_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
 }
 
 provider "minio" {
@@ -33,6 +35,7 @@ resource "minio_bucket" "zenml_bucket" {
 
   depends_on = [
     module.minio_server,
+    module.nginx-ingress,
   ]
   lifecycle {
     prevent_destroy = false
@@ -45,6 +48,7 @@ resource "minio_bucket" "mlflow_bucket" {
 
   depends_on = [
     module.minio_server,
+    module.nginx-ingress,
   ]
   lifecycle {
     prevent_destroy = false

@@ -109,3 +109,98 @@ resource "kubernetes_deployment" "minio-deployment" {
     kubernetes_persistent_volume_claim.minio-pvc,
   ]
 }
+
+# Create minio service
+resource "kubernetes_service" "zenml-minio-service" {
+  metadata {
+    name      = "zenml-minio-service"
+    namespace = "zenml-minio"
+  }
+  spec {
+    selector = {
+      app = "zenml-minio-server"
+    }
+    type = "ClusterIP"
+    port {
+      name = "minio-server"
+      protocol = "TCP"
+      port     = 9000
+      target_port = 9000
+    }
+    port {
+      name = "minio-console"
+      protocol = "TCP"
+      port     = 9001
+      target_port = 9001
+    }
+  }
+  depends_on = [
+    kubernetes_deployment.minio-deployment,
+  ]
+}
+
+# Create ingress for minio
+resource "kubectl_manifest" "zenml-minio-ingress" {
+  yaml_body = <<YAML
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zenml-minio-ingress
+  namespace: zenml-minio
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - ${var.ingress_host}
+      secretName: zenml-minio-tls
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: zenml-minio-service
+                port:
+                  number: 9000       
+      host: ${var.ingress_host}
+YAML    
+  depends_on = [
+    kubernetes_service.zenml-minio-service,
+  ]
+}
+
+# Create ingress for minio
+resource "kubectl_manifest" "zenml-minio-console-ingress" {
+  yaml_body = <<YAML
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zenml-minio-console-ingress
+  namespace: zenml-minio
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - ${var.ingress_console_host}
+      secretName: zenml-minio-tls
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: zenml-minio-service
+                port:
+                  number: 9001       
+      host: ${var.ingress_console_host}
+YAML    
+  depends_on = [
+    kubernetes_service.zenml-minio-service,
+  ]
+}
