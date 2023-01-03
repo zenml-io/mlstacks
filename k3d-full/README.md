@@ -1,21 +1,18 @@
-# 🍭 Kubeflow, Vertex, GCS, MLflow and Kserve MLOps Stack Recipe 
+# 🍭 K3d, Kubeflow, Minio Storage, MLflow MLOps Local Stack Recipe 
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
-We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). This recipe, however, goes one step further. 
+We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). In addition to that, we have created a local MLOps stack recipe that you can use to get started with your MLOps journey in a local environment 🤩.
 
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
-- A GKE cluster with Kubeflow installed that can act as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) for your workloads.
-- A GCS Bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
+- A K3D cluster with Kubeflow installed that can act as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) for your workloads.
+- A Minio S3 Bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
 - An MLflow tracking server as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
-- A Kserve serverless deployment as a [model deployer](https://docs.zenml.io/mlops-stacks/model-deployers) to have your trained model deployed on a Kubernetes cluster to run inference on. 
-- A [secrets manager](https://docs.zenml.io/mlops-stacks/secrets-managers) enabled for storing your secrets. 
-- Vertex AI is enabled which can be used a [step operator](https://docs.zenml.io/mlops-stacks/step-operators).
 
 
 ## Prerequisites
 
-* You must have a GCP project where you have sufficient permissions to create and destroy resources that will be created as part of this recipe. Supply the name of your project in the `locals.tf` file.
+* You must have a working installation of [Docker](https://docs.docker.com/get-docker/) on your system and a working installation of k3d. You can install k3d by following the instructions [here](https://k3d.io/#installation). Supply the name of your local cluster in the `locals.tf` file.
 * Have [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform) and [Helm](https://helm.sh/docs/intro/install/#from-script) installed on your system.
 
 
@@ -28,8 +25,6 @@ Before starting, you should know the values that you have to keep ready for use 
 > **Warning** 
 > The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
 
-> **Warning**
-> The CIDR block used for the VPC (inside the vpc.tf file) needs to be unique too, preferably. For example, if `10.10.0.0/16` is already under use by some VPC in your account, you can use `10.11.0.0/16` instead. However, this is not required.
 
 ## 🧑‍🍳 Cooking the recipe
 
@@ -42,7 +37,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 1. Pull this recipe to your local system.
 
     ```shell
-    zenml stack recipe pull gcp-kubeflow-kserve
+    zenml stack recipe pull k3d-full
     ```
 2. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
@@ -51,7 +46,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 5. 🚀 Deploy the recipe with this simple command.
 
     ```
-    zenml stack recipe deploy gcp-kubeflow-kserve
+    zenml stack recipe deploy k3d-full
     ```
 
     > **Tip**
@@ -72,32 +67,10 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 >
 >  You need to have your GCP credentials saved locally for the `apply` function to work.
 
-### Configuring your secrets
-
-To make the imported ZenML stack work, you'll have to create secrets that some stack components need. If you inspect the generated YAML file, you can figure out that two secrets should be created:
-- `gcp_kserve_secret` - for allowing KServe access to your GCS bucket.
- 
-    - You will need the credentials for a service account that has access to your GCS buckets. As before, this account is already created for you and the credentials file is available inside the recipe directory as `kserve_sa_key.json`.
-    - Now, create the ZenML secret using this command:
-        ```
-        zenml secret register -s kserve_gs gcp_kserve_secret --credentials=@"<PATH-TO-CREDENTIALS-FILE>"
-        ```
-
 
 ## 🍹 Outputs 
 
-The script, after running, outputs the following.
-| Output | Description |
---- | ---
-gke-cluster-name | Name of the GKE cluster that is created. This is helpful when setting up `kubectl` access |
-gcs-bucket-path | The path of the GCS bucket. Useful while registering the artifact store|
-ingress-controller-name | Used for getting the ingress URL for the MLflow tracking server|
-ingress-controller-namespace | Used for getting the ingress URL for the MLflow tracking server|
-mlflow-tracking-URL | The URL for the MLflow tracking server |
-kserve-workload-namespace | Namespace in which kserve workloads will be created |
-kserve-base-url | The URL to use for your Kserve deployment |
-container-registry-URI | The URI of your container registry |
-stack-yaml-path | The path to the ZenML stack configuration YAML file which gets created |
+The outputs of the recipe are the resources that are created by the recipe.
 
 For outputs that are sensitive, you'll see that they are not shown directly on the logs. To view the full list of outputs, run the following command.
 
