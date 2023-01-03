@@ -37,7 +37,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 1. Pull this recipe to your local system.
 
     ```shell
-    zenml stack recipe pull k3d-full
+    zenml stack recipe pull k3d-modular
     ```
 2. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
@@ -46,7 +46,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 5. 🚀 Deploy the recipe with this simple command.
 
     ```
-    zenml stack recipe deploy k3d-full
+    zenml stack recipe deploy k3d-modular
     ```
 
     > **Tip**
