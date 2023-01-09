@@ -28,6 +28,7 @@ provider "minio" {
   # If true, the server will be contacted via https://
   ssl = false
 }
+
 # Create a bucket for ZenML to use
 resource "minio_bucket" "zenml_bucket" {
   name = local.minio.zenml_minio_store_bucket
@@ -36,7 +37,4 @@ resource "minio_bucket" "zenml_bucket" {
     module.minio_server,
     module.nginx-ingress,
   ]
-  lifecycle {
-    prevent_destroy = false
-  }
 }

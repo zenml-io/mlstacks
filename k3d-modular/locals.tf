@@ -72,18 +72,6 @@ locals {
     service_account_name = "seldon"
   }
 
-  zenml = {
-    enable                  = false
-    version                 = ""
-    database_ssl_ca         = ""
-    database_ssl_cert       = ""
-    database_ssl_key        = ""
-    database_ssl_verify_server_cert = false  
-    ingress_host_prefix     = "zenml"
-    ingress_tls             = true
-    image_tag               = ""
-  }
-
   tags = {
     "managedBy"   = "terraform"
     "environment" = "dev"

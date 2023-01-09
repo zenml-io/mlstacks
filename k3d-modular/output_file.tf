@@ -28,7 +28,6 @@ resource "local_file" "stack_file" {
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
           synchronous: true
           skip_local_validations: true
-          skip_ui_daemon_provisioning: true
 %{ else }
 %{ if local.tekton.enable }
         flavor: tekton
@@ -36,7 +35,7 @@ resource "local_file" "stack_file" {
         configuration:
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
           kubernetes_namespace: "${local.tekton.workloads_namespace}"
-          skip_ui_daemon_provisioning: true
+          skip_local_validations: true
 %{ else }
         flavor: kubernetes
         name: k3d-kubernetes-${random_string.cluster_id.result}
@@ -44,6 +43,7 @@ resource "local_file" "stack_file" {
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
           synchronous: true
           kubernetes_namespace: "${local.k3d.workloads_namespace}"
+          skip_local_validations: true
 %{ endif }
 %{ endif }
 %{ if local.mlflow.enable }

@@ -41,7 +41,4 @@ resource "minio_bucket" "mlflow_bucket" {
     module.minio_server,
     module.nginx-ingress,
   ]
-  lifecycle {
-    prevent_destroy = false
-  }
 }
