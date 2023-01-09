@@ -11,14 +11,6 @@ variable "minio_secret_key" {
   description = "Your secret key for using Minio artifact store"
   type        = string
 }
-variable "zenml_minio_store_bucket" {
-  description = "The name of the bucket to use for ZenML"
-  type        = string
-}
-variable "mlflow_minio_store_bucket" {
-  description = "The name of the bucket to use for MLFlow"
-  type        = string
-}
 variable "ingress_host" {
   type    = string
   default = ""
@@ -26,4 +18,8 @@ variable "ingress_host" {
 variable "ingress_console_host" {
   type    = string
   default = ""
+}
+variable "tls_enabled" {
+  type    = bool
+  default = true
 }

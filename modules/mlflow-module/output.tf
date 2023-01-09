@@ -1,3 +1,3 @@
 output "mlflow-tracking-URL" {
-  value = "https://${var.ingress_host}"
+  value = "${var.tls_enabled ? "https" : "http"}://${var.ingress_host}"
 }

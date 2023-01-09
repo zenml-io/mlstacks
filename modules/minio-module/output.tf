@@ -3,5 +3,5 @@ output "minio-server-endpoint" {
 }
 
 output "minio-console-URL" {
-  value = "https://${var.ingress_host}/console"
+  value = "${var.tls_enabled ? "https" : "http"}://${var.ingress_host}/console"
 }

@@ -4,20 +4,21 @@ module "mlflow" {
 
   count = local.mlflow.enable ? 1 : 0
 
-  # run only after the gke cluster, cert-manager and nginx-ingress are set up
+  # run only after the gke cluster and nginx-ingress are set up
   depends_on = [
     k3d_cluster.zenml-cluster,
-    module.cert-manager,
-    module.nginx-ingress
+    module.nginx-ingress,
+    module.minio_server,
   ]
 
   # details about the mlflow deployment
   chart_version           = local.mlflow.version
   ingress_host            = "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  tls_enabled             = false
   htpasswd                = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
   artifact_Proxied_Access = local.mlflow.artifact_Proxied_Access
-  artifact_S3             = local.mlflow.artifact_S3
-  artifact_S3_Bucket      = local.minio.mlflow_minio_store_bucket
+  artifact_S3             = "true"
+  artifact_S3_Bucket      = local.mlflow.minio_store_bucket
   artifact_S3_Access_Key  = var.zenml-minio-store-access-key
   artifact_S3_Secret_Key  = var.zenml-minio-store-secret-key
 
@@ -27,4 +28,20 @@ module "mlflow" {
 
 resource "htpasswd_password" "hash" {
   password = var.mlflow-password
+}
+
+
+# Create a bucket for MLFlow to use
+resource "minio_bucket" "mlflow_bucket" {
+  name = local.mlflow.minio_store_bucket
+
+  count = local.mlflow.enable ? 1 : 0
+
+  depends_on = [
+    module.minio_server,
+    module.nginx-ingress,
+  ]
+  lifecycle {
+    prevent_destroy = false
+  }
 }

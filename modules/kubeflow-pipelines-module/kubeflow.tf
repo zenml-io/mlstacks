@@ -25,7 +25,6 @@ resource "null_resource" "kubeflow" {
   }
 }
 
-
 # create an ingress
 # cannot use kubernetes_manifest resource since it practically 
 # doesn't support CRDs. Going with kubectl instead.
@@ -37,13 +36,18 @@ metadata:
   name: kubeflow-ui-ingress
   namespace: kubeflow
   annotations:
+%{ if var.tls_enabled }
     cert-manager.io/cluster-issuer: letsencrypt-staging
+%{ endif }
+    ingress.annotations.nginx.ingress.kubernetes.io/ssl-redirect: "${var.tls_enabled}"
 spec:
   ingressClassName: nginx
+%{ if var.tls_enabled }
   tls:
     - hosts:
         - ${var.ingress_host}
       secretName: kubeflow-ui-tls
+%{ endif }
   rules:
     - http:
         paths:

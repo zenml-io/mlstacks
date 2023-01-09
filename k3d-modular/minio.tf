@@ -11,10 +11,9 @@ module "minio_server" {
   minio_storage_size        = local.minio.storage_size
   minio_access_key          = var.zenml-minio-store-access-key
   minio_secret_key          = var.zenml-minio-store-secret-key
-  zenml_minio_store_bucket  = local.minio.zenml_minio_store_bucket
-  mlflow_minio_store_bucket = local.minio.mlflow_minio_store_bucket
   ingress_host = "${local.minio.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   ingress_console_host = "${local.minio.ingress_console_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  tls_enabled = false
 }
 
 provider "minio" {
@@ -32,19 +31,6 @@ provider "minio" {
 # Create a bucket for ZenML to use
 resource "minio_bucket" "zenml_bucket" {
   name = local.minio.zenml_minio_store_bucket
-
-  depends_on = [
-    module.minio_server,
-    module.nginx-ingress,
-  ]
-  lifecycle {
-    prevent_destroy = false
-  }
-}
-
-# Create a bucket for MLFlow to use
-resource "minio_bucket" "mlflow_bucket" {
-  name = local.minio.mlflow_minio_store_bucket
 
   depends_on = [
     module.minio_server,

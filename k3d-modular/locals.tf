@@ -1,9 +1,10 @@
 # config values to use across the module
 locals {
   k3d = {
-    cluster_name = "minimal-zenml-cluster"
-    image      = "rancher/k3s:v1.24.4-k3s1"
-    workloads_namespace  = "zenml-workloads-k8s"
+    cluster_name        = "minimal-zenml-cluster"
+    image               = "rancher/k3s:v1.24.4-k3s1"
+    local_stores_path   = "/home/stefan/.config/zenml/local_stores"
+    workloads_namespace = "zenml-workloads-k8s"
   }
 
   k3d_registry = {
@@ -16,14 +17,11 @@ locals {
     host = "0.0.0.0"
   }
 
-  kubeflow = {
-    enable              = true
-    version             = "1.8.3"
-    ingress_host_prefix = "kubeflow.zenml-ci"
-  }
-
-  cert_manager = {
-    version = "1.9.1"
+  minio = {
+    storage_size = "10Gi"
+    zenml_minio_store_bucket = "zenml-minio-store"
+    ingress_host_prefix = "minio"
+    ingress_console_host_prefix = "minio-console"
   }
 
   istio = {
@@ -34,22 +32,26 @@ locals {
     version = "4.4.0"
   }
 
-  minio = {
-    storage_size = "10Gi"
-    zenml_minio_store_bucket = "zenml-minio-store"
-    mlflow_minio_store_bucket = "mlflow-minio-store"
-    ingress_host_prefix = "minio.zenml-ci"
-    ingress_console_host_prefix = "minio-console.zenml-ci"
+  kubeflow = {
+    enable              = true
+    version             = "1.8.3"
+    ingress_host_prefix = "kubeflow"
+  }
+
+  tekton = {
+    enable              = false
+    version             = "0.42.0"
+    dashboard_version   = "0.31.0"
+    ingress_host_prefix = "tekton"
+    workloads_namespace  = "zenml-workloads-tekton"
   }
 
   mlflow = {
     enable                  = true
     version                 = "0.7.13"
     artifact_Proxied_Access = "false"
-    artifact_S3             = "true"
-    # if not set, the bucket created as part of the deployment will be used
-    artifact_GCS_Bucket     = ""
-    ingress_host_prefix     = "mlflow.zenml-ci"
+    ingress_host_prefix     = "mlflow"
+    minio_store_bucket      = "mlflow-minio-store"
   }
 
   kserve = {
@@ -58,6 +60,7 @@ locals {
     knative_version      = "1.8.1"
     workloads_namespace  = "zenml-workloads-kserve"
     service_account_name = "kserve"
+    ingress_host_prefix  = "kserve"
   }
 
   seldon = {
@@ -71,13 +74,14 @@ locals {
 
   zenml = {
     enable                  = false
-    database_ssl_ca         = "cloudsql-server-ca-ci.pem"
-    database_ssl_cert       = "cloudsql-client-cert-ci.pem"
-    database_ssl_key        = "cloudsql-client-key-ci.pem"
+    version                 = ""
+    database_ssl_ca         = ""
+    database_ssl_cert       = ""
+    database_ssl_key        = ""
     database_ssl_verify_server_cert = false  
-    ingress_host_prefix     = "zenml.zenml-ci"
+    ingress_host_prefix     = "zenml"
     ingress_tls             = true
-    image_tag               = "ci"
+    image_tag               = ""
   }
 
   tags = {

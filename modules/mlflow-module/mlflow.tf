@@ -41,20 +41,34 @@ resource "helm_release" "mlflow-tracking" {
     value = "Prefix"
     type = "string"
   }
-  set {
-    name  = "ingress.tls[0].hosts[0]"
-    value = var.ingress_host
-    type = "string"
+  dynamic "set" {
+    for_each = var.tls_enabled ? [var.ingress_host] : []
+    content {
+      name  = "ingress.tls[0].hosts[0]"
+      value = set.value
+      type = "string"
+    }
+  }
+  dynamic "set" {
+    for_each = var.tls_enabled ? ["mlflow-tls"] : []
+    content {
+      name  = "ingress.tls[0].secretName"
+      value = set.value
+      type = "string"
+    }
   }
   set {
-    name  = "ingress.tls[0].secretName"
-    value = "mlflow-tls"
+    name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect"
+    value = "${var.tls_enabled}"
     type = "string"
   }
-  set {
-    name  = "ingress.annotations.cert-manager\\.io/cluster-issuer"
-    value = "letsencrypt-staging"
-    type = "string"
+  dynamic "set" {
+    for_each = var.tls_enabled ? ["letsencrypt-staging"] : []
+    content {
+      name  = "ingress.annotations.cert-manager\\.io/cluster-issuer"
+      value = set.value
+      type = "string"
+    }
   }
   set {
     name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-realm"
@@ -69,11 +83,6 @@ resource "helm_release" "mlflow-tracking" {
   set {
     name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-type"
     value = "basic"
-    type = "string"
-  }
-  set {
-    name  = "ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/ssl-redirect"
-    value = "\"true\""
     type = "string"
   }
 

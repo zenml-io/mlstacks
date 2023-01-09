@@ -15,6 +15,11 @@ variable "ingress_host" {
   default = ""
 }
 
+variable "tls_enabled" {
+  type    = bool
+  default = true
+}
+
 variable "artifact_Proxied_Access" {
   type    = bool
   default = false

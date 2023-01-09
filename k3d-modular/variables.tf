@@ -27,8 +27,3 @@ variable "zenml-version" {
   default     = "0.30.0"
   type        = string
 }
-
-variable "zenml-local-stores" {
-  description = "ZenML local store path"
-  type        = string
-}

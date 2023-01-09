@@ -148,13 +148,21 @@ metadata:
   name: zenml-minio-ingress
   namespace: zenml-minio
   annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 0m
+    nginx.org/client-max-body-size: 0m
+    nginx.org/proxy-buffering: "False"
+%{ if var.tls_enabled }
     cert-manager.io/cluster-issuer: letsencrypt-staging
+%{ endif }
+    ingress.annotations.nginx.ingress.kubernetes.io/ssl-redirect: "${var.tls_enabled}"
 spec:
   ingressClassName: nginx
+%{ if var.tls_enabled }
   tls:
     - hosts:
         - ${var.ingress_host}
       secretName: zenml-minio-tls
+%{ endif }
   rules:
     - http:
         paths:
@@ -181,13 +189,18 @@ metadata:
   name: zenml-minio-console-ingress
   namespace: zenml-minio
   annotations:
+%{ if var.tls_enabled }
     cert-manager.io/cluster-issuer: letsencrypt-staging
+%{ endif }
+    ingress.annotations.nginx.ingress.kubernetes.io/ssl-redirect: "${var.tls_enabled}"
 spec:
   ingressClassName: nginx
+%{ if var.tls_enabled }
   tls:
     - hosts:
         - ${var.ingress_console_host}
-      secretName: zenml-minio-tls
+      secretName: zenml-minio-console-tls
+%{ endif }
   rules:
     - http:
         paths:

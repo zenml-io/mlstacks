@@ -4,14 +4,14 @@ module "kubeflow-pipelines" {
 
   count = local.kubeflow.enable ? 1 : 0
 
-  # run only after the gke cluster is set up and cert-manager and nginx-ingress
-  # are installed 
+  # run only after the gke cluster is set up and nginx-ingress
+  # is installed 
   depends_on = [
     k3d_cluster.zenml-cluster,
-    module.cert-manager,
     module.nginx-ingress,
   ]
 
   pipeline_version = local.kubeflow.version
   ingress_host = "${local.kubeflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  tls_enabled = false
 }

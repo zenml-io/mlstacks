@@ -30,8 +30,8 @@ resource "k3d_cluster" "zenml-cluster" {
   }
   
   volume {
-    source      = "/${var.zenml-local-stores}"
-    destination = "/${var.zenml-local-stores}"
+    source      = "/${local.k3d.local_stores_path}"
+    destination = "/${local.k3d.local_stores_path}"
   }
 
   port {

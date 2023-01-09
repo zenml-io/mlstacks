@@ -7,3 +7,8 @@ variable "ingress_host" {
   type    = string
   default = ""
 }
+
+variable "tls_enabled" {
+  type    = bool
+  default = true
+}
