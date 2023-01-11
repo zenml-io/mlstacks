@@ -37,6 +37,11 @@ terraform {
       source  = "loafoe/htpasswd"
       version = "1.0.3"
     }
+
+    external = {
+      source  = "hashicorp/external"
+      version = "2.2.3"
+    }
   }
 
   required_version = ">= 0.14.8"

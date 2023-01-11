@@ -5,33 +5,59 @@ resource "random_string" "cluster_id" {
 }
 
 resource "k3d_registry" "zenml-registry" {
-  name = "${local.k3d_registry.name}-${random_string.cluster_id.result}.${local.k3d_registry.host}"
+  name  = "${local.k3d_registry.name}-${random_string.cluster_id.result}.${local.k3d_registry.host}"
   image = "docker.io/registry:2"
 
   port {
-    host = "${local.k3d_registry.name}-${random_string.cluster_id.result}.${local.k3d_registry.host}"
-    host_port = "${local.k3d_registry.port}"
-    host_ip = "0.0.0.0"
+    host      = "${local.k3d_registry.name}-${random_string.cluster_id.result}.${local.k3d_registry.host}"
+    host_port = local.k3d_registry.port
+    host_ip   = "0.0.0.0"
   }
 }
+
+# This is a hack to attempt get the local stores path from the zenml config
+# and pass it to the k3d cluster resource, if not set in the local config.
+data "external" "zenml_local_stores_path" {
+  program = [
+    "python",
+    "-u",
+    "-c",
+    <<-ZENML
+%{ if local.k3d.local_stores_path != "" }
+path = "${local.k3d.local_stores_path}"
+%{ else }
+try:
+  from zenml.config.global_config import GlobalConfiguration
+  path = GlobalConfiguration().local_stores_path
+except Exception:
+  path = ""
+%{ endif }
+print('{"path": "' + path + '"}')
+    ZENML
+  ]
+}
+
 resource "k3d_cluster" "zenml-cluster" {
   name    = "${local.k3d.cluster_name}-${random_string.cluster_id.result}"
   servers = 1
   agents  = 2
-  
+
   kube_api {
-    host      = "${local.k3d_kube_api.host}"
-    host_ip   = "127.0.0.1"
+    host    = "${local.k3d_kube_api.host}"
+    host_ip = "127.0.0.1"
   }
 
-  image   = "${local.k3d.image}"
+  image = "${local.k3d.image}"
   registries {
     use = ["${k3d_registry.zenml-registry.name}:${k3d_registry.zenml-registry.port[0].host_port}"]
   }
-  
-  volume {
-    source      = "/${local.k3d.local_stores_path}"
-    destination = "/${local.k3d.local_stores_path}"
+
+  dynamic "volume" {
+    for_each = data.external.zenml_local_stores_path.result.path != "" ? [data.external.zenml_local_stores_path.result.path] : []
+    content {
+      source      = "/${volume.value}"
+      destination = "/${volume.value}"
+    }
   }
 
   port {
@@ -42,8 +68,8 @@ resource "k3d_cluster" "zenml-cluster" {
     ]
   }
   k3d {
-    disable_load_balancer     = false
-    disable_image_volume      = false
+    disable_load_balancer = false
+    disable_image_volume  = false
   }
 
   kubeconfig {
@@ -52,10 +78,10 @@ resource "k3d_cluster" "zenml-cluster" {
   }
 
   k3s {
-      extra_args {
-        arg = "--disable=traefik"
-       node_filters = ["server:*"]
-      }
+    extra_args {
+      arg          = "--disable=traefik"
+      node_filters = ["server:*"]
+    }
   }
 
   depends_on = [

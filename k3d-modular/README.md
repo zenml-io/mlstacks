@@ -1,14 +1,23 @@
-# 🍭 K3d, Kubeflow, Minio Storage, MLflow MLOps Local Stack Recipe 
+# 🍭 Modular K3d based MLOps Local Stack Recipe with Kubeflow, Minio Storage, MLflow and more 
 
-There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
+There can be many motivations behind taking your ML application setup to a cloud environment, from needing specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
 We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). In addition to that, we have created a local MLOps stack recipe that you can use to get started with your MLOps journey in a local environment 🤩.
 
-You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
-- A K3D cluster with Kubeflow installed that can act as an [orchestrator](https://docs.zenml.io/mlops-stacks/orchestrators) for your workloads.
-- A Minio S3 Bucket as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- An MLflow tracking server as an [experiment tracker](https://docs.zenml.io/mlops-stacks/experiment-trackers) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
+You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources:
+- A K3D cluster which you can use directly as [Kubernetes ZenML orchestrator](https://docs.zenml.io/component-gallery/orchestrators/kubernetes) for your workloads.
+- A [local container registry](https://docs.zenml.io/component-gallery/container-registries/default) where container images built by your orchestrator are stored and used to run pipelines.
+- A Minio S3 Bucket as an [S3 artifact store](https://docs.zenml.io/component-gallery/artifact-stores/amazon-s3), which can be used to store all your ML artifacts like the model, checkpoints, etc.
 
+In addition to the above, the following optional components can be enabled by setting various local variables to `true` in the `locals.tf` file:
+
+- set `kubeflow.enable` to install Kubeflow and use it as a [Kubeflow orchestrator](https://docs.zenml.io/component-gallery/orchestrators/kubeflow) in your ZenML stack.
+- set `mlflow.enable` to deploy an MLflow tracking server as an [experiment tracker](https://docs.zenml.io/component-gallery/experiment-trackers/mlflow) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
+- you can deploy Tekton and use it as a [pipeline orchestrator](https://docs.zenml.io/component-gallery/orchestrators/tekton) instead of or in addition to Kubeflow or the native ZenML Kubernetes orchestrator by setting `tekton.enable` to `true`.
+- to install and use Seldon as a [model deployer](https://docs.zenml.io/component-gallery/model-deployers/seldon) in your ZenML pipelines, set `seldon.enable` to `true`.
+- to install and use KServe as a [model deployer](https://docs.zenml.io/component-gallery/model-deployers/kserve) in your ZenML pipelines, set `kserve.enable` to `true`.
+
+Naturally, you can combine any of the stack component resources provisioned by this recipe with other local or remote ZenML stack components to create a custom MLOps stack that suits your needs.
 
 ## Prerequisites
 
@@ -18,17 +27,21 @@ You can have a simple MLOps stack ready for running your machine learning worklo
 
 ## 🍉 Inputs
 
-Before starting, you should know the values that you have to keep ready for use in the script. 
+Before starting, you should know the values that you have to keep ready for use in the recipe. 
 - Check out the `locals.tf` file to configure basic information about your deployments.
-- Take a look at the `values.tfvars.json` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like MLflow passwords, etc. Make sure you don't commit them!
+- Take a look at the `values.tfvars.json` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like usernames, passwords, etc. Make sure you don't commit them!
 
 > **Warning** 
-> The `prefix` local variable you assign should have a unique value for each stack. This ensures that the stack you create doesn't interfere with the stacks somebody else in your organization has created with this script.
+> Certain local variables should have a unique value for each recipe deployment to ensures that the local resources created by the recipe don't overlap with other deployments of the same recipe that you might have on your system. These variables are:
+> - `k3d.cluster_name` - used to derive the name of the K3D cluster
+> - `k3d.registry_name` - used to derive the name of the local container registry
+> - `k3d.registry_port` - used to derive the port on which the local container registry is exposed
 
+The `k3d.local_stores_path` variable is used to customize the path on your system where ZenML keeps the local stores files, such as the files where the local artifact store artifacts are saved. This is only useful if you plan on using a combination of local stack components and K3D backed stack components - for example, if you wish to use the local (default) artifact store with any of the orchestrators deployed by this recipe. If left empty, the default value is computed by looking up your active ZenML client configuration. For this purpose, you should run the terraform commands with an active Python environment that has ZenML installed. If this is not possible, you can manually set the `k3d.local_stores_path` variable to the path where ZenML stores the local stores files, which is shown in the `zenml status` output, or leave it empty and avoid using local stack components.
 
 ## 🧑‍🍳 Cooking the recipe
 
-It is not neccessary to use the MLOps stacks recipes presented here alongisde the
+It is not necessary to use the MLOps stacks recipes presented here alongisde the
 [ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
 directly.
 
@@ -43,30 +56,28 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 
 3. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
 
-5. 🚀 Deploy the recipe with this simple command.
+4. 🚀 Deploy the recipe with this simple command.
 
     ```
     zenml stack recipe deploy k3d-modular
     ```
-
-    > **Tip**
-    > If the command fails to run on the first try due to an error with `EnvoyFilters`, simply running `deploy` again should get you going.
     
     > **Note**
     > If you want to allow ZenML to automatically import the created resources as a ZenML stack, pass the `--import` flag to the command above. By default, the imported stack will have the same name as the stack recipe and you can provide your own with the `--stack-name` option.
     
 
-6. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
+5. You'll notice that a ZenML stack configuration file gets created after the previous command executes 🤯! This YAML file can be imported as a ZenML stack manually by running the following command.
 
     ```
     zenml stack import <stack-name> <path-to-the-created-stack-config-yaml>
     ```
 
-
-> **Note**
->
->  You need to have your GCP credentials saved locally for the `apply` function to work.
-
+    > **Important**
+    > You may need to wait a few minutes for all Kubernetes workloads to start up successfully. You can use the following command to check the status of the pods in your cluster. When all pods are in the `Running` state, you can proceed to running pipelines with your stack(s):
+    >
+    > ```shell
+    > kubectl get -A pods
+    > ```
 
 ## 🍹 Outputs 
 
@@ -78,10 +89,10 @@ For outputs that are sensitive, you'll see that they are not shown directly on t
 terraform output
 ```
 
-To view individual sensitive outputs, use the following format. Here, the metadata password is being obtained. 
+To view individual sensitive outputs, use the following format. For example: 
 
 ```bash
-terraform output metadata-db-password
+terraform output mlflow-password
 ```
 
 ## Deleting Resources
@@ -110,14 +121,14 @@ As mentioned above, you can still use the recipe without having using the `zenml
 
 2. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
 
-3. Initiliaze Terraform modules and download provider definitions.
+3. Initialize Terraform modules and download provider definitions.
     ```bash
     terraform init
     ```
 
 4. Apply the recipe.
     ```bash
-    terraform apply
+    terraform apply --var-file=values.tfvars.json
     ```
 
 ### Deleting resources
@@ -128,7 +139,6 @@ As mentioned above, you can still use the recipe without having using the `zenml
     terraform destroy
     ```
 
-
 ## Troubleshoot Known Problems
 
 These are some known problems that might arise out of running this recipe. Some of these 
@@ -137,8 +147,6 @@ are terraform commands but running `zenml stack recipe apply` would also achieve
 * Running the script for the first time might result in an error with one of the resources - the Istio Ingressway. This is because of a limitation with the resource `kubectl_manifest` that needs the cluster to be set up before it installs its own resources.
 \
     💡 Fix - Run `terraform apply` again in a few minutes and this should get resolved.    
-
-
 
 *  When executing terraform commands, an error like this one: `timeout while waiting for plugin to start` 
 \
@@ -151,3 +159,10 @@ are terraform commands but running `zenml stack recipe apply` would also achieve
 * While running a terraform command, this error might appear too: `context deadline exceeded`
 \
     💡 Fix - This problem could arise due to strained system resources. Try running the command again after some time.
+
+* If you change any of the `k3d` locals variables, you may run into an error like the following:
+    ```
+    Error: Get "http://localhost/api/v1/namespaces/zenml-workloads-k8s": dial tcp 127.0.0.1:80: connect: connection refused
+    ```
+\
+    💡 Fix - This is a due to a fundamental limitation of Terraform that makes it impossible to create a dependency between a provider (kubernetes) and another resource (the K3D cluster). The solution is to run `terraform destroy` first, without changing the k3d configuration attributes, and only then to apply the changes and run `terraform apply`.
