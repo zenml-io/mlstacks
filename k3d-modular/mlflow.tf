@@ -18,12 +18,10 @@ module "mlflow" {
   htpasswd                = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
   artifact_Proxied_Access = local.mlflow.artifact_Proxied_Access
   artifact_S3             = "true"
-  artifact_S3_Bucket      = local.mlflow.minio_store_bucket
+  artifact_S3_Bucket      = local.mlflow.minio_store_bucket == "" ? "${local.minio.zenml_minio_store_bucket}/mlflow" : local.mlflow.minio_store_bucket
   artifact_S3_Access_Key  = var.zenml-minio-store-access-key
   artifact_S3_Secret_Key  = var.zenml-minio-store-secret-key
-
-  # set workload identity annotations for mlflow kubernetes sa
-  # kubernetes_sa = google_service_account.gke-service-account.email
+  artifact_S3_Endpoint_URL = module.minio_server.artifact_S3_Endpoint_URL
 }
 
 resource "htpasswd_password" "hash" {
@@ -35,7 +33,7 @@ resource "htpasswd_password" "hash" {
 resource "minio_bucket" "mlflow_bucket" {
   name = local.mlflow.minio_store_bucket
 
-  count = local.mlflow.enable ? 1 : 0
+  count = (local.mlflow.enable && local.mlflow.minio_store_bucket != "") ? 1 : 0
 
   depends_on = [
     module.minio_server,

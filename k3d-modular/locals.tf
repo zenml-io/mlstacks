@@ -18,6 +18,7 @@ locals {
   }
 
   minio = {
+    enable = true
     storage_size = "10Gi"
     zenml_minio_store_bucket = "zenml-minio-store"
     ingress_host_prefix = "minio"
@@ -49,9 +50,15 @@ locals {
   mlflow = {
     enable                  = true
     version                 = "0.7.13"
-    artifact_Proxied_Access = "false"
+    # if not set, you'll need to pass the minio credentials to the pipeline/step.
+    # E.g. when running with the default local orchestrator:
+    #
+    #  AWS_ACCESS_KEY_ID=zenml AWS_SECRET_ACCESS_KEY=supersafepassword MLFLOW_S3_ENDPOINT_URL="http://minio.172.24.0.3.nip.io" python run.py
+    #
+    artifact_Proxied_Access = "true"
     ingress_host_prefix     = "mlflow"
-    minio_store_bucket      = "mlflow-minio-store"
+    # if not set, the same bucket used by the artifact store will be used.
+    minio_store_bucket      = ""
   }
 
   kserve = {

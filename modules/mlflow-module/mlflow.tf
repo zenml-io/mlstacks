@@ -114,6 +114,14 @@ resource "helm_release" "mlflow-tracking" {
     value = var.artifact_S3_Secret_Key
     type = "string"
   }
+  dynamic "set" {
+    for_each = var.artifact_S3_Endpoint_URL != "" ? [var.artifact_S3_Endpoint_URL] : []
+    content {
+      name  = "extraEnvVars.MLFLOW_S3_ENDPOINT_URL"
+      value = set.value
+      type = "string"
+    }
+  }
 
   # set values for Azure Blob Storage
   set {

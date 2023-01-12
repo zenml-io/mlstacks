@@ -41,7 +41,10 @@ variable "artifact_S3_Secret_Key" {
   type    = string
   default = ""
 }
-
+variable "artifact_S3_Endpoint_URL" {
+  type    = string
+  default = ""
+}
 
 variable "artifact_Azure" {
   type    = bool

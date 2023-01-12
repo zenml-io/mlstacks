@@ -14,7 +14,7 @@ resource "local_file" "stack_file" {
           path: "s3://${local.minio.zenml_minio_store_bucket}"
           key: "${var.zenml-minio-store-access-key}"
           secret: "${var.zenml-minio-store-secret-key}"
-          client_kwargs: '{"endpoint_url":"http://${local.minio.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io", "region_name":"us-east-1"}'
+          client_kwargs: '{"endpoint_url":"${module.minio_server.artifact_S3_Endpoint_URL}", "region_name":"us-east-1"}'
       container_registry:
         flavor: default
         name: k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}

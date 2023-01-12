@@ -144,6 +144,13 @@ As mentioned above, you can still use the recipe without having using the `zenml
 These are some known problems that might arise out of running this recipe. Some of these 
 are terraform commands but running `zenml stack recipe apply` would also achieve similar results as `terraform init` and `terraform apply`.
 
+* When destroying the resources, if the S3 minio bucket is not empty, the destroy command might fail with an error like this one:
+    ```
+    Error: The bucket you tried to delete is not empty
+    ```
+\
+    💡 Fix - Delete the contents of the bucket manually or run `terraform state rm minio_bucket.zenml_bucket` followed by running `terraform destroy` again.
+
 * Running the script for the first time might result in an error with one of the resources - the Istio Ingressway. This is because of a limitation with the resource `kubectl_manifest` that needs the cluster to be set up before it installs its own resources.
 \
     💡 Fix - Run `terraform apply` again in a few minutes and this should get resolved.    
@@ -166,3 +173,7 @@ are terraform commands but running `zenml stack recipe apply` would also achieve
     ```
 \
     💡 Fix - This is a due to a fundamental limitation of Terraform that makes it impossible to create a dependency between a provider (kubernetes) and another resource (the K3D cluster). The solution is to run `terraform destroy` first, without changing the k3d configuration attributes, and only then to apply the changes and run `terraform apply`.
+
+
+* mlflow can't read from S3 bucket
+* istio ingress can't be exposed -  see https://github.com/istio/istio/blob/master/manifests/charts/gateways/istio-ingress/values.yaml to change port values
