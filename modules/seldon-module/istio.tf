@@ -10,7 +10,7 @@ metadata:
   namespace: default
 spec:
   selector:
-    istio: ingressgateway # use istio default controller
+    istio: ingress-seldon # use istio default controller
   servers:
   - port:
       number: 8082
@@ -25,22 +25,22 @@ YAML
   ]
 }
 
-# # creating a namespace for the gateway
-# resource "kubernetes_namespace" "istio-ingress-ns" {
-#   metadata {
-#     name = "istio-ingress"
-#     labels = {
-#       istio-injection = "enabled"
-#     }
-#   }
-# }
+# creating a namespace for the gateway
+resource "kubernetes_namespace" "istio-ingress-ns" {
+  metadata {
+    name = "istio-ingress"
+    labels = {
+      istio-injection = "enabled"
+    }
+  }
+}
 
-# creating the ingress gateway
-# resource "helm_release" "istio-ingress" {
-#   name       = "istio-ingress-seldon"
-#   repository = helm_release.istiod.repository
-#   chart      = "gateway"
-# 
-#   # dependency on istio-ingress-ns
-#   namespace = kubernetes_namespace.istio-ingress-ns.metadata[0].name
-# }
+# creating the ingress gateway definitions
+resource "helm_release" "istio-ingress" {
+  name       = "istio-ingress-seldon"
+  repository = helm_release.istiod.repository
+  chart      = "gateway"
+
+  # dependency on istio-ingress-ns
+  namespace = kubernetes_namespace.istio-ingress-ns.metadata[0].name
+}

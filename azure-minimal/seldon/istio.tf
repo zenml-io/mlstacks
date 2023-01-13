@@ -39,7 +39,7 @@ metadata:
   namespace: istio-system
 spec:
   selector:
-    istio: ingressgateway # use istio default controller
+    istio: ingress-seldon # use istio default controller
   servers:
   - port:
       number: 80
@@ -62,7 +62,7 @@ resource "kubernetes_namespace" "istio-ingress-ns" {
   }
 }
 
-# creating the ingress gateway
+# creating the ingress gateway definitions
 resource "helm_release" "istio-ingress" {
   name       = "istio-ingress-seldon"
   repository = helm_release.istiod.repository
