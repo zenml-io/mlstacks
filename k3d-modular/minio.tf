@@ -2,6 +2,8 @@
 module "minio_server" {
   source = "../modules/minio-module"
 
+  count = (local.minio.enable || local.mlflow.enable)  ? 1 : 0
+
   # run only after the eks cluster is set up
   depends_on = [
     k3d_cluster.zenml-cluster,
@@ -31,6 +33,9 @@ provider "minio" {
 
 # Create a bucket for ZenML to use
 resource "minio_bucket" "zenml_bucket" {
+
+  count = (local.minio.enable || local.mlflow.enable)  ? 1 : 0
+
   name = local.minio.zenml_minio_store_bucket
 
   depends_on = [

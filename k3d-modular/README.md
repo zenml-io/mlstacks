@@ -7,10 +7,10 @@ We know that the process to set up an MLOps stack can be daunting. There are man
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources:
 - A K3D cluster which you can use directly as [Kubernetes ZenML orchestrator](https://docs.zenml.io/component-gallery/orchestrators/kubernetes) for your workloads.
 - A [local container registry](https://docs.zenml.io/component-gallery/container-registries/default) where container images built by your orchestrator are stored and used to run pipelines.
-- A Minio S3 Bucket as an [S3 artifact store](https://docs.zenml.io/component-gallery/artifact-stores/amazon-s3), which can be used to store all your ML artifacts like the model, checkpoints, etc.
 
 In addition to the above, the following optional components can be enabled by setting various local variables to `true` in the `locals.tf` file:
 
+- set `minio.enable` to deploy a Minio S3 Bucket as an [S3 artifact store](https://docs.zenml.io/component-gallery/artifact-stores/amazon-s3), which can be used to store all your ML artifacts like the model, checkpoints, etc. This is  implicitly included if you enable MLflow, because the MLflow tracking server needs it to store artifacts.
 - set `kubeflow.enable` to install Kubeflow and use it as a [Kubeflow orchestrator](https://docs.zenml.io/component-gallery/orchestrators/kubeflow) in your ZenML stack.
 - set `mlflow.enable` to deploy an MLflow tracking server as an [experiment tracker](https://docs.zenml.io/component-gallery/experiment-trackers/mlflow) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
 - you can deploy Tekton and use it as a [pipeline orchestrator](https://docs.zenml.io/component-gallery/orchestrators/tekton) instead of or in addition to Kubeflow or the native ZenML Kubernetes orchestrator by setting `tekton.enable` to `true`.
@@ -28,7 +28,7 @@ Naturally, you can combine any of the stack component resources provisioned by t
 ## 🍉 Inputs
 
 Before starting, you should know the values that you have to keep ready for use in the recipe. 
-- Check out the `locals.tf` file to configure basic information about your deployments.
+- Check out the `locals.tf` file to enable/disable resources and configure basic information about your deployments.
 - Take a look at the `values.tfvars.json` file to know what values have to be supplied during the execution of the script. These are mostly sensitive values like usernames, passwords, etc. Make sure you don't commit them!
 
 > **Warning** 
@@ -105,6 +105,19 @@ Using the ZenML stack recipe CLI commands, you can run the following commands to
     zenml stack recipe destroy gcp-kubeflow-kserve
     ```
 
+    > **Note**
+    > If you encounter terraform errors running the destroy command or would simply like a faster way to clean up
+    > the resources, you can always manually delete the K3D cluster and registry by using the commands below.
+    >
+    > ```shell
+    > k3d cluster list # to get the cluster name
+    > # hint: you can also use the `k3d cluster delete --all` command to delete all clusters
+    > k3d cluster delete <cluster-name>
+    > k3d registry list # to get the registry name
+    > # hint: you can also use the `k3d registry delete --all` command to delete all registries
+    > k3d registry delete <registry-name>
+    > ```
+
 2. (Optional) 🧹 Clean up all stack recipe files that you had pulled to your local system.
 
     ```shell
@@ -136,8 +149,21 @@ As mentioned above, you can still use the recipe without having using the `zenml
 1. 🗑️ Run the destroy function to clean up all resources.
 
     ```
-    terraform destroy
+    terraform destroy --var-file=values.tfvars.json
     ```
+
+    > **Note**
+    > If you encounter terraform errors running the destroy command or would simply like a faster way to clean up
+    > the resources, you can always manually delete the K3D cluster and registry by using the commands below.
+    >
+    > ```shell
+    > k3d cluster list # to get the cluster name
+    > # hint: you can also use the `k3d cluster delete --all` command to delete all clusters
+    > k3d cluster delete <cluster-name>
+    > k3d registry list # to get the registry name
+    > # hint: you can also use the `k3d registry delete --all` command to delete all registries
+    > k3d registry delete <registry-name>
+    > ```
 
 ## Troubleshoot Known Problems
 
@@ -173,7 +199,3 @@ are terraform commands but running `zenml stack recipe apply` would also achieve
     ```
 \
     💡 Fix - This is a due to a fundamental limitation of Terraform that makes it impossible to create a dependency between a provider (kubernetes) and another resource (the K3D cluster). The solution is to run `terraform destroy` first, without changing the k3d configuration attributes, and only then to apply the changes and run `terraform apply`.
-
-
-* mlflow can't read from S3 bucket
-* istio ingress can't be exposed -  see https://github.com/istio/istio/blob/master/manifests/charts/gateways/istio-ingress/values.yaml to change port values

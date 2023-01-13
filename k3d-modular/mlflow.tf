@@ -21,7 +21,7 @@ module "mlflow" {
   artifact_S3_Bucket      = local.mlflow.minio_store_bucket == "" ? "${local.minio.zenml_minio_store_bucket}/mlflow" : local.mlflow.minio_store_bucket
   artifact_S3_Access_Key  = var.zenml-minio-store-access-key
   artifact_S3_Secret_Key  = var.zenml-minio-store-secret-key
-  artifact_S3_Endpoint_URL = module.minio_server.artifact_S3_Endpoint_URL
+  artifact_S3_Endpoint_URL = module.minio_server[0].artifact_S3_Endpoint_URL
 }
 
 resource "htpasswd_password" "hash" {

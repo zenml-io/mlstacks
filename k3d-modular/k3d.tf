@@ -5,11 +5,18 @@ resource "random_string" "cluster_id" {
 }
 
 resource "k3d_registry" "zenml-registry" {
-  name  = "${local.k3d_registry.name}-${random_string.cluster_id.result}.${local.k3d_registry.host}"
+  # IMPORTANT: the registry name must contain the `.localhost` suffix because
+  # this is the only way to make it accessible using the same hostname from
+  # both the host and from inside the cluster. K3D automatically maps the
+  # `k3d-<registry-name>.localhost` hostname to localhost outside the cluster,
+  # and inside the cluster it maps `k3d-<registry-name>` to the registry
+  # container IP address. If the cluster name contains the `.localhost` suffix,
+  # then the `k3d-<registry-name>` hostname can also be used to access the
+  # registry from the host.
+  name  = "${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost"
   image = "docker.io/registry:2"
 
   port {
-    host      = "${local.k3d_registry.name}-${random_string.cluster_id.result}.${local.k3d_registry.host}"
     host_port = local.k3d_registry.port
     host_ip   = "0.0.0.0"
   }

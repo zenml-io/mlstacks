@@ -9,7 +9,6 @@ locals {
 
   k3d_registry = {
     name = "zenml-registry"
-    host = "localhost"
     port = "5001"
   }
 

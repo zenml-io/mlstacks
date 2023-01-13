@@ -5,7 +5,7 @@ output "k3d-cluster-name" {
 
 # output for container registry
 output "container-registry-URI" {
-  value = "${local.k3d_registry.host}:${local.k3d_registry.port}"
+  value = "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}:${local.k3d_registry.port}"
 }
 
 
@@ -19,6 +19,13 @@ output "istio-ingress-hostname" {
   value = length(module.istio) > 0 ? module.istio[0].ingress-ip-address : null
 }
 
+output "minio-console-URL" {
+  value = (local.minio.enable || local.mlflow.enable) ? module.minio_server[0].minio-console-URL : null
+}
+
+output "minio-endpoint-URL" {
+  value = (local.minio.enable || local.mlflow.enable) ? module.minio_server[0].artifact_S3_Endpoint_URL : null
+}
 
 output "kubeflow-pipelines-ui-URL" {
   value = local.kubeflow.enable ? module.kubeflow-pipelines[0].pipelines-ui-URL : null
@@ -51,7 +58,6 @@ output "seldon-workload-namespace" {
 output "seldon-base-url" {
   value = local.seldon.enable ? module.istio[0].ingress-ip-address : null
 }
-
 
 # output the name of the stack YAML file created
 output "stack-yaml-path" {

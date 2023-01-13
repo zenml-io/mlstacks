@@ -3,7 +3,7 @@ output "minio-server-endpoint" {
 }
 
 output "minio-console-URL" {
-  value = "${var.tls_enabled ? "https" : "http"}://${var.ingress_host}/console"
+  value = "${var.tls_enabled ? "https" : "http"}://${var.ingress_console_host}"
 }
 
 output "artifact_S3_Endpoint_URL" {

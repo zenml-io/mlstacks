@@ -8,18 +8,24 @@ resource "local_file" "stack_file" {
     stack_name: k3d_minimal_${replace(substr(timestamp(), 0, 16), ":", "_")}
     components:
       artifact_store:
+%{ if local.minio.enable || local.mlflow.enable }
         flavor: s3
         name: k3d-minio-${random_string.cluster_id.result}
         configuration:
           path: "s3://${local.minio.zenml_minio_store_bucket}"
           key: "${var.zenml-minio-store-access-key}"
           secret: "${var.zenml-minio-store-secret-key}"
-          client_kwargs: '{"endpoint_url":"${module.minio_server.artifact_S3_Endpoint_URL}", "region_name":"us-east-1"}'
+          client_kwargs: '{"endpoint_url":"${module.minio_server[0].artifact_S3_Endpoint_URL}", "region_name":"us-east-1"}'
+%{ else }
+        flavor: local
+        name: default
+        configuration: {}
+%{ endif }
       container_registry:
         flavor: default
         name: k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}
         configuration:
-          uri: "${local.k3d_registry.host}:${local.k3d_registry.port}"
+          uri: "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
       orchestrator:
 %{ if local.kubeflow.enable }
         flavor: kubeflow
@@ -56,5 +62,5 @@ resource "local_file" "stack_file" {
           tracking_password: "${var.mlflow-password}"
 %{ endif }
     ADD
-  filename = "./k3d_kubeflow_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
+  filename = "./k3d_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }
