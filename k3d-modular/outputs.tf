@@ -5,7 +5,7 @@ output "k3d-cluster-name" {
 
 # output for container registry
 output "container-registry-URI" {
-  value = "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}:${local.k3d_registry.port}"
+  value = "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
 }
 
 
