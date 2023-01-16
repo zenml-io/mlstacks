@@ -7,10 +7,10 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: seldon-gateway
-  namespace: default
+  namespace: istio-system
 spec:
   selector:
-    istio: ingress-seldon # use istio default controller
+    istio: ingressgateway # use istio default controller
   servers:
   - port:
       number: 8082
@@ -23,24 +23,4 @@ YAML
   depends_on = [
     resource.kubernetes_namespace.seldon-ns
   ]
-}
-
-# creating a namespace for the gateway
-resource "kubernetes_namespace" "istio-ingress-ns" {
-  metadata {
-    name = "istio-ingress"
-    labels = {
-      istio-injection = "enabled"
-    }
-  }
-}
-
-# creating the ingress gateway definitions
-resource "helm_release" "istio-ingress" {
-  name       = "istio-ingress-seldon"
-  repository = helm_release.istiod.repository
-  chart      = "gateway"
-
-  # dependency on istio-ingress-ns
-  namespace = kubernetes_namespace.istio-ingress-ns.metadata[0].name
 }
