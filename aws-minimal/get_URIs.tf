@@ -12,8 +12,8 @@ data "kubernetes_service" "mlflow_tracking" {
 # get the ingress host URL for the seldon model deployer
 data "kubernetes_service" "seldon_ingress" {
   metadata {
-    name      = "istio-ingress-seldon"
-    namespace = "istio-ingress"
+    name      = "istio-ingressgateway"
+    namespace = "istio-system"
   }
   depends_on = [
     module.seldon
