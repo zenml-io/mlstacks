@@ -61,6 +61,20 @@ resource "local_file" "stack_file" {
           tracking_username: "${var.mlflow-username}"
           tracking_password: "${var.mlflow-password}"
 %{ endif }
+%{ if local.seldon.enable && !local.kserve.enable }
+      model_deployer:
+        flavor: seldon
+        name: k3d-seldon-${random_string.cluster_id.result}
+        configuration:
+          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
+          kubernetes_namespace: "${local.seldon.workloads_namespace}"
+          base_url:  "http://${local.seldon.enable ? module.istio[0].ingress-ip-address : ""}"
+          kubernetes_secret_name: "${var.seldon-secret-name}"
+      secrets_manager:
+        flavor: local
+        name: k3d-secrets-manager-${random_string.cluster_id.result}
+        configuration: {}
+%{ endif }
     ADD
   filename = "./k3d_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }

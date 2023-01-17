@@ -7,39 +7,42 @@ module "minio_server" {
   # run only after the eks cluster is set up
   depends_on = [
     k3d_cluster.zenml-cluster,
+    module.istio,
   ]
 
   # details about the mlflow deployment
   minio_storage_size        = local.minio.storage_size
   minio_access_key          = var.zenml-minio-store-access-key
   minio_secret_key          = var.zenml-minio-store-secret-key
-  ingress_host = "${local.minio.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
-  ingress_console_host = "${local.minio.ingress_console_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_host = "${ (local.kserve.enable || local.seldon.enable) ? "${local.minio.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.minio.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"}"
+  ingress_console_host = "${ (local.kserve.enable || local.seldon.enable) ? "${local.minio.ingress_console_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.minio.ingress_console_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"}"
   tls_enabled = false
+  istio_enabled = (local.kserve.enable || local.seldon.enable) ? true : false
 }
 
-provider "minio" {
+provider minio {
   # The Minio server endpoint.
   # NOTE: do NOT add an http:// or https:// prefix!
   # Set the `ssl = true/false` setting instead.
-  endpoint = "localhost:9000"
+  minio_server   = "localhost:9000"
   # Specify your minio user access key here.
-  access_key = var.zenml-minio-store-access-key
+  minio_user     = var.zenml-minio-store-access-key
   # Specify your minio user secret key here.
-  secret_key = var.zenml-minio-store-secret-key
+  minio_password = var.zenml-minio-store-secret-key
   # If true, the server will be contacted via https://
-  ssl = false
+  minio_ssl           = false
 }
-
 # Create a bucket for ZenML to use
-resource "minio_bucket" "zenml_bucket" {
+resource "minio_s3_bucket" "zenml_bucket" {
 
   count = (local.minio.enable || local.mlflow.enable)  ? 1 : 0
 
-  name = local.minio.zenml_minio_store_bucket
+  bucket = local.minio.zenml_minio_store_bucket
+  force_destroy = true
 
   depends_on = [
     module.minio_server,
     module.nginx-ingress,
+    module.istio,
   ]
 }

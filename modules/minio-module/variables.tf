@@ -23,3 +23,7 @@ variable "tls_enabled" {
   type    = bool
   default = true
 }
+variable "istio_enabled" {
+  type    = bool
+  default = false
+}

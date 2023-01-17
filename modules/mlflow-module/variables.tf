@@ -71,3 +71,7 @@ variable "artifact_GCS_Bucket" {
   type    = string
   default = ""
 }
+variable "istio_enabled" {
+  type    = bool
+  default = false
+}

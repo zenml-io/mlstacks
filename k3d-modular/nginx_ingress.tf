@@ -2,7 +2,7 @@
 module "nginx-ingress" {
   source = "../modules/nginx-ingress-module"
 
-  count = (local.mlflow.enable || local.kubeflow.enable || local.tekton.enable) ? 1 : 0
+  count = (local.mlflow.enable || local.kubeflow.enable || local.tekton.enable) && ( !local.seldon.enable && !local.kserve.enable ) ? 1 : 0
 
   # run only after the gke cluster is set up
   depends_on = [

@@ -21,9 +21,20 @@ variable "mlflow-password" {
   type        = string
 }
 
+variable "seldon-secret-name" {
+  description = "The Seldon Core Model Deployer Secret name"
+  default     = "zenml-seldon-secret"
+  type        = string
+}
+variable "kserve-secret-name" {
+  description = "The Kserve Model Deployer Secret name"
+  default     = "zenml-kserve-secret"
+  type        = string
+}
+
 # variables for creating a ZenML stack configuration file
 variable "zenml-version" {
   description = "The version of ZenML being used"
-  default     = "0.30.0"
+  default     = "0.31.1"
   type        = string
 }

@@ -15,8 +15,8 @@ terraform {
     }
 
     minio = {
-      source  = "refaktory/minio"
-      version = "0.1.0"
+      source = "aminueza/minio"
+      version = "1.10.0"
     }
 
     kubectl = {

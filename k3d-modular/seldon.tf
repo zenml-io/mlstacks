@@ -98,3 +98,29 @@ resource "kubernetes_role_binding_v1" "k8s-seldon" {
   }
 }
 
+resource "kubernetes_secret" "seldon-secret" {
+
+  count = local.seldon.enable ? 1 : 0
+  
+  metadata {
+    name = "${var.seldon-secret-name}"
+    namespace = kubernetes_namespace.seldon-workloads[0].metadata[0].name
+    labels = { app = "zenml" }
+  }
+
+  data = {
+    RCLONE_CONFIG_S3_ACCESS_KEY_ID = "${var.zenml-minio-store-access-key}"
+    RCLONE_CONFIG_S3_ENDPOINT = "${module.minio_server[0].artifact_S3_Endpoint_URL}"
+    RCLONE_CONFIG_S3_PROVIDER = "Minio"
+    RCLONE_CONFIG_S3_ENV_PATH = "false"
+    RCLONE_CONFIG_S3_SECRET_ACCESS_KEY = "${var.zenml-minio-store-secret-key}"
+    RCLONE_CONFIG_S3_TYPE = "s3"
+  }
+
+  type = "Opaque"
+
+  depends_on = [
+    kubernetes_namespace.seldon-workloads,
+    module.minio_server,
+  ]
+}

@@ -41,7 +41,11 @@ metadata:
 %{ endif }
     ingress.annotations.nginx.ingress.kubernetes.io/ssl-redirect: "${var.tls_enabled}"
 spec:
+%{ if !var.istio_enabled }
   ingressClassName: nginx
+%{ else }
+  ingressClassName: istio
+%{ endif }
 %{ if var.tls_enabled }
   tls:
     - hosts:

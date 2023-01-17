@@ -118,8 +118,9 @@ requirements:
         configuration:
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
           kubernetes_namespace: "${local.seldon.workloads_namespace}"
-          base_url: "TBD"
-          secret: "seldon_secret"
+          base_url:  "http://${local.seldon.enable ? module.istio[0].ingress-ip-address : ""}"
+          kubernetes_secret_name: "${var.seldon-secret-name}"
+
 %{ endif }
 
 %{ if local.kserve.enable }
@@ -135,8 +136,8 @@ requirements:
         configuration:
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
           kubernetes_namespace: "${local.kserve.workloads_namespace}"
-          base_url: "TBD"
-          secret: "kserve_secret"
+          base_url:  "http://${local.kserve.enable ? module.istio[0].ingress-ip-address : ""}"
+          kubernetes_secret_name: "${var.kserve-secret-name}"
 %{ endif }
 
 environments:

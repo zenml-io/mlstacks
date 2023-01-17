@@ -23,7 +23,7 @@ resource "helm_release" "mlflow-tracking" {
   }
   set {
     name  = "ingress.className"
-    value = "nginx"
+    value = var.istio_enabled ? "istio" : "nginx"
     type = "string"
   }
   set {

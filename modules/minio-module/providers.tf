@@ -14,8 +14,8 @@ terraform {
       version = "1.14.0"
     }
     minio = {
-      source = "Ferlab-Ste-Justine/minio"
-      version = "0.2.0"
+      source = "aminueza/minio"
+      version = "1.10.0"
     }
   }
   required_version = ">= 0.14.8"
