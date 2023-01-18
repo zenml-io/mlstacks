@@ -24,3 +24,4 @@ YAML
     resource.kubernetes_namespace.seldon-ns
   ]
 }
+
