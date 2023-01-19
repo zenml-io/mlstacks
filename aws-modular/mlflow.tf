@@ -2,7 +2,7 @@
 module "mlflow" {
   source = "../modules/mlflow-module"
 
-  count = local.mlflow.enable ? 1 : 0
+  count = var.enable_mlflow ? 1 : 0
 
   # run only after the eks cluster, cert-manager and nginx-ingress are set up
   depends_on = [

@@ -2,7 +2,7 @@
 module "kubeflow-pipelines" {
   source = "../modules/kubeflow-pipelines-module"
 
-  count = local.kubeflow.enable ? 1 : 0
+  count = var.enable_kubeflow ? 1 : 0
 
   # run only after the gke cluster is set up and cert-manager and nginx-ingress
   # are installed 
@@ -14,13 +14,13 @@ module "kubeflow-pipelines" {
   ]
 
   pipeline_version = local.kubeflow.version
-  ingress_host = "${local.kubeflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_host     = "${local.kubeflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
 }
 
 # tie the kubeflow kubernetes SA to the GKE service account
 resource "null_resource" "kubeflow-sa-workload-access" {
 
-  count = local.kubeflow.enable ? 1 : 0
+  count = var.enable_kubeflow ? 1 : 0
 
   provisioner "local-exec" {
     command = "kubectl -n kubeflow annotate serviceaccount pipeline-runner iam.gke.io/gcp-service-account=${google_service_account.gke-service-account.email} --overwrite=true"
@@ -36,7 +36,7 @@ resource "null_resource" "kubeflow-sa-workload-access" {
 # Vertex AI resources, which are needed for ZenML pipelines
 resource "google_service_account_iam_member" "kubeflow-workload-access" {
 
-  count = local.kubeflow.enable ? 1 : 0
+  count = var.enable_kubeflow ? 1 : 0
 
   service_account_id = google_service_account.gke-service-account.name
   role               = "roles/iam.workloadIdentityUser"

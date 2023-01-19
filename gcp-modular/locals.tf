@@ -42,32 +42,28 @@ locals {
   }
 
   kubeflow = {
-    enable              = true
     version             = "1.8.3"
     ingress_host_prefix = "kubeflow"
   }
 
   tekton = {
-    enable              = true
     version             = "0.42.0"
     dashboard_version   = "0.31.0"
     ingress_host_prefix = "tekton"
-    workloads_namespace  = "zenml-workloads-tekton"
+    workloads_namespace = "zenml-workloads-tekton"
   }
 
   mlflow = {
-    enable                  = true
     version                 = "0.7.13"
     artifact_Proxied_Access = "false"
     artifact_GCS            = "true"
     # if not set, the bucket created as part of the deployment will be used
-    artifact_GCS_Bucket     = ""
-    ingress_host_prefix     = "mlflow"
+    artifact_GCS_Bucket = ""
+    ingress_host_prefix = "mlflow"
   }
 
   kserve = {
-    enable               = true
-    version              = "0.9.0" 
+    version              = "0.9.0"
     knative_version      = "1.8.1"
     workloads_namespace  = "zenml-workloads-kserve"
     service_account_name = "kserve"
@@ -75,7 +71,6 @@ locals {
   }
 
   seldon = {
-    enable               = true
     version              = "1.15.0"
     name                 = "seldon"
     namespace            = "seldon-system"
@@ -84,15 +79,14 @@ locals {
   }
 
   zenml = {
-    enable                  = true
-    version                 = ""
-    database_ssl_ca         = ""
-    database_ssl_cert       = ""
-    database_ssl_key        = ""
-    database_ssl_verify_server_cert = false  
-    ingress_host_prefix     = "zenml"
-    ingress_tls             = true
-    image_tag               = ""
+    version                         = ""
+    database_ssl_ca                 = ""
+    database_ssl_cert               = ""
+    database_ssl_key                = ""
+    database_ssl_verify_server_cert = false
+    ingress_host_prefix             = "zenml"
+    ingress_tls                     = true
+    image_tag                       = ""
   }
 
   tags = {
