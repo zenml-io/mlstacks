@@ -31,12 +31,12 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: mlflow
         name: eks_mlflow_experiment_tracker
-        configuration: {"tracking_uri": "${local.mlflow.enable ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
+        configuration: {"tracking_uri": "${var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
       model_deployer:
         id: ${uuid()}
         flavor: kserve
         name: eks_kserve_model_deployer
-        configuration: {"kubernetes_context": "terraform", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${local.kserve.enable ? module.kserve[0].kserve-base-URL : ""}", "secret": "aws_kserve_secret"}
+        configuration: {"kubernetes_context": "terraform", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "aws_kserve_secret"}
     ADD
   filename = "./aws_kflow_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }
