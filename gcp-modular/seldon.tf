@@ -59,7 +59,7 @@ resource "kubernetes_role_binding_v1" "kubeflow-seldon" {
   count = (var.enable_kubeflow && var.enable_seldon) ? 1 : 0
 
   metadata {
-    name = "kubeflow-seldon"
+    name      = "kubeflow-seldon"
     namespace = kubernetes_namespace.seldon-workloads[0].metadata[0].name
   }
   role_ref {
@@ -84,7 +84,7 @@ resource "kubernetes_role_binding_v1" "k8s-seldon" {
   count = var.enable_seldon ? 1 : 0
 
   metadata {
-    name = "k8s-seldon"
+    name      = "k8s-seldon"
     namespace = kubernetes_namespace.seldon-workloads[0].metadata[0].name
   }
   role_ref {

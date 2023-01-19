@@ -12,8 +12,8 @@ module "kserve" {
   ]
 
   knative_version = local.kserve.knative_version
-  kserve_version = local.kserve.version
-  kserve_domain = "${local.kserve.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io"
+  kserve_version  = local.kserve.version
+  kserve_domain   = "${local.kserve.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io"
 }
 
 # the namespace where zenml will deploy kserve models
@@ -60,10 +60,10 @@ resource "kubernetes_cluster_role_v1" "kserve" {
 # assign role to kubeflow pipeline runner
 resource "kubernetes_role_binding_v1" "kubeflow-kserve" {
 
-  count =  (var.enable_kserve && var.enable_kubeflow) ? 1 : 0
+  count = (var.enable_kserve && var.enable_kubeflow) ? 1 : 0
 
   metadata {
-    name = "kubeflow-kserve"
+    name      = "kubeflow-kserve"
     namespace = kubernetes_namespace.kserve-workloads[0].metadata[0].name
   }
   role_ref {
@@ -90,7 +90,7 @@ resource "kubernetes_role_binding_v1" "k8s-kserve" {
   count = var.enable_kserve ? 1 : 0
 
   metadata {
-    name = "k8s-kserve"
+    name      = "k8s-kserve"
     namespace = kubernetes_namespace.kserve-workloads[0].metadata[0].name
   }
   role_ref {

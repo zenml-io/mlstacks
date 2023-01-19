@@ -14,7 +14,7 @@ module "kubeflow-pipelines" {
   ]
 
   pipeline_version = local.kubeflow.version
-  ingress_host = "${local.kubeflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_host     = "${local.kubeflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
 }
 
 # tie the kubeflow kubernetes SA to the GKE service account

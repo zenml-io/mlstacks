@@ -14,5 +14,5 @@ module "kubeflow-pipelines" {
   ]
 
   pipeline_version = local.kubeflow.version
-  ingress_host = local.kubeflow.ingress_host
+  ingress_host     = local.kubeflow.ingress_host
 }

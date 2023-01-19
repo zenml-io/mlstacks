@@ -13,9 +13,9 @@ module "tekton-pipelines" {
     module.nginx-ingress,
   ]
 
-  pipeline_version = local.tekton.version
+  pipeline_version  = local.tekton.version
   dashboard_version = local.tekton.dashboard_version
-  ingress_host = local.tekton.ingress_host
+  ingress_host      = local.tekton.ingress_host
 }
 
 # the namespace where zenml will run tekton pipelines
