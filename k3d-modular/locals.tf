@@ -17,7 +17,6 @@ locals {
   }
 
   minio = {
-    enable = true
     storage_size = "10Gi"
     zenml_minio_store_bucket = "zenml-minio-store"
     ingress_host_prefix = "minio"
@@ -33,13 +32,11 @@ locals {
   }
 
   kubeflow = {
-    enable              = true
     version             = "1.8.3"
     ingress_host_prefix = "kubeflow"
   }
 
   tekton = {
-    enable              = false
     version             = "0.42.0"
     dashboard_version   = "0.31.0"
     ingress_host_prefix = "tekton"
@@ -47,7 +44,6 @@ locals {
   }
 
   mlflow = {
-    enable                  = true
     version                 = "0.7.13"
     # if not set, you'll need to pass the minio credentials to the pipeline/step.
     # E.g. when running with the default local orchestrator:
@@ -61,7 +57,6 @@ locals {
   }
 
   kserve = {
-    enable               = false
     version              = "0.9.0" 
     knative_version      = "1.8.1"
     workloads_namespace  = "zenml-workloads-kserve"
@@ -70,7 +65,6 @@ locals {
   }
 
   seldon = {
-    enable               = false
     version              = "1.15.0"
     name                 = "seldon"
     namespace            = "seldon-system"

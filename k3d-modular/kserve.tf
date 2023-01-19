@@ -2,7 +2,7 @@
 module "kserve" {
   source = "../modules/kserve-module"
 
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   depends_on = [
     k3d_cluster.zenml-cluster,
@@ -17,7 +17,7 @@ module "kserve" {
 # the namespace where zenml will deploy kserve models
 resource "kubernetes_namespace" "kserve-workloads" {
 
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   metadata {
     name = local.kserve.workloads_namespace
@@ -35,7 +35,7 @@ resource "kubernetes_namespace" "kserve-workloads" {
 # it will deploy models
 resource "kubernetes_cluster_role_v1" "kserve" {
 
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   metadata {
     name = "kserve-workloads"
@@ -58,7 +58,7 @@ resource "kubernetes_cluster_role_v1" "kserve" {
 # assign role to kubeflow pipeline runner
 resource "kubernetes_role_binding_v1" "kubeflow-kserve" {
 
-  count =  (local.kserve.enable && local.kubeflow.enable) ? 1 : 0
+  count =  (var.enable_kserve && var.enable_kubeflow) ? 1 : 0
 
   metadata {
     name = "kubeflow-kserve"
@@ -85,7 +85,7 @@ resource "kubernetes_role_binding_v1" "kubeflow-kserve" {
 # assign role to kubernetes pipeline runner
 resource "kubernetes_role_binding_v1" "k8s-kserve" {
 
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   metadata {
     name = "k8s-kserve"

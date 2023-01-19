@@ -8,7 +8,7 @@ resource "local_file" "stack_file" {
     stack_name: k3d_minimal_${replace(substr(timestamp(), 0, 16), ":", "_")}
     components:
       artifact_store:
-%{ if local.minio.enable || local.mlflow.enable }
+%{ if var.enable_minio || var.enable_mlflow }
         flavor: s3
         name: k3d-minio-${random_string.cluster_id.result}
         configuration:
@@ -27,7 +27,7 @@ resource "local_file" "stack_file" {
         configuration:
           uri: "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
       orchestrator:
-%{ if local.kubeflow.enable }
+%{ if var.enable_kubeflow }
         flavor: kubeflow
         name: k3d-kubeflow-${random_string.cluster_id.result}
         configuration:
@@ -35,7 +35,7 @@ resource "local_file" "stack_file" {
           synchronous: true
           local: true
 %{ else }
-%{ if local.tekton.enable }
+%{ if var.enable_tekton }
         flavor: tekton
         name: k3d-tekton-${random_string.cluster_id.result}
         configuration:
@@ -52,7 +52,7 @@ resource "local_file" "stack_file" {
           local: true
 %{ endif }
 %{ endif }
-%{ if local.mlflow.enable }
+%{ if var.enable_mlflow }
       experiment_tracker:
         flavor: mlflow
         name: k3d-mlflow-${random_string.cluster_id.result}
@@ -61,14 +61,14 @@ resource "local_file" "stack_file" {
           tracking_username: "${var.mlflow-username}"
           tracking_password: "${var.mlflow-password}"
 %{ endif }
-%{ if local.seldon.enable && !local.kserve.enable }
+%{ if var.enable_seldon && !var.enable_kserve }
       model_deployer:
         flavor: seldon
         name: k3d-seldon-${random_string.cluster_id.result}
         configuration:
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
           kubernetes_namespace: "${local.seldon.workloads_namespace}"
-          base_url:  "http://${local.seldon.enable ? module.istio[0].ingress-ip-address : ""}"
+          base_url:  "http://${var.enable_seldon ? module.istio[0].ingress-ip-address : ""}"
           kubernetes_secret_name: "${var.seldon-secret-name}"
       secrets_manager:
         flavor: local

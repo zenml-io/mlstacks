@@ -1,3 +1,33 @@
+# enable services
+variable "enable_kubeflow" {
+  description = "Enable Kubeflow deployment"
+  default     = true
+}
+variable "enable_minio" {
+  description = "Enable Minio deployment"
+  default     = true
+}
+variable "enable_tekton" {
+  description = "Enable Tekton deployment"
+  default     = false
+}
+variable "enable_mlflow" {
+  description = "Enable MLflow deployment"
+  default     = true
+}
+variable "enable_kserve" {
+  description = "Enable KServe deployment"
+  default     = false
+}
+variable "enable_seldon" {
+  description = "Enable Seldon deployment"
+  default     = false
+}
+variable "enable_zenml" {
+  description = "Enable ZenML deployment"
+  default     = false
+}
+
 # variables for the MLflow tracking server and Minio S3 bucket
 variable "zenml-minio-store-access-key" {
   description = "Your access key for using Minio artifact store"
