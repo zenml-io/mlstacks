@@ -42,13 +42,11 @@ locals {
   }
 
   kubeflow = {
-    enable              = true
     version             = "1.8.3"
     ingress_host_prefix = "kubeflow"
   }
 
   tekton = {
-    enable              = true
     version             = "0.42.0"
     dashboard_version   = "0.31.0"
     ingress_host_prefix = "tekton"
@@ -56,7 +54,6 @@ locals {
   }
 
   mlflow = {
-    enable                  = true
     version                 = "0.7.13"
     artifact_Proxied_Access = "false"
     artifact_GCS            = "true"
@@ -66,7 +63,6 @@ locals {
   }
 
   kserve = {
-    enable               = true
     version              = "0.9.0" 
     knative_version      = "1.8.1"
     workloads_namespace  = "zenml-workloads-kserve"
@@ -75,7 +71,6 @@ locals {
   }
 
   seldon = {
-    enable               = true
     version              = "1.15.0"
     name                 = "seldon"
     namespace            = "seldon-system"
@@ -84,7 +79,6 @@ locals {
   }
 
   zenml = {
-    enable                  = true
     version                 = ""
     database_ssl_ca         = ""
     database_ssl_cert       = ""

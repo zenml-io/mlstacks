@@ -2,7 +2,7 @@
 module "kserve" {
   source = "../modules/kserve-module"
 
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   depends_on = [
     module.gke,
@@ -19,7 +19,7 @@ module "kserve" {
 # the namespace where zenml will deploy kserve models
 resource "kubernetes_namespace" "kserve-workloads" {
 
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   metadata {
     name = local.kserve.workloads_namespace
@@ -37,7 +37,7 @@ resource "kubernetes_namespace" "kserve-workloads" {
 # it will deploy models
 resource "kubernetes_cluster_role_v1" "kserve" {
 
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   metadata {
     name = "kserve-workloads"
@@ -60,7 +60,7 @@ resource "kubernetes_cluster_role_v1" "kserve" {
 # assign role to kubeflow pipeline runner
 resource "kubernetes_role_binding_v1" "kubeflow-kserve" {
 
-  count =  (local.kserve.enable && local.kubeflow.enable) ? 1 : 0
+  count =  (var.enable_kserve && var.enable_kubeflow) ? 1 : 0
 
   metadata {
     name = "kubeflow-kserve"
@@ -87,7 +87,7 @@ resource "kubernetes_role_binding_v1" "kubeflow-kserve" {
 # assign role to kubernetes pipeline runner
 resource "kubernetes_role_binding_v1" "k8s-kserve" {
 
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   metadata {
     name = "k8s-kserve"
@@ -113,7 +113,7 @@ resource "kubernetes_role_binding_v1" "k8s-kserve" {
 # service account for Kserve
 resource "google_service_account" "kserve-service-account" {
 
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   account_id   = "${local.prefix}-${local.kserve.service_account_name}"
   project      = local.project_id
@@ -121,7 +121,7 @@ resource "google_service_account" "kserve-service-account" {
 }
 resource "google_project_iam_binding" "kserve-storageviewer" {
 
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   project = local.project_id
   role    = "roles/storage.objectViewer"
@@ -141,7 +141,7 @@ resource "google_project_iam_binding" "kserve-storageviewer" {
 
 # creating a sa key
 resource "google_service_account_key" "kserve_sa_key" {
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   service_account_id = google_service_account.kserve-service-account[0].name
   public_key_type    = "TYPE_X509_PEM_FILE"
@@ -149,7 +149,7 @@ resource "google_service_account_key" "kserve_sa_key" {
 
 # create the credentials file JSON
 resource "local_file" "kserve_sa_key_file" {
-  count = local.kserve.enable ? 1 : 0
+  count = var.enable_kserve ? 1 : 0
 
   content  = base64decode(google_service_account_key.kserve_sa_key[0].private_key)
   filename = "./kserve_sa_key.json"

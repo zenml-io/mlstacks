@@ -2,7 +2,7 @@
 module "tekton-pipelines" {
   source = "../modules/tekton-pipelines-module"
 
-  count = local.tekton.enable ? 1 : 0
+  count = var.enable_tekton ? 1 : 0
 
   # run only after the gke cluster is set up and cert-manager and nginx-ingress
   # are installed 
@@ -21,7 +21,7 @@ module "tekton-pipelines" {
 # the namespace where zenml will run tekton pipelines
 resource "kubernetes_namespace" "tekton-workloads" {
 
-  count = local.tekton.enable ? 1 : 0
+  count = var.enable_tekton ? 1 : 0
 
   metadata {
     name = local.tekton.workloads_namespace
@@ -35,7 +35,7 @@ resource "kubernetes_namespace" "tekton-workloads" {
 # tie the tekton kubernetes SA to the GKE service account
 resource "null_resource" "tekton-sa-workload-access" {
 
-  count = local.tekton.enable ? 1 : 0
+  count = var.enable_tekton ? 1 : 0
 
   provisioner "local-exec" {
     command = "kubectl -n ${kubernetes_namespace.tekton-workloads[0].metadata[0].name} annotate serviceaccount default iam.gke.io/gcp-service-account=${google_service_account.gke-service-account.email} --overwrite=true"
@@ -51,7 +51,7 @@ resource "null_resource" "tekton-sa-workload-access" {
 # Vertex AI resources, which are needed for ZenML pipelines
 resource "google_service_account_iam_member" "tekton-workload-access" {
 
-  count = local.tekton.enable ? 1 : 0
+  count = var.enable_tekton ? 1 : 0
 
   service_account_id = google_service_account.gke-service-account.name
   role               = "roles/iam.workloadIdentityUser"

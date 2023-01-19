@@ -2,7 +2,7 @@
 module "zenml" {
   source = "../modules/zenml-module"
 
-  count = local.zenml.enable ? 1 : 0
+  count = var.enable_zenml ? 1 : 0
 
   # run only after the gke cluster, cert-manager and nginx-ingress are set up
   depends_on = [

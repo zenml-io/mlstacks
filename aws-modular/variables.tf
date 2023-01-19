@@ -1,3 +1,29 @@
+# enable services
+variable "enable_kubeflow" {
+  description = "Enable Kubeflow deployment"
+  default     = true
+}
+variable "enable_tekton" {
+  description = "Enable Tekton deployment"
+  default     = true
+}
+variable "enable_mlflow" {
+  description = "Enable MLflow deployment"
+  default     = true
+}
+variable "enable_kserve" {
+  description = "Enable KServe deployment"
+  default     = true
+}
+variable "enable_seldon" {
+  description = "Enable Seldon deployment"
+  default     = true
+}
+variable "enable_zenml" {
+  description = "Enable ZenML deployment"
+  default     = true
+}
+
 # variables for the MLflow tracking server
 variable "mlflow-artifact-S3-access-key" {
   description = "Your AWS access key for using S3 as MLflow artifact store"

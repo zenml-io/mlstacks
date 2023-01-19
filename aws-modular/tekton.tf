@@ -2,7 +2,7 @@
 module "tekton-pipelines" {
   source = "../modules/tekton-pipelines-module"
 
-  count = local.tekton.enable ? 1 : 0
+  count = var.enable_tekton ? 1 : 0
 
   # run only after the gke cluster is set up and cert-manager and nginx-ingress
   # are installed 
@@ -21,7 +21,7 @@ module "tekton-pipelines" {
 # the namespace where zenml will run tekton pipelines
 resource "kubernetes_namespace" "tekton-workloads" {
 
-  count = local.tekton.enable ? 1 : 0
+  count = var.enable_tekton ? 1 : 0
 
   metadata {
     name = local.tekton.workloads_namespace

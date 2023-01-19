@@ -2,7 +2,7 @@
 module "kubeflow-pipelines" {
   source = "../modules/kubeflow-pipelines-module"
 
-  count = local.kubeflow.enable ? 1 : 0
+  count = var.enable_kubeflow ? 1 : 0
 
   # run only after the eks cluster is set up and cert-manager and nginx-ingress
   # are installed 
