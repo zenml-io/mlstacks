@@ -38,13 +38,22 @@ metadata:
   name: tekton-ui-ingress
   namespace: tekton-pipelines
   annotations:
+%{ if var.tls_enabled }
     cert-manager.io/cluster-issuer: letsencrypt-staging
+%{ endif }
+    ingress.annotations.nginx.ingress.kubernetes.io/ssl-redirect: "${var.tls_enabled}"
 spec:
+%{ if !var.istio_enabled }
   ingressClassName: nginx
+%{ else }
+  ingressClassName: istio
+%{ endif }
+%{ if var.tls_enabled }
   tls:
     - hosts:
         - ${var.ingress_host}
-      secretName: kubeflow-ui-tls
+      secretName: tekton-ui-tls
+%{ endif }
   rules:
     - http:
         paths:

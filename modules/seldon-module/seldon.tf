@@ -24,6 +24,11 @@ resource "helm_release" "seldon" {
   }
 
   set {
+    name = "istio.gateway"
+    value = "${var.namespace}/${var.istio_gateway_name}"
+  }
+  
+  set {
     name  = "istio.enabled"
     value = "true"
   }

@@ -6,14 +6,14 @@ resource "kubectl_manifest" "gateway" {
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: seldon-gateway
-  namespace: istio-system
+  name: ${var.istio_gateway_name}
+  namespace: ${var.istio_ns}
 spec:
   selector:
     istio: ingressgateway # use istio default controller
   servers:
   - port:
-      number: 8082
+      number: 80
       name: http
       protocol: HTTP
     hosts:
@@ -24,3 +24,4 @@ YAML
     resource.kubernetes_namespace.seldon-ns
   ]
 }
+

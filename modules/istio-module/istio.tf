@@ -40,6 +40,14 @@ resource "helm_release" "istio-ingress" {
   namespace = kubernetes_namespace.istio-ns.metadata[0].name
 }
 
+resource "kubernetes_ingress_class" "istio-ingress-class" {
+  metadata {
+    name = "istio"
+  } 
+  spec {
+    controller = "istio.io/ingress-controller"
+  }
+}
 
 data "kubernetes_service" "istio_ingress" {
   metadata {

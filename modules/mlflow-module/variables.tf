@@ -15,6 +15,11 @@ variable "ingress_host" {
   default = ""
 }
 
+variable "tls_enabled" {
+  type    = bool
+  default = true
+}
+
 variable "artifact_Proxied_Access" {
   type    = bool
   default = false
@@ -36,7 +41,10 @@ variable "artifact_S3_Secret_Key" {
   type    = string
   default = ""
 }
-
+variable "artifact_S3_Endpoint_URL" {
+  type    = string
+  default = ""
+}
 
 variable "artifact_Azure" {
   type    = bool
@@ -62,4 +70,8 @@ variable "artifact_GCS" {
 variable "artifact_GCS_Bucket" {
   type    = string
   default = ""
+}
+variable "istio_enabled" {
+  type    = bool
+  default = false
 }
