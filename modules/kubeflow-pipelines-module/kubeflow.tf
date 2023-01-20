@@ -29,6 +29,8 @@ resource "null_resource" "kubeflow" {
 # cannot use kubernetes_manifest resource since it practically 
 # doesn't support CRDs. Going with kubectl instead.
 resource "kubectl_manifest" "ingress" {
+  count = var.istio_enabled  ? 0 : 1
+
   yaml_body = <<YAML
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -63,6 +65,73 @@ spec:
                 port:
                   number: 80
       host: ${var.ingress_host}
+YAML    
+  depends_on = [
+    null_resource.kubeflow
+  ]
+}
+
+
+# Create Gateway and VirtualService if istio is enabled
+resource "kubectl_manifest" "kubeflow-ui-gateway" {
+  count = var.istio_enabled  ? 1 : 0
+  yaml_body = <<YAML
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: zenml-kubeflow-ui-gateway
+  namespace: kubeflow
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      name: http
+      number: 80
+      protocol: HTTP
+    hosts:
+    - '*'
+  %{ if var.tls_enabled }
+    tls:
+      httpsRedirect: false
+  - port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    hosts:
+    - '*'
+    tls:
+      mode: SIMPLE # enables HTTPS on this port
+      credentialName: kubeflow-ui-tls
+    %{ endif }
+YAML    
+  depends_on = [
+    null_resource.kubeflow
+  ]
+}
+
+resource "kubectl_manifest" "kubeflow-ui-virtualservice" {
+  count = var.istio_enabled  ? 1 : 0
+  yaml_body = <<YAML
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: kubeflow-ui-virtualservice
+  namespace: kubeflow
+spec:
+  hosts:
+  - ${var.ingress_host}
+  gateways:
+  - zenml-kubeflow-ui-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: ml-pipeline-ui
+        port:
+          number: 80
 YAML    
   depends_on = [
     null_resource.kubeflow

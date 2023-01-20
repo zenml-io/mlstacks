@@ -198,16 +198,20 @@ spec:
       name: http
       number: 80
       protocol: HTTP
-    max_buffer_size: 0
     hosts:
-    - "*"
-    %{ if var.tls_enabled }
+    - '*'
+  %{ if var.tls_enabled }
     tls:
-      mode: SIMPLE
-      privateKey: /etc/istio/ingressgateway-certs/tls.key
-      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
-      hosts:
-      - ${var.ingress_host}
+      httpsRedirect: true
+  - port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    hosts:
+    - '*'
+    tls:
+      mode: SIMPLE # enables HTTPS on this port
+      credentialName: zenml-minio-tls
     %{ endif }
 YAML    
   depends_on = [
@@ -300,16 +304,20 @@ spec:
       name: http
       number: 80
       protocol: HTTP
-    max_buffer_size: 0
     hosts:
-    - "*"
-    %{ if var.tls_enabled }
+    - '*'
+  %{ if var.tls_enabled }
     tls:
-      mode: SIMPLE
-      privateKey: /etc/istio/ingressgateway-certs/tls.key
-      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
-      hosts:
-      - ${var.ingress_console_host}
+      httpsRedirect: true
+  - port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    hosts:
+    - '*'
+    tls:
+      mode: SIMPLE # enables HTTPS on this port
+      credentialName: zenml-minio-console-tls
     %{ endif }
 YAML    
   depends_on = [
