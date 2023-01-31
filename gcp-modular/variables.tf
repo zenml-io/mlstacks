@@ -21,7 +21,7 @@ variable "enable_seldon" {
 }
 variable "enable_zenml" {
   description = "Enable ZenML deployment"
-  default     = true
+  default     = false
 }
 
 # variables for the MLflow tracking server

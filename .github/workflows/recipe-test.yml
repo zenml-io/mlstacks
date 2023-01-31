@@ -34,7 +34,7 @@ jobs:
 
       - name: Loop through subdirectories
         run: |
-          for dir in $(ls -d */ | grep -Fv -e "modules" -e ".github" -e "modular" | grep "aws*"); do
+          for dir in $(ls -d */ | grep -Fv -e "modules" -e ".github" | grep "aws*"); do
             (cd $dir && terraform init)
             (cd $dir && terraform fmt -check)
             (cd $dir && terraform validate)
@@ -64,7 +64,7 @@ jobs:
 
       - name: Loop through subdirectories
         run: |
-          for dir in $(ls -d */ | grep -Fv -e "modules" -e ".github" -e "modular" | grep "gcp*"); do
+          for dir in $(ls -d */ | grep -Fv -e "modules" -e ".github" | grep "gcp*"); do
             (cd $dir && terraform init)
             (cd $dir && terraform fmt -check)
             (cd $dir && terraform validate)
@@ -115,7 +115,7 @@ jobs:
 
       - name: Loop through subdirectories
         run: |
-          for dir in $(ls -d */ | grep -Fv -e "modules" -e ".github" -e "modular" | grep "k3d*"); do
+          for dir in $(ls -d */ | grep -Fv -e "modules" -e ".github" | grep "k3d*"); do
             (cd $dir && terraform init)
             (cd $dir && terraform fmt -check)
             (cd $dir && terraform validate)
