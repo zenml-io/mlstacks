@@ -27,21 +27,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: terraform fmt
-        uses: dflook/terraform-fmt-check@v1
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
         with:
-          path: ./aws-minimal
+          terraform_version: 1.3.4
 
-      - name: terraform validate
-        uses: dflook/terraform-validate@v1
-        with:
-          path: ./aws-minimal
-
-      - name: terraform plan
-        uses: dflook/terraform-plan@v1
-        with:
-          path: ./aws-minimal
-          add_github_comment: false
+      - name: Loop through subdirectories
+        run: |
+          for dir in $(ls -d */ | grep -Fv -e "modules" -e ".github" | grep "aws*"); do
+            (cd $dir && terraform init)
+            (cd $dir && terraform validate)
+            (cd $dir && terraform plan -input=false)
+          done
 
   gcp_test:
     name: gcp_test
@@ -59,80 +56,39 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
 
-      - name: terraform fmt
-        uses: dflook/terraform-fmt-check@v1
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
         with:
-          path: ./gcp-minimal      
-      
-      - name: terraform validate
-        uses: dflook/terraform-validate@v1
-        with:
-          path: ./gcp-minimal
+          terraform_version: 1.3.4
 
-      - name: terraform plan
-        uses: dflook/terraform-plan@v1
-        with:
-          path: ./gcp-minimal
-          add_github_comment: false
-  
-  vertex_test:
-    name: vertex_test
-    runs-on: ubuntu-latest
+      - name: Loop through subdirectories
+        run: |
+          for dir in $(ls -d */ | grep -Fv -e "modules" -e ".github" | grep "gcp*"); do
+            (cd $dir && terraform init)
+            (cd $dir && terraform validate)
+            (cd $dir && terraform plan -input=false)
+          done
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
-      
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v0'
-        with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v0'
-
-      - name: terraform fmt
-        uses: dflook/terraform-fmt-check@v1
-        with:
-          path: ./vertex-ai
-
-      - name: terraform validate
-        uses: dflook/terraform-validate@v1
-        with:
-          path: ./vertex-ai
-
-      - name: terraform plan
-        uses: dflook/terraform-plan@v1
-        with:
-          path: ./vertex-ai
-          add_github_comment: false
-
-  azure-test:
-    name: azure-test
+  k3d_test:
+    name: k3d_test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
-      - name: 'Az CLI login'
-        uses: azure/login@v1
-        with:
-            client-id: ${{ secrets.AZURE_CLIENT_ID }}
-            tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-            subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: terraform fmt
-        uses: dflook/terraform-fmt-check@v1
-        with:
-          path: ./azure-minimal
+      - name: Install k3d
+        run: |
+          curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
 
-      - name: terraform validate
-        uses: dflook/terraform-validate@v1
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
         with:
-          path: ./azure-minimal
+          terraform_version: 1.3.4
 
-      - name: terraform plan
-        uses: dflook/terraform-plan@v1
-        with:
-          path: ./azure-minimal
-          add_github_comment: false
+      - name: Loop through subdirectories
+        run: |
+          for dir in $(ls -d */ | grep -Fv -e "modules" -e ".github" | grep "k3d*"); do
+            (cd $dir && terraform init)
+            (cd $dir && terraform validate)
+            (cd $dir && terraform plan -input=false)
+          done
