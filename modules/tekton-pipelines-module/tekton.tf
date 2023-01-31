@@ -1,7 +1,7 @@
 # set up tekton pipelines
 resource "null_resource" "tekton" {
   triggers = {
-    pipeline_version = var.pipeline_version
+    pipeline_version  = var.pipeline_version
     dashboard_version = var.dashboard_version
   }
 
@@ -38,22 +38,22 @@ metadata:
   name: tekton-ui-ingress
   namespace: tekton-pipelines
   annotations:
-%{ if var.tls_enabled }
+%{if var.tls_enabled}
     cert-manager.io/cluster-issuer: letsencrypt-staging
-%{ endif }
+%{endif}
     ingress.annotations.nginx.ingress.kubernetes.io/ssl-redirect: "${var.tls_enabled}"
 spec:
-%{ if !var.istio_enabled }
+%{if !var.istio_enabled}
   ingressClassName: nginx
-%{ else }
+%{else}
   ingressClassName: istio
-%{ endif }
-%{ if var.tls_enabled }
+%{endif}
+%{if var.tls_enabled}
   tls:
     - hosts:
         - ${var.ingress_host}
       secretName: tekton-ui-tls
-%{ endif }
+%{endif}
   rules:
     - http:
         paths:

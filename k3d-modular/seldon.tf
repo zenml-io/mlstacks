@@ -58,7 +58,7 @@ resource "kubernetes_role_binding_v1" "kubeflow-seldon" {
   count = (var.enable_kubeflow && var.enable_seldon) ? 1 : 0
 
   metadata {
-    name = "kubeflow-seldon"
+    name      = "kubeflow-seldon"
     namespace = kubernetes_namespace.seldon-workloads[0].metadata[0].name
   }
   role_ref {
@@ -83,7 +83,7 @@ resource "kubernetes_role_binding_v1" "k8s-seldon" {
   count = var.enable_seldon ? 1 : 0
 
   metadata {
-    name = "k8s-seldon"
+    name      = "k8s-seldon"
     namespace = kubernetes_namespace.seldon-workloads[0].metadata[0].name
   }
   role_ref {
@@ -101,20 +101,20 @@ resource "kubernetes_role_binding_v1" "k8s-seldon" {
 resource "kubernetes_secret" "seldon-secret" {
 
   count = var.enable_seldon ? 1 : 0
-  
+
   metadata {
-    name = "${var.seldon-secret-name}"
+    name      = var.seldon-secret-name
     namespace = kubernetes_namespace.seldon-workloads[0].metadata[0].name
-    labels = { app = "zenml" }
+    labels    = { app = "zenml" }
   }
 
   data = {
-    RCLONE_CONFIG_S3_ACCESS_KEY_ID = "${var.zenml-minio-store-access-key}"
-    RCLONE_CONFIG_S3_ENDPOINT = "${module.minio_server[0].artifact_S3_Endpoint_URL}"
-    RCLONE_CONFIG_S3_PROVIDER = "Minio"
-    RCLONE_CONFIG_S3_ENV_PATH = "false"
+    RCLONE_CONFIG_S3_ACCESS_KEY_ID     = "${var.zenml-minio-store-access-key}"
+    RCLONE_CONFIG_S3_ENDPOINT          = "${module.minio_server[0].artifact_S3_Endpoint_URL}"
+    RCLONE_CONFIG_S3_PROVIDER          = "Minio"
+    RCLONE_CONFIG_S3_ENV_PATH          = "false"
     RCLONE_CONFIG_S3_SECRET_ACCESS_KEY = "${var.zenml-minio-store-secret-key}"
-    RCLONE_CONFIG_S3_TYPE = "s3"
+    RCLONE_CONFIG_S3_TYPE              = "s3"
   }
 
   type = "Opaque"

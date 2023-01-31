@@ -11,7 +11,7 @@ resource "helm_release" "cert-manager" {
   chart      = "cert-manager"
   version    = "v${var.chart_version}"
 
-  namespace        = kubernetes_namespace.cert-manager-ns.metadata[0].name
+  namespace = kubernetes_namespace.cert-manager-ns.metadata[0].name
 
   set {
     name  = "installCRDs"

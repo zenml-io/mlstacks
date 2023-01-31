@@ -5,6 +5,6 @@ variable "chart_version" {
 }
 
 variable "namespace" {
-    type    = string
-    default = "cert-manager"
+  type    = string
+  default = "cert-manager"
 }

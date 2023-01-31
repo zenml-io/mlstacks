@@ -1,6 +1,6 @@
 # output for the k3d cluster
 output "k3d-cluster-name" {
-  value = "${k3d_cluster.zenml-cluster.name}"
+  value = k3d_cluster.zenml-cluster.name
 }
 
 # output for container registry

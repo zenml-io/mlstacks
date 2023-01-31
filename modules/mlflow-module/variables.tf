@@ -1,6 +1,6 @@
 variable "namespace" {
-    type    = string
-    default = "mlflow"
+  type    = string
+  default = "mlflow"
 }
 
 variable "chart_version" {

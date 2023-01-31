@@ -8,7 +8,7 @@ resource "local_file" "stack_file" {
     stack_name: k3d_minimal_${replace(substr(timestamp(), 0, 16), ":", "_")}
     components:
       artifact_store:
-%{ if var.enable_minio || var.enable_mlflow }
+%{if var.enable_minio || var.enable_mlflow}
         flavor: s3
         name: k3d-minio-${random_string.cluster_id.result}
         configuration:
@@ -16,33 +16,33 @@ resource "local_file" "stack_file" {
           key: "${var.zenml-minio-store-access-key}"
           secret: "${var.zenml-minio-store-secret-key}"
           client_kwargs: '{"endpoint_url":"${module.minio_server[0].artifact_S3_Endpoint_URL}", "region_name":"us-east-1"}'
-%{ else }
+%{else}
         flavor: local
         name: default
         configuration: {}
-%{ endif }
+%{endif}
       container_registry:
         flavor: default
         name: k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}
         configuration:
           uri: "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
       orchestrator:
-%{ if var.enable_kubeflow }
+%{if var.enable_kubeflow}
         flavor: kubeflow
         name: k3d-kubeflow-${random_string.cluster_id.result}
         configuration:
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
           synchronous: true
           local: true
-%{ else }
-%{ if var.enable_tekton }
+%{else}
+%{if var.enable_tekton}
         flavor: tekton
         name: k3d-tekton-${random_string.cluster_id.result}
         configuration:
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
           kubernetes_namespace: "${local.tekton.workloads_namespace}"
           local: true
-%{ else }
+%{else}
         flavor: kubernetes
         name: k3d-kubernetes-${random_string.cluster_id.result}
         configuration:
@@ -50,9 +50,9 @@ resource "local_file" "stack_file" {
           synchronous: true
           kubernetes_namespace: "${local.k3d.workloads_namespace}"
           local: true
-%{ endif }
-%{ endif }
-%{ if var.enable_mlflow }
+%{endif}
+%{endif}
+%{if var.enable_mlflow}
       experiment_tracker:
         flavor: mlflow
         name: k3d-mlflow-${random_string.cluster_id.result}
@@ -60,8 +60,8 @@ resource "local_file" "stack_file" {
           tracking_uri: "${module.mlflow[0].mlflow-tracking-URL}"
           tracking_username: "${var.mlflow-username}"
           tracking_password: "${var.mlflow-password}"
-%{ endif }
-%{ if var.enable_seldon && !var.enable_kserve }
+%{endif}
+%{if var.enable_seldon && !var.enable_kserve}
       model_deployer:
         flavor: seldon
         name: k3d-seldon-${random_string.cluster_id.result}
@@ -74,7 +74,7 @@ resource "local_file" "stack_file" {
         flavor: local
         name: k3d-secrets-manager-${random_string.cluster_id.result}
         configuration: {}
-%{ endif }
+%{endif}
     ADD
   filename = "./k3d_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }

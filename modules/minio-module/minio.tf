@@ -12,18 +12,18 @@ resource "kubernetes_persistent_volume" "minio-pv" {
       type = "local"
     }
   }
-    spec {
-      storage_class_name = "manual"
-      capacity = {
-        storage = var.minio_storage_size
-      }
-      access_modes = ["ReadWriteOnce"]
-      persistent_volume_source {
-        host_path {
-          path = "/tmp/miniodata"
-        }
+  spec {
+    storage_class_name = "manual"
+    capacity = {
+      storage = var.minio_storage_size
+    }
+    access_modes = ["ReadWriteOnce"]
+    persistent_volume_source {
+      host_path {
+        path = "/tmp/miniodata"
       }
     }
+  }
   depends_on = [
     kubernetes_namespace.minio-namespace,
   ]
@@ -36,7 +36,7 @@ resource "kubernetes_persistent_volume_claim" "minio-pvc" {
   }
   spec {
     storage_class_name = "manual"
-    access_modes = ["ReadWriteOnce"]
+    access_modes       = ["ReadWriteOnce"]
     resources {
       requests = {
         storage = var.minio_storage_size
@@ -80,7 +80,7 @@ resource "kubernetes_deployment" "minio-deployment" {
         container {
           name  = "zenml-minio-fs"
           image = "quay.io/minio/minio"
-          args   = ["server", "/data", "--console-address", ":9001"]
+          args  = ["server", "/data", "--console-address", ":9001"]
           env {
             name  = "MINIO_ACCESS_KEY"
             value = var.minio_access_key
@@ -98,7 +98,7 @@ resource "kubernetes_deployment" "minio-deployment" {
             host_port      = 9001
           }
           volume_mount {
-            name      = "data"
+            name       = "data"
             mount_path = "/data"
           }
         }
@@ -122,15 +122,15 @@ resource "kubernetes_service" "zenml-minio-service" {
     }
     type = "ClusterIP"
     port {
-      name = "minio-server"
-      protocol = "TCP"
-      port     = 9000
+      name        = "minio-server"
+      protocol    = "TCP"
+      port        = 9000
       target_port = 9000
     }
     port {
-      name = "minio-console"
-      protocol = "TCP"
-      port     = 9001
+      name        = "minio-console"
+      protocol    = "TCP"
+      port        = 9001
       target_port = 9001
     }
   }
@@ -141,7 +141,7 @@ resource "kubernetes_service" "zenml-minio-service" {
 
 # Create ingress for minio if istio is not inabled
 resource "kubectl_manifest" "zenml-minio-ingress" {
-  count = var.istio_enabled  ? 0 : 1
+  count     = var.istio_enabled ? 0 : 1
   yaml_body = <<YAML
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -152,18 +152,18 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-body-size: 0m
     nginx.org/client-max-body-size: 0m
     nginx.org/proxy-buffering: "False"
-%{ if var.tls_enabled }
+%{if var.tls_enabled}
     cert-manager.io/cluster-issuer: letsencrypt-staging
-%{ endif }
+%{endif}
     ingress.annotations.nginx.ingress.kubernetes.io/ssl-redirect: "${var.tls_enabled}"
 spec:
   ingressClassName: nginx
-%{ if var.tls_enabled }
+%{if var.tls_enabled}
   tls:
     - hosts:
         - ${var.ingress_host}
       secretName: zenml-minio-tls
-%{ endif }
+%{endif}
   rules:
     - http:
         paths:
@@ -183,7 +183,7 @@ YAML
 
 # Create Gateway and VirtualService if istio is enabled
 resource "kubectl_manifest" "zenml-minio-gateway" {
-  count = var.istio_enabled  ? 1 : 0
+  count     = var.istio_enabled ? 1 : 0
   yaml_body = <<YAML
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -200,7 +200,7 @@ spec:
       protocol: HTTP
     hosts:
     - '*'
-  %{ if var.tls_enabled }
+  %{if var.tls_enabled}
     tls:
       httpsRedirect: true
   - port:
@@ -212,7 +212,7 @@ spec:
     tls:
       mode: SIMPLE # enables HTTPS on this port
       credentialName: zenml-minio-tls
-    %{ endif }
+    %{endif}
 YAML    
   depends_on = [
     kubernetes_service.zenml-minio-service,
@@ -220,7 +220,7 @@ YAML
 }
 
 resource "kubectl_manifest" "zenml-minio-virtualservice" {
-  count = var.istio_enabled  ? 1 : 0
+  count     = var.istio_enabled ? 1 : 0
   yaml_body = <<YAML
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -250,7 +250,7 @@ YAML
 
 # Create Ingress for Minio if Istio is not enabled
 resource "kubectl_manifest" "zenml-minio-console-ingress" {
-  count = var.istio_enabled  ? 0 : 1
+  count     = var.istio_enabled ? 0 : 1
   yaml_body = <<YAML
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -258,18 +258,18 @@ metadata:
   name: zenml-minio-console-ingress
   namespace: zenml-minio
   annotations:
-%{ if var.tls_enabled }
+%{if var.tls_enabled}
     cert-manager.io/cluster-issuer: letsencrypt-staging
-%{ endif }
+%{endif}
     ingress.annotations.nginx.ingress.kubernetes.io/ssl-redirect: "${var.tls_enabled}"
 spec:
   ingressClassName: nginx
-%{ if var.tls_enabled }
+%{if var.tls_enabled}
   tls:
     - hosts:
         - ${var.ingress_console_host}
       secretName: zenml-minio-console-tls
-%{ endif }
+%{endif}
   rules:
     - http:
         paths:
@@ -289,7 +289,7 @@ YAML
 
 # Create Gateway and VirtualService if istio is enabled
 resource "kubectl_manifest" "zenml-minio-console-gateway" {
-  count = var.istio_enabled  ? 1 : 0
+  count     = var.istio_enabled ? 1 : 0
   yaml_body = <<YAML
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -306,7 +306,7 @@ spec:
       protocol: HTTP
     hosts:
     - '*'
-  %{ if var.tls_enabled }
+  %{if var.tls_enabled}
     tls:
       httpsRedirect: true
   - port:
@@ -318,7 +318,7 @@ spec:
     tls:
       mode: SIMPLE # enables HTTPS on this port
       credentialName: zenml-minio-console-tls
-    %{ endif }
+    %{endif}
 YAML    
   depends_on = [
     kubernetes_service.zenml-minio-service,
@@ -326,7 +326,7 @@ YAML
 }
 
 resource "kubectl_manifest" "zenml-minio-console-virtualservice" {
-  count = var.istio_enabled  ? 1 : 0
+  count     = var.istio_enabled ? 1 : 0
   yaml_body = <<YAML
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService

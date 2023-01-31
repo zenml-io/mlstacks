@@ -30,15 +30,15 @@ data "external" "zenml_local_stores_path" {
     "-u",
     "-c",
     <<-ZENML
-%{ if local.k3d.local_stores_path != "" }
+%{if local.k3d.local_stores_path != ""}
 path = "${local.k3d.local_stores_path}"
-%{ else }
+%{else}
 try:
   from zenml.config.global_config import GlobalConfiguration
   path = GlobalConfiguration().local_stores_path
 except Exception:
   path = ""
-%{ endif }
+%{endif}
 print('{"path": "' + path + '"}')
     ZENML
   ]
@@ -50,11 +50,11 @@ resource "k3d_cluster" "zenml-cluster" {
   agents  = 2
 
   kube_api {
-    host    = "${local.k3d_kube_api.host}"
+    host    = local.k3d_kube_api.host
     host_ip = "127.0.0.1"
   }
 
-  image = "${local.k3d.image}"
+  image = local.k3d.image
   registries {
     use = ["${k3d_registry.zenml-registry.name}:${k3d_registry.zenml-registry.port[0].host_port}"]
   }

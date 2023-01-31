@@ -1,7 +1,7 @@
 variable "minio_storage_size" {
-    description = "The size of the Minio storage volume"
-    default     = "20Gi"
-    type        = string
+  description = "The size of the Minio storage volume"
+  default     = "20Gi"
+  type        = string
 }
 variable "minio_access_key" {
   description = "Your access key for using Minio artifact store"
