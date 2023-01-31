@@ -66,4 +66,5 @@ variable "zenml-password" {
 variable "zenml-database-url" {
   description = "The ZenML Server database URL"
   type        = string
+  default     = ""
 }
