@@ -10,11 +10,11 @@ resource "null_resource" "kserve" {
   # destroy-time provisioners
   provisioner "local-exec" {
     when    = destroy
-    command = "kubectl delete -f https://github.com/kserve/kserve/releases/download/v0.9.0/kserve.yaml"
+    command = "kubectl delete -f https://github.com/kserve/kserve/releases/download/v0.9.0/kserve.yaml --ignore-not-found"
   }
   provisioner "local-exec" {
     when    = destroy
-    command = "kubectl delete -f https://github.com/kserve/kserve/releases/download/v0.9.0/kserve-runtimes.yaml"
+    command = "kubectl delete -f https://github.com/kserve/kserve/releases/download/v0.9.0/kserve-runtimes.yaml --ignore-not-found"
   }
 
   depends_on = [
