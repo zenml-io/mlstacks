@@ -4,7 +4,7 @@ Description: |
   minio storage as an artifact store, MLfow as an experiment tracker and Seldon
   and/or KServe as a model server.
 
-Cloud: k3d
+Cloud: local
 
 Prerequisites: |
   * Docker must be installed on your local machine.
