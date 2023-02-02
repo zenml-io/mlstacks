@@ -31,7 +31,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: mlflow
         name: gke_mlflow_experiment_tracker
-        configuration: {"tracking_uri": "http://${data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
+        configuration: {"tracking_uri": "http://${data.kubernetes_service.mlflow_tracking.status.0.load_balancer.0.ingress.0.ip}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
       model_deployer:
         id: ${uuid()}
         flavor: kserve
