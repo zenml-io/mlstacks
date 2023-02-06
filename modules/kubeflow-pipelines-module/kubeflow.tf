@@ -29,7 +29,7 @@ resource "null_resource" "kubeflow" {
 # cannot use kubernetes_manifest resource since it practically 
 # doesn't support CRDs. Going with kubectl instead.
 resource "kubectl_manifest" "ingress" {
-  count = var.istio_enabled  ? 0 : 1
+  count = var.istio_enabled ? 0 : 1
 
   yaml_body = <<YAML
 apiVersion: networking.k8s.io/v1
@@ -38,22 +38,22 @@ metadata:
   name: kubeflow-ui-ingress
   namespace: kubeflow
   annotations:
-%{ if var.tls_enabled }
+%{if var.tls_enabled}
     cert-manager.io/cluster-issuer: letsencrypt-staging
-%{ endif }
+%{endif}
     ingress.annotations.nginx.ingress.kubernetes.io/ssl-redirect: "${var.tls_enabled}"
 spec:
-%{ if !var.istio_enabled }
+%{if !var.istio_enabled}
   ingressClassName: nginx
-%{ else }
+%{else}
   ingressClassName: istio
-%{ endif }
-%{ if var.tls_enabled }
+%{endif}
+%{if var.tls_enabled}
   tls:
     - hosts:
         - ${var.ingress_host}
       secretName: kubeflow-ui-tls
-%{ endif }
+%{endif}
   rules:
     - http:
         paths:
@@ -74,7 +74,7 @@ YAML
 
 # Create Gateway and VirtualService if istio is enabled
 resource "kubectl_manifest" "kubeflow-ui-gateway" {
-  count = var.istio_enabled  ? 1 : 0
+  count     = var.istio_enabled ? 1 : 0
   yaml_body = <<YAML
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -91,7 +91,7 @@ spec:
       protocol: HTTP
     hosts:
     - '*'
-  %{ if var.tls_enabled }
+  %{if var.tls_enabled}
     tls:
       httpsRedirect: false
   - port:
@@ -103,7 +103,7 @@ spec:
     tls:
       mode: SIMPLE # enables HTTPS on this port
       credentialName: kubeflow-ui-tls
-    %{ endif }
+    %{endif}
 YAML    
   depends_on = [
     null_resource.kubeflow
@@ -111,7 +111,7 @@ YAML
 }
 
 resource "kubectl_manifest" "kubeflow-ui-virtualservice" {
-  count = var.istio_enabled  ? 1 : 0
+  count     = var.istio_enabled ? 1 : 0
   yaml_body = <<YAML
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService

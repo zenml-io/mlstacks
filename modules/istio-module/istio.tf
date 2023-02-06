@@ -43,7 +43,7 @@ resource "helm_release" "istio-ingress" {
 resource "kubernetes_ingress_class" "istio-ingress-class" {
   metadata {
     name = "istio"
-  } 
+  }
   spec {
     controller = "istio.io/ingress-controller"
   }

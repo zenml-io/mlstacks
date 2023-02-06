@@ -1,7 +1,7 @@
 # create a secret with user credentials
 resource "kubernetes_secret" "name" {
   metadata {
-    name = "basic-auth"
+    name      = "basic-auth"
     namespace = kubernetes_namespace.mlflow.metadata[0].name
   }
 

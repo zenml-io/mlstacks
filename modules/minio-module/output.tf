@@ -1,5 +1,5 @@
 output "minio-server-endpoint" {
-  value = "${var.ingress_host}"
+  value = var.ingress_host
 }
 
 output "minio-console-URL" {

@@ -1,6 +1,6 @@
 variable "namespace" {
-    type    = string
-    default = "istio-system"
+  type    = string
+  default = "istio-system"
 }
 
 variable "chart_version" {

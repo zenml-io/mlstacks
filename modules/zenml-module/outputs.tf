@@ -5,6 +5,6 @@ output "username" {
   value = var.username
 }
 output "password" {
-  value = var.password
+  value     = var.password
   sensitive = true
 }

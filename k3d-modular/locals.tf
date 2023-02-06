@@ -17,9 +17,9 @@ locals {
   }
 
   minio = {
-    storage_size = "10Gi"
-    zenml_minio_store_bucket = "zenml-minio-store"
-    ingress_host_prefix = "minio"
+    storage_size                = "10Gi"
+    zenml_minio_store_bucket    = "zenml-minio-store"
+    ingress_host_prefix         = "minio"
     ingress_console_host_prefix = "minio-console"
   }
 
@@ -40,11 +40,11 @@ locals {
     version             = "0.42.0"
     dashboard_version   = "0.31.0"
     ingress_host_prefix = "tekton"
-    workloads_namespace  = "zenml-workloads-tekton"
+    workloads_namespace = "zenml-workloads-tekton"
   }
 
   mlflow = {
-    version                 = "0.7.13"
+    version = "0.7.13"
     # if not set, you'll need to pass the minio credentials to the pipeline/step.
     # E.g. when running with the default local orchestrator:
     #
@@ -53,11 +53,11 @@ locals {
     artifact_Proxied_Access = "true"
     ingress_host_prefix     = "mlflow"
     # if not set, the same bucket used by the artifact store will be used.
-    minio_store_bucket      = ""
+    minio_store_bucket = ""
   }
 
   kserve = {
-    version              = "0.9.0" 
+    version              = "0.9.0"
     knative_version      = "1.8.1"
     workloads_namespace  = "zenml-workloads-kserve"
     service_account_name = "kserve"

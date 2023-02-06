@@ -23,10 +23,10 @@ module "cloudsql" {
         value = "0.0.0.0/0"
       }
     ]
-    ipv4_enabled        = true
-    private_network     = null
-    require_ssl         = true
-    allocated_ip_range  = null
+    ipv4_enabled       = true
+    private_network    = null
+    require_ssl        = true
+    allocated_ip_range = null
   }
 }
 

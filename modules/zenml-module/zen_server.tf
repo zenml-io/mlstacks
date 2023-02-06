@@ -1,7 +1,7 @@
 # create the ZenML Server deployment
 resource "kubernetes_namespace" "zen-server" {
   metadata {
-    name = "${var.namespace}"
+    name = var.namespace
   }
 }
 
@@ -26,7 +26,7 @@ resource "local_file" "db_ca_cert" {
 
   count = (var.database_url != "" && var.database_ssl_ca != "") ? 1 : 0
 
-  source      = var.database_ssl_ca
+  source   = var.database_ssl_ca
   filename = "${path.root}/helm/src/zenml/zen_server/deploy/helm/ssl_ca.pem"
 
   depends_on = [
@@ -38,7 +38,7 @@ resource "local_file" "db_client_cert" {
 
   count = (var.database_url != "" && var.database_ssl_cert != "") ? 1 : 0
 
-  source      = var.database_ssl_cert
+  source   = var.database_ssl_cert
   filename = "${path.root}/helm/src/zenml/zen_server/deploy/helm/ssl_cert.pem"
 
   depends_on = [
@@ -50,7 +50,7 @@ resource "local_file" "db_client_key" {
 
   count = (var.database_url != "" && var.database_ssl_key != "") ? 1 : 0
 
-  source      = var.database_ssl_key
+  source   = var.database_ssl_key
   filename = "${path.root}/helm/src/zenml/zen_server/deploy/helm/ssl_key.pem"
 
   depends_on = [
@@ -60,88 +60,88 @@ resource "local_file" "db_client_key" {
 
 resource "helm_release" "zen-server" {
 
-  name             = "zenml-server"
-  chart            = "${path.root}/helm/src/zenml/zen_server/deploy/helm"
-  namespace        = kubernetes_namespace.zen-server.metadata[0].name
+  name      = "zenml-server"
+  chart     = "${path.root}/helm/src/zenml/zen_server/deploy/helm"
+  namespace = kubernetes_namespace.zen-server.metadata[0].name
 
 
   set {
-    name = "zenml.image.tag"
+    name  = "zenml.image.tag"
     value = var.zenmlserver_image_tag
-    type = "string"
+    type  = "string"
   }
   set {
-    name = "zenml.initImage.tag"
+    name  = "zenml.initImage.tag"
     value = var.zenmlinit_image_tag
-    type = "string"
-  } 
+    type  = "string"
+  }
   set {
     name  = "zenml.defaultUsername"
     value = var.username
-    type = "string"
+    type  = "string"
   }
   set_sensitive {
     name  = "zenml.defaultPassword"
     value = var.password
-    type = "string"
+    type  = "string"
   }
   set {
     name  = "zenml.deploymentType"
     value = "aws"
-    type = "string"
+    type  = "string"
   }
-  
+
   set {
-    name = "zenml.ingress.host"
+    name  = "zenml.ingress.host"
     value = var.ingress_host
-    type = "string"
+    type  = "string"
   }
   set {
-    name = "zenml.ingress.tls.enabled"
+    name  = "zenml.ingress.tls.enabled"
     value = var.ingress_tls
-    type = "auto"
+    type  = "auto"
   }
   set {
-    name = "zenml.ingress.annotations.cert-manager\\.io/cluster-issuer"
-    value = var.ingress_tls ? "letsencrypt-staging": ""
-    type = "string"
+    name  = "zenml.ingress.annotations.cert-manager\\.io/cluster-issuer"
+    value = var.ingress_tls ? "letsencrypt-staging" : ""
+    type  = "string"
   }
   set {
-    name = "zenml.ingress.tls.generateCerts"
+    name  = "zenml.ingress.tls.generateCerts"
     value = var.ingress_tls_generate_certs
-    type = "auto"
+    type  = "auto"
   }
   set {
-    name = "zenml.ingress.tls.secretName"
-    value = "${var.ingress_tls_secret_name}"
-    type = "string"
+    name  = "zenml.ingress.tls.secretName"
+    value = var.ingress_tls_secret_name
+    type  = "string"
   }
 
   # set parameters for the mysql database
   set_sensitive {
     name  = "zenml.database.url"
     value = var.database_url
-    type = "string"
+    type  = "string"
   }
   set {
     name  = "zenml.database.sslCa"
     value = (var.database_url != "" && var.database_ssl_ca != "") ? "ssl_ca.pem" : ""
-    type = "string"
+    type  = "string"
   }
   set {
     name  = "zenml.database.sslCert"
     value = (var.database_url != "" && var.database_ssl_cert != "") ? "ssl_cert.pem" : ""
-    type = "string"
+    type  = "string"
   }
   set {
     name  = "zenml.database.sslKey"
     value = (var.database_url != "" && var.database_ssl_key != "") ? "ssl_key.pem" : ""
-    type = "string"
+    type  = "string"
   }
   set {
     name  = "zenml.database.sslVerifyServerCert"
     value = var.database_ssl_verify_server_cert
-    type = "auto"
+    type  = "auto"
   }
   depends_on = [
     null_resource.fetch_chart,
@@ -154,8 +154,8 @@ resource "helm_release" "zen-server" {
 
 data "kubernetes_secret" "certificates" {
   metadata {
-    name = "${var.ingress_tls_secret_name}"
-    namespace = "${var.namespace}"
+    name      = var.ingress_tls_secret_name
+    namespace = var.namespace
   }
   binary_data = {
     "tls.crt" = ""

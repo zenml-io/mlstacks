@@ -2,7 +2,7 @@
 # cannot use kubernetes_manifest resource since it practically 
 # doesn't support CRDs. Going with kubectl instead.
 resource "kubectl_manifest" "gateway" {
-  yaml_body = <<YAML
+  yaml_body          = <<YAML
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
