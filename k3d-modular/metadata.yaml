@@ -9,3 +9,5 @@ Cloud: k3d
 Prerequisites: |
   * Docker must be installed on your local machine.
   * Install k3d by running `curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash`.
+  * You also need to be running Linux or Windows. MacOS is currently not supported 
+  for deployments involving Seldon and KServe in container environments.
