@@ -1,4 +1,16 @@
 # enable services
+variable "enable_s3" {
+  description = "Enable S3 deployment"
+  default     = true
+}
+variable "enable_ecr" {
+  description = "Enable ECR deployment"
+  default     = true
+}
+variable "enable_secrets_manager" {
+  description = "Enable Secret Manager deployment"
+  default     = true
+}
 variable "enable_kubeflow" {
   description = "Enable Kubeflow deployment"
   default     = true
