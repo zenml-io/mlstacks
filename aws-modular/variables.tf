@@ -1,35 +1,35 @@
 # enable services
 variable "enable_s3" {
   description = "Enable S3 deployment"
-  default     = true
+  default     = false
 }
 variable "enable_ecr" {
   description = "Enable ECR deployment"
-  default     = true
+  default     = false
 }
 variable "enable_secrets_manager" {
   description = "Enable Secret Manager deployment"
-  default     = true
+  default     = false
 }
 variable "enable_kubeflow" {
   description = "Enable Kubeflow deployment"
-  default     = true
+  default     = false
 }
 variable "enable_tekton" {
   description = "Enable Tekton deployment"
-  default     = true
+  default     = false
 }
 variable "enable_mlflow" {
   description = "Enable MLflow deployment"
-  default     = true
+  default     = false
 }
 variable "enable_kserve" {
   description = "Enable KServe deployment"
-  default     = true
+  default     = false
 }
 variable "enable_seldon" {
   description = "Enable Seldon deployment"
-  default     = true
+  default     = false
 }
 variable "enable_zenml" {
   description = "Enable ZenML deployment"
