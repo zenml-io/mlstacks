@@ -11,7 +11,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: gcp
         name: gcs_artifact_store
-        configuration: {"path": "gs://${google_storage_bucket.artifact-store.name}"}
+        configuration: {"path": "gs://${google_storage_bucket.artifact-store[0].name}"}
       container_registry:
         id: ${uuid()}
         flavor: gcp

@@ -18,7 +18,7 @@ module "mlflow" {
   ingress_host            = "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   artifact_Proxied_Access = local.mlflow.artifact_Proxied_Access
   artifact_GCS            = local.mlflow.artifact_GCS
-  artifact_GCS_Bucket     = local.mlflow.artifact_GCS_Bucket == "" ? google_storage_bucket.artifact-store.name : local.mlflow.artifact_GCS_Bucket
+  artifact_GCS_Bucket     = local.mlflow.artifact_GCS_Bucket == "" ? google_storage_bucket.artifact-store[0].name : local.mlflow.artifact_GCS_Bucket
 }
 
 resource "htpasswd_password" "hash" {

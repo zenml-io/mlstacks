@@ -1,23 +1,35 @@
 # enable services
+variable "enable_gcs" {
+  description = "Enable GCS deployment"
+  default     = false
+}
+variable "enable_gcr" {
+  description = "Enable GCR deployment"
+  default     = false
+}
+variable "enable_secrets_manager" {
+  description = "Enable Secret Manager deployment"
+  default     = false
+}
 variable "enable_kubeflow" {
   description = "Enable Kubeflow deployment"
-  default     = true
+  default     = false
 }
 variable "enable_tekton" {
   description = "Enable Tekton deployment"
-  default     = true
+  default     = false
 }
 variable "enable_mlflow" {
   description = "Enable MLflow deployment"
-  default     = true
+  default     = false
 }
 variable "enable_kserve" {
   description = "Enable KServe deployment"
-  default     = true
+  default     = false
 }
 variable "enable_seldon" {
   description = "Enable Seldon deployment"
-  default     = true
+  default     = false
 }
 variable "enable_zenml" {
   description = "Enable ZenML deployment"
