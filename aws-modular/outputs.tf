@@ -109,13 +109,13 @@ output "model_deployer_name" {
 }
 output "model_deployer_configuration" {
   value = var.enable_kserve ? jsonencode({
-    kubernetes_context = "terraform",
-    kubernetes_namespace = local.kserve.workloads_namespace,
-    base_url = module.kserve[0].kserve-base-URL,
+    kubernetes_context = "terraform"
+    kubernetes_namespace = local.kserve.workloads_namespace
+    base_url = module.kserve[0].kserve-base-URL
     secret = "aws_kserve_secret"
   }) : var.enable_seldon ? jsonencode({
-    kubernetes_context = "terraform",
-    kubernetes_namespace = local.seldon.workloads_namespace,
+    kubernetes_context = "terraform"
+    kubernetes_namespace = local.seldon.workloads_namespace
     base_url = "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"
   }) : ""
 } 
