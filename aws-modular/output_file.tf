@@ -11,7 +11,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: s3
         name: s3_artifact_store
-        configuration: {"path": "s3://${aws_s3_bucket.zenml-artifact-store.bucket}"}
+        configuration: {"path": "s3://${aws_s3_bucket.zenml-artifact-store[0].bucket}"}
       container_registry:
         id: ${uuid()}
         flavor: aws

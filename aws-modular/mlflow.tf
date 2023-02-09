@@ -18,7 +18,7 @@ module "mlflow" {
   ingress_host            = local.mlflow.ingress_host
   artifact_Proxied_Access = local.mlflow.artifact_Proxied_Access
   artifact_S3             = local.mlflow.artifact_S3
-  artifact_S3_Bucket      = local.mlflow.artifact_S3_Bucket == "" ? "${aws_s3_bucket.zenml-artifact-store.bucket}/mlflow" : local.mlflow.artifact_S3_Bucket
+  artifact_S3_Bucket      = local.mlflow.artifact_S3_Bucket == "" ? "${aws_s3_bucket.zenml-artifact-store[0].bucket}/mlflow" : local.mlflow.artifact_S3_Bucket
 }
 
 resource "htpasswd_password" "hash" {

@@ -16,7 +16,7 @@ output "artifact_store_name" {
 }
 output "artifact_store_configuration" {
   value = var.enable_s3 ? jsonencode({
-    path = "s3://${aws_s3_bucket.zenml-artifact-store.bucket}"
+    path = "s3://${aws_s3_bucket.zenml-artifact-store[0].bucket}"
   }) : ""
 }
 
