@@ -5,6 +5,7 @@ resource "local_file" "test_framework_cfg_file" {
   content  = <<-ADD
 requirements:
 
+%{if var.enable_container_registry}
   - name: k3d-container-registry-${random_string.cluster_id.result}
     description: >-
       Local K3D container registry.
@@ -16,7 +17,9 @@ requirements:
         flavor: default
         configuration:
           uri: "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
+%{endif}
 
+%{if var.enable_kubernetes}
   - name: k3d-kubernetes-${random_string.cluster_id.result}
     description: >-
       K3D cluster that can be used as a kubernetes orchestrator.
@@ -31,10 +34,11 @@ requirements:
         flavor: kubernetes
         containerized: true
         configuration:
-          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
+          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           synchronous: true
           kubernetes_namespace: "${local.k3d.workloads_namespace}"
           local: true
+%{endif}
 
 %{if var.enable_kubeflow}
   - name: k3d-kubeflow-${random_string.cluster_id.result}
@@ -51,7 +55,7 @@ requirements:
         flavor: kubeflow
         containerized: true
         configuration:
-          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
+          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           synchronous: true
           local: true
 %{endif}
@@ -71,7 +75,7 @@ requirements:
         flavor: tekton
         containerized: true
         configuration:
-          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
+          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           kubernetes_namespace: "${local.tekton.workloads_namespace}"
           local: true
 %{endif}
@@ -116,7 +120,7 @@ requirements:
         type: model_deployer
         flavor: seldon
         configuration:
-          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
+          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           kubernetes_namespace: "${local.seldon.workloads_namespace}"
           base_url:  "http://${var.enable_seldon ? module.istio[0].ingress-ip-address : ""}"
           kubernetes_secret_name: "${var.seldon-secret-name}"
@@ -134,7 +138,7 @@ requirements:
         type: model_deployer
         flavor: kserve
         configuration:
-          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
+          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           kubernetes_namespace: "${local.kserve.workloads_namespace}"
           base_url:  "http://${var.enable_kserve ? module.istio[0].ingress-ip-address : ""}"
           kubernetes_secret_name: "${var.kserve-secret-name}"
@@ -169,6 +173,7 @@ environments:
     capabilities:
       synchronized: true
 
+%{if var.enable_kubernetes} 
   - name: default-k3d-kubernetes-orchestrator
     description: >-
       Default deployment with K3D kubernetes orchestrator and other
@@ -194,6 +199,7 @@ environments:
       - k3d-container-registry-${random_string.cluster_id.result}
 %{if var.enable_minio || var.enable_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
+%{endif}
 %{endif}
 
 %{if var.enable_kubeflow}
@@ -290,6 +296,8 @@ environments:
     # daemons in pytest leads to serious issues because the whole test process
     # is forked. As a workaround, the deployment can be started separately,
     # before pytest is invoked.
+
+%{if var.enable_kubernetes}
   - name: local-server-k3d-kubernetes-orchestrator
     description: >-
       Local server deployment with K3D kubernetes orchestrator and other
@@ -315,6 +323,7 @@ environments:
       - k3d-container-registry-${random_string.cluster_id.result}
 %{if var.enable_minio || var.enable_kubeflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
+%{endif}
 %{endif}
 
 %{if var.enable_kubeflow}
