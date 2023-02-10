@@ -15,6 +15,9 @@ resource "k3d_registry" "zenml-registry" {
   # registry from the host.
   name  = "${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost"
   image = "docker.io/registry:2"
+  count = (var.enable_container_registry || var.enable_kubeflow || 
+            var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
+            var.enable_seldon || var.enable_mlflow || var.enable_minio)? 1 : 0
 
   port {
     host_port = local.k3d_registry.port
@@ -48,6 +51,9 @@ resource "k3d_cluster" "zenml-cluster" {
   name    = "${local.k3d.cluster_name}-${random_string.cluster_id.result}"
   servers = 1
   agents  = 2
+  count = (var.enable_container_registry || var.enable_kubeflow || 
+            var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
+            var.enable_seldon || var.enable_mlflow || var.enable_minio)? 1 : 0
 
   kube_api {
     host    = local.k3d_kube_api.host
@@ -56,7 +62,7 @@ resource "k3d_cluster" "zenml-cluster" {
 
   image = local.k3d.image
   registries {
-    use = ["${k3d_registry.zenml-registry.name}:${k3d_registry.zenml-registry.port[0].host_port}"]
+    use = ["${k3d_registry.zenml-registry[0].name}:${k3d_registry.zenml-registry[0].port[0].host_port}"]
   }
 
   dynamic "volume" {

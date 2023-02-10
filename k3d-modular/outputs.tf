@@ -1,6 +1,8 @@
 # output for the k3d cluster
 output "k3d-cluster-name" {
-  value = k3d_cluster.zenml-cluster.name
+  value = (var.enable_container_registry || var.enable_kubeflow || 
+            var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
+            var.enable_seldon || var.enable_mlflow || var.enable_minio)? k3d_cluster.zenml-cluster[0].name : ""
 }
 
 # output for container registry

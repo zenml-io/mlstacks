@@ -1,4 +1,12 @@
 # enable services
+variable "enable_container_registry" {
+  description = "Enable K3D registry deployment"
+  default     = false
+}
+variable "enable_kubernetes" {
+  description = "Enable Kubernetes deployment"
+  default     = false
+}
 variable "enable_kubeflow" {
   description = "Enable Kubeflow deployment"
   default     = true
