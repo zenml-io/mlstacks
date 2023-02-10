@@ -59,6 +59,11 @@ resource "local_file" "stack_file" {
           synchronous: true
           kubernetes_namespace: "${local.k3d.workloads_namespace}"
           local: true
+%{else}
+        id: ${uuid()}
+        flavor: local
+        name: default
+        configuration: {}        
 %{endif}
 %{endif}
 %{endif}
