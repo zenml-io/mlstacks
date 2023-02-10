@@ -9,6 +9,7 @@ resource "local_file" "stack_file" {
     components:
       artifact_store:
 %{if var.enable_minio || var.enable_mlflow}
+        id: ${uuid()}
         flavor: s3
         name: k3d-minio-${random_string.cluster_id.result}
         configuration:
@@ -17,43 +18,53 @@ resource "local_file" "stack_file" {
           secret: "${var.zenml-minio-store-secret-key}"
           client_kwargs: '{"endpoint_url":"${module.minio_server[0].artifact_S3_Endpoint_URL}", "region_name":"us-east-1"}'
 %{else}
+        id: ${uuid()}
         flavor: local
         name: default
         configuration: {}
 %{endif}
       container_registry:
+%{if var.enable_container_registry || var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes}
+        id: ${uuid()}
         flavor: default
         name: k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}
         configuration:
           uri: "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
+%{endif}          
       orchestrator:
 %{if var.enable_kubeflow}
+        id: ${uuid()}
         flavor: kubeflow
         name: k3d-kubeflow-${random_string.cluster_id.result}
         configuration:
-          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
+          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           synchronous: true
           local: true
 %{else}
 %{if var.enable_tekton}
+        id: ${uuid()}
         flavor: tekton
         name: k3d-tekton-${random_string.cluster_id.result}
         configuration:
-          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
+          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           kubernetes_namespace: "${local.tekton.workloads_namespace}"
           local: true
 %{else}
+%{if var.enable_kubernetes}
+        id: ${uuid()}
         flavor: kubernetes
         name: k3d-kubernetes-${random_string.cluster_id.result}
         configuration:
-          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
+          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           synchronous: true
           kubernetes_namespace: "${local.k3d.workloads_namespace}"
           local: true
 %{endif}
 %{endif}
+%{endif}
 %{if var.enable_mlflow}
       experiment_tracker:
+        id: ${uuid()}
         flavor: mlflow
         name: k3d-mlflow-${random_string.cluster_id.result}
         configuration:
@@ -63,14 +74,16 @@ resource "local_file" "stack_file" {
 %{endif}
 %{if var.enable_seldon && !var.enable_kserve}
       model_deployer:
+        id: ${uuid()}
         flavor: seldon
         name: k3d-seldon-${random_string.cluster_id.result}
         configuration:
-          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster.name}"
+          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           kubernetes_namespace: "${local.seldon.workloads_namespace}"
           base_url:  "http://${var.enable_seldon ? module.istio[0].ingress-ip-address : ""}"
           kubernetes_secret_name: "${var.seldon-secret-name}"
       secrets_manager:
+        id: ${uuid()}
         flavor: local
         name: k3d-secrets-manager-${random_string.cluster_id.result}
         configuration: {}
