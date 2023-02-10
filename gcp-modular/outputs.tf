@@ -109,7 +109,7 @@ output "model_deployer_configuration" {
   }) : var.enable_seldon ? jsonencode({
     kubernetes_context = "gke_${local.project_id}_${local.region}_${module.gke.name}"
     kubernetes_namespace = local.seldon.workloads_namespace
-    base_url = "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"
+    base_url = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
   }) : ""
 }
 
