@@ -35,7 +35,7 @@ provider "minio" {
 # Create a bucket for ZenML to use
 resource "minio_s3_bucket" "zenml_bucket" {
 
-  count = (var.enable_minio || var.enable_mlflow) ? 1 : 0
+  count = (var.enable_minio) ? 1 : 0
 
   bucket        = local.minio.zenml_minio_store_bucket
   force_destroy = true

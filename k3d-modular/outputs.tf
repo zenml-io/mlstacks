@@ -21,16 +21,24 @@ output "artifact_store_configuration" {
 # if container registry is enabled, set the container registry outputs to the k3d values
 # otherwise, set the container registry outputs to empty strings
 output "container_registry_id" {
-  value = var.enable_container_registry ? uuid() : ""
+  value = (var.enable_container_registry || var.enable_kubeflow || 
+            var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
+            var.enable_seldon || var.enable_mlflow || var.enable_minio)? uuid() : ""
 }
 output "container_registry_flavor" {
-  value = var.enable_container_registry ? "default" : ""
+  value = (var.enable_container_registry || var.enable_kubeflow || 
+            var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
+            var.enable_seldon || var.enable_mlflow || var.enable_minio)? "default" : ""
 }
 output "container_registry_name" {
-  value = var.enable_container_registry ? "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}" : ""
+  value = (var.enable_container_registry || var.enable_kubeflow || 
+            var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
+            var.enable_seldon || var.enable_mlflow || var.enable_minio)? "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}" : ""
 }
 output "container_registry_configuration" {
-  value = var.enable_container_registry ? jsonencode({
+  value = (var.enable_container_registry || var.enable_kubeflow || 
+            var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
+            var.enable_seldon || var.enable_mlflow || var.enable_minio)? jsonencode({
     uri = "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
   }) : ""
 }
@@ -113,6 +121,10 @@ output "k3d-cluster-name" {
   value = (var.enable_container_registry || var.enable_kubeflow || 
             var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
             var.enable_seldon || var.enable_mlflow || var.enable_minio)? k3d_cluster.zenml-cluster[0].name : ""
+}
+
+output "mlflow-minio-bucket" {
+  value = (var.enable_mlflow && var.mlflow_minio_bucket == "")? "mlflow-minio-${random_string.mlflow_bucket_suffix.result}" : ""
 }
 
 # output for container registry
