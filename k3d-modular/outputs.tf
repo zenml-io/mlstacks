@@ -123,15 +123,10 @@ output "k3d-cluster-name" {
             var.enable_seldon || var.enable_mlflow || var.enable_minio || var.enable_zenml)? k3d_cluster.zenml-cluster[0].name : ""
 }
 
-output "mlflow-minio-bucket" {
-  value = (var.enable_mlflow && var.mlflow_minio_bucket == "")? "mlflow-minio-${random_string.mlflow_bucket_suffix.result}" : ""
-}
-
 # output for container registry
 output "container-registry-URI" {
   value = "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
 }
-
 
 # nginx ingress hostname
 output "nginx-ingress-hostname" {
@@ -146,7 +141,6 @@ output "istio-ingress-hostname" {
 output "minio-console-URL" {
   value = (var.enable_minio || var.enable_mlflow) ? module.minio_server[0].minio-console-URL : null
 }
-
 output "minio-endpoint-URL" {
   value = (var.enable_minio || var.enable_mlflow) ? module.minio_server[0].artifact_S3_Endpoint_URL : null
 }
@@ -163,6 +157,9 @@ output "tekton-pipelines-ui-URL" {
 output "mlflow-tracking-URL" {
   value = var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : null
 }
+output "mlflow-bucket" {
+  value = (var.enable_mlflow && var.mlflow_minio_bucket == "")? "mlflow-minio-${random_string.mlflow_bucket_suffix.result}" : ""
+}
 
 # output for kserve model deployer
 output "kserve-workload-namespace" {
@@ -178,7 +175,6 @@ output "seldon-workload-namespace" {
   value       = var.enable_seldon ? local.seldon.workloads_namespace : null
   description = "The namespace created for hosting your Seldon workloads"
 }
-
 output "seldon-base-url" {
   value = var.enable_seldon ? module.istio[0].ingress-ip-address : null
 }
