@@ -23,22 +23,22 @@ output "artifact_store_configuration" {
 output "container_registry_id" {
   value = (var.enable_container_registry || var.enable_kubeflow || 
             var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
-            var.enable_seldon || var.enable_mlflow || var.enable_minio)? uuid() : ""
+            var.enable_seldon || var.enable_mlflow || var.enable_minio || var.enable_zenml)? uuid() : ""
 }
 output "container_registry_flavor" {
   value = (var.enable_container_registry || var.enable_kubeflow || 
             var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
-            var.enable_seldon || var.enable_mlflow || var.enable_minio)? "default" : ""
+            var.enable_seldon || var.enable_mlflow || var.enable_minio || var.enable_zenml)? "default" : ""
 }
 output "container_registry_name" {
   value = (var.enable_container_registry || var.enable_kubeflow || 
             var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
-            var.enable_seldon || var.enable_mlflow || var.enable_minio)? "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}" : ""
+            var.enable_seldon || var.enable_mlflow || var.enable_minio || var.enable_zenml)? "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}" : ""
 }
 output "container_registry_configuration" {
   value = (var.enable_container_registry || var.enable_kubeflow || 
             var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
-            var.enable_seldon || var.enable_mlflow || var.enable_minio)? jsonencode({
+            var.enable_seldon || var.enable_mlflow || var.enable_minio || var.enable_zenml)? jsonencode({
     uri = "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
   }) : ""
 }
@@ -120,7 +120,7 @@ output "model_deployer_configuration" {
 output "k3d-cluster-name" {
   value = (var.enable_container_registry || var.enable_kubeflow || 
             var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
-            var.enable_seldon || var.enable_mlflow || var.enable_minio)? k3d_cluster.zenml-cluster[0].name : ""
+            var.enable_seldon || var.enable_mlflow || var.enable_minio || var.enable_zenml)? k3d_cluster.zenml-cluster[0].name : ""
 }
 
 output "mlflow-minio-bucket" {
