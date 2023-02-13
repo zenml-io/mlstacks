@@ -34,15 +34,16 @@ output "container_registry_configuration" {
 
 # if kubeflow is enabled, set the orchestrator outputs to the kubeflow values
 # if tekton is enabled, set the orchestrator outputs to the tekton values
+# if kubernetes is enabled, set the orchestrator outputs to the kubernetes values
 # otherwise, set the orchestrator outputs to empty strings
 output "orchestrator_id" {
-  value = var.enable_kubeflow ? uuid() : var.enable_tekton ? uuid() : ""
+  value = var.enable_kubeflow ? uuid() : var.enable_tekton ? uuid() : var.enable_kubernetes ? uuid() : ""
 }
 output "orchestrator_flavor" {
-  value = var.enable_kubeflow ? "kubeflow" : var.enable_tekton ? "tekton" : ""
+  value = var.enable_kubeflow ? "kubeflow" : var.enable_tekton ? "tekton" :  var.enable_kubernetes ? "kubernetes" : ""
 }
 output "orchestrator_name" {
-  value = var.enable_kubeflow ? "gke_kubeflow_orchestrator" : var.enable_tekton ? "gke_tekton_orchestrator" : ""
+  value = var.enable_kubeflow ? "gke_kubeflow_orchestrator" : var.enable_tekton ? "gke_tekton_orchestrator" : var.enable_kubernetes ? "gke_kubernetes_orchestrator" : ""
 }
 output "orchestrator_configuration" {
   value = var.enable_kubeflow ? jsonencode({
@@ -50,6 +51,9 @@ output "orchestrator_configuration" {
     synchronous        = true
   }) : var.enable_tekton ? jsonencode({
     kubernetes_context = "gke_${local.project_id}_${local.region}_${module.gke[0].name}"
+  }) : var.enable_kubernetes ? jsonencode({
+    kubernetes_context = "gke_${local.project_id}_${local.region}_${module.gke[0].name}"
+    synchronous        = true
   }) : ""
 }
 
