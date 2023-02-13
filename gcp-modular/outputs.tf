@@ -124,19 +124,19 @@ output "project-id" {
 
 # output for the GKE cluster
 output "gke-cluster-name" {
-  value = module.gke[0].name
+  value = length(module.gke) > 0? module.gke[0].name: ""
 }
 
 # output for the GCS bucket
 output "gcs-bucket-path" {
-  value       = "gs://${google_storage_bucket.artifact-store[0].name}"
+  value       = var.enable_gcs? "gs://${google_storage_bucket.artifact-store[0].name}" : ""
   description = "The GCS bucket path for storing your artifacts"
 }
 
 
 # output for container registry
 output "container-registry-URI" {
-  value = "${local.container_registry.region}.gcr.io/${local.project_id}"
+  value = var.enable_gcr? "${local.container_registry.region}.gcr.io/${local.project_id}" : ""
 }
 
 # nginx ingress hostname
@@ -161,6 +161,9 @@ output "tekton-pipelines-ui-URL" {
 # outputs for the MLflow tracking server
 output "mlflow-tracking-URL" {
   value = var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : null
+}
+output "mlflow-bucket" {
+  value = (var.enable_mlflow && local.mlflow.artifact_GCS_Bucket == "")? "mlflow-gcs-${random_string.mlflow_bucket_suffix.result}": ""
 }
 
 # output for kserve model deployer
