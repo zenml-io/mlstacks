@@ -8,35 +8,83 @@ resource "local_file" "stack_file" {
     stack_name: gcp_kubeflow_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}
     components:
       artifact_store:
+%{if var.enable_gcs}
         id: ${uuid()}
         flavor: gcp
         name: gcs_artifact_store
         configuration: {"path": "gs://${google_storage_bucket.artifact-store[0].name}"}
+%{else}
+        id: ${uuid()}
+        flavor: local
+        name: default
+        configuration: {}
+%{endif}
+
+%{if var.enable_container_registry}
       container_registry:
         id: ${uuid()}
         flavor: gcp
         name: gcr_container_registry
         configuration: {"uri": "${local.container_registry.region}.gcr.io/${local.project_id}"}
+%{endif}
+
       orchestrator:
+%{if var.enable_kubeflow}
         id: ${uuid()}
         flavor: kubeflow
         name: gke_kubeflow_orchestrator
         configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}", "synchronous": True}
+%{else}
+%{if var.enable_tekton}
+        id: ${uuid()}
+        flavor: tekton
+        name: gke_tekton_orchestrator
+        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}"}
+%{else}
+%{if var.enable_kubernetes}
+        id: ${uuid()}
+        flavor: kubernetes
+        name: gke_kubernetes_orchestrator
+        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}", "synchronous": True}
+%{else}
+        id: ${uuid()}
+        flavor: local
+        name: default
+        configuration: {}
+%{endif}
+%{endif}
+%{endif}
+
+%{if var.enable_secrets_manager}
       secrets_manager:
         id: ${uuid()}
         flavor: gcp
         name: gcp_secrets_manager
         configuration: {"project_id": "${local.project_id}"}
+%{endif}
+
+%{if var.enable_mlflow}
       experiment_tracker:
         id: ${uuid()}
         flavor: mlflow
         name: gke_mlflow_experiment_tracker
         configuration: {"tracking_uri": "${var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
+%{endif}
+
       model_deployer:
+%{if var.enable_kserve}}      
         id: ${uuid()}
         flavor: kserve
         name: gke_kserve
         configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
+%{else}
+%{if var.enable_seldon}
+        id : ${uuid()}
+        flavor: seldon
+        name: gke_seldon
+        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}", "kubernetes_namespace": "${local.seldon.workloads_namespace}", "base_url": "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"}}
+%{endif}
+%{endif}
     ADD
   filename = "./gcp_kubeflow_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }
