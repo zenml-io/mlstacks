@@ -18,7 +18,24 @@ module "mlflow" {
   ingress_host            = "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   artifact_Proxied_Access = local.mlflow.artifact_Proxied_Access
   artifact_GCS            = local.mlflow.artifact_GCS
-  artifact_GCS_Bucket     = local.mlflow.artifact_GCS_Bucket == "" ? google_storage_bucket.artifact-store[0].name : local.mlflow.artifact_GCS_Bucket
+  artifact_GCS_Bucket     = local.mlflow.artifact_GCS_Bucket == "" ? google_storage_bucket.mlflow-bucket[0].name : local.mlflow.artifact_GCS_Bucket
+}
+
+resource "random_string" "mlflow_bucket_suffix" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
+resource "google_storage_bucket" "mlflow-bucket" {
+  count    = (var.enable_mlflow && local.mlflow.artifact_GCS_Bucket == "") ? 1 : 0
+  name     = "mlflow-gcs-${random_string.mlflow_bucket_suffix.result}"
+  project  = local.project_id
+  location = local.gcs.location
+
+  force_destroy = true
+
+  uniform_bucket_level_access = true
 }
 
 resource "htpasswd_password" "hash" {
