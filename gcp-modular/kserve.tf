@@ -101,7 +101,7 @@ resource "kubernetes_role_binding_v1" "k8s-kserve" {
   subject {
     kind      = "ServiceAccount"
     name      = "default"
-    namespace = kubernetes_namespace.k8s-workloads.metadata[0].name
+    namespace = kubernetes_namespace.k8s-workloads[0].metadata[0].name
   }
 
   depends_on = [
