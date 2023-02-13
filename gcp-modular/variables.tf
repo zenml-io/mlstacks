@@ -19,6 +19,10 @@ variable "enable_tekton" {
   description = "Enable Tekton deployment"
   default     = false
 }
+variable "enable_kubernetes" {
+  description = "Enable Kubernetes deployment"
+  default     = false
+}
 variable "enable_mlflow" {
   description = "Enable MLflow deployment"
   default     = false

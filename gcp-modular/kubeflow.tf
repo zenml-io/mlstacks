@@ -23,7 +23,7 @@ resource "null_resource" "kubeflow-sa-workload-access" {
   count = var.enable_kubeflow ? 1 : 0
 
   provisioner "local-exec" {
-    command = "kubectl -n kubeflow annotate serviceaccount pipeline-runner iam.gke.io/gcp-service-account=${google_service_account.gke-service-account.email} --overwrite=true"
+    command = "kubectl -n kubeflow annotate serviceaccount pipeline-runner iam.gke.io/gcp-service-account=${google_service_account.gke-service-account[0].email} --overwrite=true"
   }
 
   depends_on = [
@@ -38,7 +38,7 @@ resource "google_service_account_iam_member" "kubeflow-workload-access" {
 
   count = var.enable_kubeflow ? 1 : 0
 
-  service_account_id = google_service_account.gke-service-account.name
+  service_account_id = google_service_account.gke-service-account[0].name
   role               = "roles/iam.workloadIdentityUser"
   member             = "serviceAccount:${local.project_id}.svc.id.goog[kubeflow/pipeline-runner]"
   depends_on = [

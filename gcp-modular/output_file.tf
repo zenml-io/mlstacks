@@ -21,7 +21,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: kubeflow
         name: gke_kubeflow_orchestrator
-        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke.name}", "synchronous": True}
+        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}", "synchronous": True}
       secrets_manager:
         id: ${uuid()}
         flavor: gcp
@@ -36,7 +36,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: kserve
         name: gke_kserve
-        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke.name}", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
+        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
     ADD
   filename = "./gcp_kubeflow_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }

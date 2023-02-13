@@ -38,7 +38,7 @@ resource "null_resource" "tekton-sa-workload-access" {
   count = var.enable_tekton ? 1 : 0
 
   provisioner "local-exec" {
-    command = "kubectl -n ${kubernetes_namespace.tekton-workloads[0].metadata[0].name} annotate serviceaccount default iam.gke.io/gcp-service-account=${google_service_account.gke-service-account.email} --overwrite=true"
+    command = "kubectl -n ${kubernetes_namespace.tekton-workloads[0].metadata[0].name} annotate serviceaccount default iam.gke.io/gcp-service-account=${google_service_account.gke-service-account[0].email} --overwrite=true"
   }
 
   depends_on = [
@@ -53,7 +53,7 @@ resource "google_service_account_iam_member" "tekton-workload-access" {
 
   count = var.enable_tekton ? 1 : 0
 
-  service_account_id = google_service_account.gke-service-account.name
+  service_account_id = google_service_account.gke-service-account[0].name
   role               = "roles/iam.workloadIdentityUser"
   member             = "serviceAccount:${local.project_id}.svc.id.goog[${kubernetes_namespace.tekton-workloads[0].metadata[0].name}/default]"
   depends_on = [

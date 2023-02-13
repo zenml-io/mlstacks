@@ -1,5 +1,9 @@
 data "google_client_config" "default" {}
 module "gke" {
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
+            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+            var.enable_zenml)
+          
   depends_on = [
     google_project_service.compute_engine_api
   ]
@@ -34,7 +38,7 @@ module "gke" {
       enable_gcfs     = false
       auto_repair     = true
       auto_upgrade    = true
-      service_account = google_service_account.gke-service-account.email
+      service_account = google_service_account.gke-service-account[0].email
 
       preemptible        = false
       initial_node_count = 1
@@ -60,52 +64,70 @@ module "gke" {
 
 # service account for GKE nodes
 resource "google_service_account" "gke-service-account" {
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
+            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+            var.enable_zenml)? 1: 0
   account_id   = "${local.prefix}-${local.gke.service_account_name}"
   project      = local.project_id
   display_name = "Terraform GKE SA"
 }
 
 resource "google_project_iam_binding" "container-registry" {
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
+            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+            var.enable_zenml)? 1: 0
   project = local.project_id
   role    = "roles/containerregistry.ServiceAgent"
 
   members = [
-    "serviceAccount:${google_service_account.gke-service-account.email}",
+    "serviceAccount:${google_service_account.gke-service-account[0].email}",
   ]
 }
 
 resource "google_project_iam_binding" "secret-manager" {
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
+            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+            var.enable_zenml)? 1: 0
   project = local.project_id
   role    = "roles/secretmanager.admin"
 
   members = [
-    "serviceAccount:${google_service_account.gke-service-account.email}",
+    "serviceAccount:${google_service_account.gke-service-account[0].email}",
   ]
 }
 
 resource "google_project_iam_binding" "cloudsql" {
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
+            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+            var.enable_zenml)? 1: 0
   project = local.project_id
   role    = "roles/cloudsql.admin"
 
   members = [
-    "serviceAccount:${google_service_account.gke-service-account.email}",
+    "serviceAccount:${google_service_account.gke-service-account[0].email}",
   ]
 }
 
 resource "google_project_iam_binding" "storageadmin" {
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
+            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+            var.enable_zenml)? 1: 0
   project = local.project_id
   role    = "roles/storage.admin"
 
   members = [
-    "serviceAccount:${google_service_account.gke-service-account.email}",
+    "serviceAccount:${google_service_account.gke-service-account[0].email}",
   ]
 }
 
 resource "google_project_iam_binding" "vertex-ai-user" {
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
+            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+            var.enable_zenml)? 1: 0
   project = local.project_id
   role    = "roles/aiplatform.user"
 
   members = [
-    "serviceAccount:${google_service_account.gke-service-account.email}",
+    "serviceAccount:${google_service_account.gke-service-account[0].email}",
   ]
 }
