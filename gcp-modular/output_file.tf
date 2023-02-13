@@ -20,7 +20,7 @@ resource "local_file" "stack_file" {
         configuration: {}
 %{endif}
 
-%{if var.enable_container_registry}
+%{if var.enable_gcr}
       container_registry:
         id: ${uuid()}
         flavor: gcp
@@ -33,19 +33,19 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: kubeflow
         name: gke_kubeflow_orchestrator
-        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}", "synchronous": True}
+        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "synchronous": True}
 %{else}
 %{if var.enable_tekton}
         id: ${uuid()}
         flavor: tekton
         name: gke_tekton_orchestrator
-        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}"}
+        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}}
 %{else}
 %{if var.enable_kubernetes}
         id: ${uuid()}
         flavor: kubernetes
         name: gke_kubernetes_orchestrator
-        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}", "synchronous": True}
+        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "synchronous": True}
 %{else}
         id: ${uuid()}
         flavor: local
@@ -71,18 +71,19 @@ resource "local_file" "stack_file" {
         configuration: {"tracking_uri": "${var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
 %{endif}
 
-      model_deployer:
-%{if var.enable_kserve}}      
+%{if var.enable_kserve}}        
+      model_deployer:    
         id: ${uuid()}
         flavor: kserve
         name: gke_kserve
-        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
+        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
 %{else}
 %{if var.enable_seldon}
+      model_deployer:
         id : ${uuid()}
         flavor: seldon
         name: gke_seldon
-        configuration: {"kubernetes_context": "gke_${local.project_id}_${local.region}_${module.gke[0].name}", "kubernetes_namespace": "${local.seldon.workloads_namespace}", "base_url": "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"}}
+        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "kubernetes_namespace": "${local.seldon.workloads_namespace}", "base_url": "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"}}
 %{endif}
 %{endif}
     ADD

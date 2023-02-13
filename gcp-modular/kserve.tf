@@ -5,7 +5,7 @@ module "kserve" {
   count = var.enable_kserve ? 1 : 0
 
   depends_on = [
-    module.gke,
+    google_container_cluster.gke,
     null_resource.configure-local-kubectl,
     module.cert-manager,
     module.istio
@@ -106,7 +106,7 @@ resource "kubernetes_role_binding_v1" "k8s-kserve" {
 
   depends_on = [
     module.kserve,
-    module.gke,
+    google_container_cluster.gke,
   ]
 }
 

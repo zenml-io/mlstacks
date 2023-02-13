@@ -47,14 +47,18 @@ output "orchestrator_name" {
 }
 output "orchestrator_configuration" {
   value = var.enable_kubeflow ? jsonencode({
-    kubernetes_context = "gke_${local.project_id}_${local.region}_${module.gke[0].name}"
+    kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
     synchronous        = true
   }) : var.enable_tekton ? jsonencode({
-    kubernetes_context = "gke_${local.project_id}_${local.region}_${module.gke[0].name}"
+    kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
   }) : var.enable_kubernetes ? jsonencode({
-    kubernetes_context = "gke_${local.project_id}_${local.region}_${module.gke[0].name}"
+    kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
     synchronous        = true
   }) : ""
+
+  depends_on = [
+    google_container_cluster.gke
+  ]
 }
 
 # if mlflow is enabled, set the tracking server outputs to the mlflow values
@@ -107,11 +111,11 @@ output "model_deployer_name" {
 }
 output "model_deployer_configuration" {
   value = var.enable_kserve ? jsonencode({
-    kubernetes_context = "gke_${local.project_id}_${local.region}_${module.gke[0].name}"
+    kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
     kubernetes_namespace = local.kserve.workloads_namespace
     base_url = module.kserve[0].kserve-base-URL
   }) : var.enable_seldon ? jsonencode({
-    kubernetes_context = "gke_${local.project_id}_${local.region}_${module.gke[0].name}"
+    kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
     kubernetes_namespace = local.seldon.workloads_namespace
     base_url = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
   }) : ""
@@ -124,7 +128,7 @@ output "project-id" {
 
 # output for the GKE cluster
 output "gke-cluster-name" {
-  value = length(module.gke) > 0? module.gke[0].name: ""
+  value = length(google_container_cluster.gke) > 0? "${local.prefix}-${local.gke.cluster_name}": ""
 }
 
 # output for the GCS bucket

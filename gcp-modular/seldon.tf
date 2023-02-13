@@ -7,7 +7,7 @@ module "seldon" {
 
   # run only after the gke cluster and istio are set up
   depends_on = [
-    module.gke,
+    google_container_cluster.gke,
     null_resource.configure-local-kubectl,
     module.istio
   ]
