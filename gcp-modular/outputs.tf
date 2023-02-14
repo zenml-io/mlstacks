@@ -167,7 +167,7 @@ output "mlflow-tracking-URL" {
   value = var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : null
 }
 output "mlflow-bucket" {
-  value = (var.enable_mlflow && local.mlflow.artifact_GCS_Bucket == "")? "mlflow-gcs-${random_string.mlflow_bucket_suffix.result}": ""
+  value = (var.enable_mlflow && var.mlflow-gcs-bucket == "")? "mlflow-gcs-${random_string.mlflow_bucket_suffix.result}": ""
 }
 
 # output for kserve model deployer

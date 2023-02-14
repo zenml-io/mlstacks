@@ -41,6 +41,10 @@ variable "enable_zenml" {
 }
 
 # variables for the MLflow tracking server
+variable "mlflow-gcs-bucket" {
+  description = "The name of the GCS bucket to use for MLflow artifact store"
+  default     = ""
+}
 variable "mlflow-username" {
   description = "The username for the MLflow Tracking Server"
   default     = "admin"
