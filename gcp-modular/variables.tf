@@ -1,9 +1,9 @@
 # enable services
-variable "enable_gcs" {
+variable "enable_artifact_store" {
   description = "Enable GCS deployment"
   default     = false
 }
-variable "enable_gcr" {
+variable "enable_container_registry" {
   description = "Enable GCR deployment"
   default     = false
 }

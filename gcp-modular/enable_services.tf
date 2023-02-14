@@ -12,7 +12,7 @@ resource "google_project_service" "secret_manager" {
 
 # enable container registry
 resource "google_project_service" "container_registry" {
-  count   = var.enable_gcr ? 1 : 0
+  count   = var.enable_container_registry ? 1 : 0
   project = local.project_id
   service = "containerregistry.googleapis.com"
 

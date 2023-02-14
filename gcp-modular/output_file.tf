@@ -8,7 +8,7 @@ resource "local_file" "stack_file" {
     stack_name: gcp_modular_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}
     components:
       artifact_store:
-%{if var.enable_gcs}
+%{if var.enable_artifact_store}
         id: ${uuid()}
         flavor: gcp
         name: gcs_artifact_store
@@ -20,7 +20,7 @@ resource "local_file" "stack_file" {
         configuration: {}
 %{endif}
 
-%{if var.enable_gcr}
+%{if var.enable_container_registry}
       container_registry:
         id: ${uuid()}
         flavor: gcp

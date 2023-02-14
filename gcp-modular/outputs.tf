@@ -1,16 +1,16 @@
 # if gcs is enabled, set the artifact store outputs to the gcs values
 # otherwise, set the artifact store outputs to empty strings
 output "artifact_store_id" {
-  value = var.enable_gcs ? uuid() : ""
+  value = var.enable_artifact_store ? uuid() : ""
 }
 output "artifact_store_flavor" {
-  value = var.enable_gcs ? "gcs" : ""
+  value = var.enable_artifact_store ? "gcs" : ""
 }
 output "artifact_store_name" {
-  value = var.enable_gcs ? "gcs_artifact_store" : ""
+  value = var.enable_artifact_store ? "gcs_artifact_store" : ""
 }
 output "artifact_store_configuration" {
-  value = var.enable_gcs ? jsonencode({
+  value = var.enable_artifact_store ? jsonencode({
     path = "gs://${google_storage_bucket.artifact-store[0].name}"
   }) : ""
 }
@@ -18,16 +18,16 @@ output "artifact_store_configuration" {
 # if gcr is enabled, set the container registry outputs to the gcr values
 # otherwise, set the container registry outputs to empty strings
 output "container_registry_id" {
-  value = var.enable_gcr ? uuid() : ""
+  value = var.enable_container_registry ? uuid() : ""
 }
 output "container_registry_flavor" {
-  value = var.enable_gcr ? "gcp" : ""
+  value = var.enable_container_registry ? "gcp" : ""
 }
 output "container_registry_name" {
-  value = var.enable_gcr ? "gcp_container_registry" : ""
+  value = var.enable_container_registry ? "gcp_container_registry" : ""
 }
 output "container_registry_configuration" {
-  value = var.enable_gcr ? jsonencode({
+  value = var.enable_container_registry ? jsonencode({
     uri = "${local.container_registry.region}.gcr.io/${local.project_id}"
   }) : ""
 }
@@ -133,14 +133,14 @@ output "gke-cluster-name" {
 
 # output for the GCS bucket
 output "gcs-bucket-path" {
-  value       = var.enable_gcs? "gs://${google_storage_bucket.artifact-store[0].name}" : ""
+  value       = var.enable_artifact_store? "gs://${google_storage_bucket.artifact-store[0].name}" : ""
   description = "The GCS bucket path for storing your artifacts"
 }
 
 
 # output for container registry
 output "container-registry-URI" {
-  value = var.enable_gcr? "${local.container_registry.region}.gcr.io/${local.project_id}" : ""
+  value = var.enable_container_registry? "${local.container_registry.region}.gcr.io/${local.project_id}" : ""
 }
 
 # nginx ingress hostname
