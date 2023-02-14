@@ -1,6 +1,13 @@
 # eks module to creater a cluster
 # newer versions of it had some error so going with v17.23.0 for now
+locals {
+  enable_eks = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
+            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+            var.enable_zenml)
+}
+
 module "eks" {
+  count = local.enable_eks? 1: 0
   source  = "terraform-aws-modules/eks/aws"
   version = "17.23.0"
 
@@ -47,9 +54,17 @@ module "eks" {
   ]
 }
 data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_id
+  name = "${local.prefix}-${local.eks.cluster_name}"
+
+  depends_on = [
+    module.eks
+  ]
 }
 
 data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_id
+  name = "${local.prefix}-${local.eks.cluster_name}"
+
+  depends_on = [
+    module.eks
+  ]
 }
