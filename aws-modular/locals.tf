@@ -48,8 +48,7 @@ locals {
     version                 = "0.7.13"
     artifact_Proxied_Access = "false"
     artifact_S3             = "true"
-    # if not set, the bucket created as part of the deployment will be used
-    artifact_S3_Bucket = ""
+    
     ingress_host       = "mlflow.example.com"
   }
 

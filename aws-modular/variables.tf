@@ -19,6 +19,10 @@ variable "enable_tekton" {
   description = "Enable Tekton deployment"
   default     = false
 }
+variable "enable_kubernetes" {
+  description = "Enable Kubernetes deployment"
+  default     = false
+}
 variable "enable_mlflow" {
   description = "Enable MLflow deployment"
   default     = false
@@ -56,6 +60,10 @@ variable "mlflow-password" {
   description = "The password for the MLflow Tracking Server"
   default     = "supersafepassword"
   type        = string
+}
+variable "mlflow-s3-bucket" {
+  description = "The name of the S3 bucket to use for MLflow artifact store"
+  default     = ""
 }
 
 # variables for creating a ZenML stack configuration file

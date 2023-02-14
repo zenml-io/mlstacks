@@ -39,15 +39,16 @@ output "container_registry_configuration" {
 
 # if kubeflow is enabled, set the orchestrator outputs to the kubeflow values
 # if tekton is enabled, set the orchestrator outputs to the tekton values
+# if kubernetes is enabled, set the orchestrator outputs to the kubernetes values
 # otherwise, set the orchestrator outputs to empty strings
 output "orchestrator_id" {
-  value = var.enable_kubeflow ? uuid() : var.enable_tekton ? uuid() : ""
+  value = var.enable_kubeflow ? uuid() : var.enable_tekton ? uuid() : var.enable_kubernetes ? uuid() : ""
 }
 output "orchestrator_flavor" {
-  value = var.enable_kubeflow ? "kubeflow" : var.enable_tekton ? "tekton" : ""
+  value = var.enable_kubeflow ? "kubeflow" : var.enable_tekton ? "tekton" : var.enable_kubernetes ? "kubernetes" : ""
 }
 output "orchestrator_name" {
-  value = var.enable_kubeflow ? "eks_kubeflow_orchestrator" : var.enable_tekton ? "eks_tekton_orchestrator" : ""
+  value = var.enable_kubeflow ? "eks_kubeflow_orchestrator" : var.enable_tekton ? "eks_tekton_orchestrator" : var.enable_kubernetes ? "eks_kubernetes_orchestrator" : ""
 }
 output "orchestrator_configuration" {
   value = var.enable_kubeflow ? jsonencode({
@@ -55,6 +56,9 @@ output "orchestrator_configuration" {
     synchronous        = true
   }) : var.enable_tekton ? jsonencode({
     kubernetes_context = "terraform"
+  }) : var.enable_kubernetes ? jsonencode({
+    kubernetes_context = "terraform"
+    synchronous        = true
   }) : ""
 }
 
@@ -142,6 +146,9 @@ output "tekton-pipelines-ui-URL" {
 # outputs for the MLflow tracking server
 output "mlflow-tracking-URL" {
   value = var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : null
+}
+output "mlflow-bucket" {
+  value = (var.enable_mlflow && var.mlflow-s3-bucket == "")? "mlflow-s3-${random_string.mlflow_bucket_suffix.result}": ""
 }
 
 # output for kserve model deployer
