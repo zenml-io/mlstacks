@@ -15,7 +15,7 @@ module "mlflow" {
   # details about the mlflow deployment
   chart_version           = local.mlflow.version
   htpasswd                = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
-  ingress_host            = local.mlflow.ingress_host
+  ingress_host            = "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-hostname}}"
   artifact_Proxied_Access = local.mlflow.artifact_Proxied_Access
   artifact_S3             = local.mlflow.artifact_S3
   artifact_S3_Bucket      = var.mlflow-s3-bucket == "" ? aws_s3_bucket.mlflow-bucket[0].bucket : var.mlflow-s3-bucket

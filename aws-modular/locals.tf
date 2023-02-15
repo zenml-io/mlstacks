@@ -49,7 +49,7 @@ locals {
     artifact_Proxied_Access = "false"
     artifact_S3             = "true"
     
-    ingress_host       = "mlflow.example.com"
+    ingress_host_prefix       = "mlflow"
   }
 
   kserve = {
