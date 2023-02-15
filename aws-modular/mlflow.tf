@@ -6,7 +6,7 @@ module "mlflow" {
 
   # run only after the eks cluster, cert-manager and nginx-ingress are set up
   depends_on = [
-    module.eks,
+    aws_eks_cluster.cluster,
     null_resource.configure-local-kubectl,
     module.cert-manager,
     module.nginx-ingress

@@ -7,7 +7,7 @@ module "seldon" {
 
   # run only after the eks cluster and istio are set up
   depends_on = [
-    module.eks,
+    aws_eks_cluster.cluster,
     null_resource.configure-local-kubectl,
     module.istio
   ]

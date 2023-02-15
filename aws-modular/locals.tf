@@ -1,7 +1,7 @@
 # config values to use across the module
 locals {
   prefix = "mystack"
-  region = "us-east-1"
+  region = "eu-west-1"
   eks = {
     cluster_name = "mycluster"
     # important to use 1.22 or above due to a bug with Istio in older versions

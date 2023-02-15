@@ -5,7 +5,7 @@ module "kserve" {
   count = var.enable_kserve ? 1 : 0
 
   depends_on = [
-    module.eks,
+    aws_eks_cluster.cluster,
     null_resource.configure-local-kubectl,
     module.cert-manager,
     module.istio
@@ -106,6 +106,6 @@ resource "kubernetes_role_binding_v1" "k8s-kserve" {
 
   depends_on = [
     module.kserve,
-    module.eks,
+    aws_eks_cluster.cluster,
   ]
 }

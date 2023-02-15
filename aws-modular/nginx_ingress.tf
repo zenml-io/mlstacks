@@ -6,7 +6,7 @@ module "nginx-ingress" {
 
   # run only after the gke cluster is set up
   depends_on = [
-    module.eks,
+    aws_eks_cluster.cluster,
     null_resource.configure-local-kubectl
   ]
 

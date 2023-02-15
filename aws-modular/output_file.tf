@@ -33,19 +33,19 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: kubeflow
         name: eks_kubeflow_orchestrator
-        configuration: {"kubernetes_context": "terraform", "synchronous": True}
+        configuration: {"kubernetes_context": "${aws_eks_cluster.cluster[0].arn}", "synchronous": True}
 %{else}
 %{if var.enable_tekton}
         id: ${uuid()}
         flavor: tekton
         name: eks_tekton_orchestrator
-        configuration: {"kubernetes_context": "terraform"}
+        configuration: {"kubernetes_context": "${aws_eks_cluster.cluster[0].arn}"}
 %{else}
 %{if var.enable_kubernetes}
         id: ${uuid()}
         flavor: kubernetes
         name: eks_kubernetes_orchestrator
-        configuration: {"kubernetes_context": "terraform", "synchronous": True}
+        configuration: {"kubernetes_context": "${aws_eks_cluster.cluster[0].arn}", "synchronous": True}
 %{else}
         id: ${uuid()}
         flavor: local
@@ -76,14 +76,14 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: kserve
         name: eks_kserve_model_deployer
-        configuration: {"kubernetes_context": "terraform", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${module.kserve[0].kserve-base-URL}", "secret": "aws_kserve_secret"}
+        configuration: {"kubernetes_context": "${aws_eks_cluster.cluster[0].arn}", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${module.kserve[0].kserve-base-URL}", "secret": "aws_kserve_secret"}
 %{endif}
 %{if var.enable_seldon}
       model_deployer:
         id: ${uuid()}
         flavor: seldon
         name: eks_seldon_model_deployer
-        configuration: {"kubernetes_context": "terraform", "kubernetes_namespace": "${local.seldon.workloads_namespace}", "base_url": "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"}}
+        configuration: {"kubernetes_context": "${aws_eks_cluster.cluster[0].arn}", "kubernetes_namespace": "${local.seldon.workloads_namespace}", "base_url": "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"}}
 %{endif}
     ADD
   filename = "./aws_modular_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
