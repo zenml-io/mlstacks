@@ -1,9 +1,9 @@
 # enable services
-variable "enable_s3" {
+variable "enable_artifact_store" {
   description = "Enable S3 deployment"
   default     = false
 }
-variable "enable_ecr" {
+variable "enable_container_registry" {
   description = "Enable ECR deployment"
   default     = false
 }

@@ -8,7 +8,7 @@ resource "local_file" "stack_file" {
     stack_name: aws_modular_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}
     components:
       artifact_store:
-%{if var.enable_s3}}      
+%{if var.enable_artifact_store}}      
         id: ${uuid()}
         flavor: s3
         name: s3_artifact_store
@@ -20,7 +20,7 @@ resource "local_file" "stack_file" {
         configuration: {}
 %{endif}
 
-%{if var.enable_ecr}
+%{if var.enable_container_registry}
       container_registry:
         id: ${uuid()}
         flavor: aws

@@ -6,16 +6,16 @@ output "eks-cluster-name" {
 # if s3 is enabled, set the artifact store outputs to the s3 values
 # otherwise, set the artifact store outputs to empty strings
 output "artifact_store_id" {
-  value = var.enable_s3 ? uuid() : ""
+  value = var.enable_artifact_store ? uuid() : ""
 }
 output "artifact_store_flavor" {
-  value = var.enable_s3 ? "s3" : ""
+  value = var.enable_artifact_store ? "s3" : ""
 }
 output "artifact_store_name" {
-  value = var.enable_s3 ? "s3_artifact_store" : ""
+  value = var.enable_artifact_store ? "s3_artifact_store" : ""
 }
 output "artifact_store_configuration" {
-  value = var.enable_s3 ? jsonencode({
+  value = var.enable_artifact_store ? jsonencode({
     path = "s3://${aws_s3_bucket.zenml-artifact-store[0].bucket}"
   }) : ""
 }
@@ -23,16 +23,16 @@ output "artifact_store_configuration" {
 # if ecr is enabled, set the container registry outputs to the ecr values
 # otherwise, set the container registry outputs to empty strings
 output "container_registry_id" {
-  value = var.enable_ecr ? uuid() : ""
+  value = var.enable_container_registry ? uuid() : ""
 }
 output "container_registry_flavor" {
-  value = var.enable_ecr ? "aws" : ""
+  value = var.enable_container_registry ? "aws" : ""
 }
 output "container_registry_name" {
-  value = var.enable_ecr ? "aws_container_registry" : ""
+  value = var.enable_container_registry ? "aws_container_registry" : ""
 }
 output "container_registry_configuration" {
-  value = var.enable_ecr ? jsonencode({
+  value = var.enable_container_registry ? jsonencode({
     uri = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com"
   }) : ""
 }
