@@ -61,9 +61,13 @@ data "google_client_config" "default" {}
 #     }
 #   }
 # }
-data "google_container_cluster" "my_cluster" {
-  name     = "${local.prefix}-${local.gke.cluster_name}"
-  location = local.region
+data "external" "get_cluster" {
+  program = ["bash", "${path.module}/get_cluster.sh"]
+  query = {
+    project_id = local.project_id
+    cluster_name = "${local.prefix}-${local.gke.cluster_name}"
+    region = local.region
+  }
 
   depends_on = [
     google_container_cluster.gke
@@ -82,8 +86,8 @@ resource "google_container_cluster" "gke" {
   node_locations     = ["${local.region}-a", "${local.region}-b", "${local.region}-c"]
   initial_node_count = 1
 
-  network = module.vpc.network_name
-  subnetwork = module.vpc.subnets_names[0]
+  network = module.vpc[0].network_name
+  subnetwork = module.vpc[0].subnets_names[0]
   ip_allocation_policy {
     cluster_secondary_range_name  = "gke-pods"
     services_secondary_range_name = "gke-services"
