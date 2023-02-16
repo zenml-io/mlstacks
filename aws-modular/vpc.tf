@@ -1,6 +1,6 @@
 # VPC infra using https://github.com/terraform-aws-modules/terraform-aws-vpc
 module "vpc" {
-  count = local.enable_eks? 1 : 0
+  count   = local.enable_eks ? 1 : 0
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
 

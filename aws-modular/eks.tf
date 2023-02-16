@@ -1,9 +1,9 @@
 # eks module to creater a cluster
 # newer versions of it had some error so going with v17.23.0 for now
 locals {
-  enable_eks = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
-            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
-            var.enable_zenml)
+  enable_eks = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
+    var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+  var.enable_zenml)
 }
 
 # module "eks" {
@@ -87,8 +87,8 @@ resource "aws_eks_node_group" "nodegroup" {
 resource "aws_iam_role" "ng" {
   count = local.enable_eks ? 1 : 0
 
-  name_prefix           = "${local.prefix}-${local.eks.cluster_name}-ng"
-  assume_role_policy    = jsonencode({
+  name_prefix = "${local.prefix}-${local.eks.cluster_name}-ng"
+  assume_role_policy = jsonencode({
     Statement = [{
       Action = "sts:AssumeRole"
       Effect = "Allow"
@@ -132,10 +132,10 @@ resource "aws_eks_cluster" "cluster" {
   version = local.eks.cluster_version
 
   vpc_config {
-    endpoint_public_access = true
+    endpoint_public_access  = true
     endpoint_private_access = false
-    subnet_ids = module.vpc[0].private_subnets
-    public_access_cidrs = ["0.0.0.0/0"]
+    subnet_ids              = module.vpc[0].private_subnets
+    public_access_cidrs     = ["0.0.0.0/0"]
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
@@ -228,15 +228,15 @@ data "aws_iam_policy_document" "cluster_assume_role_policy" {
 
 data "aws_partition" "current" {}
 locals {
-  policy_arn_prefix = "arn:${data.aws_partition.current.partition}:iam::aws:policy"
-  cluster_iam_role_name = local.enable_eks? aws_iam_role.cluster[0].name : ""
+  policy_arn_prefix     = "arn:${data.aws_partition.current.partition}:iam::aws:policy"
+  cluster_iam_role_name = local.enable_eks ? aws_iam_role.cluster[0].name : ""
 }
 
 data "external" "get_cluster_info" {
   program = ["bash", "${path.module}/get_cluster_info.sh"]
   query = {
     cluster_name = "${local.prefix}-${local.eks.cluster_name}"
-    region = local.region
+    region       = local.region
   }
 
   depends_on = [
@@ -248,7 +248,7 @@ data "external" "get_cluster_auth" {
   program = ["bash", "${path.module}/get_cluster_token.sh"]
   query = {
     cluster_name = "${local.prefix}-${local.eks.cluster_name}"
-    region = local.region
+    region       = local.region
   }
 
   depends_on = [

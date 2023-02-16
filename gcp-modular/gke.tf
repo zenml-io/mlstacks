@@ -3,7 +3,7 @@ data "google_client_config" "default" {}
 #   count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
 #             var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
 #             var.enable_zenml)? 1: 0
-          
+
 #   depends_on = [
 #     google_project_service.compute_engine_api
 #   ]
@@ -64,9 +64,9 @@ data "google_client_config" "default" {}
 data "external" "get_cluster" {
   program = ["bash", "${path.module}/get_cluster.sh"]
   query = {
-    project_id = local.project_id
+    project_id   = local.project_id
     cluster_name = "${local.prefix}-${local.gke.cluster_name}"
-    region = local.region
+    region       = local.region
   }
 
   depends_on = [
@@ -75,18 +75,18 @@ data "external" "get_cluster" {
 }
 
 resource "google_container_cluster" "gke" {
-  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
-            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
-            var.enable_zenml)? 1: 0
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
+    var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+  var.enable_zenml) ? 1 : 0
 
-  name               = "${local.prefix}-${local.gke.cluster_name}"
-  project            = local.project_id
+  name    = "${local.prefix}-${local.gke.cluster_name}"
+  project = local.project_id
 
   location           = local.region
   node_locations     = ["${local.region}-a", "${local.region}-b", "${local.region}-c"]
   initial_node_count = 1
 
-  network = module.vpc[0].network_name
+  network    = module.vpc[0].network_name
   subnetwork = module.vpc[0].subnets_names[0]
   ip_allocation_policy {
     cluster_secondary_range_name  = "gke-pods"
@@ -94,7 +94,7 @@ resource "google_container_cluster" "gke" {
   }
   node_config {
     machine_type = "e2-standard-8"
-    
+
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
     service_account = google_service_account.gke-service-account[0].email
     oauth_scopes = [
@@ -113,16 +113,16 @@ resource "google_container_cluster" "gke" {
 
 # service account for GKE nodes
 resource "google_service_account" "gke-service-account" {
-  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
-            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
-            var.enable_zenml)? 1: 0
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
+    var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+  var.enable_zenml) ? 1 : 0
   account_id   = "${local.prefix}-${local.gke.service_account_name}"
   project      = local.project_id
   display_name = "Terraform GKE SA"
 }
 
 resource "google_project_iam_binding" "container-registry" {
-  count = length(google_container_cluster.gke)
+  count   = length(google_container_cluster.gke)
   project = local.project_id
   role    = "roles/containerregistry.ServiceAgent"
 
@@ -132,9 +132,9 @@ resource "google_project_iam_binding" "container-registry" {
 }
 
 resource "google_project_iam_binding" "secret-manager" {
-  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
-            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
-            var.enable_zenml)? 1: 0
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
+    var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+  var.enable_zenml) ? 1 : 0
   project = local.project_id
   role    = "roles/secretmanager.admin"
 
@@ -144,9 +144,9 @@ resource "google_project_iam_binding" "secret-manager" {
 }
 
 resource "google_project_iam_binding" "cloudsql" {
-  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
-            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
-            var.enable_zenml)? 1: 0
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
+    var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+  var.enable_zenml) ? 1 : 0
   project = local.project_id
   role    = "roles/cloudsql.admin"
 
@@ -156,9 +156,9 @@ resource "google_project_iam_binding" "cloudsql" {
 }
 
 resource "google_project_iam_binding" "storageadmin" {
-  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
-            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
-            var.enable_zenml)? 1: 0
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
+    var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+  var.enable_zenml) ? 1 : 0
   project = local.project_id
   role    = "roles/storage.admin"
 
@@ -168,9 +168,9 @@ resource "google_project_iam_binding" "storageadmin" {
 }
 
 resource "google_project_iam_binding" "vertex-ai-user" {
-  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
-            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
-            var.enable_zenml)? 1: 0
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
+    var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+  var.enable_zenml) ? 1 : 0
   project = local.project_id
   role    = "roles/aiplatform.user"
 

@@ -40,7 +40,7 @@ output "orchestrator_id" {
   value = var.enable_kubeflow ? uuid() : var.enable_tekton ? uuid() : var.enable_kubernetes ? uuid() : ""
 }
 output "orchestrator_flavor" {
-  value = var.enable_kubeflow ? "kubeflow" : var.enable_tekton ? "tekton" :  var.enable_kubernetes ? "kubernetes" : ""
+  value = var.enable_kubeflow ? "kubeflow" : var.enable_tekton ? "tekton" : var.enable_kubernetes ? "kubernetes" : ""
 }
 output "orchestrator_name" {
   value = var.enable_kubeflow ? "gke_kubeflow_orchestrator" : var.enable_tekton ? "gke_tekton_orchestrator" : var.enable_kubernetes ? "gke_kubernetes_orchestrator" : ""
@@ -49,9 +49,9 @@ output "orchestrator_configuration" {
   value = var.enable_kubeflow ? jsonencode({
     kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
     synchronous        = true
-  }) : var.enable_tekton ? jsonencode({
+    }) : var.enable_tekton ? jsonencode({
     kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
-  }) : var.enable_kubernetes ? jsonencode({
+    }) : var.enable_kubernetes ? jsonencode({
     kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
     synchronous        = true
   }) : ""
@@ -74,9 +74,9 @@ output "experiment_tracker_name" {
 }
 output "experiment_tracker_configuration" {
   value = var.enable_mlflow ? jsonencode({
-    tracking_uri       = module.mlflow[0].mlflow-tracking-URL
-    tracking_username  = var.mlflow-username
-    tracking_password  = var.mlflow-password
+    tracking_uri      = module.mlflow[0].mlflow-tracking-URL
+    tracking_username = var.mlflow-username
+    tracking_password = var.mlflow-password
   }) : ""
 }
 
@@ -111,13 +111,13 @@ output "model_deployer_name" {
 }
 output "model_deployer_configuration" {
   value = var.enable_kserve ? jsonencode({
-    kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
+    kubernetes_context   = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
     kubernetes_namespace = local.kserve.workloads_namespace
-    base_url = module.kserve[0].kserve-base-URL
-  }) : var.enable_seldon ? jsonencode({
-    kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
+    base_url             = module.kserve[0].kserve-base-URL
+    }) : var.enable_seldon ? jsonencode({
+    kubernetes_context   = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
     kubernetes_namespace = local.seldon.workloads_namespace
-    base_url = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
+    base_url             = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
   }) : ""
 }
 
@@ -128,19 +128,19 @@ output "project-id" {
 
 # output for the GKE cluster
 output "gke-cluster-name" {
-  value = length(google_container_cluster.gke) > 0? "${local.prefix}-${local.gke.cluster_name}": ""
+  value = length(google_container_cluster.gke) > 0 ? "${local.prefix}-${local.gke.cluster_name}" : ""
 }
 
 # output for the GCS bucket
 output "gcs-bucket-path" {
-  value       = var.enable_artifact_store? "gs://${google_storage_bucket.artifact-store[0].name}" : ""
+  value       = var.enable_artifact_store ? "gs://${google_storage_bucket.artifact-store[0].name}" : ""
   description = "The GCS bucket path for storing your artifacts"
 }
 
 
 # output for container registry
 output "container-registry-URI" {
-  value = var.enable_container_registry? "${local.container_registry.region}.gcr.io/${local.project_id}" : ""
+  value = var.enable_container_registry ? "${local.container_registry.region}.gcr.io/${local.project_id}" : ""
 }
 
 # nginx ingress hostname
@@ -167,7 +167,7 @@ output "mlflow-tracking-URL" {
   value = var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : null
 }
 output "mlflow-bucket" {
-  value = (var.enable_mlflow && var.mlflow-gcs-bucket == "")? "mlflow-gcs-${random_string.mlflow_bucket_suffix.result}": ""
+  value = (var.enable_mlflow && var.mlflow-gcs-bucket == "") ? "mlflow-gcs-${random_string.mlflow_bucket_suffix.result}" : ""
 }
 
 # output for kserve model deployer

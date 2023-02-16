@@ -54,9 +54,9 @@ output "orchestrator_configuration" {
   value = var.enable_kubeflow ? jsonencode({
     kubernetes_context = "${aws_eks_cluster.cluster[0].arn}"
     synchronous        = true
-  }) : var.enable_tekton ? jsonencode({
+    }) : var.enable_tekton ? jsonencode({
     kubernetes_context = "${aws_eks_cluster.cluster[0].arn}"
-  }) : var.enable_kubernetes ? jsonencode({
+    }) : var.enable_kubernetes ? jsonencode({
     kubernetes_context = "${aws_eks_cluster.cluster[0].arn}"
     synchronous        = true
   }) : ""
@@ -113,16 +113,16 @@ output "model_deployer_name" {
 }
 output "model_deployer_configuration" {
   value = var.enable_kserve ? jsonencode({
-    kubernetes_context = "${aws_eks_cluster.cluster[0].arn}"
+    kubernetes_context   = "${aws_eks_cluster.cluster[0].arn}"
     kubernetes_namespace = local.kserve.workloads_namespace
-    base_url = module.kserve[0].kserve-base-URL
-    secret = "aws_kserve_secret"
-  }) : var.enable_seldon ? jsonencode({
-    kubernetes_context = "${aws_eks_cluster.cluster[0].arn}"
+    base_url             = module.kserve[0].kserve-base-URL
+    secret               = "aws_kserve_secret"
+    }) : var.enable_seldon ? jsonencode({
+    kubernetes_context   = "${aws_eks_cluster.cluster[0].arn}"
     kubernetes_namespace = local.seldon.workloads_namespace
-    base_url = "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"
+    base_url             = "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"
   }) : ""
-} 
+}
 
 # nginx ingress hostname
 output "nginx-ingress-hostname" {
@@ -148,7 +148,7 @@ output "mlflow-tracking-URL" {
   value = var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : null
 }
 output "mlflow-bucket" {
-  value = (var.enable_mlflow && var.mlflow-s3-bucket == "")? "mlflow-s3-${random_string.mlflow_bucket_suffix.result}": ""
+  value = (var.enable_mlflow && var.mlflow-s3-bucket == "") ? "mlflow-s3-${random_string.mlflow_bucket_suffix.result}" : ""
 }
 
 # output for kserve model deployer

@@ -1,7 +1,7 @@
 module "vpc" {
-  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes || 
-            var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
-            var.enable_zenml)? 1: 0
+  count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
+    var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+  var.enable_zenml) ? 1 : 0
   source  = "terraform-google-modules/network/google"
   version = "~> 4.0"
 

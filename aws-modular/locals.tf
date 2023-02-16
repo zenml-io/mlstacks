@@ -48,8 +48,8 @@ locals {
     version                 = "0.7.13"
     artifact_Proxied_Access = "false"
     artifact_S3             = "true"
-    
-    ingress_host_prefix       = "mlflow"
+
+    ingress_host_prefix = "mlflow"
   }
 
   kserve = {

@@ -3,7 +3,7 @@
 
 # enable secret manager
 resource "google_project_service" "secret_manager" {
-  count = var.enable_secrets_manager ? 1 : 0
+  count   = var.enable_secrets_manager ? 1 : 0
   project = local.project_id
   service = "secretmanager.googleapis.com"
 
