@@ -23,7 +23,7 @@ resource "local_file" "stack_file_mlflow" {
         id: ${uuid()}
         flavor: vertex
         name: vertex_ai_orchestrator
-        configuration: {"workload_service_account": "${google_service_account.sa.email}", "project": "${local.project_id}", "location": "${local.vertex_ai.region}", "labels": "{}"}
+        configuration: {"workload_service_account": "${google_service_account.sa.email}", "project": "${local.project_id}", "location": "${local.vertex_ai.region}"}
       secrets_manager:
         id: ${uuid()}
         flavor: gcp
@@ -61,7 +61,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: vertex
         name: vertex_ai_orchestrator
-        configuration: {"workload_service_account": "${google_service_account.sa.email}", "project": "${local.project_id}", "location": "${local.vertex_ai.region}", "labels": "{}"}
+        configuration: {"workload_service_account": "${google_service_account.sa.email}", "project": "${local.project_id}", "location": "${local.vertex_ai.region}"}
       secrets_manager:
         id: ${uuid()}
         flavor: gcp
