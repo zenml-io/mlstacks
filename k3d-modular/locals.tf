@@ -52,8 +52,6 @@ locals {
     #
     artifact_Proxied_Access = "true"
     ingress_host_prefix     = "mlflow"
-    # if not set, the same bucket used by the artifact store will be used.
-    minio_store_bucket = ""
   }
 
   kserve = {

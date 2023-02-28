@@ -4,7 +4,7 @@ locals {
 
   # if you're using europe-west1, please make the following modification in
   # the gke.tf file:
-  # For zones in module.gke, replace "${local.region}-a" to "${local.region}-d"
+  # For zones in google_container_cluster.gke, replace "${local.region}-a" to "${local.region}-d"
   # This is because "europe-west1-a" doesn't exist for some reason.
   region     = "us-east4"
   project_id = "zenml-ci"
@@ -57,9 +57,7 @@ locals {
     version                 = "0.7.13"
     artifact_Proxied_Access = "false"
     artifact_GCS            = "true"
-    # if not set, the bucket created as part of the deployment will be used
-    artifact_GCS_Bucket = ""
-    ingress_host_prefix = "mlflow"
+    ingress_host_prefix     = "mlflow"
   }
 
   kserve = {

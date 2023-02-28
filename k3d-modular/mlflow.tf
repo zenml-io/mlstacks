@@ -20,7 +20,7 @@ module "mlflow" {
   htpasswd                 = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
   artifact_Proxied_Access  = local.mlflow.artifact_Proxied_Access
   artifact_S3              = "true"
-  artifact_S3_Bucket       = local.mlflow.minio_store_bucket == "" ? "${local.minio.zenml_minio_store_bucket}/mlflow" : local.mlflow.minio_store_bucket
+  artifact_S3_Bucket       = var.mlflow_minio_bucket == "" ? minio_s3_bucket.mlflow_bucket[0].bucket : var.mlflow_minio_bucket
   artifact_S3_Access_Key   = var.zenml-minio-store-access-key
   artifact_S3_Secret_Key   = var.zenml-minio-store-secret-key
   artifact_S3_Endpoint_URL = module.minio_server[0].artifact_S3_Endpoint_URL
@@ -30,12 +30,17 @@ resource "htpasswd_password" "hash" {
   password = var.mlflow-password
 }
 
+resource "random_string" "mlflow_bucket_suffix" {
+  length  = 6
+  special = false
+  upper   = false
+}
 
 # Create a bucket for MLFlow to use
 resource "minio_s3_bucket" "mlflow_bucket" {
-  count = (var.enable_mlflow && local.mlflow.minio_store_bucket != "") ? 1 : 0
+  count = (var.enable_mlflow && var.mlflow_minio_bucket == "") ? 1 : 0
 
-  bucket        = local.mlflow.minio_store_bucket
+  bucket        = "mlflow-minio-${random_string.mlflow_bucket_suffix.result}"
   force_destroy = true
 
   depends_on = [

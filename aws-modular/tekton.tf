@@ -7,7 +7,7 @@ module "tekton-pipelines" {
   # run only after the gke cluster is set up and cert-manager and nginx-ingress
   # are installed 
   depends_on = [
-    module.eks,
+    aws_eks_cluster.cluster,
     null_resource.configure-local-kubectl,
     module.cert-manager,
     module.nginx-ingress,

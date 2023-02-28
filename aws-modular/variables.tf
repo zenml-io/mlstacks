@@ -1,23 +1,39 @@
 # enable services
+variable "enable_artifact_store" {
+  description = "Enable S3 deployment"
+  default     = false
+}
+variable "enable_container_registry" {
+  description = "Enable ECR deployment"
+  default     = false
+}
+variable "enable_secrets_manager" {
+  description = "Enable Secret Manager deployment"
+  default     = false
+}
 variable "enable_kubeflow" {
   description = "Enable Kubeflow deployment"
-  default     = true
+  default     = false
 }
 variable "enable_tekton" {
   description = "Enable Tekton deployment"
-  default     = true
+  default     = false
+}
+variable "enable_kubernetes" {
+  description = "Enable Kubernetes deployment"
+  default     = false
 }
 variable "enable_mlflow" {
   description = "Enable MLflow deployment"
-  default     = true
+  default     = false
 }
 variable "enable_kserve" {
   description = "Enable KServe deployment"
-  default     = true
+  default     = false
 }
 variable "enable_seldon" {
   description = "Enable Seldon deployment"
-  default     = true
+  default     = false
 }
 variable "enable_zenml" {
   description = "Enable ZenML deployment"
@@ -44,6 +60,10 @@ variable "mlflow-password" {
   description = "The password for the MLflow Tracking Server"
   default     = "supersafepassword"
   type        = string
+}
+variable "mlflow-s3-bucket" {
+  description = "The name of the S3 bucket to use for MLflow artifact store"
+  default     = ""
 }
 
 # variables for creating a ZenML stack configuration file

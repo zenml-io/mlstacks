@@ -1,7 +1,7 @@
 # config values to use across the module
 locals {
   prefix = "mystack"
-  region = "us-east-1"
+  region = "eu-west-1"
   eks = {
     cluster_name = "mycluster"
     # important to use 1.22 or above due to a bug with Istio in older versions
@@ -48,9 +48,8 @@ locals {
     version                 = "0.7.13"
     artifact_Proxied_Access = "false"
     artifact_S3             = "true"
-    # if not set, the bucket created as part of the deployment will be used
-    artifact_S3_Bucket = ""
-    ingress_host       = "mlflow.example.com"
+
+    ingress_host_prefix = "mlflow"
   }
 
   kserve = {

@@ -6,7 +6,7 @@ module "zenml" {
 
   # run only after the gke cluster, cert-manager and nginx-ingress are set up
   depends_on = [
-    module.gke,
+    google_container_cluster.gke,
     null_resource.configure-local-kubectl,
     module.cert-manager,
     module.nginx-ingress

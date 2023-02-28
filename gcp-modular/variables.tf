@@ -1,23 +1,39 @@
 # enable services
+variable "enable_artifact_store" {
+  description = "Enable GCS deployment"
+  default     = false
+}
+variable "enable_container_registry" {
+  description = "Enable GCR deployment"
+  default     = false
+}
+variable "enable_secrets_manager" {
+  description = "Enable Secret Manager deployment"
+  default     = false
+}
 variable "enable_kubeflow" {
   description = "Enable Kubeflow deployment"
-  default     = true
+  default     = false
 }
 variable "enable_tekton" {
   description = "Enable Tekton deployment"
-  default     = true
+  default     = false
+}
+variable "enable_kubernetes" {
+  description = "Enable Kubernetes deployment"
+  default     = false
 }
 variable "enable_mlflow" {
   description = "Enable MLflow deployment"
-  default     = true
+  default     = false
 }
 variable "enable_kserve" {
   description = "Enable KServe deployment"
-  default     = true
+  default     = false
 }
 variable "enable_seldon" {
   description = "Enable Seldon deployment"
-  default     = true
+  default     = false
 }
 variable "enable_zenml" {
   description = "Enable ZenML deployment"
@@ -25,6 +41,10 @@ variable "enable_zenml" {
 }
 
 # variables for the MLflow tracking server
+variable "mlflow-gcs-bucket" {
+  description = "The name of the GCS bucket to use for MLflow artifact store"
+  default     = ""
+}
 variable "mlflow-username" {
   description = "The username for the MLflow Tracking Server"
   default     = "admin"

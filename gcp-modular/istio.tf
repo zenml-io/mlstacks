@@ -5,7 +5,7 @@ module "istio" {
   count = (var.enable_kserve || var.enable_seldon) ? 1 : 0
 
   depends_on = [
-    module.gke,
+    google_container_cluster.gke,
     null_resource.configure-local-kubectl,
   ]
 

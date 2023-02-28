@@ -3,6 +3,7 @@
 
 # enable secret manager
 resource "google_project_service" "secret_manager" {
+  count   = var.enable_secrets_manager ? 1 : 0
   project = local.project_id
   service = "secretmanager.googleapis.com"
 
@@ -11,6 +12,7 @@ resource "google_project_service" "secret_manager" {
 
 # enable container registry
 resource "google_project_service" "container_registry" {
+  count   = var.enable_container_registry ? 1 : 0
   project = local.project_id
   service = "containerregistry.googleapis.com"
 
