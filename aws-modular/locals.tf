@@ -1,23 +1,29 @@
+resource "random_string" "unique" {
+  length  = 5
+  special = false
+  upper   = false
+}
+
 # config values to use across the module
 locals {
-  prefix = "mystack"
+  prefix = "zenml"
   region = "eu-west-1"
   eks = {
-    cluster_name = "mycluster"
+    cluster_name = "mycluster-${random_string.unique.result}"
     # important to use 1.22 or above due to a bug with Istio in older versions
     cluster_version     = "1.22"
     workloads_namespace = "zenml-workloads-k8s"
   }
   vpc = {
-    name = "vpc"
+    name = "vpc-${random_string.unique.result}"
   }
 
   ecr = {
-    name = "container-registry"
+    name = var.repo_name == "" ? "container-registry-${random_string.unique.result}" : var.repo_name
   }
 
   s3 = {
-    name = "store"
+    name = var.bucket_name == "" ? "store-${random_string.unique.result}" : var.bucket_name
   }
 
   cert_manager = {
