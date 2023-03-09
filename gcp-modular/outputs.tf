@@ -4,7 +4,7 @@ output "artifact_store_id" {
   value = var.enable_artifact_store ? uuid() : ""
 }
 output "artifact_store_flavor" {
-  value = var.enable_artifact_store ? "gcs" : ""
+  value = var.enable_artifact_store ? "gcp" : ""
 }
 output "artifact_store_name" {
   value = var.enable_artifact_store ? "gcs_artifact_store" : ""
