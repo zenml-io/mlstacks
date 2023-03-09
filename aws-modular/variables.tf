@@ -49,7 +49,10 @@ variable "bucket_name" {
   description = "The name of the S3 bucket"
   default     = ""
 }
-
+variable "region" {
+  description = "The region to deploy resources to"
+  default     = "eu-west-1"
+}
 
 # variables for the MLflow tracking server
 variable "mlflow-artifact-S3-access-key" {

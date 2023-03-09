@@ -25,7 +25,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: aws
         name: aws_container_registry
-        configuration: {"uri": "${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com"}
+        configuration: {"uri": "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com"}
 %{endif}
 
       orchestrator:
@@ -60,7 +60,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: aws
         name: aws_secrets_manager
-        configuration: {"region_name": "${local.region}"}
+        configuration: {"region_name": "${var.region}"}
 %{endif}
 
 %{if var.enable_mlflow}

@@ -33,7 +33,7 @@ output "container_registry_name" {
 }
 output "container_registry_configuration" {
   value = var.enable_container_registry ? jsonencode({
-    uri = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${local.region}.amazonaws.com"
+    uri = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com"
   }) : ""
 }
 
@@ -95,7 +95,7 @@ output "secrets_manager_name" {
 }
 output "secrets_manager_configuration" {
   value = var.enable_secrets_manager ? jsonencode({
-    region_name = local.region
+    region_name = var.region
   }) : ""
 }
 

@@ -7,7 +7,7 @@ resource "random_string" "unique" {
 # config values to use across the module
 locals {
   prefix = "zenml"
-  region = "eu-west-1"
+
   eks = {
     cluster_name = "mycluster-${random_string.unique.result}"
     # important to use 1.22 or above due to a bug with Istio in older versions
