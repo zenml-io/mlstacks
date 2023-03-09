@@ -28,7 +28,7 @@ output "container_registry_name" {
 }
 output "container_registry_configuration" {
   value = var.enable_container_registry ? jsonencode({
-    uri = "${local.container_registry.region}.gcr.io/${local.project_id}"
+    uri = "${local.container_registry.region}.gcr.io/${var.project_id}"
   }) : ""
 }
 
@@ -47,12 +47,12 @@ output "orchestrator_name" {
 }
 output "orchestrator_configuration" {
   value = var.enable_kubeflow ? jsonencode({
-    kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
+    kubernetes_context = "gke_${var.project_id}_${var.region}_${local.prefix}-${local.gke.cluster_name}"
     synchronous        = true
     }) : var.enable_tekton ? jsonencode({
-    kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
+    kubernetes_context = "gke_${var.project_id}_${var.region}_${local.prefix}-${local.gke.cluster_name}"
     }) : var.enable_kubernetes ? jsonencode({
-    kubernetes_context = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
+    kubernetes_context = "gke_${var.project_id}_${var.region}_${local.prefix}-${local.gke.cluster_name}"
     synchronous        = true
   }) : ""
 
@@ -93,7 +93,7 @@ output "secrets_manager_name" {
 }
 output "secrets_manager_configuration" {
   value = var.enable_secrets_manager ? jsonencode({
-    project_id = local.project_id
+    project_id = var.project_id
   }) : ""
 }
 
@@ -111,11 +111,11 @@ output "model_deployer_name" {
 }
 output "model_deployer_configuration" {
   value = var.enable_kserve ? jsonencode({
-    kubernetes_context   = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
+    kubernetes_context   = "gke_${var.project_id}_${var.region}_${local.prefix}-${local.gke.cluster_name}"
     kubernetes_namespace = local.kserve.workloads_namespace
     base_url             = module.kserve[0].kserve-base-URL
     }) : var.enable_seldon ? jsonencode({
-    kubernetes_context   = "gke_${local.project_id}_${local.region}_${local.prefix}-${local.gke.cluster_name}"
+    kubernetes_context   = "gke_${var.project_id}_${var.region}_${local.prefix}-${local.gke.cluster_name}"
     kubernetes_namespace = local.seldon.workloads_namespace
     base_url             = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
   }) : ""
@@ -123,7 +123,7 @@ output "model_deployer_configuration" {
 
 # project id
 output "project-id" {
-  value = local.project_id
+  value = var.project_id
 }
 
 # output for the GKE cluster
@@ -140,7 +140,7 @@ output "gcs-bucket-path" {
 
 # output for container registry
 output "container-registry-URI" {
-  value = var.enable_container_registry ? "${local.container_registry.region}.gcr.io/${local.project_id}" : ""
+  value = var.enable_container_registry ? "${local.container_registry.region}.gcr.io/${var.project_id}" : ""
 }
 
 # nginx ingress hostname

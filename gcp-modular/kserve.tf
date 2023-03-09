@@ -116,14 +116,14 @@ resource "google_service_account" "kserve-service-account" {
   count = var.enable_kserve ? 1 : 0
 
   account_id   = "${local.prefix}-${local.kserve.service_account_name}"
-  project      = local.project_id
+  project      = var.project_id
   display_name = "Kserve SA"
 }
 resource "google_project_iam_binding" "kserve-storageviewer" {
 
   count = var.enable_kserve ? 1 : 0
 
-  project = local.project_id
+  project = var.project_id
   role    = "roles/storage.objectViewer"
 
   members = [
@@ -131,7 +131,7 @@ resource "google_project_iam_binding" "kserve-storageviewer" {
   ]
 }
 # resource "google_project_iam_binding" "kserve-container-registry" {
-#   project = local.project_id
+#   project = var.project_id
 #   role    = "roles/containerregistry.ServiceAgent"
 
 #   members = [

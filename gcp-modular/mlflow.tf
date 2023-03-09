@@ -30,7 +30,7 @@ resource "random_string" "mlflow_bucket_suffix" {
 resource "google_storage_bucket" "mlflow-bucket" {
   count    = (var.enable_mlflow && var.mlflow-gcs-bucket == "") ? 1 : 0
   name     = "mlflow-gcs-${random_string.mlflow_bucket_suffix.result}"
-  project  = local.project_id
+  project  = var.project_id
   location = local.gcs.location
 
   force_destroy = true
@@ -64,7 +64,7 @@ resource "google_service_account_iam_member" "mlflow-storage-access" {
 
   service_account_id = google_service_account.gke-service-account[0].name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${local.project_id}.svc.id.goog[mlflow/mlflow-tracking]"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[mlflow/mlflow-tracking]"
   depends_on = [
     module.mlflow
   ]

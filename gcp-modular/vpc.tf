@@ -5,19 +5,19 @@ module "vpc" {
   source  = "terraform-google-modules/network/google"
   version = "~> 4.0"
 
-  project_id   = local.project_id
+  project_id   = var.project_id
   network_name = "${local.prefix}-${local.vpc.name}"
 
   subnets = [
     {
       subnet_name   = "${local.prefix}-${local.vpc.name}-01"
       subnet_ip     = "11.12.10.0/24"
-      subnet_region = local.region
+      subnet_region = var.region
     },
     {
       subnet_name   = "${local.prefix}-${local.vpc.name}-02"
       subnet_ip     = "11.12.20.0/24"
-      subnet_region = local.region
+      subnet_region = var.region
     },
   ]
 
