@@ -72,7 +72,7 @@ variable "mlflow-password" {
   default     = "supersafepassword"
   type        = string
 }
-variable "mlflow-s3-bucket" {
+variable "mlflow_bucket" {
   description = "The name of the S3 bucket to use for MLflow artifact store"
   default     = ""
 }

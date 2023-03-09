@@ -148,7 +148,7 @@ output "mlflow-tracking-URL" {
   value = var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : null
 }
 output "mlflow-bucket" {
-  value = (var.enable_mlflow && var.mlflow-s3-bucket == "") ? "mlflow-s3-${random_string.mlflow_bucket_suffix.result}" : ""
+  value = (var.enable_mlflow && var.mlflow_bucket == "") ? "mlflow-s3-${random_string.mlflow_bucket_suffix.result}" : ""
 }
 
 # output for kserve model deployer
