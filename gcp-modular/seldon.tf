@@ -106,14 +106,14 @@ resource "google_service_account" "seldon-service-account" {
   count = var.enable_seldon ? 1 : 0
 
   account_id   = "${local.prefix}-${local.seldon.service_account_name}"
-  project      = local.project_id
+  project      = var.project_id
   display_name = "Seldon SA"
 }
 resource "google_project_iam_binding" "seldon-storageviewer" {
 
   count = var.enable_seldon ? 1 : 0
 
-  project = local.project_id
+  project = var.project_id
   role    = "roles/storage.objectViewer"
 
   members = [
@@ -121,7 +121,7 @@ resource "google_project_iam_binding" "seldon-storageviewer" {
   ]
 }
 # resource "google_project_iam_binding" "seldon-container-registry" {
-#   project = local.project_id
+#   project = var.project_id
 #   role    = "roles/containerregistry.ServiceAgent"
 
 #   members = [

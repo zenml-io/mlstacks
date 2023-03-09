@@ -48,7 +48,7 @@ resource "google_service_account_iam_member" "k8s-workload-access" {
   var.enable_zenml) ? 1 : 0
   service_account_id = google_service_account.gke-service-account[0].name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${local.project_id}.svc.id.goog[${kubernetes_namespace.k8s-workloads[0].metadata[0].name}/default]"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[${kubernetes_namespace.k8s-workloads[0].metadata[0].name}/default]"
   depends_on = [
     kubernetes_namespace.k8s-workloads,
   ]

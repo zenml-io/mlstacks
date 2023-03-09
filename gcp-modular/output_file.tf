@@ -25,7 +25,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: gcp
         name: gcr_container_registry
-        configuration: {"uri": "${local.container_registry.region}.gcr.io/${local.project_id}"}
+        configuration: {"uri": "${local.container_registry.region}.gcr.io/${var.project_id}"}
 %{endif}
 
       orchestrator:
@@ -60,7 +60,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: gcp
         name: gcp_secrets_manager
-        configuration: {"project_id": "${local.project_id}"}
+        configuration: {"project_id": "${var.project_id}"}
 %{endif}
 
 %{if var.enable_mlflow}

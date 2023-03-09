@@ -40,6 +40,20 @@ variable "enable_zenml" {
   default     = false
 }
 
+
+variable "repo_name" {
+  description = "The name of the container repository"
+  default     = ""
+}
+variable "bucket_name" {
+  description = "The name of the S3 bucket"
+  default     = ""
+}
+variable "region" {
+  description = "The region to deploy resources to"
+  default     = "eu-west-1"
+}
+
 # variables for the MLflow tracking server
 variable "mlflow-artifact-S3-access-key" {
   description = "Your AWS access key for using S3 as MLflow artifact store"
@@ -61,7 +75,7 @@ variable "mlflow-password" {
   default     = "supersafepassword"
   type        = string
 }
-variable "mlflow-s3-bucket" {
+variable "mlflow_bucket" {
   description = "The name of the S3 bucket to use for MLflow artifact store"
   default     = ""
 }

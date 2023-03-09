@@ -40,8 +40,22 @@ variable "enable_zenml" {
   default     = false
 }
 
+variable "bucket_name" {
+  description = "The name of the GCS bucket"
+  default     = ""
+}
+variable "region" {
+  description = "The region to deploy resources to"
+  default     = "us-central1"
+}
+variable "project_id" {
+  description = "The project ID to deploy resources to"
+  default     = ""
+}
+
+
 # variables for the MLflow tracking server
-variable "mlflow-gcs-bucket" {
+variable "mlflow_bucket" {
   description = "The name of the GCS bucket to use for MLflow artifact store"
   default     = ""
 }
