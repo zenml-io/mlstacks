@@ -44,7 +44,7 @@ Watch it below:
 | [gcp-airflow](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-airflow) | Managed Airflow using GCP Cloud Composer, GCS Bucket, GCR | A recipe that creates a Cloud Composer environment that enables a managed Airflow environment as orchestrator, a GCS artifact store and a GCR container registry |
 | [gcp-kubeflow-kserve](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-kubeflow-kserve) | Kubeflow on GKE, GCS Bucket, GCR, MLflow Tracking, KServe, Vertex | A recipe that creates a Kubeflow pipelines cluster as orchestrator, GCS artifact store, GCR container registry,  MLflow experiment tracker, KServe model deployer and option for Vertex AI as a step operator |
 | [gcp-minimal](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-minimal) | GKE, GCS Bucket, GCR, MLflow Tracking, Seldon | GCP specific recipe to showcase a production-grade MLOps Stack with a GKE orchestrator, GCS artifact store, GCR container repository, MLflow experiment tracker and Seldon Core model deployer |
-| [vertex-ai](https://github.com/zenml-io/mlops-stacks/tree/main/vertex-ai) | Vertex AI Pipelines, GCS Bucket, GCR and (optional) MLflow Tracking | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry and an optional MLflow experiment tracker |
+| [gcp-vertexai](https://github.com/zenml-io/mlops-stacks/tree/main/gcp-vertexai) | Vertex AI Pipelines, GCS Bucket, GCR and (optional) MLflow Tracking | A stack with a Vertex AI orchestrator, GCS artifact store, GCR container registry and an optional MLflow experiment tracker |
 
 ## 🙏 Association with ZenML
 
