@@ -44,7 +44,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 1. Pull this recipe to your local system.
 
     ```shell
-    zenml stack recipe pull vertex-ai
+    zenml stack recipe pull gcp-vertexai
     ```
 2. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
@@ -53,7 +53,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 5. 🚀 Deploy the recipe with this simple command.
 
     ```
-    zenml stack recipe deploy vertex-ai
+    zenml stack recipe deploy gcp-vertexai
     ```
 
     On the Vertex dashboard, under "Training" tab on the left, and under the "Custom Jobs" section, you will see that a dummy run gets created. This is done to trigger creation of a Vertex service agent and you can cancel and/or delete this job. 
