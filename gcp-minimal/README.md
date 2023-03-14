@@ -1,6 +1,6 @@
 # 🥙 GKE, GCS, MLflow and Seldon MLOps Stack Recipe 
 
-There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
+There can be many motivations behind taking your ML application setup to a cloud environment, from needing specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
 We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). This recipe, however, goes one step further. 
 
@@ -33,7 +33,7 @@ Before starting, you should know the values that you have to keep ready for use 
 
 ## 🧑‍🍳 Cooking the recipe
 
-It is not neccessary to use the MLOps stacks recipes presented here alongisde the
+It is not necessary to use the MLOps stacks recipes presented here alongside the
 [ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
 directly.
 
@@ -133,7 +133,7 @@ As mentioned above, you can still use the recipe without having using the `zenml
 
 2. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
 
-3. Initiliaze Terraform modules and download provider definitions.
+3. Initialize Terraform modules and download provider definitions.
     ```bash
     terraform init
     ```

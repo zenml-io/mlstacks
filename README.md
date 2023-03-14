@@ -50,7 +50,7 @@ Watch it below:
 
 [![maintained-by-zenml](https://user-images.githubusercontent.com/3348134/173032050-ad923313-f2ce-4583-b27a-afcaa8b355e2.png)](https://github.com/zenml-io/zenml)
 
-It is not neccessary to use the MLOps stacks recipes presented here alongisde the
+It is not necessary to use the MLOps stacks recipes presented here alongside the
 [ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
 directly.
 

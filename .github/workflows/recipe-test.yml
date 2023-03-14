@@ -27,6 +27,7 @@ jobs:
       with:
         files: "."
         config: ./.typos.toml
+
   aws_test:
     name: aws_test
     runs-on: ubuntu-latest

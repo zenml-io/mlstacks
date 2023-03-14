@@ -41,7 +41,7 @@ The `k3d.local_stores_path` variable is used to customize the path on your syste
 
 ## 🧑‍🍳 Cooking the recipe
 
-It is not necessary to use the MLOps stacks recipes presented here alongisde the
+It is not necessary to use the MLOps stacks recipes presented here alongside the
 [ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
 directly.
 
