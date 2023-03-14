@@ -1,4 +1,4 @@
-# eks module to creater a cluster
+# eks module to create a cluster
 # newer versions of it had some error so going with v17.23.0 for now
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
