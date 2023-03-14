@@ -39,6 +39,10 @@ variable "enable_zenml" {
   description = "Enable ZenML deployment"
   default     = false
 }
+variable "enable_orchestrator_sagemaker" {
+  description = "Enable SageMaker as orchestrator"
+  default     = true
+}
 
 
 variable "repo_name" {

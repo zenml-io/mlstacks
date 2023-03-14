@@ -40,15 +40,16 @@ output "container_registry_configuration" {
 # if kubeflow is enabled, set the orchestrator outputs to the kubeflow values
 # if tekton is enabled, set the orchestrator outputs to the tekton values
 # if kubernetes is enabled, set the orchestrator outputs to the kubernetes values
+# if sagemaker is enabled, set the orchestrator outputs to the sagemaker values
 # otherwise, set the orchestrator outputs to empty strings
 output "orchestrator_id" {
-  value = var.enable_kubeflow ? uuid() : var.enable_tekton ? uuid() : var.enable_kubernetes ? uuid() : ""
+  value = var.enable_kubeflow ? uuid() : var.enable_tekton ? uuid() : var.enable_kubernetes ? uuid() : var.enable_orchestrator_sagemaker ? uuid() : ""
 }
 output "orchestrator_flavor" {
-  value = var.enable_kubeflow ? "kubeflow" : var.enable_tekton ? "tekton" : var.enable_kubernetes ? "kubernetes" : ""
+  value = var.enable_kubeflow ? "kubeflow" : var.enable_tekton ? "tekton" : var.enable_kubernetes ? "kubernetes" : var.enable_orchestrator_sagemaker ? "sagemaker" : ""
 }
 output "orchestrator_name" {
-  value = var.enable_kubeflow ? "eks_kubeflow_orchestrator" : var.enable_tekton ? "eks_tekton_orchestrator" : var.enable_kubernetes ? "eks_kubernetes_orchestrator" : ""
+  value = var.enable_kubeflow ? "eks_kubeflow_orchestrator" : var.enable_tekton ? "eks_tekton_orchestrator" : var.enable_kubernetes ? "eks_kubernetes_orchestrator" : var.enable_orchestrator_sagemaker ? "sagemaker_orchestrator" : ""
 }
 output "orchestrator_configuration" {
   value = var.enable_kubeflow ? jsonencode({
@@ -59,6 +60,8 @@ output "orchestrator_configuration" {
     }) : var.enable_kubernetes ? jsonencode({
     kubernetes_context = "${aws_eks_cluster.cluster[0].arn}"
     synchronous        = true
+  }) : var.enable_orchestrator_sagemaker ? jsonencode({
+    execution_role = "${aws_iam_role.sagemaker_role[0].arn}"
   }) : ""
 }
 
