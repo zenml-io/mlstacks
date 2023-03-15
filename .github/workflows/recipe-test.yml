@@ -15,6 +15,19 @@ permissions:
       contents: read
 
 jobs:
+  spell-check:
+    name: spell-check
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Actions Repository
+      uses: actions/checkout@v2
+
+    - name: Spelling checker
+      uses: crate-ci/typos@master
+      with:
+        files: "."
+        config: ./.typos.toml
+
   aws_test:
     name: aws_test
     runs-on: ubuntu-latest

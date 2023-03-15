@@ -14,7 +14,7 @@ output "resource-group-location" {
 }
 
 # output for the AzureML workspace
-output "azureml-workpsace-name" {
+output "azureml-workspace-name" {
   value = "${local.prefix}-${local.azureml.cluster_name}-mlw"
 }
 output "azureml-compute-cluster-name" {
