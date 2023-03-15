@@ -72,7 +72,7 @@ data "external" "get_cluster" {
   query = {
     project_id   = var.project_id
     cluster_name = local.enable_gke ? google_container_cluster.gke[0].name : "${local.prefix}-${local.gke.cluster_name}"
-    region      = var.region
+    region       = var.region
   }
 }
 
