@@ -40,7 +40,7 @@ resource "google_service_account_iam_member" "kubeflow-workload-access" {
 
   service_account_id = google_service_account.gke-service-account[0].name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${local.project_id}.svc.id.goog[kubeflow/pipeline-runner]"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[kubeflow/pipeline-runner]"
   depends_on = [
     module.kubeflow-pipelines
   ]

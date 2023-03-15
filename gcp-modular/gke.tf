@@ -9,10 +9,10 @@ data "google_client_config" "default" {}
 #   ]
 
 #   source            = "terraform-google-modules/kubernetes-engine/google"
-#   project_id        = local.project_id
+#   project_id        = var.project_id
 #   name              = "${local.prefix}-${local.gke.cluster_name}"
-#   region            = local.region
-#   zones             = ["${local.region}-a", "${local.region}-b", "${local.region}-c"]
+#   region            = var.region
+#   zones             = ["${var.region}-a", "${var.region}-b", "${var.region}-c"]
 #   network           = module.vpc.network_name
 #   subnetwork        = module.vpc.subnets_names[0]
 #   ip_range_pods     = "gke-pods"
@@ -28,7 +28,7 @@ data "google_client_config" "default" {}
 #     {
 #       name            = "default-node-pool"
 #       machine_type    = "e2-standard-8"
-#       node_locations  = "${local.region}-b"
+#       node_locations  = "${var.region}-b"
 #       min_count       = 1
 #       max_count       = 3
 #       local_ssd_count = 0
@@ -61,17 +61,19 @@ data "google_client_config" "default" {}
 #     }
 #   }
 # }
+locals {
+  enable_gke = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
+    var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+  var.enable_zenml)
+}
+
 data "external" "get_cluster" {
   program = ["bash", "${path.module}/get_cluster.sh"]
   query = {
-    project_id   = local.project_id
-    cluster_name = "${local.prefix}-${local.gke.cluster_name}"
-    region       = local.region
+    project_id   = var.project_id
+    cluster_name = local.enable_gke ? google_container_cluster.gke[0].name : "${local.prefix}-${local.gke.cluster_name}"
+    region       = var.region
   }
-
-  depends_on = [
-    google_container_cluster.gke
-  ]
 }
 
 resource "google_container_cluster" "gke" {
@@ -80,10 +82,10 @@ resource "google_container_cluster" "gke" {
   var.enable_zenml) ? 1 : 0
 
   name    = "${local.prefix}-${local.gke.cluster_name}"
-  project = local.project_id
+  project = var.project_id
 
-  location           = local.region
-  node_locations     = ["${local.region}-a", "${local.region}-b", "${local.region}-c"]
+  location           = var.region
+  node_locations     = ["${var.region}-a", "${var.region}-b", "${var.region}-c"]
   initial_node_count = 1
 
   network    = module.vpc[0].network_name
@@ -117,13 +119,13 @@ resource "google_service_account" "gke-service-account" {
     var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
   var.enable_zenml) ? 1 : 0
   account_id   = "${local.prefix}-${local.gke.service_account_name}"
-  project      = local.project_id
+  project      = var.project_id
   display_name = "Terraform GKE SA"
 }
 
 resource "google_project_iam_binding" "container-registry" {
   count   = length(google_container_cluster.gke)
-  project = local.project_id
+  project = var.project_id
   role    = "roles/containerregistry.ServiceAgent"
 
   members = [
@@ -135,7 +137,7 @@ resource "google_project_iam_binding" "secret-manager" {
   count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
     var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
   var.enable_zenml) ? 1 : 0
-  project = local.project_id
+  project = var.project_id
   role    = "roles/secretmanager.admin"
 
   members = [
@@ -147,7 +149,7 @@ resource "google_project_iam_binding" "cloudsql" {
   count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
     var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
   var.enable_zenml) ? 1 : 0
-  project = local.project_id
+  project = var.project_id
   role    = "roles/cloudsql.admin"
 
   members = [
@@ -159,7 +161,7 @@ resource "google_project_iam_binding" "storageadmin" {
   count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
     var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
   var.enable_zenml) ? 1 : 0
-  project = local.project_id
+  project = var.project_id
   role    = "roles/storage.admin"
 
   members = [
@@ -171,7 +173,7 @@ resource "google_project_iam_binding" "vertex-ai-user" {
   count = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
     var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
   var.enable_zenml) ? 1 : 0
-  project = local.project_id
+  project = var.project_id
   role    = "roles/aiplatform.user"
 
   members = [

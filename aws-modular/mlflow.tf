@@ -18,7 +18,7 @@ module "mlflow" {
   ingress_host            = "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-hostname}}"
   artifact_Proxied_Access = local.mlflow.artifact_Proxied_Access
   artifact_S3             = local.mlflow.artifact_S3
-  artifact_S3_Bucket      = var.mlflow-s3-bucket == "" ? aws_s3_bucket.mlflow-bucket[0].bucket : var.mlflow-s3-bucket
+  artifact_S3_Bucket      = var.mlflow_bucket == "" ? aws_s3_bucket.mlflow-bucket[0].bucket : var.mlflow_bucket
 }
 
 resource "htpasswd_password" "hash" {
@@ -33,7 +33,7 @@ resource "random_string" "mlflow_bucket_suffix" {
 
 # create s3 bucket for mlflow
 resource "aws_s3_bucket" "mlflow-bucket" {
-  count         = (var.enable_mlflow && var.mlflow-s3-bucket == "") ? 1 : 0
+  count         = (var.enable_mlflow && var.mlflow_bucket == "") ? 1 : 0
   bucket        = "mlflow-s3-${random_string.mlflow_bucket_suffix.result}"
   force_destroy = true
 

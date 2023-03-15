@@ -236,7 +236,7 @@ data "external" "get_cluster_info" {
   program = ["bash", "${path.module}/get_cluster_info.sh"]
   query = {
     cluster_name = "${local.prefix}-${local.eks.cluster_name}"
-    region       = local.region
+    region       = var.region
   }
 
   depends_on = [
@@ -248,7 +248,7 @@ data "external" "get_cluster_auth" {
   program = ["bash", "${path.module}/get_cluster_token.sh"]
   query = {
     cluster_name = "${local.prefix}-${local.eks.cluster_name}"
-    region       = local.region
+    region       = var.region
   }
 
   depends_on = [

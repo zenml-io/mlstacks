@@ -18,7 +18,7 @@ module "mlflow" {
   ingress_host            = "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   artifact_Proxied_Access = local.mlflow.artifact_Proxied_Access
   artifact_GCS            = local.mlflow.artifact_GCS
-  artifact_GCS_Bucket     = var.mlflow-gcs-bucket == "" ? google_storage_bucket.mlflow-bucket[0].name : var.mlflow-gcs-bucket
+  artifact_GCS_Bucket     = var.mlflow_bucket == "" ? google_storage_bucket.mlflow-bucket[0].name : var.mlflow_bucket
 }
 
 resource "random_string" "mlflow_bucket_suffix" {
@@ -28,9 +28,9 @@ resource "random_string" "mlflow_bucket_suffix" {
 }
 
 resource "google_storage_bucket" "mlflow-bucket" {
-  count    = (var.enable_mlflow && var.mlflow-gcs-bucket == "") ? 1 : 0
+  count    = (var.enable_mlflow && var.mlflow_bucket == "") ? 1 : 0
   name     = "mlflow-gcs-${random_string.mlflow_bucket_suffix.result}"
-  project  = local.project_id
+  project  = var.project_id
   location = local.gcs.location
 
   force_destroy = true
@@ -64,7 +64,7 @@ resource "google_service_account_iam_member" "mlflow-storage-access" {
 
   service_account_id = google_service_account.gke-service-account[0].name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${local.project_id}.svc.id.goog[mlflow/mlflow-tracking]"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[mlflow/mlflow-tracking]"
   depends_on = [
     module.mlflow
   ]
