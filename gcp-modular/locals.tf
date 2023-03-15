@@ -21,7 +21,7 @@ locals {
     workloads_namespace  = "zenml-workloads-k8s"
   }
   vpc = {
-    name = "vpc-${random_string.unique.result}"
+    name = "vpc"
   }
 
   container_registry = {
