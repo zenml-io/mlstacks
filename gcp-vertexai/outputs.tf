@@ -25,7 +25,7 @@ output "container-registry-URI" {
 
 # ingress controller hostname
 output "ingress-controller-host" {
-  value = data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip
+  value = var.enable_mlflow ? data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip : ""
 }
 
 # output for MLflow URI
