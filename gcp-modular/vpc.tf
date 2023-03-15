@@ -6,7 +6,7 @@ module "vpc" {
   version = "~> 4.0"
 
   project_id   = var.project_id
-  network_name = "${local.prefix}-${local.vpc.name}"
+  network_name = "${local.prefix}-${local.vpc.name}-${random_string.unique.result}"
 
   subnets = [
     {

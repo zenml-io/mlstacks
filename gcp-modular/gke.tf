@@ -61,17 +61,19 @@ data "google_client_config" "default" {}
 #     }
 #   }
 # }
+locals {
+  enable_gke = (var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes ||
+    var.enable_kserve || var.enable_seldon || var.enable_mlflow ||
+  var.enable_zenml)
+}
+
 data "external" "get_cluster" {
   program = ["bash", "${path.module}/get_cluster.sh"]
   query = {
     project_id   = var.project_id
-    cluster_name = "${local.prefix}-${local.gke.cluster_name}"
+    cluster_name = local.enable_gke ? google_container_cluster.gke[0].name : "${local.prefix}-${local.gke.cluster_name}"
     region       = var.region
   }
-
-  depends_on = [
-    google_container_cluster.gke
-  ]
 }
 
 resource "google_container_cluster" "gke" {
