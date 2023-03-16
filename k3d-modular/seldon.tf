@@ -3,7 +3,7 @@
 module "seldon" {
   source = "../modules/seldon-module"
 
-  count = var.enable_seldon ? 1 : 0
+  count = var.enable_model_deployer_seldon ? 1 : 0
 
   # run only after the eks cluster and istio are set up
   depends_on = [
@@ -18,7 +18,7 @@ module "seldon" {
 # the namespace where zenml will deploy seldon models
 resource "kubernetes_namespace" "seldon-workloads" {
 
-  count = var.enable_seldon ? 1 : 0
+  count = var.enable_model_deployer_seldon ? 1 : 0
 
   metadata {
     name = local.seldon.workloads_namespace
@@ -32,7 +32,7 @@ resource "kubernetes_namespace" "seldon-workloads" {
 # will deploy models
 resource "kubernetes_cluster_role_v1" "seldon" {
 
-  count = var.enable_seldon ? 1 : 0
+  count = var.enable_model_deployer_seldon ? 1 : 0
 
   metadata {
     name = "seldon-workloads"
@@ -55,7 +55,7 @@ resource "kubernetes_cluster_role_v1" "seldon" {
 # assign role to kubeflow pipeline runner
 resource "kubernetes_role_binding_v1" "kubeflow-seldon" {
 
-  count = (var.enable_kubeflow && var.enable_seldon) ? 1 : 0
+  count = (var.enable_orchestrator_kubeflow && var.enable_model_deployer_seldon) ? 1 : 0
 
   metadata {
     name      = "kubeflow-seldon"
@@ -80,7 +80,7 @@ resource "kubernetes_role_binding_v1" "kubeflow-seldon" {
 # assign role to kubernetes pipeline runner
 resource "kubernetes_role_binding_v1" "k8s-seldon" {
 
-  count = var.enable_seldon ? 1 : 0
+  count = var.enable_model_deployer_seldon ? 1 : 0
 
   metadata {
     name      = "k8s-seldon"
@@ -100,7 +100,7 @@ resource "kubernetes_role_binding_v1" "k8s-seldon" {
 
 resource "kubernetes_secret" "seldon-secret" {
 
-  count = var.enable_seldon ? 1 : 0
+  count = var.enable_model_deployer_seldon ? 1 : 0
 
   metadata {
     name      = var.seldon-secret-name

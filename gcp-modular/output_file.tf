@@ -29,19 +29,19 @@ resource "local_file" "stack_file" {
 %{endif}
 
       orchestrator:
-%{if var.enable_kubeflow}
+%{if var.enable_orchestrator_kubeflow}
         id: ${uuid()}
         flavor: kubeflow
         name: gke_kubeflow_orchestrator
         configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "synchronous": True}
 %{else}
-%{if var.enable_tekton}
+%{if var.enable_orchestrator_tekton}
         id: ${uuid()}
         flavor: tekton
         name: gke_tekton_orchestrator
         configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}}
 %{else}
-%{if var.enable_kubernetes}
+%{if var.enable_orchestrator_kubernetes}
         id: ${uuid()}
         flavor: kubernetes
         name: gke_kubernetes_orchestrator
@@ -63,22 +63,22 @@ resource "local_file" "stack_file" {
         configuration: {"project_id": "${var.project_id}"}
 %{endif}
 
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
       experiment_tracker:
         id: ${uuid()}
         flavor: mlflow
         name: gke_mlflow_experiment_tracker
-        configuration: {"tracking_uri": "${var.enable_mlflow ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
+        configuration: {"tracking_uri": "${var.enable_experiment_tracker_mlflow ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
 %{endif}
 
-%{if var.enable_kserve}}        
+%{if var.enable_model_deployer_kserve}}        
       model_deployer:    
         id: ${uuid()}
         flavor: kserve
         name: gke_kserve
-        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
+        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_model_deployer_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
 %{else}
-%{if var.enable_seldon}
+%{if var.enable_model_deployer_seldon}
       model_deployer:
         id : ${uuid()}
         flavor: seldon

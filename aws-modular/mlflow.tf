@@ -2,7 +2,7 @@
 module "mlflow" {
   source = "../modules/mlflow-module"
 
-  count = var.enable_mlflow ? 1 : 0
+  count = var.enable_experiment_tracker_mlflow ? 1 : 0
 
   # run only after the eks cluster, cert-manager and nginx-ingress are set up
   depends_on = [
@@ -33,7 +33,7 @@ resource "random_string" "mlflow_bucket_suffix" {
 
 # create s3 bucket for mlflow
 resource "aws_s3_bucket" "mlflow-bucket" {
-  count         = (var.enable_mlflow && var.mlflow_bucket == "") ? 1 : 0
+  count         = (var.enable_experiment_tracker_mlflow && var.mlflow_bucket == "") ? 1 : 0
   bucket        = "mlflow-s3-${random_string.mlflow_bucket_suffix.result}"
   force_destroy = true
 

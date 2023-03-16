@@ -19,7 +19,7 @@ requirements:
           uri: "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
 %{endif}
 
-%{if var.enable_kubernetes}
+%{if var.enable_orchestrator_kubernetes}
   - name: k3d-kubernetes-${random_string.cluster_id.result}
     description: >-
       K3D cluster that can be used as a kubernetes orchestrator.
@@ -40,7 +40,7 @@ requirements:
           local: true
 %{endif}
 
-%{if var.enable_kubeflow}
+%{if var.enable_orchestrator_kubeflow}
   - name: k3d-kubeflow-${random_string.cluster_id.result}
     description: >-
       Kubeflow running in a local K3D cluster.
@@ -60,7 +60,7 @@ requirements:
           local: true
 %{endif}
 
-%{if var.enable_tekton}
+%{if var.enable_orchestrator_tekton}
   - name: k3d-tekton-${random_string.cluster_id.result}
     description: >-
       Tekton running in a local K3D cluster.
@@ -80,7 +80,7 @@ requirements:
           local: true
 %{endif}
 
-%{if var.enable_minio || var.enable_mlflow}
+%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
   - name: k3d-minio-artifact-store-${random_string.cluster_id.result}
     description: >-
       Minio artifact store running in a local K3D cluster.
@@ -95,7 +95,7 @@ requirements:
           client_kwargs: '{"endpoint_url":"${module.minio_server[0].artifact_S3_Endpoint_URL}", "region_name":"us-east-1"}'
 %{endif}
 
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
   - name: k3d-mlflow-${random_string.cluster_id.result}
     description: >-
       MLFlow deployed in a local K3D cluster.
@@ -109,7 +109,7 @@ requirements:
           tracking_password: "${var.mlflow-password}"
 %{endif}
 
-%{if var.enable_seldon}
+%{if var.enable_model_deployer_seldon}
   - name: k3d-seldon-${random_string.cluster_id.result}
     description: >-
       Seldon Core deployed in a local K3D cluster.
@@ -122,12 +122,12 @@ requirements:
         configuration:
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           kubernetes_namespace: "${local.seldon.workloads_namespace}"
-          base_url:  "http://${var.enable_seldon ? module.istio[0].ingress-ip-address : ""}"
+          base_url:  "http://${var.enable_model_deployer_seldon ? module.istio[0].ingress-ip-address : ""}"
           kubernetes_secret_name: "${var.seldon-secret-name}"
 
 %{endif}
 
-%{if var.enable_kserve}
+%{if var.enable_model_deployer_kserve}
   - name: k3d-kserve-${random_string.cluster_id.result}
     description: >-
       Kserve deployed in a local K3D cluster.
@@ -140,7 +140,7 @@ requirements:
         configuration:
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           kubernetes_namespace: "${local.kserve.workloads_namespace}"
-          base_url:  "http://${var.enable_kserve ? module.istio[0].ingress-ip-address : ""}"
+          base_url:  "http://${var.enable_model_deployer_kserve ? module.istio[0].ingress-ip-address : ""}"
           kubernetes_secret_name: "${var.kserve-secret-name}"
 %{endif}
 
@@ -153,27 +153,27 @@ environments:
     deployment: default
     requirements:
       - data-validators
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
       - k3d-mlflow-${random_string.cluster_id.result}
 %{else}
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
       - local-secrets-manager
-%{if var.enable_seldon}
+%{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_kserve}
+%{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
     mandatory_requirements:
-%{if var.enable_minio || var.enable_mlflow}
+%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
     capabilities:
       synchronized: true
 
-%{if var.enable_kubernetes} 
+%{if var.enable_orchestrator_kubernetes} 
   - name: default-k3d-kubernetes-orchestrator
     description: >-
       Default deployment with K3D kubernetes orchestrator and other
@@ -181,28 +181,28 @@ environments:
     deployment: default
     requirements:
       - data-validators
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
       - k3d-mlflow-${random_string.cluster_id.result}
 %{else}
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
-%{if var.enable_seldon}
+%{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_kserve}
+%{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
       - local-secrets-manager
     mandatory_requirements:
       - k3d-kubernetes-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_mlflow}
+%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
 
-%{if var.enable_kubeflow}
+%{if var.enable_orchestrator_kubeflow}
   - name: default-k3d-kubeflow-orchestrator
     description: >-
       Default deployment with K3D kubeflow orchestrator and other
@@ -210,29 +210,29 @@ environments:
     deployment: default
     requirements:
       - data-validators
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
       - k3d-mlflow-${random_string.cluster_id.result}
 %{else}
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
-%{if var.enable_seldon}
+%{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_kserve}
+%{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
       - local-secrets-manager
     mandatory_requirements:
       - k3d-kubeflow-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_mlflow}
+%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
 
 
-%{if var.enable_tekton}
+%{if var.enable_orchestrator_tekton}
   - name: default-k3d-tekton-orchestrator
     description: >-
       Default deployment with K3D Tekton orchestrator and other
@@ -240,23 +240,23 @@ environments:
     deployment: default
     requirements:
       - data-validators
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
       - k3d-mlflow-${random_string.cluster_id.result}
 %{else}
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
-%{if var.enable_seldon}
+%{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_kserve}
+%{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
       - local-secrets-manager
     mandatory_requirements:
       - k3d-tekton-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_mlflow}
+%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
@@ -272,21 +272,21 @@ environments:
     deployment: local-server
     requirements:
       - data-validators
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
       - k3d-mlflow-${random_string.cluster_id.result}
 %{else}
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
       - local-secrets-manager
-%{if var.enable_seldon}
+%{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_kserve}
+%{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
     mandatory_requirements:
-%{if var.enable_minio || var.enable_mlflow}
+%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
     capabilities:
@@ -297,7 +297,7 @@ environments:
     # is forked. As a workaround, the deployment can be started separately,
     # before pytest is invoked.
 
-%{if var.enable_kubernetes}
+%{if var.enable_orchestrator_kubernetes}
   - name: local-server-k3d-kubernetes-orchestrator
     description: >-
       Local server deployment with K3D kubernetes orchestrator and other
@@ -305,28 +305,28 @@ environments:
     deployment: local-server
     requirements:
       - data-validators
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
       - k3d-mlflow-${random_string.cluster_id.result}
 %{else}
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
-%{if var.enable_seldon}
+%{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_kserve}
+%{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
       - local-secrets-manager
     mandatory_requirements:
       - k3d-kubernetes-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_kubeflow}
+%{if var.enable_minio || var.enable_orchestrator_kubeflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
 
-%{if var.enable_kubeflow}
+%{if var.enable_orchestrator_kubeflow}
     # IMPORTANT: don't use this with pytest auto-provisioning. Running forked
     # daemons in pytest leads to serious issues because the whole test process
     # is forked. As a workaround, the deployment can be started separately,
@@ -338,28 +338,28 @@ environments:
     deployment: local-server
     requirements:
       - data-validators
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
       - k3d-mlflow-${random_string.cluster_id.result}
 %{else}
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
-%{if var.enable_seldon}
+%{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_kserve}
+%{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
       - local-secrets-manager
     mandatory_requirements:
       - k3d-kubeflow-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_mlflow}
+%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
 
-%{if var.enable_tekton}
+%{if var.enable_orchestrator_tekton}
     # IMPORTANT: don't use this with pytest auto-provisioning. Running forked
     # daemons in pytest leads to serious issues because the whole test process
     # is forked. As a workaround, the deployment can be started separately,
@@ -371,23 +371,23 @@ environments:
     deployment: local-server
     requirements:
       - data-validators
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
       - k3d-mlflow-${random_string.cluster_id.result}
 %{else}
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
-%{if var.enable_seldon}
+%{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_kserve}
+%{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
       - local-secrets-manager
     mandatory_requirements:
       - k3d-tekton-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_mlflow}
+%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}

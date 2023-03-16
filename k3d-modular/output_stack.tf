@@ -24,7 +24,7 @@ resource "local_file" "stack_file" {
         configuration: {}
 %{endif}
       container_registry:
-%{if var.enable_container_registry || var.enable_kubeflow || var.enable_tekton || var.enable_kubernetes}
+%{if var.enable_container_registry || var.enable_orchestrator_kubeflow || var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes}
         id: ${uuid()}
         flavor: default
         name: k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}
@@ -32,7 +32,7 @@ resource "local_file" "stack_file" {
           uri: "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
 %{endif}          
       orchestrator:
-%{if var.enable_kubeflow}
+%{if var.enable_orchestrator_kubeflow}
         id: ${uuid()}
         flavor: kubeflow
         name: k3d-kubeflow-${random_string.cluster_id.result}
@@ -41,7 +41,7 @@ resource "local_file" "stack_file" {
           synchronous: true
           local: true
 %{else}
-%{if var.enable_tekton}
+%{if var.enable_orchestrator_tekton}
         id: ${uuid()}
         flavor: tekton
         name: k3d-tekton-${random_string.cluster_id.result}
@@ -50,7 +50,7 @@ resource "local_file" "stack_file" {
           kubernetes_namespace: "${local.tekton.workloads_namespace}"
           local: true
 %{else}
-%{if var.enable_kubernetes}
+%{if var.enable_orchestrator_kubernetes}
         id: ${uuid()}
         flavor: kubernetes
         name: k3d-kubernetes-${random_string.cluster_id.result}
@@ -67,7 +67,7 @@ resource "local_file" "stack_file" {
 %{endif}
 %{endif}
 %{endif}
-%{if var.enable_mlflow}
+%{if var.enable_experiment_tracker_mlflow}
       experiment_tracker:
         id: ${uuid()}
         flavor: mlflow
@@ -77,7 +77,7 @@ resource "local_file" "stack_file" {
           tracking_username: "${var.mlflow-username}"
           tracking_password: "${var.mlflow-password}"
 %{endif}
-%{if var.enable_seldon && !var.enable_kserve}
+%{if var.enable_model_deployer_seldon && !var.enable_model_deployer_kserve}
       model_deployer:
         id: ${uuid()}
         flavor: seldon
@@ -85,7 +85,7 @@ resource "local_file" "stack_file" {
         configuration:
           kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
           kubernetes_namespace: "${local.seldon.workloads_namespace}"
-          base_url:  "http://${var.enable_seldon ? module.istio[0].ingress-ip-address : ""}"
+          base_url:  "http://${var.enable_model_deployer_seldon ? module.istio[0].ingress-ip-address : ""}"
           kubernetes_secret_name: "${var.seldon-secret-name}"
       secrets_manager:
         id: ${uuid()}
