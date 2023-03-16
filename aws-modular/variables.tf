@@ -25,7 +25,7 @@ variable "enable_orchestrator_kubernetes" {
 }
 variable "enable_orchestrator_sagemaker" {
   description = "Enable SageMaker as orchestrator"
-  default     = true
+  default     = false
 }
 variable "enable_experiment_tracker_mlflow" {
   description = "Enable MLflow deployment"
@@ -37,6 +37,10 @@ variable "enable_model_deployer_kserve" {
 }
 variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
+  default     = false
+}
+variable "enable_step_operator_sagemaker" {
+  description = "Enable SageMaker as step operator"
   default     = false
 }
 variable "enable_zenml" {

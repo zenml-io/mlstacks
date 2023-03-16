@@ -127,6 +127,23 @@ output "model_deployer_configuration" {
   }) : ""
 }
 
+# if sagemaker is enabled as step operator, set the step operator outputs to the sagemaker values
+# otherwise, set the step operator outputs to empty strings
+output "step_operator_id" {
+  value = var.enable_step_operator_sagemaker ? uuid() : ""
+}
+output "step_operator_flavor" {
+  value = var.enable_step_operator_sagemaker ? "sagemaker" : ""
+}
+output "step_operator_name" {
+  value = var.enable_step_operator_sagemaker ? "sagemaker_step_operator" : ""
+}
+output "step_operator_configuration" {
+  value = var.enable_step_operator_sagemaker ? jsonencode({
+    role = "${aws_iam_role.sagemaker_role[0].arn}"
+  }) : ""
+}
+
 # nginx ingress hostname
 output "nginx-ingress-hostname" {
   value = length(module.nginx-ingress) > 0 ? module.nginx-ingress[0].ingress-hostname : null
