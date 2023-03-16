@@ -15,9 +15,9 @@ resource "k3d_registry" "zenml-registry" {
   # registry from the host.
   name  = "${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost"
   image = "docker.io/registry:2"
-  count = (var.enable_container_registry || var.enable_kubeflow ||
-    var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
-  var.enable_seldon || var.enable_mlflow || var.enable_minio || var.enable_zenml) ? 1 : 0
+  count = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
+    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
+  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_minio || var.enable_zenml) ? 1 : 0
 
   port {
     host_port = local.k3d_registry.port
@@ -51,9 +51,9 @@ resource "k3d_cluster" "zenml-cluster" {
   name    = "${local.k3d.cluster_name}-${random_string.cluster_id.result}"
   servers = 1
   agents  = 2
-  count = (var.enable_container_registry || var.enable_kubeflow ||
-    var.enable_tekton || var.enable_kubernetes || var.enable_kserve ||
-  var.enable_seldon || var.enable_mlflow || var.enable_minio || var.enable_zenml) ? 1 : 0
+  count = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
+    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
+  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_minio || var.enable_zenml) ? 1 : 0
 
   kube_api {
     host    = local.k3d_kube_api.host

@@ -2,7 +2,7 @@
 module "tekton-pipelines" {
   source = "../modules/tekton-pipelines-module"
 
-  count = var.enable_tekton ? 1 : 0
+  count = var.enable_orchestrator_tekton ? 1 : 0
 
   # run only after the k3d cluster and nginx-ingress are set up
   depends_on = [
@@ -12,15 +12,15 @@ module "tekton-pipelines" {
 
   pipeline_version  = local.tekton.version
   dashboard_version = local.tekton.dashboard_version
-  ingress_host      = (var.enable_kserve || var.enable_seldon) ? "${local.tekton.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.tekton.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_host      = (var.enable_model_deployer_kserve || var.enable_model_deployer_seldon) ? "${local.tekton.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.tekton.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   tls_enabled       = false
-  istio_enabled     = (var.enable_kserve || var.enable_seldon) ? true : false
+  istio_enabled     = (var.enable_model_deployer_kserve || var.enable_model_deployer_seldon) ? true : false
 }
 
 # the namespace where zenml will run tekton pipelines
 resource "kubernetes_namespace" "tekton-workloads" {
 
-  count = var.enable_tekton ? 1 : 0
+  count = var.enable_orchestrator_tekton ? 1 : 0
 
   metadata {
     name = local.tekton.workloads_namespace

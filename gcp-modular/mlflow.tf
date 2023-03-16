@@ -2,7 +2,7 @@
 module "mlflow" {
   source = "../modules/mlflow-module"
 
-  count = var.enable_mlflow ? 1 : 0
+  count = var.enable_experiment_tracker_mlflow ? 1 : 0
 
   # run only after the gke cluster, cert-manager and nginx-ingress are set up
   depends_on = [
@@ -28,7 +28,7 @@ resource "random_string" "mlflow_bucket_suffix" {
 }
 
 resource "google_storage_bucket" "mlflow-bucket" {
-  count    = (var.enable_mlflow && var.mlflow_bucket == "") ? 1 : 0
+  count    = (var.enable_experiment_tracker_mlflow && var.mlflow_bucket == "") ? 1 : 0
   name     = "mlflow-gcs-${random_string.mlflow_bucket_suffix.result}"
   project  = var.project_id
   location = local.gcs.location
@@ -45,7 +45,7 @@ resource "htpasswd_password" "hash" {
 # tie the mlflow kubernetes SA to the GKE service account
 resource "null_resource" "mlflow-sa-workload-access" {
 
-  count = var.enable_mlflow ? 1 : 0
+  count = var.enable_experiment_tracker_mlflow ? 1 : 0
 
   provisioner "local-exec" {
     command = "kubectl -n mlflow annotate serviceaccount mlflow-tracking iam.gke.io/gcp-service-account=${google_service_account.gke-service-account[0].email} --overwrite=true"
@@ -60,7 +60,7 @@ resource "null_resource" "mlflow-sa-workload-access" {
 # # the GKE IAM role should have access to Storage resources
 resource "google_service_account_iam_member" "mlflow-storage-access" {
 
-  count = var.enable_mlflow ? 1 : 0
+  count = var.enable_experiment_tracker_mlflow ? 1 : 0
 
   service_account_id = google_service_account.gke-service-account[0].name
   role               = "roles/iam.workloadIdentityUser"

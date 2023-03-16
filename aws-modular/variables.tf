@@ -11,27 +11,31 @@ variable "enable_secrets_manager" {
   description = "Enable Secret Manager deployment"
   default     = false
 }
-variable "enable_kubeflow" {
+variable "enable_orchestrator_kubeflow" {
   description = "Enable Kubeflow deployment"
   default     = false
 }
-variable "enable_tekton" {
+variable "enable_orchestrator_tekton" {
   description = "Enable Tekton deployment"
   default     = false
 }
-variable "enable_kubernetes" {
+variable "enable_orchestrator_kubernetes" {
   description = "Enable Kubernetes deployment"
   default     = false
 }
-variable "enable_mlflow" {
+variable "enable_orchestrator_sagemaker" {
+  description = "Enable SageMaker as orchestrator"
+  default     = true
+}
+variable "enable_experiment_tracker_mlflow" {
   description = "Enable MLflow deployment"
   default     = false
 }
-variable "enable_kserve" {
+variable "enable_model_deployer_kserve" {
   description = "Enable KServe deployment"
   default     = false
 }
-variable "enable_seldon" {
+variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
   default     = false
 }
@@ -39,11 +43,6 @@ variable "enable_zenml" {
   description = "Enable ZenML deployment"
   default     = false
 }
-variable "enable_orchestrator_sagemaker" {
-  description = "Enable SageMaker as orchestrator"
-  default     = true
-}
-
 
 variable "repo_name" {
   description = "The name of the container repository"

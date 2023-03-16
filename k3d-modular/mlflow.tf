@@ -2,7 +2,7 @@
 module "mlflow" {
   source = "../modules/mlflow-module"
 
-  count = var.enable_mlflow ? 1 : 0
+  count = var.enable_experiment_tracker_mlflow ? 1 : 0
 
   # run only after the gke cluster and nginx-ingress are set up
   depends_on = [
@@ -14,9 +14,9 @@ module "mlflow" {
 
   # details about the mlflow deployment
   chart_version            = local.mlflow.version
-  ingress_host             = (var.enable_kserve || var.enable_seldon) ? "${local.mlflow.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_host             = (var.enable_model_deployer_kserve || var.enable_model_deployer_seldon) ? "${local.mlflow.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   tls_enabled              = false
-  istio_enabled            = (var.enable_kserve || var.enable_seldon) ? true : false
+  istio_enabled            = (var.enable_model_deployer_kserve || var.enable_model_deployer_seldon) ? true : false
   htpasswd                 = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
   artifact_Proxied_Access  = local.mlflow.artifact_Proxied_Access
   artifact_S3              = "true"
@@ -38,7 +38,7 @@ resource "random_string" "mlflow_bucket_suffix" {
 
 # Create a bucket for MLFlow to use
 resource "minio_s3_bucket" "mlflow_bucket" {
-  count = (var.enable_mlflow && var.mlflow_minio_bucket == "") ? 1 : 0
+  count = (var.enable_experiment_tracker_mlflow && var.mlflow_minio_bucket == "") ? 1 : 0
 
   bucket        = "mlflow-minio-${random_string.mlflow_bucket_suffix.result}"
   force_destroy = true
