@@ -60,7 +60,7 @@ output "orchestrator_configuration" {
     }) : var.enable_orchestrator_kubernetes ? jsonencode({
     kubernetes_context = "${aws_eks_cluster.cluster[0].arn}"
     synchronous        = true
-  }) : var.enable_orchestrator_sagemaker ? jsonencode({
+    }) : var.enable_orchestrator_sagemaker ? jsonencode({
     execution_role = "${aws_iam_role.sagemaker_role[0].arn}"
   }) : ""
 }
