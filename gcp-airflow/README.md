@@ -58,11 +58,49 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     zenml stack import <STACK_NAME> -f <PATH_TO_THE_CREATED_STACK_CONFIG_YAML>
     ```
 
-
-
 > **Note**
 >
 >  You need to have your GCP credentials saved locally for the `apply` function to work.
+
+### 📢 Important
+
+In case you see an error like the following, follow the steps listed after the error message to resolve it.
+
+```
+HTTP response body: {"kind":"Status","apiVersion":"v1","metadata":{},"status":"Failure","message":"pods is forbidden: User \"system:serviceaccount:composer-x-x-x-airflow-x-x-x-fe36b202:default\" cannot list resource \"pods\" in API group \"\" in the namespace \"composer-user-workloads\"","reason":"Forbidden","details":{"kind":"pods"},"code":403}
+```
+
+You need to add a [Role](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#role-and-clusterrole) and a [RoleBinding](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#rolebinding-and-clusterrolebinding) to allow the service account in your composer namespace to perform actions on your Kubernetes resources like your pods. Your local kubectl client should already be configured to talk to the Kubernetes cluster that Cloud Composer is using.
+
+Apply the following Role and RoleBinding to your cluster after replacing the namespace under `subjects` with the namespace of your Cloud Composer deployment:
+
+```shell
+kubectl apply -n composer-user-workloads -f - <<EOF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-list-reader
+  namespace: composer-user-workloads
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods", "pods/log", "secrets", "serviceaccounts"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-list-reader-binding
+  namespace: composer-user-workloads
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pod-list-reader
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: composer-x-x-x-airflow-x-x-x-fe36b202
+EOF
+```
 
 
 ## 🥧 Outputs 
