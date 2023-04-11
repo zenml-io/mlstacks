@@ -7,7 +7,7 @@ output "artifact_store_flavor" {
   value = var.enable_artifact_store ? "gcp" : ""
 }
 output "artifact_store_name" {
-  value = var.enable_artifact_store ? "gcs_artifact_store" : ""
+  value = var.enable_artifact_store ? "gcs_artifact_store_${random_string.unique.result}" : ""
 }
 output "artifact_store_configuration" {
   value = var.enable_artifact_store ? jsonencode({
@@ -24,7 +24,7 @@ output "container_registry_flavor" {
   value = var.enable_container_registry ? "gcp" : ""
 }
 output "container_registry_name" {
-  value = var.enable_container_registry ? "gcp_container_registry" : ""
+  value = var.enable_container_registry ? "gcp_container_registry_${random_string.unique.result}" : ""
 }
 output "container_registry_configuration" {
   value = var.enable_container_registry ? jsonencode({
@@ -43,7 +43,7 @@ output "orchestrator_flavor" {
   value = var.enable_orchestrator_kubeflow ? "kubeflow" : var.enable_orchestrator_tekton ? "tekton" : var.enable_orchestrator_kubernetes ? "kubernetes" : ""
 }
 output "orchestrator_name" {
-  value = var.enable_orchestrator_kubeflow ? "gke_kubeflow_orchestrator" : var.enable_orchestrator_tekton ? "gke_tekton_orchestrator" : var.enable_orchestrator_kubernetes ? "gke_kubernetes_orchestrator" : ""
+  value = var.enable_orchestrator_kubeflow ? "gke_kubeflow_orchestrator_${random_string.unique.result}" : var.enable_orchestrator_tekton ? "gke_tekton_orchestrator_${random_string.unique.result}" : var.enable_orchestrator_kubernetes ? "gke_kubernetes_orchestrator_${random_string.unique.result}" : ""
 }
 output "orchestrator_configuration" {
   value = var.enable_orchestrator_kubeflow ? jsonencode({
@@ -70,7 +70,7 @@ output "experiment_tracker_flavor" {
   value = var.enable_experiment_tracker_mlflow ? "mlflow" : ""
 }
 output "experiment_tracker_name" {
-  value = var.enable_experiment_tracker_mlflow ? "gke_mlflow_experiment_tracker" : ""
+  value = var.enable_experiment_tracker_mlflow ? "gke_mlflow_experiment_tracker_${random_string.unique.result}" : ""
 }
 output "experiment_tracker_configuration" {
   value = var.enable_experiment_tracker_mlflow ? jsonencode({
@@ -89,7 +89,7 @@ output "secrets_manager_flavor" {
   value = var.enable_secrets_manager ? "gcp" : ""
 }
 output "secrets_manager_name" {
-  value = var.enable_secrets_manager ? "gcp_secrets_manager" : ""
+  value = var.enable_secrets_manager ? "gcp_secrets_manager_${random_string.unique.result}" : ""
 }
 output "secrets_manager_configuration" {
   value = var.enable_secrets_manager ? jsonencode({
@@ -107,7 +107,7 @@ output "model_deployer_flavor" {
   value = var.enable_model_deployer_kserve ? "kserve" : var.enable_model_deployer_seldon ? "seldon" : ""
 }
 output "model_deployer_name" {
-  value = var.enable_model_deployer_kserve ? "gke_kserve_model_deployer" : var.enable_model_deployer_seldon ? "gke_seldon_model_deployer" : ""
+  value = var.enable_model_deployer_kserve ? "gke_kserve_model_deployer_${random_string.unique.result}" : var.enable_model_deployer_seldon ? "gke_seldon_model_deployer_${random_string.unique.result}" : ""
 }
 output "model_deployer_configuration" {
   value = var.enable_model_deployer_kserve ? jsonencode({
