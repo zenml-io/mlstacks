@@ -1,15 +1,18 @@
 # project number
 output "project-number" {
-  value = data.google_project.project.number
+  value       = data.google_project.project.number
+  description = "Project number for the GCP project"
 }
 # project id
 output "project-id" {
-  value = local.project_id
+  value       = local.project_id
+  description = "Project ID for the GCP project"
 }
 
 # service account for vertex AI
 output "service-account" {
-  value = google_service_account.sa.email
+  value       = google_service_account.sa.email
+  description = "Service account email address reference"
 }
 
 # output for the GCS bucket
@@ -20,22 +23,26 @@ output "gcs-bucket-path" {
 
 # output for container registry
 output "container-registry-URI" {
-  value = "${local.container_registry.region}.gcr.io/${local.project_id}"
+  value       = "${local.container_registry.region}.gcr.io/${local.project_id}"
+  description = "The container registry URI for storing your images"
 }
 
 # ingress controller hostname
 output "ingress-controller-host" {
-  value = var.enable_mlflow ? data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip : ""
+  value       = var.enable_mlflow ? data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip : ""
+  description = "The ingress controller hostname for your MLflow tracking server"
 }
 
 # output for MLflow URI
 output "mlflow-tracking-URL" {
-  value = var.enable_mlflow ? "${data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip}/mlflow/" : "not enabled"
+  value       = var.enable_mlflow ? "${data.kubernetes_service.mlflow_tracking[0].status.0.load_balancer.0.ingress.0.ip}/mlflow/" : "not enabled"
+  description = "The MLflow tracking server URL"
 }
 
 # output the name of the stack YAML file created
 output "stack-yaml-path" {
-  value = var.enable_mlflow ? local_file.stack_file_mlflow[0].filename : local_file.stack_file[0].filename
+  value       = var.enable_mlflow ? local_file.stack_file_mlflow[0].filename : local_file.stack_file[0].filename
+  description = "The path to the stack YAML file created"
 }
 
 # # output for artifact registry repository
