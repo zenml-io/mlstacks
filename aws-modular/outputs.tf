@@ -12,7 +12,7 @@ output "artifact_store_flavor" {
   value = var.enable_artifact_store ? "s3" : ""
 }
 output "artifact_store_name" {
-  value = var.enable_artifact_store ? "s3_artifact_store" : ""
+  value = var.enable_artifact_store ? "s3_artifact_store_${random_string.unique.result}" : ""
 }
 output "artifact_store_configuration" {
   value = var.enable_artifact_store ? jsonencode({
@@ -29,7 +29,7 @@ output "container_registry_flavor" {
   value = var.enable_container_registry ? "aws" : ""
 }
 output "container_registry_name" {
-  value = var.enable_container_registry ? "aws_container_registry" : ""
+  value = var.enable_container_registry ? "aws_container_registry_${random_string.unique.result}" : ""
 }
 output "container_registry_configuration" {
   value = var.enable_container_registry ? jsonencode({
@@ -49,7 +49,7 @@ output "orchestrator_flavor" {
   value = var.enable_orchestrator_kubeflow ? "kubeflow" : var.enable_orchestrator_tekton ? "tekton" : var.enable_orchestrator_kubernetes ? "kubernetes" : var.enable_orchestrator_sagemaker ? "sagemaker" : ""
 }
 output "orchestrator_name" {
-  value = var.enable_orchestrator_kubeflow ? "eks_kubeflow_orchestrator" : var.enable_orchestrator_tekton ? "eks_tekton_orchestrator" : var.enable_orchestrator_kubernetes ? "eks_kubernetes_orchestrator" : var.enable_orchestrator_sagemaker ? "sagemaker_orchestrator" : ""
+  value = var.enable_orchestrator_kubeflow ? "eks_kubeflow_orchestrator_${random_string.unique.result}" : var.enable_orchestrator_tekton ? "eks_tekton_orchestrator_${random_string.unique.result}" : var.enable_orchestrator_kubernetes ? "eks_kubernetes_orchestrator_${random_string.unique.result}" : var.enable_orchestrator_sagemaker ? "sagemaker_orchestrator_${random_string.unique.result}" : ""
 }
 output "orchestrator_configuration" {
   value = var.enable_orchestrator_kubeflow ? jsonencode({
@@ -74,7 +74,7 @@ output "experiment_tracker_flavor" {
   value = var.enable_experiment_tracker_mlflow ? "mlflow" : ""
 }
 output "experiment_tracker_name" {
-  value = var.enable_experiment_tracker_mlflow ? "eks_mlflow_experiment_tracker" : ""
+  value = var.enable_experiment_tracker_mlflow ? "eks_mlflow_experiment_tracker_${random_string.unique.result}" : ""
 }
 output "experiment_tracker_configuration" {
   value = var.enable_experiment_tracker_mlflow ? jsonencode({
@@ -94,7 +94,7 @@ output "secrets_manager_flavor" {
   value = var.enable_secrets_manager ? "aws" : ""
 }
 output "secrets_manager_name" {
-  value = var.enable_secrets_manager ? "aws_secrets_manager" : ""
+  value = var.enable_secrets_manager ? "aws_secrets_manager_${random_string.unique.result}" : ""
 }
 output "secrets_manager_configuration" {
   value = var.enable_secrets_manager ? jsonencode({
@@ -112,7 +112,7 @@ output "model_deployer_flavor" {
   value = var.enable_model_deployer_kserve ? "kserve" : var.enable_model_deployer_seldon ? "seldon" : ""
 }
 output "model_deployer_name" {
-  value = var.enable_model_deployer_kserve ? "eks_kserve_model_deployer" : var.enable_model_deployer_seldon ? "eks_seldon_model_deployer" : ""
+  value = var.enable_model_deployer_kserve ? "eks_kserve_model_deployer_${random_string.unique.result}" : var.enable_model_deployer_seldon ? "eks_seldon_model_deployer_${random_string.unique.result}" : ""
 }
 output "model_deployer_configuration" {
   value = var.enable_model_deployer_kserve ? jsonencode({
@@ -136,7 +136,7 @@ output "step_operator_flavor" {
   value = var.enable_step_operator_sagemaker ? "sagemaker" : ""
 }
 output "step_operator_name" {
-  value = var.enable_step_operator_sagemaker ? "sagemaker_step_operator" : ""
+  value = var.enable_step_operator_sagemaker ? "sagemaker_step_operator_${random_string.unique.result}" : ""
 }
 output "step_operator_configuration" {
   value = var.enable_step_operator_sagemaker ? jsonencode({
