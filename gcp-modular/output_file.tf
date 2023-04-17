@@ -1,4 +1,4 @@
-# Export Terraform output variable values to a stack yaml file 
+# Export Terraform output variable values to a stack yaml file
 # that can be consumed by zenml stack import
 resource "local_file" "stack_file" {
   content  = <<-ADD
@@ -47,6 +47,12 @@ resource "local_file" "stack_file" {
         name: gke_kubernetes_orchestrator
         configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "synchronous": True}
 %{else}
+%{if var.enable_orchestrator_vertex}
+        id: ${uuid()}
+        flavor: vertex
+        name: vertex_orchestrator
+        configuration: {"project_id": "${var.project_id}", "location": "${var.region}"}
+%{else}
         id: ${uuid()}
         flavor: local
         name: default
@@ -54,6 +60,16 @@ resource "local_file" "stack_file" {
 %{endif}
 %{endif}
 %{endif}
+%{endif}
+
+%{if var.enable_step_operator_vertex}
+      step_operator:
+        id: ${uuid()}
+        flavor: vertex
+        name: vertex_step_operator
+        configuration: {"project": "${var.project_id}", "region": "${var.region}", "service_account_path": "${local_file.sa_key_file.filename}"}
+%{endif}
+
 
 %{if var.enable_secrets_manager}
       secrets_manager:
@@ -71,8 +87,8 @@ resource "local_file" "stack_file" {
         configuration: {"tracking_uri": "${var.enable_experiment_tracker_mlflow ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
 %{endif}
 
-%{if var.enable_model_deployer_kserve}}        
-      model_deployer:    
+%{if var.enable_model_deployer_kserve}}
+      model_deployer:
         id: ${uuid()}
         flavor: kserve
         name: gke_kserve

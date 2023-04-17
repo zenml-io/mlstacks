@@ -1,3 +1,7 @@
+data "google_project" "project" {
+  project_id = var.project_id
+}
+
 # You must have owner, editor, or service config editor roles 
 # to be able to enable services.
 

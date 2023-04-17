@@ -35,6 +35,14 @@ variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
   default     = false
 }
+variable "enable_step_operator_vertex" {
+  description = "Enable VertexAI Step Operator"
+  default     = false
+}
+variable "enable_orchestrator_vertex" {
+  description = "Enable VertexAI Orchestrator"
+  default     = false
+}
 variable "enable_zenml" {
   description = "Enable ZenML deployment"
   default     = false
