@@ -24,6 +24,10 @@ locals {
     name = "vpc"
   }
 
+  vertex = {
+    service_account_id = "zenml-vertex-sa"
+  }
+
   container_registry = {
     region = "us" # available options: eu, us, asia
   }

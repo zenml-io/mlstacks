@@ -37,13 +37,13 @@ output "container_registry_configuration" {
 # if kubernetes is enabled, set the orchestrator outputs to the kubernetes values
 # otherwise, set the orchestrator outputs to empty strings
 output "orchestrator_id" {
-  value = var.enable_orchestrator_kubeflow ? uuid() : var.enable_orchestrator_tekton ? uuid() : var.enable_orchestrator_kubernetes ? uuid() : ""
+  value = var.enable_orchestrator_kubeflow ? uuid() : var.enable_orchestrator_tekton ? uuid() : var.enable_orchestrator_kubernetes ? uuid() : var.enable_orchestrator_vertex ? uuid() : ""
 }
 output "orchestrator_flavor" {
-  value = var.enable_orchestrator_kubeflow ? "kubeflow" : var.enable_orchestrator_tekton ? "tekton" : var.enable_orchestrator_kubernetes ? "kubernetes" : ""
+  value = var.enable_orchestrator_kubeflow ? "kubeflow" : var.enable_orchestrator_tekton ? "tekton" : var.enable_orchestrator_kubernetes ? "kubernetes" : var.enable_orchestrator_vertex ? "vertex" : ""
 }
 output "orchestrator_name" {
-  value = var.enable_orchestrator_kubeflow ? "gke_kubeflow_orchestrator_${random_string.unique.result}" : var.enable_orchestrator_tekton ? "gke_tekton_orchestrator_${random_string.unique.result}" : var.enable_orchestrator_kubernetes ? "gke_kubernetes_orchestrator_${random_string.unique.result}" : ""
+  value = var.enable_orchestrator_kubeflow ? "gke_kubeflow_orchestrator_${random_string.unique.result}" : var.enable_orchestrator_tekton ? "gke_tekton_orchestrator_${random_string.unique.result}" : var.enable_orchestrator_kubernetes ? "gke_kubernetes_orchestrator_${random_string.unique.result}" : var.enable_orchestrator_vertex ? "vertex_orchestrator_${random_string.unique.result}" : ""
 }
 output "orchestrator_configuration" {
   value = var.enable_orchestrator_kubeflow ? jsonencode({
@@ -54,11 +54,31 @@ output "orchestrator_configuration" {
     }) : var.enable_orchestrator_kubernetes ? jsonencode({
     kubernetes_context = "gke_${var.project_id}_${var.region}_${local.prefix}-${local.gke.cluster_name}"
     synchronous        = true
+    }) : var.enable_orchestrator_vertex ? jsonencode({
+    project  = var.project_id
+    location = var.region
   }) : ""
 
   depends_on = [
     google_container_cluster.gke
   ]
+}
+
+output "step_operator_id" {
+  value = var.enable_step_operator_vertex ? uuid() : ""
+}
+output "step_operator_flavor" {
+  value = var.enable_step_operator_vertex ? "vertex" : ""
+}
+output "step_operator_name" {
+  value = var.enable_step_operator_vertex ? "vertex_step_operator_${random_string.unique.result}" : ""
+}
+output "step_operator_configuration" {
+  value = var.enable_step_operator_vertex ? jsonencode({
+    project              = var.project_id
+    region               = var.region
+    service_account_path = local_file.sa_key_file[0].filename
+  }) : ""
 }
 
 # if mlflow is enabled, set the tracking server outputs to the mlflow values

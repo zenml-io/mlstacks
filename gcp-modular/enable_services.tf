@@ -1,3 +1,8 @@
+data "google_project" "project" {
+  count      = local.enable_vertex ? 1 : 0
+  project_id = var.project_id
+}
+
 # You must have owner, editor, or service config editor roles 
 # to be able to enable services.
 
