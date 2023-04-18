@@ -77,7 +77,7 @@ output "step_operator_configuration" {
   value = var.enable_step_operator_vertex ? jsonencode({
     project              = var.project_id
     region               = var.region
-    service_account_path = local_file.sa_key_file.filename
+    service_account_path = local_file.sa_key_file[0].filename
   }) : ""
 }
 

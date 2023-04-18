@@ -67,7 +67,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: vertex
         name: vertex_step_operator
-        configuration: {"project": "${var.project_id}", "region": "${var.region}", "service_account_path": "${local_file.sa_key_file.filename}"}
+        configuration: {"project": "${var.project_id}", "region": "${var.region}", "service_account_path": "${local_file.sa_key_file[0].filename}"}
 %{endif}
 
 

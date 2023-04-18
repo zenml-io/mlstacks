@@ -1,4 +1,5 @@
 data "google_project" "project" {
+  count      = local.enable_vertex ? 1 : 0
   project_id = var.project_id
 }
 

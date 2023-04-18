@@ -21,30 +21,27 @@ resource "google_service_account_key" "vertex_sa_key" {
 
 # create the credentials file JSON
 resource "local_file" "sa_key_file" {
+  count    = local.enable_vertex ? 1 : 0
   content  = base64decode(google_service_account_key.vertex_sa_key[0].private_key)
   filename = "./vertex_sa_key.json"
 }
 
 locals {
-  roles_to_grant_to_custom_service_account = [
+  roles_to_grant_to_custom_service_account = local.enable_vertex ? [
     "roles/aiplatform.customCodeServiceAgent",
     "roles/aiplatform.serviceAgent",
     "roles/containerregistry.ServiceAgent",
     "roles/secretmanager.admin",
     "roles/iam.serviceAccountUser"
-  ]
+  ] : []
 }
 
 resource "google_project_iam_member" "roles-custom-sa" {
   project = var.project_id
 
-  member   = "serviceAccount:${google_service_account.sa[0].email}"
   for_each = toset(local.roles_to_grant_to_custom_service_account)
   role     = each.value
-
-  depends_on = [
-    google_service_account.sa
-  ]
+  member   = "serviceAccount:${google_service_account.sa[0].email}"
 }
 
 
@@ -65,7 +62,7 @@ resource "null_resource" "add-admin-policy-cc" {
   count = local.enable_vertex ? 1 : 0
 
   provisioner "local-exec" {
-    command = "gcloud iam service-accounts add-iam-policy-binding --role=roles/iam.serviceAccountAdmin --member=serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform-cc.iam.gserviceaccount.com ${google_service_account.sa[0].email} --project ${var.project_id}"
+    command = "gcloud iam service-accounts add-iam-policy-binding --role=roles/iam.serviceAccountAdmin --member=serviceAccount:service-${data.google_project.project[0].number}@gcp-sa-aiplatform-cc.iam.gserviceaccount.com ${google_service_account.sa[0].email} --project ${var.project_id}"
   }
 
   depends_on = [
@@ -74,19 +71,20 @@ resource "null_resource" "add-admin-policy-cc" {
 }
 # add permissions to the service agent
 locals {
-  roles_to_grant_to_service_agent = [
+  roles_to_grant_to_service_agent = local.enable_vertex ? [
     "roles/aiplatform.customCodeServiceAgent",
     "roles/aiplatform.serviceAgent",
     "roles/containerregistry.ServiceAgent",
     "roles/secretmanager.admin",
-  ]
+  ] : []
 }
 resource "google_project_iam_member" "roles-service-agent-cc" {
   project = var.project_id
 
-  member   = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform-cc.iam.gserviceaccount.com"
   for_each = toset(local.roles_to_grant_to_service_agent)
   role     = each.value
+
+  member = "serviceAccount:service-${data.google_project.project[0].number}@gcp-sa-aiplatform-cc.iam.gserviceaccount.com"
 
   depends_on = [
     null_resource.vertex-dummy-run,
@@ -108,7 +106,7 @@ resource "null_resource" "add-admin-policy" {
   count = local.enable_vertex ? 1 : 0
 
   provisioner "local-exec" {
-    command = "gcloud iam service-accounts add-iam-policy-binding --role=roles/iam.serviceAccountAdmin --member=serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform.iam.gserviceaccount.com ${google_service_account.sa[0].email} --project ${var.project_id}"
+    command = "gcloud iam service-accounts add-iam-policy-binding --role=roles/iam.serviceAccountAdmin --member=serviceAccount:service-${data.google_project.project[0].number}@gcp-sa-aiplatform.iam.gserviceaccount.com ${google_service_account.sa[0].email} --project ${var.project_id}"
   }
 
   depends_on = [
@@ -119,9 +117,10 @@ resource "null_resource" "add-admin-policy" {
 resource "google_project_iam_member" "roles-service-agent" {
   project = var.project_id
 
-  member   = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-aiplatform.iam.gserviceaccount.com"
   for_each = toset(local.roles_to_grant_to_service_agent)
   role     = each.value
+
+  member = "serviceAccount:service-${data.google_project.project[0].number}@gcp-sa-aiplatform.iam.gserviceaccount.com"
 
   depends_on = [
     null_resource.get-vertex-agent,
