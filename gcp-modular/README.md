@@ -42,7 +42,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 1. Pull this recipe to your local system.
 
     ```shell
-    zenml stack recipe pull gcp-kubeflow-kserve
+    zenml stack recipe pull gcp-modular
     ```
 2. 🎨 Customize your deployment by editing the default values in the `locals.tf` file.
 
@@ -51,7 +51,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
 5. 🚀 Deploy the recipe with this simple command.
 
     ```
-    zenml stack recipe deploy gcp-kubeflow-kserve
+    zenml stack recipe deploy gcp-modular
     ```
 
     > **Tip**
@@ -118,7 +118,7 @@ Using the ZenML stack recipe CLI commands, you can run the following commands to
 1. 🗑️ Run the destroy command which removes all resources and their dependencies from the cloud.
 
     ```shell
-    zenml stack recipe destroy gcp-kubeflow-kserve
+    zenml stack recipe destroy gcp-modular
     ```
 
 2. (Optional) 🧹 Clean up all stack recipe files that you had pulled to your local system.
