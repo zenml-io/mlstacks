@@ -80,7 +80,7 @@ requirements:
           local: true
 %{endif}
 
-%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
+%{if var.enable_artifact_store || var.enable_experiment_tracker_mlflow}
   - name: k3d-minio-artifact-store-${random_string.cluster_id.result}
     description: >-
       Minio artifact store running in a local K3D cluster.
@@ -167,7 +167,7 @@ environments:
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
     mandatory_requirements:
-%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
+%{if var.enable_artifact_store || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
     capabilities:
@@ -197,7 +197,7 @@ environments:
     mandatory_requirements:
       - k3d-kubernetes-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
+%{if var.enable_artifact_store || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
@@ -226,7 +226,7 @@ environments:
     mandatory_requirements:
       - k3d-kubeflow-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
+%{if var.enable_artifact_store || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
@@ -256,7 +256,7 @@ environments:
     mandatory_requirements:
       - k3d-tekton-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
+%{if var.enable_artifact_store || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
@@ -286,7 +286,7 @@ environments:
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
     mandatory_requirements:
-%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
+%{if var.enable_artifact_store || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
     capabilities:
@@ -321,7 +321,7 @@ environments:
     mandatory_requirements:
       - k3d-kubernetes-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_orchestrator_kubeflow}
+%{if var.enable_artifact_store || var.enable_orchestrator_kubeflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
@@ -354,7 +354,7 @@ environments:
     mandatory_requirements:
       - k3d-kubeflow-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
+%{if var.enable_artifact_store || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
@@ -387,7 +387,7 @@ environments:
     mandatory_requirements:
       - k3d-tekton-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
-%{if var.enable_minio || var.enable_experiment_tracker_mlflow}
+%{if var.enable_artifact_store || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
 %{endif}
 %{endif}
