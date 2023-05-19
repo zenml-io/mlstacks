@@ -110,7 +110,7 @@ resource "kubernetes_secret" "seldon-secret" {
 
   data = {
     RCLONE_CONFIG_S3_ACCESS_KEY_ID     = "${var.zenml-minio-store-access-key}"
-    RCLONE_CONFIG_S3_ENDPOINT          =  local.enable_minio? "${module.minio_server[0].artifact_S3_Endpoint_URL}": ""
+    RCLONE_CONFIG_S3_ENDPOINT          = local.enable_minio ? "${module.minio_server[0].artifact_S3_Endpoint_URL}" : ""
     RCLONE_CONFIG_S3_PROVIDER          = "Minio"
     RCLONE_CONFIG_S3_ENV_PATH          = "false"
     RCLONE_CONFIG_S3_SECRET_ACCESS_KEY = "${var.zenml-minio-store-secret-key}"
