@@ -11,7 +11,7 @@ variable "enable_orchestrator_kubeflow" {
   description = "Enable Kubeflow deployment"
   default     = false
 }
-variable "enable_minio" {
+variable "enable_artifact_store" {
   description = "Enable Minio deployment"
   default     = false
 }

@@ -8,7 +8,7 @@ resource "local_file" "stack_file" {
     stack_name: k3d_minimal_${replace(substr(timestamp(), 0, 16), ":", "_")}
     components:
       artifact_store:
-%{if var.enable_minio}
+%{if var.enable_artifact_store}
         id: ${uuid()}
         flavor: s3
         name: k3d-minio-${random_string.cluster_id.result}

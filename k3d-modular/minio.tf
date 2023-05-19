@@ -1,8 +1,10 @@
-
+locals {
+  enable_minio = (var.enable_artifact_store || var.enable_experiment_tracker_mlflow)
+}
 module "minio_server" {
   source = "../modules/minio-module"
 
-  count = (var.enable_minio || var.enable_experiment_tracker_mlflow) ? 1 : 0
+  count = local.enable_minio ? 1 : 0
 
   # run only after the eks cluster is set up
   depends_on = [
@@ -35,7 +37,7 @@ provider "minio" {
 # Create a bucket for ZenML to use
 resource "minio_s3_bucket" "zenml_bucket" {
 
-  count = (var.enable_minio) ? 1 : 0
+  count = (var.enable_artifact_store) ? 1 : 0
 
   bucket        = local.minio.zenml_minio_store_bucket
   force_destroy = true

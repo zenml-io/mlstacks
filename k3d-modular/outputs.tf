@@ -1,16 +1,16 @@
 # if minio is enabled, set the artifact store outputs to the minio values
 # otherwise, set the artifact store outputs to empty strings
 output "artifact_store_id" {
-  value = var.enable_minio ? uuid() : ""
+  value = var.enable_artifact_store ? uuid() : ""
 }
 output "artifact_store_flavor" {
-  value = var.enable_minio ? "s3" : ""
+  value = var.enable_artifact_store ? "s3" : ""
 }
 output "artifact_store_name" {
-  value = var.enable_minio ? "k3d-minio-${random_string.cluster_id.result}" : ""
+  value = var.enable_artifact_store ? "k3d-minio-${random_string.cluster_id.result}" : ""
 }
 output "artifact_store_configuration" {
-  value = var.enable_minio ? jsonencode({
+  value = var.enable_artifact_store ? jsonencode({
     path          = "s3://${local.minio.zenml_minio_store_bucket}"
     key           = "${var.zenml-minio-store-access-key}"
     secret        = "${var.zenml-minio-store-secret-key}"
@@ -23,22 +23,22 @@ output "artifact_store_configuration" {
 output "container_registry_id" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
-  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_minio || var.enable_zenml) ? uuid() : ""
+  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? uuid() : ""
 }
 output "container_registry_flavor" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
-  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_minio || var.enable_zenml) ? "default" : ""
+  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? "default" : ""
 }
 output "container_registry_name" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
-  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_minio || var.enable_zenml) ? "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}" : ""
+  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}" : ""
 }
 output "container_registry_configuration" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
-    var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_minio || var.enable_zenml) ? jsonencode({
+    var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? jsonencode({
       uri = "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
   }) : ""
 }
@@ -120,7 +120,7 @@ output "model_deployer_configuration" {
 output "k3d-cluster-name" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
-  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_minio || var.enable_zenml) ? k3d_cluster.zenml-cluster[0].name : ""
+  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? k3d_cluster.zenml-cluster[0].name : ""
 }
 
 # output for container registry
@@ -139,10 +139,10 @@ output "istio-ingress-hostname" {
 }
 
 output "minio-console-URL" {
-  value = (var.enable_minio || var.enable_experiment_tracker_mlflow) ? module.minio_server[0].minio-console-URL : null
+  value = (var.enable_artifact_store || var.enable_experiment_tracker_mlflow) ? module.minio_server[0].minio-console-URL : null
 }
 output "minio-endpoint-URL" {
-  value = (var.enable_minio || var.enable_experiment_tracker_mlflow) ? module.minio_server[0].artifact_S3_Endpoint_URL : null
+  value = (var.enable_artifact_store || var.enable_experiment_tracker_mlflow) ? module.minio_server[0].artifact_S3_Endpoint_URL : null
 }
 
 output "kubeflow-pipelines-ui-URL" {
