@@ -22,7 +22,7 @@ module "zenml" {
   database_ssl_key                = local.zenml.database_ssl_key
   database_ssl_verify_server_cert = local.zenml.database_ssl_verify_server_cert
 
-  ingress_host          = local.zenml.ingress_host
+  ingress_host          = "${local.zenml.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address-aws}.nip.io"
   ingress_tls           = true
   zenmlserver_image_tag = local.zenml.image_tag
   zenmlinit_image_tag   = local.zenml.image_tag
