@@ -1,7 +1,6 @@
 from hypothesis import given, strategies as st
 
-# TODO: fix imports
-from src.stackrecipes.models.stack import Stack
+from stackrecipes.models.stack import Stack
 
 
 @given(st.builds(Stack))

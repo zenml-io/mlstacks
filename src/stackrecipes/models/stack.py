@@ -12,4 +12,4 @@ class Stack(BaseModel):
     default_region: Optional[str]
     default_tags: Optional[Dict[str, str]]
     deployment_method: Optional[str] = "kubernetes"
-    components: List[Component]
+    components: List[Component] = []

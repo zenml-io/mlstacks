@@ -1,7 +1,6 @@
 from hypothesis import given, strategies as st
 
-# TODO: fix imports
-from src.stackrecipes.models.component import Component, ComponentMetadata
+from stackrecipes.models.component import Component, ComponentMetadata
 
 
 @given(st.builds(ComponentMetadata))
