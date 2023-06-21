@@ -3,13 +3,15 @@ from pydantic import BaseModel
 
 
 class ComponentMetadata(BaseModel):
-    configuration: Optional[Dict[str, str]]
+    region: str
+    config: Optional[Dict[str, str]]
     tags: Optional[Dict[str, str]]
-    region: Optional[str]
     environment_variables: Optional[Dict[str, str]]
 
 
 class Component(BaseModel):
+    spec_version: int = 1
+    component_type: str = "component"
     name: str
-    deployment_type: str = "KUBERNETES"
-    metadata: Optional[ComponentMetadata]
+    provider: str
+    metadata: ComponentMetadata
