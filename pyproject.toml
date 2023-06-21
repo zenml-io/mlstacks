@@ -51,6 +51,8 @@ exclude = '''
 
 [tool.poetry.dependencies]
 pydantic = {version = "2.0b3"}
+pyyaml = {version = "6.0"}
+
 # dev dependencies
 hypothesis = {version = "^6.79.1", optional = true}
 pytest = {version = "^7.3.2", optional = true}
