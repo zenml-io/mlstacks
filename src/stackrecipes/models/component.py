@@ -11,7 +11,8 @@ class ComponentMetadata(BaseModel):
 
 class Component(BaseModel):
     spec_version: int = 1
-    component_type: str = "component"
+    spec_type: str = "component"
+    component_type: str
     name: str
     provider: str
     metadata: ComponentMetadata
