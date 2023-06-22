@@ -4,7 +4,7 @@ version = "0.1.0"
 packages = [
     { include = "stackrecipes", from = "src" },
 ]
-# description = "ZenML: Write production-ready ML code."
+description = "ZenML: Write production-ready ML code."
 authors = ["ZenML GmbH <info@zenml.io>"]
 readme = "README.md"
 homepage = ""
@@ -14,6 +14,7 @@ license = "Apache-2.0"
 keywords = [
     "machine learning", "production", "pipeline", "mlops", "devops"
 ]
+
 
 [build-system]
 requires = ["setuptools", "wheel"]
