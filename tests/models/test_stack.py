@@ -1,6 +1,6 @@
 from hypothesis import given, strategies as st
 
-from stackrecipes.models.stack import Stack
+from mlstacks.models.stack import Stack
 
 
 @given(st.builds(Stack))

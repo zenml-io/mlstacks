@@ -1,7 +1,7 @@
 from typing import Dict, List
 import python_terraform
-from stackrecipes.models.component import Component
-from stackrecipes.models.stack import Stack
+from mlstacks.models.component import Component
+from mlstacks.models.stack import Stack
 
 
 class TerraformRunner:

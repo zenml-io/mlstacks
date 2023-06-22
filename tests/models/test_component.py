@@ -1,6 +1,6 @@
 from hypothesis import given, strategies as st
 
-from stackrecipes.models.component import Component, ComponentMetadata
+from mlstacks.models.component import Component, ComponentMetadata
 
 
 @given(st.builds(ComponentMetadata))

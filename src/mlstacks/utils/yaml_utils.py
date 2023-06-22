@@ -1,6 +1,6 @@
 import yaml
-from stackrecipes.models.component import Component, ComponentMetadata
-from stackrecipes.models.stack import Stack
+from mlstacks.models.component import Component, ComponentMetadata
+from mlstacks.models.stack import Stack
 
 
 def load_component_yaml(path: str) -> Component:
