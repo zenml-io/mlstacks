@@ -1,5 +1,6 @@
 import click
 import os
+from mlstacks.utils.terraform_utils import deploy_stack
 
 
 @click.group()
@@ -17,9 +18,7 @@ def cli():
 )
 def deploy(file):
     """This command deploys the stack based on a YAML file"""
-    with open(file, "r") as file:
-        content = file.read()
-        click.echo(f"Deploying with the following file contents:\n{content}")
+    deploy_stack(file)
 
 
 @click.command()

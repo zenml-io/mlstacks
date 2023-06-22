@@ -2,6 +2,7 @@ from typing import Dict, List
 import python_terraform
 from mlstacks.models.component import Component
 from mlstacks.models.stack import Stack
+from mlstacks.utils.yaml_utils import load_stack_yaml
 
 
 class TerraformRunner:
@@ -38,3 +39,21 @@ def parse_tf_vars(stack: Stack) -> Dict[str, str]:
     # update the dict with the component variables
     tf_vars.update(parse_component_variables(stack.components))
     return tf_vars
+
+
+def deploy_stack(stack_path: str):
+    stack = load_stack_yaml(stack_path)
+    tf_vars = parse_tf_vars(stack)
+
+    tf_recipe_path = f"terraform/{stack.provider}-modular"
+
+    tfr = TerraformRunner(tf_recipe_path)
+    ret_code, _, _ = tfr.client.init(capture_output=False)
+
+    tfr.client.apply(
+        var=tf_vars,
+        input=False,
+        capture_output=False,
+        raise_on_error=True,
+        refresh=False,
+    )
