@@ -1,6 +1,6 @@
 import click
 import os
-from mlstacks.utils.terraform_utils import deploy_stack
+from mlstacks.utils.terraform_utils import deploy_stack, destroy_stack
 
 
 @click.group()
@@ -31,9 +31,7 @@ def deploy(file):
 )
 def destroy(file):
     """This command destroys the stack based on a YAML file"""
-    with open(file, "r") as file:
-        content = file.read()
-        click.echo(f"Destroying with the following file contents:\n{content}")
+    destroy_stack(file)
 
 
 cli.add_command(deploy)

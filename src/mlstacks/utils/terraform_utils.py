@@ -57,3 +57,21 @@ def deploy_stack(stack_path: str):
         raise_on_error=True,
         refresh=False,
     )
+
+
+def destroy_stack(stack_path: str):
+    stack = load_stack_yaml(stack_path)
+    tf_vars = parse_tf_vars(stack)
+
+    tf_recipe_path = f"terraform/{stack.provider}-modular"
+
+    tfr = TerraformRunner(tf_recipe_path)
+    ret_code, _, _ = tfr.client.init(capture_output=False)
+
+    tfr.client.destroy(
+        var=tf_vars,
+        capture_output=False,
+        raise_on_error=True,
+        force=python_terraform.IsNotFlagged,
+        refresh=False,
+    )
