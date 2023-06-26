@@ -17,7 +17,11 @@ def cli():
     help="Path to the YAML file for deploy",
 )
 def deploy(file):
-    """This command deploys the stack based on a YAML file"""
+    """This command deploys the stack based on a YAML file.
+
+    Args:
+        file (str): Path to the YAML file for deploy
+    """
     deploy_stack(file)
 
 
@@ -30,7 +34,11 @@ def deploy(file):
     help="Path to the YAML file for destroy",
 )
 def destroy(file):
-    """This command destroys the stack based on a YAML file"""
+    """This command destroys the stack based on a YAML file.
+
+    Args:
+        file (str): Path to the YAML file for destroy
+    """
     destroy_stack(file)
 
 
