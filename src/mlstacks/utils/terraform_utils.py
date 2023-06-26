@@ -1,6 +1,6 @@
 """Utility functions for Terraform."""
 
-from typing import Dict, List
+from typing import Any, Dict, List, Optional
 
 import python_terraform
 
@@ -12,7 +12,7 @@ from mlstacks.utils.yaml_utils import load_stack_yaml
 class TerraformRunner:
     """Terraform runner."""
 
-    def __init__(self, tf_recipe_path):
+    def __init__(self, tf_recipe_path: str) -> None:
         """Initialize Terraform runner.
 
         Args:
@@ -25,7 +25,9 @@ class TerraformRunner:
         )
 
 
-def parse_component_variables(components: List[Component]) -> Dict[str, str]:
+def parse_component_variables(
+    components: List[Component],
+) -> Dict[str, Optional[str]]:
     """Parse component variables.
 
     Args:
@@ -50,7 +52,7 @@ def parse_component_variables(components: List[Component]) -> Dict[str, str]:
     return component_variables
 
 
-def parse_tf_vars(stack: Stack) -> Dict[str, str]:
+def parse_tf_vars(stack: Stack) -> Dict[str, Any]:
     """Parse Terraform variables.
 
     Args:

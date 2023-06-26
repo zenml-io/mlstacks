@@ -15,4 +15,4 @@ ruff $SRC --select F401,F841 --exclude "__init__.py" --isolated
 black $SRC  --check
 
 # check type annotations
-# mypy $SRC_NO_TESTS
+mypy $SRC_NO_TESTS

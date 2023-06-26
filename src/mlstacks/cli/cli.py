@@ -6,7 +6,7 @@ from mlstacks.utils.terraform_utils import deploy_stack, destroy_stack
 
 
 @click.group()
-def cli():
+def cli() -> None:
     """CLI for mlstacks."""
     pass
 
@@ -19,7 +19,7 @@ def cli():
     type=click.Path(exists=True),
     help="Path to the YAML file for deploy",
 )
-def deploy(file):
+def deploy(file: str) -> None:
     """This command deploys the stack based on a YAML file.
 
     Args:
@@ -36,7 +36,7 @@ def deploy(file):
     type=click.Path(exists=True),
     help="Path to the YAML file for destroy",
 )
-def destroy(file):
+def destroy(file: str) -> None:
     """This command destroys the stack based on a YAML file.
 
     Args:
