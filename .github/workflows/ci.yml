@@ -1,6 +1,8 @@
 name: Linting & Integration Test
 
 on:
+    workflow_dispatch:
+    workflow_call:
     pull_request:
         types: [opened, synchronize, ready_for_review]
         paths-ignore: ["**.md"]
