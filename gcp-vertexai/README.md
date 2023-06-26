@@ -59,7 +59,7 @@ However, ZenML works seamlessly with the infrastructure provisioned through thes
     On the Vertex dashboard, under "Training" tab on the left, and under the "Custom Jobs" section, you will see that a dummy run gets created. This is done to trigger creation of a Vertex service agent and you can cancel and/or delete this job. 
     
     > **Note**
-    > If after deploying, you encounter an error that says Vertex AI service is not enabled, wait for a minute and run `delpoy` again. In some cases, the service takes time to get active.
+    > If after deploying, you encounter an error that says Vertex AI service is not enabled, wait for a minute and run `deploy` again. In some cases, the service takes time to get active.
     
     > **Note**
     > If you want to allow ZenML to automatically import the created resources as a ZenML stack, pass the `--import` flag to the command above. By default, the imported stack will have the same name as the stack recipe and you can provide your own with the `--stack-name` option.
