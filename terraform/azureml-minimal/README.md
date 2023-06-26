@@ -2,12 +2,12 @@
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from needing specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
-We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). This recipe, however, goes one step further.
+We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/platform-guide/set-up-your-mlops-platform/deploy-zenml) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). This recipe, however, goes one step further.
 
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources:
 
-- An Azure ML Workspace and cluster that can act as an [step operator](https://docs.zenml.io/mlops-stacks/step-operators) for your workloads.
-- An Azure Blob Storage Container as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc.
+- An Azure ML Workspace and cluster that can act as an [step operator](https://docs.zenml.io/user-guide/component-guide/step-operators) for your workloads.
+- An Azure Blob Storage Container as an [artifact store](https://docs.zenml.io/user-guide/component-guide/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc.
 
 For each AzureML Worskpace, azureml automatically provisions a storage account, application insights, key vault, container registry and mlflow server.  
 
