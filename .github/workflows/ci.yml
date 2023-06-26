@@ -22,7 +22,6 @@ permissions:
 
 jobs:
   ubuntu-setup-python-environment:
-    if: github.event.pull_request.draft == false
     strategy:
       matrix:
         os: [ubuntu-latest]
