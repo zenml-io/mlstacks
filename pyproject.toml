@@ -11,6 +11,7 @@ homepage = ""
 documentation = ""
 repository = "https://github.com/zenml-io/mlops-stacks"
 license = "Apache-2.0"
+requires-python = ">=3.8.0"
 keywords = [
     "machine learning", "production", "pipeline", "mlops", "devops"
 ]
@@ -19,7 +20,25 @@ include = [
     "terraform",
     "*.txt",
      "*.sh",
-    "*.md"
+    "*.md",
+]
+exclude = [
+    "tests",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: System :: Distributed Computing",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 
 [tool.poetry.scripts]
