@@ -5,12 +5,12 @@ on:
     workflow_call:
     pull_request:
         types: [opened, synchronize, ready_for_review]
-        paths-ignore: ["**.md"]
+        paths-ignore: ["**.md", "!pyproject.toml"]
     push:
         branches:
             - main
             - develop
-        paths-ignore: ["**.md"]
+        paths-ignore: ["**.md", "!pyproject.toml"]
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.ref }}
