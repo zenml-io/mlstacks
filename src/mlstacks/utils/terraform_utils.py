@@ -22,7 +22,7 @@ def parse_component_variables(components: List[Component]) -> Dict[str, str]:
             and component.metadata.config
         ):
             component_variables["bucket_name"] = component.metadata.config.get(
-                "bucket_name"
+                "path"
             )
             component_variables["enable_artifact_store"] = "true"
         # extract the logic for each different component type
