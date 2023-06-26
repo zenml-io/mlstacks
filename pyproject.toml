@@ -60,3 +60,55 @@ hypothesis = {version = "^6.79.1", optional = true}
 pytest = {version = "^7.3.2", optional = true}
 mypy = {version = "^1.4.0", optional = true}
 darglint = { version = "^1.8.1", optional = true }
+ruff = { version = "^0.0.275", optional = true }
+
+[tool.poetry.extras]
+dev = ["black", "ruff", "pytest", "mypy", "darglint", "hypothesis"]
+
+[tool.ruff]
+line-length = 79
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "venv",
+    '__init__.py',
+]
+per-file-ignores = {}
+select = ["D", "E", "F", "I", "I001", "Q", "N", "UP", "S", "B", "A", "COM", "C4", "DTZ", "EM", "ISC", "ICN", "G", "INP", "T20", "PT", "Q", "RSE", "RET", "SIM", "TID", "TCH", "ARG", "PL", "TRY", "RUF"]
+# ignore = ["E501", "F401", "F403", "D301", "D401", "D403", "D407", "D213", "D203", "S101", "S104", "S105", "S106", "S107"]
+src = ["src", "tests"]
+# use Python 3.7 as the minimum version for autofixing
+target-version = "py37"
+ignore-init-module-imports = true
+# # Disable autofix for unused imports (`F401`).
+# unfixable = ["F401"]
+
+[tool.ruff.flake8-import-conventions.aliases]
+altair = "alt"
+"matplotlib.pyplot" = "plt"
+numpy = "np"
+pandas = "pd"
+seaborn = "sns"
+
+[tool.ruff.mccabe]
+max-complexity = 15
+
+[tool.ruff.pydocstyle]
+# Use Google-style docstrings.
+convention = "google"
