@@ -1,5 +1,5 @@
 import click
-import os
+
 from mlstacks.utils.terraform_utils import deploy_stack, destroy_stack
 
 
