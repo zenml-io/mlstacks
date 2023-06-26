@@ -4,30 +4,30 @@ on:
   workflow_call:
     inputs:
       os:
-        description: 'OS'
+        description: "OS"
         type: string
         required: true
       python-version:
-        description: 'Python version'
+        description: "Python version"
         type: string
         required: true
       enable_tmate:
-        description: 'Enable tmate session for debugging'
+        description: "Enable tmate session for debugging"
         type: string
         required: false
         default: "never"
       install_integrations:
-        description: 'Install ZenML integrations'
+        description: "Install ZenML integrations"
         type: string
         required: false
-        default: 'yes'
+        default: "yes"
 
 jobs:
   setup:
     name: setup
     runs-on: ${{ inputs.os }}
     env:
-      PYTHONIOENCODING: 'utf-8'
+      PYTHONIOENCODING: "utf-8"
 
     steps:
       - uses: actions/checkout@v3
@@ -37,4 +37,3 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
           os: ${{ inputs.os }}
-
