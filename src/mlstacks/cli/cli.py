@@ -1,3 +1,5 @@
+"""CLI for mlstacks."""
+
 import click
 
 from mlstacks.utils.terraform_utils import deploy_stack, destroy_stack
@@ -5,6 +7,7 @@ from mlstacks.utils.terraform_utils import deploy_stack, destroy_stack
 
 @click.group()
 def cli():
+    """CLI for mlstacks."""
     pass
 
 

@@ -1,10 +1,21 @@
+"""Utility functions for loading YAML files into Python objects."""
+
 import yaml
+
 from mlstacks.models.component import Component, ComponentMetadata
 from mlstacks.models.stack import Stack
 
 
 def load_component_yaml(path: str) -> Component:
-    with open(path, "r") as file:
+    """Load component YAML file as a Pydantic model.
+
+    Args:
+        path: The path to the component YAML file.
+
+    Returns:
+        The component model.
+    """
+    with open(path) as file:
         component_data = yaml.safe_load(file)
 
     return Component(
@@ -18,14 +29,22 @@ def load_component_yaml(path: str) -> Component:
             config=component_data.get("metadata").get("config"),
             tags=component_data.get("metadata").get("tags"),
             environment_variables=component_data.get("metadata").get(
-                "environment_variables"
+                "environment_variables",
             ),
         ),
     )
 
 
 def load_stack_yaml(path: str) -> Stack:
-    with open(path, "r") as file:
+    """Load stack YAML file as a Pydantic model.
+
+    Args:
+        path: The path to the stack YAML file.
+
+    Returns:
+        The stack model.
+    """
+    with open(path) as file:
         stack_data = yaml.safe_load(file)
         component_data = stack_data.get("components")
 
