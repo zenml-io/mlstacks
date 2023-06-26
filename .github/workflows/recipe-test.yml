@@ -11,22 +11,22 @@
 #       - develop
 
 # permissions:
-#       id-token: write
-#       contents: read
+#   id-token: write
+#   contents: read
 
 # jobs:
 #   spell-check:
 #     name: spell-check
 #     runs-on: ubuntu-latest
 #     steps:
-#     - name: Checkout Actions Repository
-#       uses: actions/checkout@v2
+#       - name: Checkout Actions Repository
+#         uses: actions/checkout@v2
 
-#     - name: Spelling checker
-#       uses: crate-ci/typos@master
-#       with:
-#         files: "."
-#         config: ./.typos.toml
+#       - name: Spelling checker
+#         uses: crate-ci/typos@master
+#         with:
+#           files: "."
+#           config: ./.typos.toml
 
 #   aws_test:
 #     name: aws_test
@@ -61,14 +61,14 @@
 #     steps:
 #       - name: Checkout
 #         uses: actions/checkout@master
-      
-#       - id: 'auth'
-#         uses: 'google-github-actions/auth@v0'
-#         with:
-#           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-#       - name: 'Set up Cloud SDK'
-#         uses: 'google-github-actions/setup-gcloud@v0'
+#       - id: "auth"
+#         uses: "google-github-actions/auth@v0"
+#         with:
+#           credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+
+#       - name: "Set up Cloud SDK"
+#         uses: "google-github-actions/setup-gcloud@v0"
 
 #       - name: Install Terraform
 #         uses: hashicorp/setup-terraform@v2
