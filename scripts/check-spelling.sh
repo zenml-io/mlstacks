@@ -1,4 +1,4 @@
 #!/bin/sh -e
 set -x
 
-typos .
+typos -c .typos.toml .
