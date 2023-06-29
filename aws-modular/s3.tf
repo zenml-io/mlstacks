@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "allow_access_from_another_account" {
   count = var.enable_artifact_store ? 1 : 0
   statement {
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = [aws_iam_role.ng[0].arn]
     }
     actions = [
