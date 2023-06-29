@@ -4,7 +4,7 @@ locals {
     cluster_name        = "minimal-zenml-cluster"
     image               = "rancher/k3s:v1.24.4-k3s1"
     local_stores_path   = ""
-    workloads_namespace = "zenml-workloads-k8s"
+    workloads_namespace = "zenml"
   }
 
   k3d_registry = {
