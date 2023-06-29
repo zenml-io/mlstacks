@@ -1,8 +1,8 @@
 """Utility functions for Terraform."""
 
+import logging
 import subprocess
 from typing import Any, Dict, List, Optional
-import logging
 
 import python_terraform
 
