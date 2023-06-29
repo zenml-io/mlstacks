@@ -36,6 +36,7 @@ class Component(BaseModel):
     spec_version: int = 1
     spec_type: str = "component"
     component_type: str
+    component_flavor: str
     name: str
     provider: str
     metadata: ComponentMetadata

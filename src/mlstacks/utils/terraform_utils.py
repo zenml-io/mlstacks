@@ -12,6 +12,13 @@ from mlstacks.utils.yaml_utils import load_stack_yaml
 
 logger = logging.getLogger(__name__)
 
+HIGH_LEVEL_COMPONENTS = [
+    "artifact_store",
+    "container_registry",
+    "secrets_manager",
+    "mlops_platform",
+]
+
 
 class TerraformRunner:
     """Terraform runner."""
@@ -29,6 +36,41 @@ class TerraformRunner:
         )
 
 
+def _compose_enable_key(component: Component) -> str:
+    """Generate the key for enabling a component.
+
+    Args:
+        component: The component.
+
+    Returns:
+        The key for enabling the component.
+    """
+    if component.component_type not in HIGH_LEVEL_COMPONENTS:
+        return (
+            f"enable_{component.component_type}_{component.component_flavor}"
+        )
+    elif (
+        component.component_type == "mlops_platform"
+        and component.component_flavor == "zenml"
+    ):
+        return "enable_zenml"
+    else:
+        return f"enable_{component.component_type}"
+
+
+def _get_config_property(component: Component, property_name: str) -> str:
+    """Retrieve a property value from the configuration.
+
+    Args:
+        component: The component.
+        property_name: The name of the property.
+
+    Returns:
+        The value of the property.
+    """
+    return component.metadata.config.get(property_name)
+
+
 def parse_component_variables(
     components: List[Component],
 ) -> Dict[str, Optional[str]]:
@@ -40,18 +82,17 @@ def parse_component_variables(
     Returns:
         The component variables.
     """
+
     component_variables = {}
     for component in components:
-        if (
-            component.component_type == "artifact_store"
-            and component.metadata.config
-        ):
-            component_variables["bucket_name"] = component.metadata.config.get(
-                "path",
-            )
-            component_variables["enable_artifact_store"] = "true"
-        # extract the logic for each different component type
-        # add those variables to the component_variables dict
+        key = _compose_enable_key(component)
+        component_variables[key] = "true"
+        if component.metadata.config:
+            # additionally set all other key/value pairs from the configuration
+            for config_key in component.metadata.config:
+                component_variables[config_key] = _get_config_property(
+                    component, config_key
+                )
 
     return component_variables
 
@@ -87,7 +128,7 @@ def deploy_stack(stack_path: str) -> None:
 
     tfr = TerraformRunner(tf_recipe_path)
     ret_code, _, _ = tfr.client.init(capture_output=False)
-
+    breakpoint()
     tfr.client.apply(
         var=tf_vars,
         input=False,
@@ -128,9 +169,9 @@ def _infracost_installed() -> bool:
     """
     try:
         subprocess.run(
-            ["infracost"],
-            check=False,
-            capture_output=False,
+            ["infracost", "configure", "get", "api_key"],
+            check=True,
+            capture_output=True,
             text=True,
         )
         return True
@@ -155,7 +196,9 @@ def infracost_breakdown_stack(stack_path: str) -> None:
     """Estimate costs for a stack using Infracost."""
     if not _infracost_installed():
         logger.error(
-            "Infracost is not installed. Please visit their docs at https://www.infracost.io/docs/ and install before retrying."
+            "Infracost is not installed or you have not logged in. "
+            "Please visit their docs at https://www.infracost.io/docs/ "
+            "and install, then run 'infracost auth login' before retrying."
         )
         return
 

@@ -24,7 +24,7 @@ def cli() -> None:
     help="Path to the YAML file for deploy",
 )
 def deploy(file: str) -> None:
-    """This command deploys the stack based on a YAML file.
+    """Deploys a stack based on a YAML file.
 
     Args:
         file (str): Path to the YAML file for deploy
@@ -41,7 +41,7 @@ def deploy(file: str) -> None:
     help="Path to the YAML file for destroy",
 )
 def destroy(file: str) -> None:
-    """This command destroys the stack based on a YAML file.
+    """Destroys a stack based on a YAML file.
 
     Args:
         file (str): Path to the YAML file for destroy
@@ -55,10 +55,10 @@ def destroy(file: str) -> None:
     "--file",
     required=True,
     type=click.Path(exists=True),
-    help="Path to the YAML file for Infracost breakdown",
+    help="Path to the YAML file for Infracost cost breakdown",
 )
-def breakdown(file: str) -> None:
-    """This command estimates the costs for a stack based on a YAML file.
+def cost(file: str) -> None:
+    """Estimates the costs for an MLOps stack.
 
     Args:
         file (str): Path to the YAML file for breakdown
@@ -68,7 +68,7 @@ def breakdown(file: str) -> None:
 
 cli.add_command(deploy)
 cli.add_command(destroy)
-cli.add_command(breakdown)
+cli.add_command(cost)
 
 if __name__ == "__main__":
     cli()

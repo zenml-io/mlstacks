@@ -22,6 +22,7 @@ def load_component_yaml(path: str) -> Component:
         spec_version=component_data.get("spec_version"),
         spec_type=component_data.get("spec_type"),
         component_type=component_data.get("component_type"),
+        component_flavor=component_data.get("component_flavor"),
         name=component_data.get("name"),
         provider=component_data.get("provider"),
         metadata=ComponentMetadata(
