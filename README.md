@@ -15,7 +15,7 @@ provision popular combinations of MLOps tools. These recipes will be useful for 
 
 - You are at the start of your MLOps journey, and would like to explore different tools.
 - You are looking for guidelines for production-grade deployments.
-- You would like to run your pipelines on your chosen [ZenML Stack](https://docs.zenml.io/advanced-guide/stacks-components-flavors).
+- You would like to run your pipelines on your chosen [ZenML Stack](https://docs.zenml.io/user-guide/starter-guide/understand-stacks).
 
 🔥 **Do you use these tools or do you want to add one to your MLOps stack?** At
 ZenML, we are looking for design partnerships and collaboration to implement and

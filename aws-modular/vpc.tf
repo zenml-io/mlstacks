@@ -2,7 +2,7 @@
 module "vpc" {
   count   = local.enable_eks ? 1 : 0
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.0"
+  version = ">= 4.0.0"
 
   name = "${local.prefix}-${local.vpc.name}"
   cidr = "11.12.0.0/16"
