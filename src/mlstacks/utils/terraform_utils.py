@@ -2,12 +2,15 @@
 
 import subprocess
 from typing import Any, Dict, List, Optional
+import logging
 
 import python_terraform
 
 from mlstacks.models.component import Component
 from mlstacks.models.stack import Stack
 from mlstacks.utils.yaml_utils import load_stack_yaml
+
+logger = logging.getLogger(__name__)
 
 
 class TerraformRunner:
@@ -123,7 +126,16 @@ def _infracost_installed() -> bool:
     Returns:
         True if Infracost is installed, False otherwise.
     """
-    return True
+    try:
+        subprocess.run(
+            ["infracost"],
+            check=False,
+            capture_output=False,
+            text=True,
+        )
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
 
 
 def _get_infracost_vars(vars: Dict[str, Any]) -> Dict[str, str]:
@@ -142,7 +154,10 @@ def _get_infracost_vars(vars: Dict[str, Any]) -> Dict[str, str]:
 def infracost_breakdown_stack(stack_path: str) -> None:
     """Estimate costs for a stack using Infracost."""
     if not _infracost_installed():
-        raise RuntimeError("Infracost is not installed.")
+        logger.error(
+            "Infracost is not installed. Please visit their docs at https://www.infracost.io/docs/ and install before retrying."
+        )
+        return
 
     stack = load_stack_yaml(stack_path)
     infracost_vars = _get_infracost_vars(parse_tf_vars(stack))
