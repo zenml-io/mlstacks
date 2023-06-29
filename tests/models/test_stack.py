@@ -1,5 +1,6 @@
 from hypothesis import given
 from hypothesis import strategies as st
+
 from mlstacks.models.stack import Stack
 
 

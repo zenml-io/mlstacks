@@ -1,5 +1,6 @@
 """Utility functions for Terraform."""
 
+import subprocess
 from typing import Any, Dict, List, Optional
 
 import python_terraform
@@ -114,3 +115,52 @@ def destroy_stack(stack_path: str) -> None:
         force=python_terraform.IsNotFlagged,
         refresh=False,
     )
+
+
+def _infracost_installed() -> bool:
+    """Check if Infracost is installed.
+
+    Returns:
+        True if Infracost is installed, False otherwise.
+    """
+    return True
+
+
+def _get_infracost_vars(vars: Dict[str, Any]) -> Dict[str, str]:
+    """Get Infracost variables.
+
+    Args:
+        vars: The Terraform variables.
+
+    Returns:
+        The Infracost variables.
+    """
+    # remove any k:v pairs that are nested dicts
+    return {k: v for k, v in vars.items() if not isinstance(v, dict)}
+
+
+def infracost_breakdown_stack(stack_path: str) -> None:
+    """Estimate costs for a stack using Infracost."""
+    if not _infracost_installed():
+        raise RuntimeError("Infracost is not installed.")
+
+    stack = load_stack_yaml(stack_path)
+    infracost_vars = _get_infracost_vars(parse_tf_vars(stack))
+
+    tf_recipe_path = f"terraform/{stack.provider}-modular"
+
+    tfr = TerraformRunner(tf_recipe_path)
+    tfr.client.init(capture_output=True)
+
+    # Constructing the infracost command
+    infracost_cmd = f"infracost breakdown --path {tf_recipe_path}"
+    for k, v in infracost_vars.items():
+        infracost_cmd += f" --terraform-var {k}={v}"
+
+    # Execute the command
+    process = subprocess.run(
+        infracost_cmd, shell=True, check=True, capture_output=True, text=True
+    )
+
+    # Print the output
+    print(process.stdout)
