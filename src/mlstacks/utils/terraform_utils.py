@@ -127,8 +127,8 @@ def deploy_stack(stack_path: str) -> None:
     tf_recipe_path = f"terraform/{stack.provider}-modular"
 
     tfr = TerraformRunner(tf_recipe_path)
-    ret_code, _, _ = tfr.client.init(capture_output=False)
-    breakpoint()
+    ret_code, _, _ = tfr.client.init(capture_output=True)
+    # breakpoint()
     tfr.client.apply(
         var=tf_vars,
         input=False,
@@ -150,7 +150,7 @@ def destroy_stack(stack_path: str) -> None:
     tf_recipe_path = f"terraform/{stack.provider}-modular"
 
     tfr = TerraformRunner(tf_recipe_path)
-    ret_code, _, _ = tfr.client.init(capture_output=False)
+    ret_code, _, _ = tfr.client.init(capture_output=True)
 
     tfr.client.destroy(
         var=tf_vars,
