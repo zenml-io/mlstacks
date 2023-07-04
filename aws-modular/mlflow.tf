@@ -40,17 +40,36 @@ resource "aws_s3_bucket" "mlflow-bucket" {
   tags = local.tags
 }
 
-resource "aws_s3_bucket_acl" "mlflow" {
-  count  = length(aws_s3_bucket.mlflow-bucket) > 0 ? 1 : 0
-  bucket = aws_s3_bucket.mlflow-bucket[0].id
-  acl    = "private"
-}
-
 # block public access to the bucket
 resource "aws_s3_bucket_public_access_block" "mlflow" {
-  count  = length(aws_s3_bucket.mlflow-bucket) > 0 ? 1 : 0
+  count  = (var.enable_experiment_tracker_mlflow && var.mlflow_bucket == "") ? 1 : 0
   bucket = aws_s3_bucket.mlflow-bucket[0].id
 
-  block_public_acls   = true
-  block_public_policy = true
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_policy" "allow_access_from_another_account_mlflow" {
+  count  = (var.enable_experiment_tracker_mlflow && var.mlflow_bucket == "") ? 1 : 0
+  bucket = aws_s3_bucket.mlflow-bucket[0].id
+  policy = data.aws_iam_policy_document.allow_access_from_another_account_mlflow[0].json
+}
+
+data "aws_iam_policy_document" "allow_access_from_another_account_mlflow" {
+  count = (var.enable_experiment_tracker_mlflow && var.mlflow_bucket == "") ? 1 : 0
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.ng[0].arn]
+    }
+    actions = [
+      "s3:*",
+    ]
+    resources = [
+      aws_s3_bucket.mlflow-bucket[0].arn,
+      "${aws_s3_bucket.mlflow-bucket[0].arn}/*",
+    ]
+  }
 }
