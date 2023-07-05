@@ -57,7 +57,7 @@ def destroy(file: str) -> None:
     type=click.Path(exists=True),
     help="Path to the YAML file for Infracost cost breakdown",
 )
-def cost(file: str) -> None:
+def breakdown(file: str) -> None:
     """Estimates the costs for an MLOps stack.
 
     Args:
@@ -68,7 +68,7 @@ def cost(file: str) -> None:
 
 cli.add_command(deploy)
 cli.add_command(destroy)
-cli.add_command(cost)
+cli.add_command(breakdown)
 
 if __name__ == "__main__":
     cli()
