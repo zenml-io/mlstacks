@@ -20,6 +20,7 @@ include = [
      "*.sh",
     "*.md",
     "*.tf",
+    "*.yaml",
 ]
 exclude = [
     "tests",
