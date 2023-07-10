@@ -16,10 +16,10 @@ keywords = [
 ]
 include = [
     "src/mlstacks",
-    "terraform",
     "*.txt",
      "*.sh",
     "*.md",
+    "*.tf",
 ]
 exclude = [
     "tests",
@@ -82,7 +82,9 @@ exclude = '''
 '''
 
 [tool.poetry.dependencies]
-pydantic = {version = "2.0.1"}
+# pydantic = {version = "2.0.2"}
+# compatible with Core ZenML
+pydantic = {version = "<1.11,>=1.9.0"}
 pyyaml = {version = "6.0"}
 click = {version = "8.1.3"}
 python-terraform = { version = "^0.10.1" }
