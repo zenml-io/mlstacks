@@ -128,7 +128,7 @@ def deploy_stack(stack_path: str) -> None:
 
     tfr = TerraformRunner(tf_recipe_path)
     ret_code, _, _ = tfr.client.init(capture_output=True)
-    # breakpoint()
+
     tfr.client.apply(
         var=tf_vars,
         input=False,
