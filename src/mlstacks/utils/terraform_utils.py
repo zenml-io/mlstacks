@@ -161,6 +161,29 @@ def destroy_stack(stack_path: str) -> None:
     )
 
 
+def get_stack_outputs(
+    stack_name: str, output_key: Optional[str] = None
+) -> Dict[str, str]:
+    """Get stack outputs.
+
+    Args:
+        stack_path: The path to the stack.
+    """
+    stack = load_stack_yaml(stack_name)
+
+    tf_recipe_path = f"terraform/{stack.provider}-modular"
+
+    tfr = TerraformRunner(tf_recipe_path)
+    tfr.client.init(capture_output=True)
+
+    if output_key:
+        full_outputs = tfr.client.output(output_key, full_value=True)
+        return {output_key: full_outputs}
+    else:
+        full_outputs = tfr.client.output(full_value=True)
+        return {k: v["value"] for k, v in full_outputs.items()}
+
+
 def _infracost_installed() -> bool:
     """Check if Infracost is installed.
 

@@ -67,6 +67,23 @@ def breakdown(file: str) -> None:
     infracost_breakdown_stack(file)
 
 
+@click.command()
+@click.option(
+    "-n",
+    "--name",
+    required=True,
+    type=str,
+    help="Stack recipe name",
+)
+def output(recipe_name: str) -> None:
+    """Estimates the costs for an MLOps stack.
+
+    Args:
+        file (str): Path to the YAML file for breakdown
+    """
+    get_stack_outputs(recipe_name)
+
+
 cli.add_command(deploy)
 cli.add_command(destroy)
 cli.add_command(breakdown)
