@@ -1,25 +1,15 @@
 """Stack model."""
 
-from enum import Enum
+
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
-from .component import Component
-
-
-class ProviderEnum(str, Enum):
-    """Provider enum."""
-
-    AWS = "aws"
-    AZURE = "azure"
-    GCP = "gcp"
-
-
-class DeploymentMethodEnum(str, Enum):
-    """Deployment method enum."""
-
-    KUBERNETES = "kubernetes"
+from mlstacks.enums import (
+    DeploymentMethodEnum,
+    ProviderEnum,
+)
+from mlstacks.models.component import Component
 
 
 class Stack(BaseModel):
