@@ -2,7 +2,10 @@
 
 import yaml
 
-from mlstacks.models.component import Component, ComponentMetadata
+from mlstacks.models.component import (
+    Component,
+    ComponentMetadata,
+)
 from mlstacks.models.stack import Stack
 
 
@@ -45,8 +48,8 @@ def load_stack_yaml(path: str) -> Stack:
     Returns:
         The stack model.
     """
-    with open(path) as file:
-        stack_data = yaml.safe_load(file)
+    with open(path) as yaml_file:
+        stack_data = yaml.safe_load(yaml_file)
         component_data = stack_data.get("components")
 
     return Stack(
