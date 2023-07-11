@@ -5,7 +5,7 @@ from typing import Dict, Optional
 
 from pydantic import BaseModel
 
-from mlstacks.models.stack import (
+from mlstacks.enums import (
     ComponentFlavorEnum,
     ComponentTypeEnum,
     ProviderEnum,
@@ -16,15 +16,11 @@ class ComponentMetadata(BaseModel):
     """Component metadata model.
 
     Attributes:
-        region: The region where the component will be deployed.
         config: The configuration for the component.
-        tags: The tags for the component.
         environment_variables: The environment variables for the component.
     """
 
-    region: str
     config: Optional[Dict[str, str]]
-    tags: Optional[Dict[str, str]]
     environment_variables: Optional[Dict[str, str]]
 
 

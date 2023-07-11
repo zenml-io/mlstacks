@@ -1,11 +1,17 @@
 """Utility functions for Terraform."""
 
 import logging
+import shutil
 import subprocess
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import pkg_resources
 import python_terraform
+from click import get_app_dir
 
+from mlstacks.constants import MLSTACKS_PACKAGE_NAME
+from mlstacks.enums import ProviderEnum
 from mlstacks.models.component import Component
 from mlstacks.models.stack import Stack
 from mlstacks.utils.yaml_utils import load_stack_yaml
@@ -115,6 +121,66 @@ def parse_tf_vars(stack: Stack) -> Dict[str, Any]:
     return tf_vars
 
 
+def tf_definitions_present(provider: ProviderEnum) -> bool:
+    """Check if Terraform definitions are present.
+
+    Args:
+        provider: The provider.
+
+    Returns:
+        True if Terraform definitions are present, False otherwise.
+    """
+    config_dir = get_app_dir(MLSTACKS_PACKAGE_NAME)
+    return Path(f"{config_dir}/terraform/{provider}-modular").exists()
+
+
+def populate_tf_definitions(provider: ProviderEnum) -> None:
+    """Copies Terraform definitions to local config directory.
+
+    Args:
+        provider: The cloud provider.
+    """
+    config_dir = get_app_dir(MLSTACKS_PACKAGE_NAME)
+    definitions_subdir = f"terraform/{provider}-modular"
+    destination_path = Path(f"{config_dir}/{definitions_subdir}")
+    package_path = pkg_resources.resource_filename(
+        MLSTACKS_PACKAGE_NAME, definitions_subdir
+    )
+    # copy files from package to the directory
+    _ = shutil.copytree(package_path, destination_path)
+    logger.info(f"Populated Terraform definitions in {destination_path}")
+    # write package version into the directory
+    with open(f"{destination_path}/MLSTACKS_VERSION.txt", "w") as f:
+        mlstacks_version = pkg_resources.get_distribution(
+            MLSTACKS_PACKAGE_NAME
+        ).version
+        f.write(mlstacks_version)
+
+
+def check_tf_definitions_version(provider: ProviderEnum) -> None:
+    """Checks for a Terraform version mismatch.
+
+    Args:
+        provider: The cloud provider.
+    """
+    config_dir = get_app_dir(MLSTACKS_PACKAGE_NAME)
+    definitions_subdir = f"terraform/{provider}-modular"
+    definitions_path = Path(f"{config_dir}/{definitions_subdir}")
+    if definitions_path.exists():
+        with open(f"{definitions_path}/MLSTACKS_VERSION.txt", "r") as f:
+            tf_version = f.read()
+            mlstacks_version = pkg_resources.get_distribution(
+                MLSTACKS_PACKAGE_NAME
+            ).version
+            if tf_version != mlstacks_version:
+                logger.warning(
+                    f"You are running mlstacks version {mlstacks_version}, "
+                    f"but the Terraform definitions in {definitions_path} "
+                    f"were generated with mlstacks version {tf_version}. "
+                    f"This may lead to unexpected behavior."
+                )
+
+
 def deploy_stack(stack_path: str) -> None:
     """Deploy stack.
 
@@ -122,6 +188,11 @@ def deploy_stack(stack_path: str) -> None:
         stack_path: The path to the stack.
     """
     stack = load_stack_yaml(stack_path)
+    if not tf_definitions_present(stack.provider):
+        populate_tf_definitions(stack.provider)
+
+    check_tf_definitions_version(stack.provider)
+
     tf_vars = parse_tf_vars(stack)
 
     tf_recipe_path = f"terraform/{stack.provider}-modular"
