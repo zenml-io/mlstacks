@@ -1,8 +1,11 @@
 """Component model."""
 
+from enum import Enum
 from typing import Dict, Optional
 
 from pydantic import BaseModel
+
+from mlstacks.models.stack import ProviderEnum
 
 
 class ComponentMetadata(BaseModel):
@@ -21,6 +24,39 @@ class ComponentMetadata(BaseModel):
     environment_variables: Optional[Dict[str, str]]
 
 
+class ComponentTypeEnum(str, Enum):
+    """Component type enum."""
+
+    MLOPS_PLATFORM = "mlops_platform"
+    ARTIFACT_STORE = "artifact_store"
+    ORCHESTRATOR = "orchestrator"
+    CONTAINER_REGISTRY = "container_registry"
+    SECRETS_MANAGER = "secrets_manager"
+    DATA_VALIDATOR = "data_validator"
+    EXPERIMENT_TRACKER = "experiment_tracker"
+    MODEL_REGISTRY = "model_registry"
+    MODEL_DEPLOYER = "model_deployer"
+    STEP_OPERATOR = "step_operator"
+    ALERTER = "alerter"
+    FEATURE_STORE = "feature_store"
+    ANNOTATOR = "annotator"
+    IMAGE_BUILDER = "image_builder"
+
+
+class ComponentFlavorEnum(str, Enum):
+    """Component flavor enum."""
+
+    ZENML = "zenml"
+    MLFLOW = "mlflow"
+    KUBEFLOW = "kubeflow"
+    KSERVE = "kserve"
+    KUBERNETES = "kubernetes"
+    S3 = "s3"
+    SAGEMAKER = "sagemaker"
+    SELDON = "seldon"
+    TEKTON = "tekton"
+
+
 class Component(BaseModel):
     """Component model.
 
@@ -35,8 +71,8 @@ class Component(BaseModel):
 
     spec_version: int = 1
     spec_type: str = "component"
-    component_type: str
-    component_flavor: str
+    component_type: ComponentTypeEnum
+    component_flavor: ComponentFlavorEnum
     name: str
-    provider: str
+    provider: ProviderEnum
     metadata: ComponentMetadata

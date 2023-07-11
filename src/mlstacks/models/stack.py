@@ -1,10 +1,25 @@
 """Stack model."""
 
+from enum import Enum
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel
 
 from .component import Component
+
+
+class ProviderEnum(str, Enum):
+    """Provider enum."""
+
+    AWS = "aws"
+    AZURE = "azure"
+    GCP = "gcp"
+
+
+class DeploymentMethodEnum(str, Enum):
+    """Deployment method enum."""
+
+    KUBERNETES = "kubernetes"
 
 
 class Stack(BaseModel):
@@ -24,8 +39,10 @@ class Stack(BaseModel):
     spec_version: int = 1
     spec_type: str = "stack"
     name: str
-    provider: str
+    provider: ProviderEnum
     default_region: Optional[str]
     default_tags: Optional[Dict[str, str]]
-    deployment_method: Optional[str] = "kubernetes"
+    deployment_method: Optional[
+        DeploymentMethodEnum
+    ] = DeploymentMethodEnum.KUBERNETES
     components: List[Component] = []
