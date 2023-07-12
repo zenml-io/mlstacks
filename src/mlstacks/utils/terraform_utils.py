@@ -10,7 +10,10 @@ import pkg_resources
 import python_terraform
 from click import get_app_dir
 
-from mlstacks.constants import MLSTACKS_PACKAGE_NAME
+from mlstacks.constants import (
+    MLSTACKS_PACKAGE_NAME,
+    MLSTACKS_INITIALIZATION_FILE_FLAG,
+)
 from mlstacks.enums import ProviderEnum
 from mlstacks.models.component import Component
 from mlstacks.models.stack import Stack
@@ -24,6 +27,8 @@ HIGH_LEVEL_COMPONENTS = [
     "model_deployer",
     "step_operator",
 ]
+
+CONFIG_DIR = get_app_dir(MLSTACKS_PACKAGE_NAME)
 
 
 class TerraformRunner:
@@ -153,9 +158,8 @@ def populate_tf_definitions(provider: ProviderEnum) -> None:
     Args:
         provider: The cloud provider.
     """
-    config_dir = get_app_dir(MLSTACKS_PACKAGE_NAME)
     definitions_subdir = f"terraform/{provider}-modular"
-    destination_path = Path(f"{config_dir}/{definitions_subdir}")
+    destination_path = Path(f"{CONFIG_DIR}/{definitions_subdir}")
     package_path = pkg_resources.resource_filename(
         MLSTACKS_PACKAGE_NAME, definitions_subdir
     )
@@ -176,9 +180,8 @@ def check_tf_definitions_version(provider: ProviderEnum) -> None:
     Args:
         provider: The cloud provider.
     """
-    config_dir = get_app_dir(MLSTACKS_PACKAGE_NAME)
     definitions_subdir = f"terraform/{provider}-modular"
-    definitions_path = Path(f"{config_dir}/{definitions_subdir}")
+    definitions_path = Path(f"{CONFIG_DIR}/{definitions_subdir}")
     if definitions_path.exists():
         with open(f"{definitions_path}/MLSTACKS_VERSION.txt", "r") as f:
             tf_version = f.read()
@@ -194,24 +197,43 @@ def check_tf_definitions_version(provider: ProviderEnum) -> None:
                 )
 
 
+def tf_previously_initialized(tf_recipe_path: str) -> bool:
+    """Returns whether Terraform has been previously initialized.
+
+    Args:
+        tf_recipe_path: The path to the Terraform recipe.
+
+    Returns:
+        True if Terraform has been previously initialized, False otherwise.
+    """
+    return Path(
+        f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}"
+    ).exists()
+
+
 def deploy_stack(stack_path: str) -> None:
     """Deploy stack.
 
     Args:
         stack_path: The path to the stack.
     """
+    # load and parse terraform variables and definitions
     stack = load_stack_yaml(stack_path)
+    tf_recipe_path = f"{CONFIG_DIR}/terraform/{stack.provider}-modular"
     if not tf_definitions_present(stack.provider):
         populate_tf_definitions(stack.provider)
+    tf_vars = parse_tf_vars(stack)
 
     check_tf_definitions_version(stack.provider)
 
-    tf_vars = parse_tf_vars(stack)
-
-    tf_recipe_path = f"terraform/{stack.provider}-modular"
-
+    # run Terraform
     tfr = TerraformRunner(tf_recipe_path)
-    ret_code, _, _ = tfr.client.init(capture_output=True)
+
+    if not tf_previously_initialized(tf_recipe_path):
+        # write a file with name `IGNORE_ME` to the Terraform recipe directory
+        # to prevent Terraform from initializing the recipe
+        ret_code, _, _ = tfr.client.init(capture_output=True)
+        Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     tfr.client.apply(
         var=tf_vars,
@@ -231,10 +253,15 @@ def destroy_stack(stack_path: str) -> None:
     stack = load_stack_yaml(stack_path)
     tf_vars = parse_tf_vars(stack)
 
-    tf_recipe_path = f"terraform/{stack.provider}-modular"
+    tf_recipe_path = f"{CONFIG_DIR}/terraform/{stack.provider}-modular"
 
     tfr = TerraformRunner(tf_recipe_path)
-    ret_code, _, _ = tfr.client.init(capture_output=True)
+
+    if not tf_previously_initialized(tf_recipe_path):
+        # write a file with name `IGNORE_ME` to the Terraform recipe directory
+        # to prevent Terraform from initializing the recipe
+        ret_code, _, _ = tfr.client.init(capture_output=True)
+        Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     tfr.client.destroy(
         var=tf_vars,
@@ -255,10 +282,14 @@ def get_stack_outputs(
     """
     stack = load_stack_yaml(stack_name)
 
-    tf_recipe_path = f"terraform/{stack.provider}-modular"
+    tf_recipe_path = f"{CONFIG_DIR}/terraform/{stack.provider}-modular"
 
     tfr = TerraformRunner(tf_recipe_path)
-    tfr.client.init(capture_output=True)
+    if not tf_previously_initialized(tf_recipe_path):
+        # write a file with name `IGNORE_ME` to the Terraform recipe directory
+        # to prevent Terraform from initializing the recipe
+        ret_code, _, _ = tfr.client.init(capture_output=True)
+        Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     if output_key:
         full_outputs = tfr.client.output(output_key, full_value=True)
@@ -312,10 +343,14 @@ def infracost_breakdown_stack(stack_path: str) -> None:
     stack = load_stack_yaml(stack_path)
     infracost_vars = _get_infracost_vars(parse_tf_vars(stack))
 
-    tf_recipe_path = f"terraform/{stack.provider}-modular"
+    tf_recipe_path = f"{CONFIG_DIR}/terraform/{stack.provider}-modular"
 
     tfr = TerraformRunner(tf_recipe_path)
-    tfr.client.init(capture_output=True)
+    if not tf_previously_initialized(tf_recipe_path):
+        # write a file with name `IGNORE_ME` to the Terraform recipe directory
+        # to prevent Terraform from initializing the recipe
+        ret_code, _, _ = tfr.client.init(capture_output=True)
+        Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     # Constructing the infracost command
     infracost_cmd = f"infracost breakdown --path {tf_recipe_path}"
