@@ -20,8 +20,8 @@ class ComponentMetadata(BaseModel):
         environment_variables: The environment variables for the component.
     """
 
-    config: Optional[Dict[str, str]]
-    environment_variables: Optional[Dict[str, str]]
+    config: Optional[Dict[str, str]] = None
+    environment_variables: Optional[Dict[str, str]] = None
 
 
 class Component(BaseModel):

@@ -31,7 +31,7 @@ class Stack(BaseModel):
     name: str
     provider: ProviderEnum
     default_region: Optional[str]
-    default_tags: Optional[Dict[str, str]]
+    default_tags: Optional[Dict[str, str]] = None
     deployment_method: Optional[
         DeploymentMethodEnum
     ] = DeploymentMethodEnum.KUBERNETES
