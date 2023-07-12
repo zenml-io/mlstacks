@@ -11,8 +11,8 @@ import python_terraform
 from click import get_app_dir
 
 from mlstacks.constants import (
-    MLSTACKS_PACKAGE_NAME,
     MLSTACKS_INITIALIZATION_FILE_FLAG,
+    MLSTACKS_PACKAGE_NAME,
 )
 from mlstacks.enums import ProviderEnum
 from mlstacks.models.component import Component
