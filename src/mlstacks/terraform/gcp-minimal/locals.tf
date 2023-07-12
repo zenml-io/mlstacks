@@ -44,7 +44,7 @@ locals {
     enable_container_registry = false
   }
 
-  tags = {
+  common_tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix
   }

@@ -24,7 +24,7 @@ locals {
     name = "zenmlsecrets"
   }
 
-  tags = {
+  common_tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix
   }

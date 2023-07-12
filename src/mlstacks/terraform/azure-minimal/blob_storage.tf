@@ -5,7 +5,7 @@ resource "azurerm_storage_account" "zenml-account" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
-  tags = local.tags
+  tags = merge(local.common_tags, var.additional_tags)
 }
 
 resource "azurerm_storage_container" "artifact-store" {

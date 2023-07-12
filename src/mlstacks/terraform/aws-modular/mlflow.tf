@@ -37,7 +37,7 @@ resource "aws_s3_bucket" "mlflow-bucket" {
   bucket        = "mlflow-s3-${random_string.mlflow_bucket_suffix.result}"
   force_destroy = true
 
-  tags = local.tags
+  tags = merge(local.common_tags, var.additional_tags)
 }
 
 resource "aws_s3_bucket_acl" "mlflow" {

@@ -101,3 +101,10 @@ variable "zenml-database-url" {
   type        = string
   default     = ""
 }
+
+# additional tags defined via CLI
+variable "additional_tags" {
+  default     = {}
+  description = "Additional resource tags"
+  type        = map(string)
+}

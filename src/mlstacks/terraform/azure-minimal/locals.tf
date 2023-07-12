@@ -43,7 +43,7 @@ locals {
     artifact_Azure_Container = ""
   }
 
-  tags = {
+  common_tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix
   }

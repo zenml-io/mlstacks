@@ -70,7 +70,7 @@ locals {
     service_account_name = "seldon"
   }
 
-  tags = {
+  common_tags = {
     "managedBy"   = "terraform"
     "environment" = "dev"
   }

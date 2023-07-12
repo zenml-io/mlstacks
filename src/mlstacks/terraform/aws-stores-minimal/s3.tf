@@ -4,7 +4,8 @@ resource "aws_s3_bucket" "zenml-artifact-store" {
   force_destroy = true
 
   tags = merge(
-    local.tags,
+    local.common_tags,
+    var.additional_tags,
     {
       name = "zenml-artifact-store"
     }

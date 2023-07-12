@@ -85,7 +85,7 @@ locals {
     image_tag                       = ""
   }
 
-  tags = {
+  common_tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix
   }

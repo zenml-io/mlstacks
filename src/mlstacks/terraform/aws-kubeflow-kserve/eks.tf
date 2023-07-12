@@ -8,7 +8,7 @@ module "eks" {
   cluster_version = "1.22"
   subnets         = module.vpc.private_subnets
   enable_irsa     = true
-  tags            = local.tags
+  tags            = merge(local.common_tags, var.additional_tags)
 
   vpc_id = module.vpc.vpc_id
 

@@ -4,3 +4,10 @@ variable "zenml-version" {
   default     = "0.20.1"
   type        = string
 }
+
+# additional tags defined via CLI
+variable "additional_tags" {
+  default     = {}
+  description = "Additional resource tags"
+  type        = map(string)
+}

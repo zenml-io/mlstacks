@@ -48,7 +48,7 @@ locals {
     artifact_GCS_Bucket = ""
   }
 
-  tags = {
+  common_tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix
   }

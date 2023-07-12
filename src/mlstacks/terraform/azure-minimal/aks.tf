@@ -26,7 +26,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
 
-  tags = local.tags
+  tags = merge(local.common_tags, var.additional_tags)
 }
 
 resource "kubernetes_namespace" "k8s-ns" {

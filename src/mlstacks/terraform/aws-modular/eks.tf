@@ -15,7 +15,7 @@ locals {
 #   cluster_version = local.eks.cluster_version
 #   subnets         = module.vpc[0].private_subnets
 #   enable_irsa     = true
-#   tags            = local.tags
+#   tags            = merge(local.common_tags, var.additional_tags)
 
 #   vpc_id = module.vpc[0].vpc_id
 
@@ -100,7 +100,7 @@ resource "aws_iam_role" "ng" {
   })
   force_detach_policies = true
 
-  tags = local.tags
+  tags = merge(local.common_tags, var.additional_tags)
 }
 
 locals {
@@ -153,7 +153,7 @@ resource "aws_iam_role" "cluster" {
   assume_role_policy    = data.aws_iam_policy_document.cluster_assume_role_policy.json
   force_detach_policies = true
 
-  tags = local.tags
+  tags = merge(local.common_tags, var.additional_tags)
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {

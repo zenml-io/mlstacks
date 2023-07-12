@@ -27,7 +27,7 @@ locals {
     region = "eu" # available options: eu, us, asia
   }
 
-  tags = {
+  common_tags = {
     "managedBy"   = "terraform"
     "application" = local.prefix
   }
