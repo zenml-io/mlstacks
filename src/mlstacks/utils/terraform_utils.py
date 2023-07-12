@@ -19,10 +19,10 @@ from mlstacks.utils.yaml_utils import load_stack_yaml
 logger = logging.getLogger(__name__)
 
 HIGH_LEVEL_COMPONENTS = [
-    "artifact_store",
-    "container_registry",
-    "secrets_manager",
-    "mlops_platform",
+    "orchestrator",
+    "experiment_tracker",
+    "model_deployer",
+    "step_operator",
 ]
 
 
@@ -51,7 +51,7 @@ def _compose_enable_key(component: Component) -> str:
     Returns:
         The key for enabling the component.
     """
-    if component.component_type not in HIGH_LEVEL_COMPONENTS:
+    if component.component_type in HIGH_LEVEL_COMPONENTS:
         return (
             f"enable_{component.component_type}_{component.component_flavor}"
         )
@@ -64,7 +64,9 @@ def _compose_enable_key(component: Component) -> str:
         return f"enable_{component.component_type}"
 
 
-def _get_config_property(component: Component, property_name: str) -> str:
+def _get_config_property(
+    component: Component, property_name: str
+) -> Optional[str]:
     """Retrieve a property value from the configuration.
 
     Args:
@@ -74,12 +76,14 @@ def _get_config_property(component: Component, property_name: str) -> str:
     Returns:
         The value of the property.
     """
-    return component.metadata.config.get(property_name)
+    if component.metadata.config is None:
+        return None
+    return component.metadata.config[property_name]
 
 
 def parse_component_variables(
     components: List[Component],
-) -> Dict[str, Optional[str]]:
+) -> Dict[str, str]:
     """Parse component variables.
 
     Args:
@@ -88,17 +92,26 @@ def parse_component_variables(
     Returns:
         The component variables.
     """
-
     component_variables = {}
     for component in components:
-        key = _compose_enable_key(component)
-        component_variables[key] = "true"
-        if component.metadata.config:
+        # set enable_xxx as appropriate per component
+        enable_key = _compose_enable_key(component)
+        component_variables[enable_key] = "true"
+
+        # set additional config properties
+        config_vals = component.metadata.config
+        if config_vals:
             # additionally set all other key/value pairs from the configuration
-            for config_key in component.metadata.config:
-                component_variables[config_key] = _get_config_property(
-                    component, config_key
-                )
+            component_variables.update(config_vals)
+
+        # set additional environment variables
+        env_var_vals = component.metadata.environment_variables
+        if env_var_vals:
+            # additionally set all other key/value pairs from the environment
+            # variables
+            # prefix the keys with TF_VAR_ as required by Terraform
+            prefixed_env_var_vals = {f"TF_VAR_{k}": v for k, v in env_var_vals}
+            component_variables.update(prefixed_env_var_vals)
 
     return component_variables
 
