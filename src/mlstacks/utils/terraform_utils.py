@@ -127,7 +127,7 @@ def parse_tf_vars(stack: Stack) -> Dict[str, Any]:
     """
     tf_vars = {
         "region": stack.default_region,
-        "tags": stack.default_tags,
+        "additional_tags": stack.default_tags,
     }
     # update the dict with the component variables
     tf_vars.update(parse_component_variables(stack.components))
