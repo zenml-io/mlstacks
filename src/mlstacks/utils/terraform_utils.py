@@ -17,7 +17,7 @@ from mlstacks.constants import (
 from mlstacks.enums import ProviderEnum
 from mlstacks.models.component import Component
 from mlstacks.models.stack import Stack
-from mlstacks.utils.yaml_utils import load_stack_yaml
+from mlstacks.utils.yaml_utils import load_stack_yaml, load_yaml_as_dict
 
 logger = logging.getLogger(__name__)
 
@@ -172,6 +172,22 @@ def populate_tf_definitions(provider: ProviderEnum) -> None:
             MLSTACKS_PACKAGE_NAME
         ).version
         f.write(mlstacks_version)
+
+
+def get_recipe_metadata(provider: ProviderEnum) -> Dict[str, Any]:
+    """Loads modular recipe metadata for a specific provider.
+
+    Args:
+        provider: The cloud provider.
+
+    Returns:
+        The recipe metadata.
+    """
+    config_dir = get_app_dir(MLSTACKS_PACKAGE_NAME)
+    recipe_metadata = Path(
+        config_dir / Path(f"terraform/{provider}-modular/metadata.yaml")
+    )
+    return load_yaml_as_dict(recipe_metadata)
 
 
 def check_tf_definitions_version(provider: ProviderEnum) -> None:
@@ -353,7 +369,7 @@ def infracost_breakdown_stack(stack_path: str) -> None:
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     # Constructing the infracost command
-    infracost_cmd = f"infracost breakdown --path {tf_recipe_path}"
+    infracost_cmd = f"infracost breakdown --path '{tf_recipe_path}'"
     for k, v in infracost_vars.items():
         infracost_cmd += f" --terraform-var {k}={v}"
 

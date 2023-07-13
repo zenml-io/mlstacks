@@ -1,5 +1,7 @@
 """Utility functions for loading YAML files into Python objects."""
 
+from pathlib import Path
+from typing import Any, Dict, Union
 import yaml
 
 from mlstacks.models.component import (
@@ -7,6 +9,26 @@ from mlstacks.models.component import (
     ComponentMetadata,
 )
 from mlstacks.models.stack import Stack
+
+
+def load_yaml_as_dict(path: Union[Path, str]) -> Dict[str, Any]:
+    """Loads a yaml file as a dictionary.
+
+    Args:
+        path: The path to the yaml file.
+
+    Returns:
+        The dictionary representation of the yaml file.
+    """
+    if type(path) == Path:
+        str_path = str(path)
+
+    if not Path(path).exists():
+        raise FileNotFoundError(f"File {path} not found.")
+
+    with open(str_path) as yaml_file:
+        yaml_dict = yaml.safe_load(yaml_file)
+    return yaml_dict
 
 
 def load_component_yaml(path: str) -> Component:
