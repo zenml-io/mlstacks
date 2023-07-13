@@ -22,12 +22,12 @@ def load_yaml_as_dict(path: Union[Path, str]) -> Dict[str, Any]:
         The dictionary representation of the yaml file.
     """
     if type(path) == Path:
-        str_path = str(path)
+        path = str(path)
 
     if not Path(path).exists():
         raise FileNotFoundError(f"File {path} not found.")
 
-    with open(str_path) as yaml_file:
+    with open(path) as yaml_file:
         yaml_dict = yaml.safe_load(yaml_file)
     return yaml_dict
 

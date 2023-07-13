@@ -152,11 +152,37 @@ def tf_definitions_present(provider: ProviderEnum) -> bool:
     return Path(f"{config_dir}/terraform/{provider}-modular").exists()
 
 
-def populate_tf_definitions(provider: ProviderEnum) -> None:
+def include_files(directory, files):
+    """Include files in Terraform definitions.
+
+    Args:
+        directory: The directory.
+        files: The files.
+
+    Returns:
+        The files to include.
+    """
+    return [
+        file
+        for file in files
+        if not (
+            file.endswith(".tf")
+            or file.endswith(".md")
+            or file.endswith(".yaml")
+            or file.endswith(".sh")
+            or file == ".terraformignore"
+        )
+    ]
+
+
+def populate_tf_definitions(
+    provider: ProviderEnum, force: bool = False
+) -> None:
     """Copies Terraform definitions to local config directory.
 
     Args:
         provider: The cloud provider.
+        force: Whether to force the copy.
     """
     definitions_subdir = f"terraform/{provider}-modular"
     destination_path = Path(f"{CONFIG_DIR}/{definitions_subdir}")
@@ -164,7 +190,16 @@ def populate_tf_definitions(provider: ProviderEnum) -> None:
         MLSTACKS_PACKAGE_NAME, definitions_subdir
     )
     # copy files from package to the directory
-    _ = shutil.copytree(package_path, destination_path)
+    if force:
+        _ = shutil.copytree(
+            package_path,
+            destination_path,
+            ignore=include_files,
+            dirs_exist_ok=True,
+        )
+    else:
+        shutil.copytree(package_path, destination_path, ignore=include_files)
+
     logger.info(f"Populated Terraform definitions in {destination_path}")
     # write package version into the directory
     with open(f"{destination_path}/MLSTACKS_VERSION.txt", "w") as f:
