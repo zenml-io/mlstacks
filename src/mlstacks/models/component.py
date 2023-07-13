@@ -30,16 +30,16 @@ class Component(BaseModel):
     Attributes:
         spec_version: The version of the component spec.
         spec_type: The type of the component spec.
-        component_type: The type of the component.
         name: The name of the component.
+        component_type: The type of the component.
         provider: The provider of the component.
         metadata: The metadata of the component.
     """
 
     spec_version: int = 1
     spec_type: str = "component"
+    name: str
     component_type: ComponentTypeEnum
     component_flavor: ComponentFlavorEnum
-    name: str
     provider: ProviderEnum
-    metadata: ComponentMetadata
+    metadata: Optional[ComponentMetadata] = None
