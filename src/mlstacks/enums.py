@@ -46,3 +46,4 @@ class ProviderEnum(str, Enum):
     AWS = "aws"
     AZURE = "azure"
     GCP = "gcp"
+    K3D = "k3d"
