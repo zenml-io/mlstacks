@@ -47,17 +47,18 @@ def load_component_yaml(path: str) -> Component:
     with open(path) as file:
         component_data = yaml.safe_load(file)
 
+    if component_data.get("metadata") is None:
+        component_data["metadata"] = {}
+
     return Component(
         spec_version=component_data.get("spec_version"),
         spec_type=component_data.get("spec_type"),
+        name=component_data.get("name"),
         component_type=component_data.get("component_type"),
         component_flavor=component_data.get("component_flavor"),
-        name=component_data.get("name"),
         provider=component_data.get("provider"),
         metadata=ComponentMetadata(
-            region=component_data.get("metadata").get("region"),
             config=component_data.get("metadata").get("config"),
-            tags=component_data.get("metadata").get("tags"),
             environment_variables=component_data.get("metadata").get(
                 "environment_variables",
             ),

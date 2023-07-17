@@ -3,8 +3,12 @@ import tempfile
 
 import pytest
 import yaml
+from pydantic import ValidationError
 
-from mlstacks.utils.yaml_utils import load_yaml_as_dict
+from mlstacks.models.component import (
+    Component,
+)
+from mlstacks.utils.yaml_utils import load_component_yaml, load_yaml_as_dict
 
 
 def test_load_valid_yaml_file():
@@ -115,3 +119,45 @@ def test_load_yaml_file_with_special_characters():
         assert result == expected
     finally:
         os.remove(f_path)
+
+
+def test_load_component_yaml_valid_input(tmp_path):
+    yaml_content = """
+    spec_version: 1
+    spec_type: component
+    name: test
+    component_type: mlops_platform
+    component_flavor: zenml
+    provider: aws
+    metadata:
+        config: 
+            key: value
+        environment_variables: 
+            key: value
+    """
+
+    yaml_file = tmp_path / "component.yaml"
+    yaml_file.write_text(yaml_content)
+
+    result = load_component_yaml(str(yaml_file))
+    assert isinstance(result, Component)
+    assert result.spec_version == 1
+    assert result.spec_type == "component"
+    assert result.name == "test"
+
+
+def test_load_component_yaml_invalid_input(tmp_path):
+    yaml_content = """
+    invalid_key: invalid_value
+    """
+
+    yaml_file = tmp_path / "component_invalid.yaml"
+    yaml_file.write_text(yaml_content)
+
+    with pytest.raises(ValidationError):
+        load_component_yaml(str(yaml_file))
+
+
+def test_load_component_yaml_file_not_found():
+    with pytest.raises(FileNotFoundError):
+        load_component_yaml("non_existent_file.yaml")
