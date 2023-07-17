@@ -79,6 +79,8 @@ def load_stack_yaml(path: str) -> Stack:
         stack_data = yaml.safe_load(yaml_file)
         component_data = stack_data.get("components")
 
+    if component_data is None:
+        component_data = []
     return Stack(
         spec_version=stack_data.get("spec_version"),
         spec_type=stack_data.get("spec_type"),
