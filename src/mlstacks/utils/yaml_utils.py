@@ -29,6 +29,9 @@ def load_yaml_as_dict(path: Union[Path, str]) -> Dict[str, Any]:
 
     with open(path) as yaml_file:
         yaml_dict = yaml.safe_load(yaml_file)
+
+    if yaml_dict is None:
+        yaml_dict = {}
     return cast(Dict[str, Any], yaml_dict)
 
 
