@@ -1,7 +1,7 @@
 """Utility functions for loading YAML files into Python objects."""
 
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, cast
 
 import yaml
 
@@ -29,7 +29,7 @@ def load_yaml_as_dict(path: Union[Path, str]) -> Dict[str, Any]:
 
     with open(path) as yaml_file:
         yaml_dict = yaml.safe_load(yaml_file)
-    return yaml_dict
+    return cast(Dict[str, Any], yaml_dict)
 
 
 def load_component_yaml(path: str) -> Component:
