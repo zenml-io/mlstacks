@@ -1,7 +1,7 @@
 from hypothesis import given
 from hypothesis import strategies as st
-from mlstacks.enums import ComponentFlavorEnum, ComponentTypeEnum
 
+from mlstacks.enums import ComponentFlavorEnum, ComponentTypeEnum
 from mlstacks.models.component import Component, ComponentMetadata
 
 

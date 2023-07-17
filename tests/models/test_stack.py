@@ -1,7 +1,7 @@
 from hypothesis import given
 from hypothesis import strategies as st
-from mlstacks.enums import DeploymentMethodEnum, ProviderEnum
 
+from mlstacks.enums import DeploymentMethodEnum, ProviderEnum
 from mlstacks.models.stack import Stack
 
 
