@@ -6,7 +6,7 @@ from mlstacks.models.stack import Stack
 
 
 @given(st.builds(Stack))
-def test_component(instance):
+def test_stack(instance):
     assert isinstance(instance.spec_version, int)
     assert isinstance(instance.spec_type, str)
     assert isinstance(instance.name, str)
