@@ -8,7 +8,26 @@ from pydantic import ValidationError
 from mlstacks.models.component import (
     Component,
 )
-from mlstacks.utils.yaml_utils import load_component_yaml, load_yaml_as_dict
+from mlstacks.models.stack import Stack
+from mlstacks.utils.yaml_utils import (
+    load_component_yaml,
+    load_stack_yaml,
+    load_yaml_as_dict,
+)
+
+valid_component_yaml_content = """
+    spec_version: 1
+    spec_type: component
+    name: test
+    component_type: mlops_platform
+    component_flavor: zenml
+    provider: aws
+    metadata:
+        config: 
+            key: value
+        environment_variables: 
+            key: value
+    """
 
 
 def test_load_valid_yaml_file():
@@ -122,19 +141,7 @@ def test_load_yaml_file_with_special_characters():
 
 
 def test_load_component_yaml_valid_input(tmp_path):
-    yaml_content = """
-    spec_version: 1
-    spec_type: component
-    name: test
-    component_type: mlops_platform
-    component_flavor: zenml
-    provider: aws
-    metadata:
-        config: 
-            key: value
-        environment_variables: 
-            key: value
-    """
+    yaml_content = valid_component_yaml_content
 
     yaml_file = tmp_path / "component.yaml"
     yaml_file.write_text(yaml_content)
@@ -161,3 +168,44 @@ def test_load_component_yaml_invalid_input(tmp_path):
 def test_load_component_yaml_file_not_found():
     with pytest.raises(FileNotFoundError):
         load_component_yaml("non_existent_file.yaml")
+
+
+def test_load_stack_yaml_valid_input(tmp_path):
+    stack_yaml_content = f"""
+    spec_version: 1
+    spec_type: stack
+    name: stack_test
+    provider: aws
+    default_region: test_region
+    default_tags: 
+        key: value
+    deployment_method: kubernetes
+    components: 
+    """
+
+    stack_yaml_file = tmp_path / "stack.yaml"
+    stack_yaml_file.write_text(stack_yaml_content)
+
+    result = load_stack_yaml(str(stack_yaml_file))
+
+    assert isinstance(result, Stack)
+    assert result.spec_version == 1
+    assert result.spec_type == "stack"
+    assert result.name == "stack_test"
+
+
+def test_load_stack_yaml_invalid_input(tmp_path):
+    stack_yaml_content = """
+    invalid_key: invalid_value
+    """
+
+    stack_yaml_file = tmp_path / "stack_invalid.yaml"
+    stack_yaml_file.write_text(stack_yaml_content)
+
+    with pytest.raises(ValidationError):
+        load_stack_yaml(str(stack_yaml_file))
+
+
+def test_load_stack_yaml_file_not_found():
+    with pytest.raises(FileNotFoundError):
+        load_stack_yaml("non_existent_file.yaml")
