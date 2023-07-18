@@ -161,7 +161,10 @@ def tf_definitions_present(provider: ProviderEnum) -> bool:
         True if Terraform definitions are present, False otherwise.
     """
     config_dir = get_app_dir(MLSTACKS_PACKAGE_NAME)
-    return Path(f"{config_dir}/terraform/{provider}-modular").exists()
+    return (
+        Path(f"{config_dir}/terraform/{provider}-modular").exists()
+        and Path(f"{config_dir}/terraform/modules").exists()
+    )
 
 
 def include_files(directory, files):
@@ -197,9 +200,14 @@ def populate_tf_definitions(
         force: Whether to force the copy.
     """
     definitions_subdir = f"terraform/{provider}-modular"
+    modules_subdir = "terraform/modules"
     destination_path = Path(f"{CONFIG_DIR}/{definitions_subdir}")
+    modules_destination = Path(f"{CONFIG_DIR}/{modules_subdir}")
     package_path = pkg_resources.resource_filename(
         MLSTACKS_PACKAGE_NAME, definitions_subdir
+    )
+    modules_path = pkg_resources.resource_filename(
+        MLSTACKS_PACKAGE_NAME, modules_subdir
     )
     # copy files from package to the directory
     if force:
@@ -209,8 +217,19 @@ def populate_tf_definitions(
             ignore=include_files,
             dirs_exist_ok=True,
         )
+        # also copy the module files
+        _ = shutil.copytree(
+            modules_path,
+            modules_destination,
+            ignore=include_files,
+            dirs_exist_ok=True,
+        )
     else:
         shutil.copytree(package_path, destination_path, ignore=include_files)
+        # also copy the module files
+        shutil.copytree(
+            modules_path, modules_destination, ignore=include_files
+        )
 
     logger.info(f"Populated Terraform definitions in {destination_path}")
     # write package version into the directory
