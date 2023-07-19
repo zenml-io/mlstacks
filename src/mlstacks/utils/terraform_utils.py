@@ -181,6 +181,8 @@ def include_files(directory, filenames):
     Returns:
         The files to ignore.
     """
+    # Note that the directory argument is required by Terraform, though not used
+    # directly in this function
     return [
         filename
         for filename in filenames
