@@ -19,11 +19,11 @@ import pytest
 from hypothesis import given
 from hypothesis.strategies import text
 
-from mlstacks.enums import ComponentFlavorEnum, ComponentTypeEnum, ProviderEnum
+from mlstacks.enums import ProviderEnum
 from mlstacks.models.component import (
     Component,
 )
-from mlstacks.utils.terraform_utils import TerraformRunner
+from mlstacks.utils.terraform_utils import TerraformRunner, _compose_enable_key
 
 
 def test_terraform_runner_initialisation_works():
@@ -51,9 +51,43 @@ def test_terraform_runner_fails_with_invalid_recipe_path():
 @given(text(min_size=1))
 def test_enable_key_function_works(dummy_name: str):
     """Tests that the enable key function works."""
-    Component(
+    c = Component(
         name=dummy_name,
-        component_flavor=random.choice(list(ComponentFlavorEnum)),
-        component_type=random.choice(list(ComponentTypeEnum)),
+        component_flavor="zenml",
+        component_type="mlops_platform",
         provider=random.choice(list(ProviderEnum)),
     )
+    key = _compose_enable_key(c)
+    assert key == "enable_zenml"
+
+
+@given(text(min_size=1))
+def test_enable_key_function_handles_components_with_flavors(dummy_name: str):
+    """Tests that the enable key function works."""
+    comp_flavor = "mlflow"
+    comp_type = "experiment_tracker"
+    c = Component(
+        name=dummy_name,
+        component_flavor=comp_flavor,
+        component_type=comp_type,
+        provider=random.choice(list(ProviderEnum)),
+    )
+    key = _compose_enable_key(c)
+    assert key == "enable_experiment_tracker_mlflow"
+
+
+@given(text(min_size=1))
+def test_enable_key_function_handles_components_without_flavors(
+    dummy_name: str,
+):
+    """Tests that the enable key function works."""
+    comp_flavor = "s3"
+    comp_type = "artifact_store"
+    c = Component(
+        name=dummy_name,
+        component_flavor=comp_flavor,
+        component_type=comp_type,
+        provider=random.choice(list(ProviderEnum)),
+    )
+    key = _compose_enable_key(c)
+    assert key == "enable_artifact_store"
