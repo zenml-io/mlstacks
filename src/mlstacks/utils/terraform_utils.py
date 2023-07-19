@@ -54,6 +54,10 @@ class TerraformRunner:
         """
         self.tf_recipe_path = tf_recipe_path
 
+        if not Path(tf_recipe_path).exists():
+            raise ValueError(
+                f"Terraform recipe path {tf_recipe_path} does not exist."
+            )
         self.client = python_terraform.Terraform(
             working_dir=self.tf_recipe_path,
         )
