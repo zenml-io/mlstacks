@@ -383,6 +383,13 @@ def tf_client_destroy(
     return ret_code, _stdout, _stderr
 
 
+def clean_stack_recipes() -> None:
+    """Deletes stack recipe files from config directory."""
+    tf_path = f"{CONFIG_DIR}/terraform"
+    shutil.rmtree(tf_path)
+    logger.info(f"Deleted Terraform directory at {tf_path}")
+
+
 def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     """Deploy stack.
 

@@ -13,9 +13,15 @@
 """CLI for mlstacks."""
 
 
+from pathlib import Path
+
 import click
 
+from mlstacks.constants import (
+    MLSTACKS_PACKAGE_NAME,
+)
 from mlstacks.utils.terraform_utils import (
+    clean_stack_recipes,
     deploy_stack,
     destroy_stack,
     infracost_breakdown_stack,
@@ -111,9 +117,39 @@ def output(recipe_name: str) -> None:
     get_stack_outputs(recipe_name)
 
 
+@click.command()
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Flag to skip confirmation prompt",
+)
+def clean(yes: bool = False) -> None:
+    """Cleans up all the Terraform state files.
+
+    Args:
+        yes (bool): Flag to skip confirmation prompt
+    """
+    files_path = f"{click.get_app_dir(MLSTACKS_PACKAGE_NAME)}/terraform"
+    if not Path(files_path).exists():
+        click.echo("No Terraform state files found.")
+    elif yes or click.confirm(
+        "Are you sure you want to delete all the Terraform state "
+        f"and definition files from {files_path}?\n",
+        "This action is irreversible.",
+    ):
+        clean_stack_recipes()
+        click.echo("Cleaned up all the Terraform state files.")
+    else:
+        click.echo("Aborting cleaning!")
+
+
 cli.add_command(deploy)
 cli.add_command(destroy)
 cli.add_command(breakdown)
+# cli.add_command(output)
+cli.add_command(clean)
 
 if __name__ == "__main__":
     cli()
