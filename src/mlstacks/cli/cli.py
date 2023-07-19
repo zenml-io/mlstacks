@@ -36,13 +36,20 @@ def cli() -> None:
     type=click.Path(exists=True),
     help="Path to the YAML file for deploy",
 )
-def deploy(file: str) -> None:
+@click.option(
+    "-d",
+    "--debug",
+    is_flag=True,
+    default=False,
+    help="Flag to enable debug mode to view raw Terraform logging",
+)
+def deploy(file: str, debug: bool = False) -> None:
     """Deploys a stack based on a YAML file.
 
     Args:
         file (str): Path to the YAML file for deploy
     """
-    deploy_stack(file)
+    deploy_stack(stack_path=file, debug_mode=debug)
 
 
 @click.command()

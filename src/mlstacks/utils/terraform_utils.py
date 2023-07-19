@@ -167,25 +167,26 @@ def tf_definitions_present(provider: ProviderEnum) -> bool:
     )
 
 
-def include_files(directory, files):
+def include_files(directory, filenames):
     """Include files in Terraform definitions.
 
     Args:
         directory: The directory.
-        files: The files.
+        filenames: The filenames.
 
     Returns:
-        The files to include.
+        The files to ignore.
     """
     return [
-        file
-        for file in files
+        filename
+        for filename in filenames
         if not (
-            file.endswith(".tf")
-            or file.endswith(".md")
-            or file.endswith(".yaml")
-            or file.endswith(".sh")
-            or file == ".terraformignore"
+            filename.endswith(".tf")
+            or filename.endswith(".md")
+            or filename.endswith(".yaml")
+            or filename.endswith(".sh")
+            or filename == ".terraformignore"
+            or filename == MLSTACKS_INITIALIZATION_FILE_FLAG
         )
     ]
 
@@ -227,9 +228,7 @@ def populate_tf_definitions(
     else:
         shutil.copytree(package_path, destination_path, ignore=include_files)
         # also copy the module files
-        shutil.copytree(
-            modules_path, modules_destination, ignore=include_files
-        )
+        shutil.copytree(modules_path, modules_destination)
 
     logger.info(f"Populated Terraform definitions in {destination_path}")
     # write package version into the directory
@@ -293,7 +292,7 @@ def tf_previously_initialized(tf_recipe_path: str) -> bool:
     ).exists()
 
 
-def deploy_stack(stack_path: str) -> None:
+def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     """Deploy stack.
 
     Args:
@@ -312,18 +311,38 @@ def deploy_stack(stack_path: str) -> None:
     tfr = TerraformRunner(tf_recipe_path)
 
     if not tf_previously_initialized(tf_recipe_path):
+        if debug_mode:
+            ret_code, _, _ = tfr.client.init(capture_output=False)
+        else:
+            ret_code, _, _ = tfr.client.init(capture_output=True)
+
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
-        ret_code, _, _ = tfr.client.init(capture_output=True)
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
-    tfr.client.apply(
-        var=tf_vars,
-        input=False,
-        capture_output=False,
-        raise_on_error=True,
-        refresh=False,
-    )
+    # TODO: confirm the logging of progress doesn't require user input still
+    # confirm the plan
+    # log what's being deployed
+    # spinner to state that Terraform is running
+    # output the outputs at the end (or in CLI?)
+    if debug_mode:
+        tfr.client.apply(
+            var=tf_vars,
+            input=True,
+            capture_output=False,
+            raise_on_error=True,
+            refresh=False,
+            auto_approve=False,
+        )
+    else:
+        tfr.client.apply(
+            var=tf_vars,
+            input=False,
+            capture_output=True,
+            raise_on_error=True,
+            refresh=False,
+            auto_approve=True,
+        )
 
 
 def destroy_stack(stack_path: str) -> None:
