@@ -428,9 +428,10 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
     tfr = TerraformRunner(tf_recipe_path)
 
     if not tf_previously_initialized(tf_recipe_path):
+        tf_client_init(tfr.client, debug_mode)
+
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
-        ret_code, _, _ = tfr.client.init(capture_output=True)
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     tf_client_destroy(tfr.client, tf_vars, debug_mode)
