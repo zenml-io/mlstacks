@@ -444,7 +444,7 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
 
 
 def get_stack_outputs(
-    stack_name: str, output_key: Optional[str] = None
+    stack_name: str, output_key: Optional[str] = None, debug_mode: bool = False
 ) -> Dict[str, str]:
     """Get stack outputs.
 
@@ -459,7 +459,7 @@ def get_stack_outputs(
     if not tf_previously_initialized(tf_recipe_path):
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
-        ret_code, _, _ = tfr.client.init(capture_output=True)
+        tf_client_init(tfr.client, debug_mode)
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     if output_key:
@@ -501,7 +501,9 @@ def _get_infracost_vars(vars: Dict[str, Any]) -> Dict[str, str]:
     return {k: v for k, v in vars.items() if not isinstance(v, dict)}
 
 
-def infracost_breakdown_stack(stack_path: str) -> None:
+def infracost_breakdown_stack(
+    stack_path: str, debug_mode: bool = False
+) -> None:
     """Estimate costs for a stack using Infracost."""
     if not _infracost_installed():
         logger.error(
@@ -520,7 +522,7 @@ def infracost_breakdown_stack(stack_path: str) -> None:
     if not tf_previously_initialized(tf_recipe_path):
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
-        ret_code, _, _ = tfr.client.init(capture_output=True)
+        tf_client_init(tfr.client, debug_mode)
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     # Constructing the infracost command
