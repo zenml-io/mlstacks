@@ -16,7 +16,7 @@ import logging
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import pkg_resources
 import python_terraform
@@ -292,6 +292,91 @@ def tf_previously_initialized(tf_recipe_path: str) -> bool:
     ).exists()
 
 
+def tf_client_init(
+    client: python_terraform.Terraform, debug: bool
+) -> Tuple[Any, Any, Any]:
+    """Initialize Terraform client.
+
+    Args:
+        client: The Terraform client.
+        debug: Whether to run in debug mode.
+
+    Returns:
+        The return code, stdout, and stderr.
+    """
+    if debug:
+        ret_code, _stdout, _stderr = client.init(capture_output=False)
+    else:
+        ret_code, _stdout, _stderr = client.init(capture_output=True)
+    return ret_code, _stdout, _stderr
+
+
+def tf_client_apply(
+    client: python_terraform.Terraform, tf_vars: Dict[str, Any], debug: bool
+) -> Tuple[Any, Any, Any]:
+    """Apply Terraform changes.
+
+    Args:
+        client: The Terraform client.
+        debug: Whether to run in debug mode.
+
+    Returns:
+        The return code, stdout, and stderr.
+    """
+    if debug:
+        ret_code, _stdout, _stderr = client.apply(
+            var=tf_vars,
+            input=True,
+            capture_output=False,
+            raise_on_error=True,
+            refresh=False,
+            auto_approve=False,
+        )
+    else:
+        ret_code, _stdout, _stderr = client.apply(
+            var=tf_vars,
+            input=False,
+            capture_output=True,
+            raise_on_error=True,
+            refresh=False,
+            auto_approve=True,
+        )
+    return ret_code, _stdout, _stderr
+
+
+def tf_client_destroy(
+    client: python_terraform.Terraform, tf_vars: Dict[str, Any], debug: bool
+) -> Tuple[Any, Any, Any]:
+    """Destroy Terraform changes.
+
+    Args:
+        client: The Terraform client.
+        debug: Whether to run in debug mode.
+
+    Returns:
+        The return code, stdout, and stderr.
+    """
+    if debug:
+        ret_code, _stdout, _stderr = client.destroy(
+            var=tf_vars,
+            capture_output=False,
+            raise_on_error=True,
+            force=python_terraform.IsNotFlagged,
+            refresh=False,
+            auto_approve=False,
+        )
+    else:
+        ret_code, _stdout, _stderr = client.destroy(
+            var=tf_vars,
+            capture_output=True,
+            raise_on_error=True,
+            force=python_terraform.IsNotFlagged,
+            refresh=False,
+            auto_approve=True,
+        )
+    return ret_code, _stdout, _stderr
+
+
 def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     """Deploy stack.
 
@@ -311,10 +396,7 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     tfr = TerraformRunner(tf_recipe_path)
 
     if not tf_previously_initialized(tf_recipe_path):
-        if debug_mode:
-            ret_code, _, _ = tfr.client.init(capture_output=False)
-        else:
-            ret_code, _, _ = tfr.client.init(capture_output=True)
+        tf_client_init(tfr.client, debug_mode)
 
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
@@ -325,31 +407,18 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     # log what's being deployed
     # spinner to state that Terraform is running
     # output the outputs at the end (or in CLI?)
-    if debug_mode:
-        tfr.client.apply(
-            var=tf_vars,
-            input=True,
-            capture_output=False,
-            raise_on_error=True,
-            refresh=False,
-            auto_approve=False,
-        )
-    else:
-        tfr.client.apply(
-            var=tf_vars,
-            input=False,
-            capture_output=True,
-            raise_on_error=True,
-            refresh=False,
-            auto_approve=True,
-        )
+    tf_client_apply(tfr.client, tf_vars, debug_mode)
 
 
-def destroy_stack(stack_path: str) -> None:
+def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
     """Destroy stack.
 
     Args:
         stack_path: The path to the stack.
+        debug_mode: Whether to run in debug mode.
+
+    Returns:
+        The return code, stdout, and stderr.
     """
     stack = load_stack_yaml(stack_path)
     tf_vars = parse_tf_vars(stack)
@@ -364,13 +433,7 @@ def destroy_stack(stack_path: str) -> None:
         ret_code, _, _ = tfr.client.init(capture_output=True)
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
-    tfr.client.destroy(
-        var=tf_vars,
-        capture_output=False,
-        raise_on_error=True,
-        force=python_terraform.IsNotFlagged,
-        refresh=False,
-    )
+    tf_client_destroy(tfr.client, tf_vars, debug_mode)
 
 
 def get_stack_outputs(
