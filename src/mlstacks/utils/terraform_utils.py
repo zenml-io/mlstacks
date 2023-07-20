@@ -299,7 +299,9 @@ def tf_previously_initialized(tf_recipe_path: str) -> bool:
 
 
 def tf_client_init(
-    client: python_terraform.Terraform, debug: bool
+    client: python_terraform.Terraform,
+    debug: bool,
+    provider: str,
 ) -> Tuple[Any, Any, Any]:
     """Initialize Terraform client.
 
@@ -310,8 +312,12 @@ def tf_client_init(
     Returns:
         The return code, stdout, and stderr.
     """
+    state_path = f"{CONFIG_DIR}/terraform/{provider}-modular/terraform.tfstate"
     if debug:
-        ret_code, _stdout, _stderr = client.init(capture_output=False)
+        ret_code, _stdout, _stderr = client.init(
+            capture_output=False,
+            backend_config=state_path,
+        )
     else:
         ret_code, _stdout, _stderr = client.init(capture_output=True)
     return ret_code, _stdout, _stderr
@@ -409,7 +415,7 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     tfr = TerraformRunner(tf_recipe_path)
 
     if not tf_previously_initialized(tf_recipe_path):
-        tf_client_init(tfr.client, debug_mode)
+        tf_client_init(tfr.client, debug_mode, provider=stack.provider)
 
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
@@ -441,7 +447,7 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
     tfr = TerraformRunner(tf_recipe_path)
 
     if not tf_previously_initialized(tf_recipe_path):
-        tf_client_init(tfr.client, debug_mode)
+        tf_client_init(tfr.client, debug_mode, provider=stack.provider)
 
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
@@ -466,7 +472,7 @@ def get_stack_outputs(
     if not tf_previously_initialized(tf_recipe_path):
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
-        tf_client_init(tfr.client, debug_mode)
+        tf_client_init(tfr.client, debug_mode, provider=stack.provider)
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     if output_key:
@@ -529,7 +535,7 @@ def infracost_breakdown_stack(
     if not tf_previously_initialized(tf_recipe_path):
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
-        tf_client_init(tfr.client, debug_mode)
+        tf_client_init(tfr.client, debug_mode, provider=stack.provider)
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     # Constructing the infracost command
