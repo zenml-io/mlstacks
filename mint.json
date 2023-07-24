@@ -1,10 +1,10 @@
 {
     "name": "MLOps Stacks",
     "logo": {
-      "light": "",
-      "dark": ""
+      "light": "assets/light_logo.png",
+      "dark": "assets/dark_logo.png"
     },
-    "favicon": "",
+    "favicon": "assets/favicon.png",
     "colors": {
       "primary": "#16A34A",
       "light": "#4ADE80",
