@@ -338,7 +338,6 @@ def tf_client_apply(
     Returns:
         The return code, stdout, and stderr.
     """
-    state_path = f"{CONFIG_DIR}/terraform/{provider}-modular/terraform.tfstate"
     if debug:
         ret_code, _stdout, _stderr = client.apply(
             var=tf_vars,
@@ -347,7 +346,7 @@ def tf_client_apply(
             raise_on_error=True,
             refresh=False,
             auto_approve=False,
-            state=state_path,
+            # state=state_path,
         )
     else:
         ret_code, _stdout, _stderr = client.apply(
@@ -357,7 +356,7 @@ def tf_client_apply(
             raise_on_error=True,
             refresh=False,
             auto_approve=True,
-            state=state_path,
+            # state=state_path,
         )
     return ret_code, _stdout, _stderr
 
@@ -414,7 +413,7 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     if not tf_definitions_present(stack.provider):
         populate_tf_definitions(stack.provider)
     tf_vars = parse_tf_vars(stack)
-
+    # breakpoint()
     check_tf_definitions_version(stack.provider)
 
     # run Terraform
@@ -425,12 +424,13 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
-
+    print(tf_vars)
     # TODO: confirm the logging of progress doesn't require user input still
     # confirm the plan
     # log what's being deployed
     # spinner to state that Terraform is running
     # output the outputs at the end (or in CLI?)
+    # breakpoint()
     tf_client_apply(
         client=tfr.client,
         tf_vars=tf_vars,
