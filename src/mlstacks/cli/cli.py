@@ -117,20 +117,21 @@ def breakdown(file: str) -> None:
     type=click.STRING,
     help="Optional key for the output to be printed",
 )
-@click.option(
-    "-d",
-    "--debug",
-    is_flag=True,
-    default=False,
-    help="Flag to enable debug mode to view raw Terraform logging",
-)
-def output(file: str, key: Optional[str] = "", debug: bool = False) -> None:
+def output(file: str, key: Optional[str] = "") -> None:
     """Estimates the costs for an MLOps stack.
 
     Args:
         file (str): Path to the YAML file for breakdown
     """
-    get_stack_outputs(file, output_key=key, debug_mode=debug)
+    try:
+        outputs = get_stack_outputs(file, output_key=key)
+    except RuntimeError:
+        click.echo(
+            "Terraform has not been initialized so there are no outputs to "
+            "show. Please run `mlstacks deploy ...` first."
+        )
+    if outputs:
+        print(outputs)
 
 
 @click.command()
@@ -164,7 +165,7 @@ def clean(yes: bool = False) -> None:
 cli.add_command(deploy)
 cli.add_command(destroy)
 cli.add_command(breakdown)
-# cli.add_command(output)
+cli.add_command(output)
 cli.add_command(clean)
 
 if __name__ == "__main__":

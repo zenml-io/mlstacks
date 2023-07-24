@@ -469,7 +469,6 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
 def get_stack_outputs(
     stack_path: str,
     output_key: Optional[str] = None,
-    debug_mode: bool = False,
 ) -> Dict[str, str]:
     """Get stack outputs.
 
@@ -477,18 +476,23 @@ def get_stack_outputs(
         stack_path: The path to the stack.
         output_key: The output key.
         debug_mode: Whether to run in debug mode.
+
+    Returns:
+        The stack outputs.
+
+    Raises:
+        RuntimeError: If Terraform has not been initialized.
     """
     stack = load_stack_yaml(stack_path)
     tf_recipe_path = f"{CONFIG_DIR}/terraform/{stack.provider}-modular"
     state_tf_path = f"{tf_recipe_path}/terraform.tfstate"
 
-    tfr = TerraformRunner(tf_recipe_path, state_path=state_tf_path)
+    tfr = TerraformRunner(tf_recipe_path)
     if not tf_previously_initialized(tf_recipe_path):
-        # TODO: maybe end early here if true?
-        # write a file with name `IGNORE_ME` to the Terraform recipe directory
-        # to prevent Terraform from initializing the recipe
-        tf_client_init(tfr.client, provider=stack.provider)
-        Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
+        raise RuntimeError(
+            "Terraform has not been initialized so there are no "
+            "outputs to show."
+        )
 
     if output_key:
         full_outputs = tfr.client.output(
@@ -497,7 +501,7 @@ def get_stack_outputs(
         return {output_key: full_outputs}
     else:
         full_outputs = tfr.client.output(full_value=True, state=state_tf_path)
-        return {k: v["value"] for k, v in full_outputs.items()}
+        return {k: v["value"] for k, v in full_outputs.items() if v["value"]}
 
 
 def _infracost_installed() -> bool:
