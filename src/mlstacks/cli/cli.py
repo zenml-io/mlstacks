@@ -14,6 +14,7 @@
 
 
 from pathlib import Path
+from typing import Optional
 
 import click
 
@@ -24,6 +25,7 @@ from mlstacks.utils.terraform_utils import (
     clean_stack_recipes,
     deploy_stack,
     destroy_stack,
+    get_stack_outputs,
     infracost_breakdown_stack,
 )
 
@@ -102,19 +104,33 @@ def breakdown(file: str) -> None:
 
 @click.command()
 @click.option(
-    "-n",
-    "--name",
+    "-f",
+    "--file",
     required=True,
-    type=str,
-    help="Stack recipe name",
+    type=click.Path(exists=True),
+    help="Path to the YAML file defining the stack",
 )
-def output(recipe_name: str) -> None:
+@click.option(
+    "--key",
+    "-k",
+    required=False,
+    type=click.STRING,
+    help="Optional key for the output to be printed",
+)
+@click.option(
+    "-d",
+    "--debug",
+    is_flag=True,
+    default=False,
+    help="Flag to enable debug mode to view raw Terraform logging",
+)
+def output(file: str, key: Optional[str] = "", debug: bool = False) -> None:
     """Estimates the costs for an MLOps stack.
 
     Args:
         file (str): Path to the YAML file for breakdown
     """
-    get_stack_outputs(recipe_name)
+    get_stack_outputs(file, output_key=key, debug_mode=debug)
 
 
 @click.command()
