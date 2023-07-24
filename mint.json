@@ -1,10 +1,10 @@
 {
     "name": "MLOps Stacks",
     "logo": {
-      "light": "/logo/light.svg",
-      "dark": "/logo/dark.svg"
+      "light": "",
+      "dark": ""
     },
-    "favicon": "/favicon.svg",
+    "favicon": "",
     "colors": {
       "primary": "#16A34A",
       "light": "#4ADE80",
@@ -12,17 +12,17 @@
     },
     "topbarLinks": [
       {
-        "name": "Contact Us",
-        "url": "mailto:hi@mintlify.com"
+        "name": "GitHub",
+        "url": "https://github.com/zenml-io/mlops-stacks"
       }
     ],
     "topbarCtaButton": {
-      "name": "Get Started",
-      "url": "https://1tc7vihvbit.typeform.com/to/pZJ31XZB"
+      "name": "Website",
+      "url": "https://github.com/zenml-io/mlops-stacks"
     },
     "anchors": [
       {
-        "name": "API Components",
+        "name": "API Docs",
         "icon": "rectangle-terminal",
         "color": "#f59f0b",
         "url": "api-components"
@@ -41,9 +41,6 @@
       }
     ],
     "footerSocials": {
-      "github": "https://github.com/mintlify",
-      "discord": "https://discord.gg/MPNgtSZkgK",
-      "twitter": "https://twitter.com/mintlify"
     },
     "integrations": {
       "intercom": "abcdefz",
