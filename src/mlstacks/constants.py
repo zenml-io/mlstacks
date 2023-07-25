@@ -16,3 +16,27 @@
 # deployment_type.KUBERNETES = "KUBERNETES"
 MLSTACKS_PACKAGE_NAME = "mlstacks"
 MLSTACKS_INITIALIZATION_FILE_FLAG = "IGNORE_ME"
+MLSTACKS_STACK_COMPONENT_FLAGS = [
+    "artifact_store",
+    "container_registry",
+    "experiment_tracker",  # takes flavor
+    "orchestrator",  # takes flavor
+    "mlops_platform",  # takes flavor
+    "model_deployer",  # takes flavor
+    "step_operator",  # takes flavor
+]
+ALLOWED_FLAVORS = {
+    "artifact_store": ["s3", "gcp", "minio"],
+    "container_registry": ["gcp", "aws"],
+    "experiment_tracker": ["mlflow"],
+    "orchestrator": [
+        "kubernetes",
+        "kubeflow",
+        "tekton",
+        "sagemaker",
+        "vertex",
+    ],
+    "mlops_platform": ["zenml"],
+    "model_deployer": ["seldon", "kserve"],
+    "step_operator": ["sagemaker", "vertex"],
+}
