@@ -37,7 +37,7 @@
     "navigation": [
       {
         "group": "Getting Started",
-        "pages": ["docs/What is MLOps Stacks?"]
+        "pages": ["docs/README"]
       }
     ],
     "footerSocials": {
