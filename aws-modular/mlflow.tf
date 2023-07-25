@@ -73,3 +73,17 @@ data "aws_iam_policy_document" "allow_access_from_another_account_mlflow" {
     ]
   }
 }
+
+# allow the mlflow kubernetes SA to assume the IAM role
+resource "null_resource" "mlflow-iam-access" {
+
+  count = var.enable_experiment_tracker_mlflow ? 1 : 0
+
+  provisioner "local-exec" {
+    command = "kubectl annotate serviceaccount -n mlflow mlflow-tracking eks.amazonaws.com/role-arn=${aws_iam_role.ng[0].arn}"
+  }
+
+  depends_on = [
+    module.mlflow,
+  ]
+}
