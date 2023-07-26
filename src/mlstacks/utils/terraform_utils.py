@@ -338,26 +338,35 @@ def tf_client_apply(
     Returns:
         The return code, stdout, and stderr.
     """
-    if debug:
-        ret_code, _stdout, _stderr = client.apply(
-            var=tf_vars,
-            input=True,
-            capture_output=False,
-            raise_on_error=True,
-            refresh=False,
-            auto_approve=False,
-            # state=state_path,
-        )
-    else:
-        ret_code, _stdout, _stderr = client.apply(
-            var=tf_vars,
-            input=False,
-            capture_output=True,
-            raise_on_error=True,
-            refresh=False,
-            auto_approve=True,
-            # state=state_path,
-        )
+    try:
+        if debug:
+            ret_code, _stdout, _stderr = client.apply(
+                var=tf_vars,
+                input=True,
+                capture_output=False,
+                raise_on_error=True,
+                refresh=False,
+                auto_approve=False,
+                # state=state_path,
+            )
+        else:
+            ret_code, _stdout, _stderr = client.apply(
+                var=tf_vars,
+                input=False,
+                capture_output=True,
+                raise_on_error=True,
+                refresh=False,
+                auto_approve=True,
+                # state=state_path,
+            )
+    except python_terraform.TerraformCommandError as e:
+        # TODO: pull all this error handling out to somewhere else
+        # TODO: catch the error!
+        if "The specified location constraint is not valid" in e:
+            logger.error(
+                f"The region '{tf_vars['region']}' you provided is invalid. "
+                "Please fix and try again."
+            )
     return ret_code, _stdout, _stderr
 
 
