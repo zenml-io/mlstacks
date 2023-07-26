@@ -11,13 +11,14 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-from typing import Dict, Union
+from typing import List
 
 from mlstacks.constants import ALLOWED_FLAVORS
+from mlstacks.models import Component, Stack
 
 
 def has_valid_flavor_combinations(
-    provider: str, components: Dict[str, Union[bool, str]]
+    stack: Stack, components: List[Component]
 ) -> bool:
     """Returns true if flavors have a valid combination.
 
@@ -26,24 +27,30 @@ def has_valid_flavor_combinations(
     combination of provider and flavors is valid.
 
     Args:
-        provider: The provider of the stack.
-        components: The components of the stack.
+        stack: The stack.
+        components: The components.
 
     Returns:
         A boolean indicating whether the flavors are valid or not.
     """
-    for component_type, component_flavor in components.items():
-        if component_flavor not in ALLOWED_FLAVORS[component_type]:
-            return False
-        # for cases like artifact store, secrets manager and container registry
-        # the flavor is the same as the cloud
-        elif (
-            component_flavor in {"s3", "sagemaker", "aws"}
-            and provider != "aws"
+    for component in components:
+        if (
+            component.component_flavor
+            not in ALLOWED_FLAVORS[component.component_type]
         ):
             return False
-        elif component_flavor in {"vertex", "gcp"} and provider != "gcp":
+        elif (
+            component.component_flavor in {"s3", "sagemaker", "aws"}
+            and stack.provider != "aws"
+        ):
             return False
-        elif component_flavor in {"minio"} and provider != "k3d":
+        elif (
+            component.component_flavor in {"vertex", "gcp"}
+            and stack.provider != "gcp"
+        ):
+            return False
+        elif (
+            component.component_flavor in {"minio"} and stack.provider != "k3d"
+        ):
             return False
     return True
