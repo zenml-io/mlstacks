@@ -39,14 +39,14 @@ locals {
   }
 
   kubeflow = {
-    version      = "1.8.3"
-    ingress_host = "kubeflow.example.com"
+    version             = "1.8.3"
+    ingress_host_prefix = "kubeflow"
   }
 
   tekton = {
     version             = "0.40.2"
     dashboard_version   = "0.31.0"
-    ingress_host        = "tekton..example.com"
+    ingress_host_prefix = "tekton"
     workloads_namespace = "zenml-workloads-tekton"
   }
 
@@ -80,7 +80,7 @@ locals {
     database_ssl_cert               = ""
     database_ssl_key                = ""
     database_ssl_verify_server_cert = false
-    ingress_host                    = "zenml.example.com"
+    ingress_host_prefix             = "zenml"
     ingress_tls                     = true
     image_tag                       = ""
   }

@@ -10,3 +10,15 @@ output "ingress-hostname" {
 output "ingress-ip-address" {
   value = data.kubernetes_service.nginx-ingress-controller.status.0.load_balancer.0.ingress.0.ip
 }
+
+data "external" "getIP" {
+  program = ["${path.module}/dig.sh"]
+
+  query = {
+    hostname = data.kubernetes_service.nginx-ingress-controller.status.0.load_balancer.0.ingress.0.hostname
+  }
+}
+
+output "ingress-ip-address-aws" {
+  value = data.external.getIP.result.ip
+}

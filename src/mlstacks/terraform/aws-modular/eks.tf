@@ -95,6 +95,19 @@ resource "aws_iam_role" "ng" {
       Principal = {
         Service = "ec2.amazonaws.com"
       }
+      },
+      {
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Effect = "Allow"
+        Principal = {
+          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${aws_eks_cluster.cluster[0].identity[0].oidc[0].issuer}"
+        }
+        Condition = {
+          StringLike = {
+            "${aws_eks_cluster.cluster[0].identity[0].oidc[0].issuer}:aud" = "sts.amazonaws.com"
+            "${aws_eks_cluster.cluster[0].identity[0].oidc[0].issuer}:sub" = "system:serviceaccount:mlflow:*"
+          }
+        }
     }]
     Version = "2012-10-17"
   })
