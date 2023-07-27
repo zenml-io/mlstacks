@@ -1,0 +1,14 @@
+Description: |
+  A recipe that creates a Cloud Composer environment that 
+  enables a managed Airflow environment as orchestrator, 
+  a GCS artifact store and a GCR container registry
+
+Cloud: gcp
+
+Prerequisites: |
+  * The gcloud CLI on your local machine must be configured with 
+    the account you want to deploy resources to. Run `gcloud auth login`.
+  * Install the gcloud beta component by running `gcloud components install beta`.
+  * You must have the project already setup and with billing enabled.
+  * You should have `gke-gcloud-auth-plugin` installed.
+    Run `gcloud components install gke-gcloud-auth-plugin` to install.

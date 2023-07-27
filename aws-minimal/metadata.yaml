@@ -1,0 +1,10 @@
+Description: |
+  A recipe that creates an EKS orchestrator, S3 artifact store, 
+  ECR container registry, MLflow experiment tracker 
+  and Seldon Core model deployer.
+
+Cloud: aws
+
+Prerequisites: |
+  * The AWS CLI on your local machine must be configured with 
+    the account you want to deploy resources to. Run `aws configure`.`

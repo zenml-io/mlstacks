@@ -1,0 +1,11 @@
+Description: |
+  A recipe that creates an MLOps stack with an Azure 
+  Machine Learning Studio as step operator, 
+  Azure Blob Storage container as artifact store, 
+  and Azure MLflow as experiment tracker.
+
+Cloud: azure
+
+Prerequisites: |
+  * The Az CLI on your local machine must be configured with 
+    the account you want to deploy resources to. Run `az login`.
