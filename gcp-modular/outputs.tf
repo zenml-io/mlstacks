@@ -163,6 +163,11 @@ output "container-registry-URI" {
   value = var.enable_container_registry ? "${local.container_registry.region}.gcr.io/${var.project_id}" : ""
 }
 
+# ingress controller hostname (for the zenserver deploy CLI)
+output "ingress-controller-host" {
+  value = length(module.nginx-ingress) > 0 ? module.nginx-ingress[0].ingress-ip-address : null
+}
+
 # nginx ingress hostname
 output "nginx-ingress-hostname" {
   value = length(module.nginx-ingress) > 0 ? module.nginx-ingress[0].ingress-ip-address : null
