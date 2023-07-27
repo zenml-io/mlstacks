@@ -144,6 +144,11 @@ output "step_operator_configuration" {
   }) : ""
 }
 
+# ingress controller hostname (for the zenserver deploy CLI)
+output "ingress-controller-host" {
+  value = length(module.nginx-ingress) > 0 ? module.nginx-ingress[0].ingress-hostname : null
+}
+
 # nginx ingress hostname
 output "nginx-ingress-hostname" {
   value = length(module.nginx-ingress) > 0 ? module.nginx-ingress[0].ingress-hostname : null
