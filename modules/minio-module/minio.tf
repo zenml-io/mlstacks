@@ -139,7 +139,7 @@ resource "kubernetes_service" "zenml-minio-service" {
   ]
 }
 
-# Create ingress for minio if istio is not inabled
+# Create ingress for minio if istio is not enabled
 resource "kubectl_manifest" "zenml-minio-ingress" {
   count     = var.istio_enabled ? 0 : 1
   yaml_body = <<YAML

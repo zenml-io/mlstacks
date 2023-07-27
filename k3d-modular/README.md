@@ -2,20 +2,20 @@
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from needing specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
-We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). In addition to that, we have created a local MLOps stack recipe that you can use to get started with your MLOps journey in a local environment 🤩.
+We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/platform-guide/set-up-your-mlops-platform/deploy-zenml) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). In addition to that, we have created a local MLOps stack recipe that you can use to get started with your MLOps journey in a local environment 🤩.
 
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources:
-- A K3D cluster which you can use directly as [Kubernetes ZenML orchestrator](https://docs.zenml.io/component-gallery/orchestrators/kubernetes) for your workloads.
-- A [local container registry](https://docs.zenml.io/component-gallery/container-registries/default) where container images built by your orchestrator are stored and used to run pipelines.
+- A K3D cluster which you can use directly as [Kubernetes ZenML orchestrator](https://docs.zenml.io/user-guide/component-guide/orchestrators/kubernetes) for your workloads.
+- A [local container registry](https://docs.zenml.io/user-guide/component-guide/container-registries/default) where container images built by your orchestrator are stored and used to run pipelines.
 
 In addition to the above, the following optional components can be enabled by setting various local variables to `true` in the `locals.tf` file:
 
-- set `minio.enable` to deploy a Minio S3 Bucket as an [S3 artifact store](https://docs.zenml.io/component-gallery/artifact-stores/amazon-s3), which can be used to store all your ML artifacts like the model, checkpoints, etc. This is  implicitly included if you enable MLflow, because the MLflow tracking server needs it to store artifacts.
-- set `kubeflow.enable` to install Kubeflow and use it as a [Kubeflow orchestrator](https://docs.zenml.io/component-gallery/orchestrators/kubeflow) in your ZenML stack.
-- set `mlflow.enable` to deploy an MLflow tracking server as an [experiment tracker](https://docs.zenml.io/component-gallery/experiment-trackers/mlflow) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
-- you can deploy Tekton and use it as a [pipeline orchestrator](https://docs.zenml.io/component-gallery/orchestrators/tekton) instead of or in addition to Kubeflow or the native ZenML Kubernetes orchestrator by setting `tekton.enable` to `true`.
-- to install and use Seldon as a [model deployer](https://docs.zenml.io/component-gallery/model-deployers/seldon) in your ZenML pipelines, set `seldon.enable` to `true`.
-- to install and use KServe as a [model deployer](https://docs.zenml.io/component-gallery/model-deployers/kserve) in your ZenML pipelines, set `kserve.enable` to `true`.
+- set `minio.enable` to deploy a Minio S3 Bucket as an [S3 artifact store](https://docs.zenml.io/user-guide/component-guide/artifact-stores/s3), which can be used to store all your ML artifacts like the model, checkpoints, etc. This is  implicitly included if you enable MLflow, because the MLflow tracking server needs it to store artifacts.
+- set `kubeflow.enable` to install Kubeflow and use it as a [Kubeflow orchestrator](https://docs.zenml.io/user-guide/component-guide/orchestrators/kubeflow) in your ZenML stack.
+- set `mlflow.enable` to deploy an MLflow tracking server as an [experiment tracker](https://docs.zenml.io/user-guide/component-guide/experiment-trackers/mlflow) which can be used for logging data while running your applications. It also has a beautiful UI that you can use to view everything in one place.
+- you can deploy Tekton and use it as a [pipeline orchestrator](https://docs.zenml.io/user-guide/component-guide/orchestrators/tekton) instead of or in addition to Kubeflow or the native ZenML Kubernetes orchestrator by setting `tekton.enable` to `true`.
+- to install and use Seldon as a [model deployer](https://docs.zenml.io/user-guide/component-guide/model-deployers/seldon) in your ZenML pipelines, set `seldon.enable` to `true`.
+- to install and use KServe as a [model deployer](https://docs.zenml.io/user-guide/component-guide/model-deployers/kserve) in your ZenML pipelines, set `kserve.enable` to `true`.
 
 Naturally, you can combine any of the stack component resources provisioned by this recipe with other local or remote ZenML stack components to create a custom MLOps stack that suits your needs.
 

@@ -12,7 +12,7 @@ locals {
     cluster_name = "mycluster-${random_string.unique.result}"
     # important to use 1.22 or above due to a bug with Istio in older versions
     cluster_version     = "1.22"
-    workloads_namespace = "zenml-workloads-k8s"
+    workloads_namespace = "zenml"
   }
   vpc = {
     name = "vpc-${random_string.unique.result}"
