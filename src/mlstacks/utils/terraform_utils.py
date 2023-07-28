@@ -15,6 +15,7 @@
 import logging
 import shutil
 import subprocess
+from functools import wraps
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -317,7 +318,7 @@ def tf_client_init(
     ret_code, _stdout, _stderr = client.init(
         backend_config=state_path,
     )
-    # breakpoint()
+
     return ret_code, _stdout, _stderr
 
 
@@ -377,6 +378,7 @@ def tf_client_destroy(
 
     Args:
         client: The Terraform client.
+        tf_vars: The Terraform variables.
         debug: Whether to run in debug mode.
 
     Returns:
@@ -415,6 +417,7 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
 
     Args:
         stack_path: The path to the stack.
+        debug_mode: Whether to run in debug mode.
     """
     # load and parse terraform variables and definitions
     stack = load_stack_yaml(stack_path)
@@ -454,9 +457,6 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
     Args:
         stack_path: The path to the stack.
         debug_mode: Whether to run in debug mode.
-
-    Returns:
-        The return code, stdout, and stderr.
     """
     stack = load_stack_yaml(stack_path)
     tf_vars = parse_tf_vars(stack)
@@ -484,7 +484,6 @@ def get_stack_outputs(
     Args:
         stack_path: The path to the stack.
         output_key: The output key.
-        debug_mode: Whether to run in debug mode.
 
     Returns:
         The stack outputs.
@@ -513,22 +512,32 @@ def get_stack_outputs(
         return {k: v["value"] for k, v in full_outputs.items() if v["value"]}
 
 
-def _infracost_installed() -> bool:
-    """Check if Infracost is installed.
+def infracost_installed(f):
+    """Decorator checks if Infracost is installed before calling function.
 
-    Returns:
-        True if Infracost is installed, False otherwise.
+    Args:
+        f: The function to decorate.
     """
-    try:
-        subprocess.run(
-            ["infracost", "configure", "get", "api_key"],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-        return True
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        return False
+
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        try:
+            subprocess.run(
+                ["infracost", "configure", "get", "api_key"],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            logger.error(
+                "Infracost is not installed or you have not logged in. "
+                "Please visit their docs at https://www.infracost.io/docs/ "
+                "and install, then run 'infracost auth login' before retrying."
+            )
+            return None
+        return f(*args, **kwargs)
+
+    return decorated
 
 
 def _get_infracost_vars(vars: Dict[str, Any]) -> Dict[str, str]:
@@ -544,18 +553,16 @@ def _get_infracost_vars(vars: Dict[str, Any]) -> Dict[str, str]:
     return {k: v for k, v in vars.items() if not isinstance(v, dict)}
 
 
+@infracost_installed
 def infracost_breakdown_stack(
     stack_path: str, debug_mode: bool = False
 ) -> None:
-    """Estimate costs for a stack using Infracost."""
-    if not _infracost_installed():
-        logger.error(
-            "Infracost is not installed or you have not logged in. "
-            "Please visit their docs at https://www.infracost.io/docs/ "
-            "and install, then run 'infracost auth login' before retrying."
-        )
-        return
+    """Estimate costs for a stack using Infracost.
 
+    Args:
+        stack_path: The path to the stack.
+        debug_mode: Whether to run in debug mode.
+    """
     stack = load_stack_yaml(stack_path)
     infracost_vars = _get_infracost_vars(parse_tf_vars(stack))
 
