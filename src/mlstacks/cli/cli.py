@@ -118,7 +118,7 @@ def breakdown(file: str) -> None:
     help="Optional key for the output to be printed",
 )
 def output(file: str, key: Optional[str] = "") -> None:
-    """Estimates the costs for an MLOps stack.
+    """Retrieves output values for an MLOps stack.
 
     Args:
         file (str): Path to the YAML file for breakdown
