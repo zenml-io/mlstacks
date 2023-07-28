@@ -17,7 +17,7 @@ import shutil
 import subprocess
 from functools import wraps
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import pkg_resources
 import python_terraform
@@ -512,11 +512,18 @@ def get_stack_outputs(
         return {k: v["value"] for k, v in full_outputs.items() if v["value"]}
 
 
-def infracost_installed(f):
+def infracost_installed(f: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator checks if Infracost is installed before calling function.
 
     Args:
         f: The function to decorate.
+
+    Raises:
+        FileNotFoundError: If Infracost is not installed.
+        CalledProcessError: If Infracost is not installed.
+
+    Returns:
+        The decorated function.
     """
 
     @wraps(f)
@@ -528,13 +535,13 @@ def infracost_installed(f):
                 capture_output=True,
                 text=True,
             )
-        except (subprocess.CalledProcessError, FileNotFoundError):
+        except (subprocess.CalledProcessError, FileNotFoundError) as e:
             logger.error(
                 "Infracost is not installed or you have not logged in. "
                 "Please visit their docs at https://www.infracost.io/docs/ "
                 "and install, then run 'infracost auth login' before retrying."
             )
-            return None
+            raise e
         return f(*args, **kwargs)
 
     return decorated
