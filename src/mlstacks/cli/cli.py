@@ -60,7 +60,9 @@ def deploy(file: str, debug: bool = False) -> None:
     Args:
         file (str): Path to the YAML file for deploy
     """
+    declare(f"Deploying stack from '{file}'...")
     deploy_stack(stack_path=file, debug_mode=debug)
+    declare("Stack deployed successfully!")
 
 
 @click.command()
@@ -94,6 +96,7 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
     """
     stack_name: str = load_yaml_as_dict(file).get("name")
     provider: str = load_yaml_as_dict(file).get("provider")
+    declare(f"Destroying stack '{stack_name}'...")
     destroy_stack(stack_path=file, debug_mode=debug)
 
     mlstacks_app_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
@@ -190,7 +193,9 @@ def clean(yes: bool = False) -> None:
         "This action is irreversible.",
     ):
         clean_stack_recipes()
-        declare("Cleaned up all the Terraform state files.")
+        declare(
+            f"Cleaned up all the Terraform state files from '{files_path}'."
+        )
     else:
         declare("Aborting cleaning!")
 
