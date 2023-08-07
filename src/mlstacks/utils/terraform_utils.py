@@ -234,9 +234,11 @@ def populate_tf_definitions(
             dirs_exist_ok=True,
         )
     else:
-        shutil.copytree(package_path, destination_path, ignore=include_files)
+        _ = shutil.copytree(
+            package_path, destination_path, ignore=include_files
+        )
         # also copy the module files
-        shutil.copytree(modules_path, modules_destination)
+        _ = shutil.copytree(modules_path, modules_destination)
 
     logger.info(f"Populated Terraform definitions in {destination_path}")
     # write package version into the directory
@@ -245,6 +247,7 @@ def populate_tf_definitions(
             MLSTACKS_PACKAGE_NAME
         ).version
         f.write(mlstacks_version)
+    logger.debug(f"Wrote mlstacks version {mlstacks_version} to directory.")
 
 
 def get_recipe_metadata(provider: ProviderEnum) -> Dict[str, Any]:
@@ -317,6 +320,7 @@ def tf_client_init(
     base_workspace = f"{CONFIG_DIR}/terraform/{provider}-modular"
     state_path = f"path={base_workspace}/terraform.tfstate"
 
+    logger.debug(f"Initializing Terraform in {base_workspace}...")
     if not debug:
         ret_code, _stdout, _stderr = client.init(
             backend_config=state_path,
@@ -329,7 +333,7 @@ def tf_client_init(
             raise_on_error=False,
             capture_output=False,
         )
-
+    logger.debug("Terraform successfully initialized.")
     return ret_code, _stdout, _stderr
 
 
@@ -351,6 +355,7 @@ def tf_client_apply(
         The return code, stdout, and stderr.
     """
     try:
+        logger.debug("Applying Terraform changes...")
         if debug:
             ret_code, _stdout, _stderr = client.apply(
                 var=tf_vars,
@@ -379,6 +384,7 @@ def tf_client_apply(
                 f"The region '{tf_vars['region']}' you provided is invalid. "
                 "Please fix and try again."
             )
+    logger.debug("Terraform changes successfully applied.")
     return ret_code, _stdout, _stderr
 
 
@@ -395,6 +401,7 @@ def tf_client_destroy(
     Returns:
         The return code, stdout, and stderr.
     """
+    logger.debug("Destroying Terraform components...")
     if debug:
         ret_code, _stdout, _stderr = client.destroy(
             var=tf_vars,
@@ -416,11 +423,13 @@ def tf_client_destroy(
             auto_approve=True,
             # skip_plan=True,
         )
+    logger.debug("Terraform components successfully destroyed.")
     return ret_code, _stdout, _stderr
 
 
 def clean_stack_recipes() -> None:
     """Deletes stack recipe files from config directory."""
+    logger.info("Cleaning stack recipes...")
     tf_path = f"{CONFIG_DIR}/terraform"
     shutil.rmtree(tf_path)
     logger.info(f"Deleted Terraform directory at {tf_path}")
