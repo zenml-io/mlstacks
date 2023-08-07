@@ -398,20 +398,23 @@ def tf_client_destroy(
     if debug:
         ret_code, _stdout, _stderr = client.destroy(
             var=tf_vars,
+            input=True,
             capture_output=False,
             raise_on_error=True,
             force=python_terraform.IsNotFlagged,
             refresh=False,
             auto_approve=False,
+            skip_plan=False,
         )
     else:
         ret_code, _stdout, _stderr = client.destroy(
             var=tf_vars,
             capture_output=True,
-            raise_on_error=True,
+            raise_on_error=False,
             force=python_terraform.IsNotFlagged,
             refresh=False,
             auto_approve=True,
+            skip_plan=True,
         )
     return ret_code, _stdout, _stderr
 
