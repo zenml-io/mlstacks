@@ -359,17 +359,17 @@ def tf_client_apply(
                 raise_on_error=True,
                 refresh=False,
                 auto_approve=False,
-                # state=state_path,
+                skip_plan=False,
             )
         else:
             ret_code, _stdout, _stderr = client.apply(
                 var=tf_vars,
                 input=False,
                 capture_output=True,
-                raise_on_error=True,
+                raise_on_error=False,
                 refresh=False,
+                skip_plan=True,
                 auto_approve=True,
-                # state=state_path,
             )
     except python_terraform.TerraformCommandError as e:
         # TODO: pull all this error handling out to somewhere else
