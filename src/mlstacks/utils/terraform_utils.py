@@ -303,6 +303,7 @@ def tf_previously_initialized(tf_recipe_path: str) -> bool:
 def tf_client_init(
     client: python_terraform.Terraform,
     provider: str,
+    debug: bool = False,
 ) -> Tuple[Any, Any, Any]:
     """Initialize Terraform client.
 
@@ -315,9 +316,19 @@ def tf_client_init(
     """
     base_workspace = f"{CONFIG_DIR}/terraform/{provider}-modular"
     state_path = f"path={base_workspace}/terraform.tfstate"
-    ret_code, _stdout, _stderr = client.init(
-        backend_config=state_path,
-    )
+
+    if not debug:
+        ret_code, _stdout, _stderr = client.init(
+            backend_config=state_path,
+            raise_on_error=False,
+            capture_output=True,
+        )
+    else:
+        ret_code, _stdout, _stderr = client.init(
+            backend_config=state_path,
+            raise_on_error=False,
+            capture_output=False,
+        )
 
     return ret_code, _stdout, _stderr
 
@@ -431,7 +442,7 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     # run Terraform
     tfr = TerraformRunner(tf_recipe_path)
     if not tf_previously_initialized(tf_recipe_path):
-        tf_client_init(tfr.client, provider=stack.provider)
+        tf_client_init(tfr.client, provider=stack.provider, debug=debug_mode)
 
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
@@ -466,7 +477,7 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
     tfr = TerraformRunner(tf_recipe_path)
 
     if not tf_previously_initialized(tf_recipe_path):
-        tf_client_init(tfr.client, provider=stack.provider)
+        tf_client_init(tfr.client, provider=stack.provider, debug=debug_mode)
 
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
@@ -579,7 +590,7 @@ def infracost_breakdown_stack(
     if not tf_previously_initialized(tf_recipe_path):
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
-        tf_client_init(tfr.client, provider=stack.provider)
+        tf_client_init(tfr.client, provider=stack.provider, debug=debug_mode)
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
 
     # Constructing the infracost command
