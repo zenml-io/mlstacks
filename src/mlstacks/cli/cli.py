@@ -184,7 +184,7 @@ def clean(yes: bool = False) -> None:
     files_path = f"{click.get_app_dir(MLSTACKS_PACKAGE_NAME)}/terraform"
     if not Path(files_path).exists():
         declare("No Terraform state files found.")
-    elif yes or click.confirm(
+    elif yes or confirmation(
         "WARNING: Are you sure you want to delete all the Terraform state "
         f"and definition files from {files_path}?\n",
         "This action is irreversible.",
