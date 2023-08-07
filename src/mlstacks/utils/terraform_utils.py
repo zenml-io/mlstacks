@@ -404,7 +404,7 @@ def tf_client_destroy(
             force=python_terraform.IsNotFlagged,
             refresh=False,
             auto_approve=False,
-            skip_plan=False,
+            # skip_plan=False,
         )
     else:
         ret_code, _stdout, _stderr = client.destroy(
@@ -414,7 +414,7 @@ def tf_client_destroy(
             force=python_terraform.IsNotFlagged,
             refresh=False,
             auto_approve=True,
-            skip_plan=True,
+            # skip_plan=True,
         )
     return ret_code, _stdout, _stderr
 
@@ -450,13 +450,12 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
         Path(f"{tf_recipe_path}/{MLSTACKS_INITIALIZATION_FILE_FLAG}").touch()
-    print(tf_vars)
+
     # TODO: confirm the logging of progress doesn't require user input still
     # confirm the plan
     # log what's being deployed
     # spinner to state that Terraform is running
     # output the outputs at the end (or in CLI?)
-    # breakpoint()
     tf_client_apply(
         client=tfr.client,
         tf_vars=tf_vars,
@@ -492,6 +491,7 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
 def get_stack_outputs(
     stack_path: str,
     output_key: Optional[str] = None,
+    debug_mode: bool = False,
 ) -> Dict[str, str]:
     """Get stack outputs.
 
@@ -516,6 +516,8 @@ def get_stack_outputs(
             "outputs to show."
         )
 
+    # TODO: add debug mode functionality
+    # TODO: extract out into separate helper method
     if output_key:
         full_outputs = tfr.client.output(
             output_key, full_value=True, state=state_tf_path
