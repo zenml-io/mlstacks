@@ -13,6 +13,7 @@
 """CLI for mlstacks."""
 
 
+import shutil
 from pathlib import Path
 from typing import Optional
 
@@ -21,6 +22,7 @@ import click
 from mlstacks.constants import (
     MLSTACKS_PACKAGE_NAME,
 )
+from mlstacks.utils.cli_utils import confirmation, declare, print_table
 from mlstacks.utils.terraform_utils import (
     clean_stack_recipes,
     deploy_stack,
@@ -28,6 +30,7 @@ from mlstacks.utils.terraform_utils import (
     get_stack_outputs,
     infracost_breakdown_stack,
 )
+from mlstacks.utils.yaml_utils import load_yaml_as_dict
 
 
 @click.group()
@@ -75,14 +78,44 @@ def deploy(file: str, debug: bool = False) -> None:
     default=False,
     help="Flag to enable debug mode to view raw Terraform logging",
 )
-def destroy(file: str, debug: bool = False) -> None:
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Flag to skip confirmation prompt",
+)
+def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
     """Destroys a stack based on a YAML file.
 
     Args:
         file (str): Path to the YAML file for destroy
         debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
+    stack_name: str = load_yaml_as_dict(file).get("name")
+    provider: str = load_yaml_as_dict(file).get("provider")
     destroy_stack(stack_path=file, debug_mode=debug)
+
+    mlstacks_app_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
+    spec_files_dir: str = f"{mlstacks_app_dir}/stack_specs/{stack_name}"
+    tf_files_dir: str = f"{mlstacks_app_dir}/terraform/{provider}-modular"
+    if (
+        yes
+        or confirmation(
+            "Would you like to delete the spec files and directory (located "
+            "at '{}') used to create this stack?"
+        )
+    ) and Path(spec_files_dir).exists():
+        shutil.rmtree(spec_files_dir)
+    if (
+        yes
+        or confirmation(
+            "Would you like to delete the Terraform state files and "
+            "definitions (located at '{tf_files_dir}') used for your stack?"
+        )
+    ) and Path(tf_files_dir).exists():
+        shutil.rmtree(tf_files_dir)
+    declare(f"Stack '{stack_name}' has been destroyed.")
 
 
 @click.command()
@@ -131,7 +164,7 @@ def output(file: str, key: Optional[str] = "") -> None:
             "show. Please run `mlstacks deploy ...` first."
         )
     if outputs:
-        print(outputs)
+        print_table(outputs)
 
 
 @click.command()
@@ -150,16 +183,16 @@ def clean(yes: bool = False) -> None:
     """
     files_path = f"{click.get_app_dir(MLSTACKS_PACKAGE_NAME)}/terraform"
     if not Path(files_path).exists():
-        click.echo("No Terraform state files found.")
+        declare("No Terraform state files found.")
     elif yes or click.confirm(
         "Are you sure you want to delete all the Terraform state "
         f"and definition files from {files_path}?\n",
         "This action is irreversible.",
     ):
         clean_stack_recipes()
-        click.echo("Cleaned up all the Terraform state files.")
+        declare("Cleaned up all the Terraform state files.")
     else:
-        click.echo("Aborting cleaning!")
+        declare("Aborting cleaning!")
 
 
 cli.add_command(deploy)
