@@ -185,7 +185,7 @@ def clean(yes: bool = False) -> None:
     if not Path(files_path).exists():
         declare("No Terraform state files found.")
     elif yes or click.confirm(
-        "Are you sure you want to delete all the Terraform state "
+        "WARNING: Are you sure you want to delete all the Terraform state "
         f"and definition files from {files_path}?\n",
         "This action is irreversible.",
     ):
