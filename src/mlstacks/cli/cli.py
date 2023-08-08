@@ -109,16 +109,16 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
     if (
         yes
         or confirmation(
-            "Would you like to delete the spec files and directory (located "
-            "at '{}') used to create this stack?"
+            f"Would you like to delete the spec files and directory (located "
+            f"at '{spec_files_dir}') used to create this stack?"
         )
     ) and Path(spec_files_dir).exists():
         shutil.rmtree(spec_files_dir)
     if (
         yes
         or confirmation(
-            "Would you like to delete the Terraform state files and "
-            "definitions (located at '{tf_files_dir}') used for your stack?"
+            f"Would you like to delete the Terraform state files and "
+            f"definitions (located at '{tf_files_dir}') used for your stack?"
         )
     ) and Path(tf_files_dir).exists():
         shutil.rmtree(tf_files_dir)
