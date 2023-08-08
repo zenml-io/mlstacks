@@ -22,7 +22,11 @@ import click
 from mlstacks.constants import (
     MLSTACKS_PACKAGE_NAME,
 )
-from mlstacks.utils.cli_utils import confirmation, declare, print_table
+from mlstacks.utils.cli_utils import (
+    confirmation,
+    declare,
+    pretty_print_output_vals,
+)
 from mlstacks.utils.terraform_utils import (
     clean_stack_recipes,
     deploy_stack,
@@ -167,7 +171,7 @@ def output(file: str, key: Optional[str] = "") -> None:
             "show. Please run `mlstacks deploy ...` first."
         )
     if outputs:
-        print_table(outputs)
+        pretty_print_output_vals(outputs)
 
 
 @click.command()

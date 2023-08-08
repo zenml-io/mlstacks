@@ -175,3 +175,24 @@ def print_table(
     if len(rich_table.columns) > 1:
         rich_table.columns[0].justify = "center"
     console.print(rich_table)
+
+
+def pretty_print_output_vals(
+    output_vals: Dict[str, str],
+) -> None:
+    """Prints dictionary values as a rich table.
+
+    Args:
+        output_vals: Dictionary of output values.
+    """
+    title: Optional[str] = "Terraform Output Values"
+
+    stack_dicts = [
+        {
+            "OUTPUT_KEY": key,
+            "OUTPUT_VALUE": value,
+        }
+        for key, value in output_vals.items()
+    ]
+
+    print_table(stack_dicts, title=title)
