@@ -314,18 +314,11 @@ def tf_client_init(
     state_path = f"path={base_workspace}/terraform.tfstate"
 
     logger.debug(f"Initializing Terraform in {base_workspace}...")
-    if not debug:
-        ret_code, _stdout, _stderr = client.init(
-            backend_config=state_path,
-            raise_on_error=False,
-            capture_output=True,
-        )
-    else:
-        ret_code, _stdout, _stderr = client.init(
-            backend_config=state_path,
-            raise_on_error=False,
-            capture_output=False,
-        )
+    ret_code, _stdout, _stderr = client.init(
+        backend_config=state_path,
+        raise_on_error=False,
+        capture_output=not debug,
+    )
     logger.debug("Terraform successfully initialized.")
     return ret_code, _stdout, _stderr
 
