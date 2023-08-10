@@ -219,30 +219,23 @@ def populate_tf_definitions(
         MLSTACKS_PACKAGE_NAME, modules_subdir
     )
     # copy files from package to the directory
-    if force:
-        _ = shutil.copytree(
-            package_path,
-            destination_path,
-            ignore=include_files,
-            dirs_exist_ok=True,
-        )
-        # also copy the module files
-        _ = shutil.copytree(
-            modules_path,
-            modules_destination,
-            ignore=include_files,
-            dirs_exist_ok=True,
-        )
-    else:
-        _ = shutil.copytree(
-            package_path, destination_path, ignore=include_files
-        )
-        # also copy the module files
-        _ = shutil.copytree(modules_path, modules_destination)
+    shutil.copytree(
+        package_path,
+        destination_path,
+        ignore=include_files,
+        dirs_exist_ok=force,
+    )
+    # also copy the module files
+    shutil.copytree(
+        modules_path,
+        modules_destination,
+        ignore=include_files,
+        dirs_exist_ok=force,
+    )
 
     logger.info(f"Populated Terraform definitions in {destination_path}")
     # write package version into the directory
-    with open(f"{destination_path}/MLSTACKS_VERSION.txt", "w") as f:
+    with open(os.path.join(destination_path, "MLSTACKS_VERSION.txt"), "w") as f:
         mlstacks_version = pkg_resources.get_distribution(
             MLSTACKS_PACKAGE_NAME
         ).version
@@ -321,18 +314,11 @@ def tf_client_init(
     state_path = f"path={base_workspace}/terraform.tfstate"
 
     logger.debug(f"Initializing Terraform in {base_workspace}...")
-    if not debug:
-        ret_code, _stdout, _stderr = client.init(
-            backend_config=state_path,
-            raise_on_error=False,
-            capture_output=True,
-        )
-    else:
-        ret_code, _stdout, _stderr = client.init(
-            backend_config=state_path,
-            raise_on_error=False,
-            capture_output=False,
-        )
+    ret_code, _stdout, _stderr = client.init(
+        backend_config=state_path,
+        raise_on_error=False,
+        capture_output=not debug,
+    )
     logger.debug("Terraform successfully initialized.")
     return ret_code, _stdout, _stderr
 
@@ -356,26 +342,15 @@ def tf_client_apply(
     """
     try:
         logger.debug("Applying Terraform changes...")
-        if debug:
-            ret_code, _stdout, _stderr = client.apply(
-                var=tf_vars,
-                input=True,
-                capture_output=False,
-                raise_on_error=True,
-                refresh=False,
-                auto_approve=False,
-                skip_plan=False,
-            )
-        else:
-            ret_code, _stdout, _stderr = client.apply(
-                var=tf_vars,
-                input=False,
-                capture_output=True,
-                raise_on_error=False,
-                refresh=False,
-                skip_plan=True,
-                auto_approve=True,
-            )
+        ret_code, _stdout, _stderr = client.apply(
+            var=tf_vars,
+            input=debug,
+            capture_output=not debug,
+            raise_on_error=debug,
+            refresh=False,
+            auto_approve=not debug,
+            skip_plan=not debug,
+        )
     except python_terraform.TerraformCommandError as e:
         # TODO: pull all this error handling out to somewhere else
         # TODO: catch the error!
@@ -402,27 +377,16 @@ def tf_client_destroy(
         The return code, stdout, and stderr.
     """
     logger.debug("Destroying Terraform components...")
-    if debug:
-        ret_code, _stdout, _stderr = client.destroy(
-            var=tf_vars,
-            input=True,
-            capture_output=False,
-            raise_on_error=True,
-            force=python_terraform.IsNotFlagged,
-            refresh=False,
-            auto_approve=False,
-            # skip_plan=False,
-        )
-    else:
-        ret_code, _stdout, _stderr = client.destroy(
-            var=tf_vars,
-            capture_output=True,
-            raise_on_error=False,
-            force=python_terraform.IsNotFlagged,
-            refresh=False,
-            auto_approve=True,
-            # skip_plan=True,
-        )
+    ret_code, _stdout, _stderr = client.destroy(
+        var=tf_vars,
+        input=debug,
+        capture_output=not debug,
+        raise_on_error=debug,
+        force=python_terraform.IsNotFlagged,
+        refresh=False,
+        auto_approve=not debug,
+        # skip_plan=not debug,
+    )
     logger.debug("Terraform components successfully destroyed.")
     return ret_code, _stdout, _stderr
 
@@ -430,7 +394,7 @@ def tf_client_destroy(
 def clean_stack_recipes() -> None:
     """Deletes stack recipe files from config directory."""
     logger.info("Cleaning stack recipes...")
-    tf_path = f"{CONFIG_DIR}/terraform"
+    tf_path = os.path.join(CONFIG_DIR, "terraform")
     shutil.rmtree(tf_path)
     logger.info(f"Deleted Terraform directory at {tf_path}")
 
@@ -447,7 +411,6 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     if not tf_definitions_present(stack.provider):
         populate_tf_definitions(stack.provider)
     tf_vars = parse_tf_vars(stack)
-    # breakpoint()
     check_tf_definitions_version(stack.provider)
 
     tfr = TerraformRunner(tf_recipe_path)
