@@ -10,6 +10,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
+from pathlib import Path
 from typing import Any, Dict, List, NoReturn, Optional, Union
 
 import click
@@ -34,6 +35,7 @@ mlstacks_custom_theme = Theme(mlstacks_style_defaults)
 
 console = Console(theme=mlstacks_custom_theme, markup=True)
 error_console = Console(stderr=True, theme=mlstacks_custom_theme)
+from mlstacks.constants import MLSTACKS_PACKAGE_NAME
 
 
 def title(text: str) -> None:
@@ -196,3 +198,19 @@ def pretty_print_output_vals(
     ]
 
     print_table(stack_dicts, title=title)
+
+
+def _get_spec_dir(stack_name: str) -> str:
+    """Gets the path to the spec directory for a given stack.
+
+    Args:
+        stack_name: The name of the stack.
+
+    Returns:
+        The path to the spec directory.
+    """
+    return str(
+        Path(click.get_app_dir(MLSTACKS_PACKAGE_NAME))
+        / "stack_specs"
+        / stack_name
+    )

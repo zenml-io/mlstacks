@@ -23,11 +23,13 @@ from mlstacks.constants import (
     MLSTACKS_PACKAGE_NAME,
 )
 from mlstacks.utils.cli_utils import (
+    _get_spec_dir,
     confirmation,
     declare,
     pretty_print_output_vals,
 )
 from mlstacks.utils.terraform_utils import (
+    _get_tf_recipe_path,
     clean_stack_recipes,
     deploy_stack,
     destroy_stack,
@@ -104,9 +106,8 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
     declare(f"Destroying stack '{stack_name}' from '{file}'...")
     destroy_stack(stack_path=file, debug_mode=debug)
 
-    mlstacks_app_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
-    spec_files_dir: str = f"{mlstacks_app_dir}/stack_specs/{stack_name}"
-    tf_files_dir: str = f"{mlstacks_app_dir}/terraform/{provider}-modular"
+    spec_files_dir: str = _get_spec_dir(stack_name)
+    tf_files_dir: str = _get_tf_recipe_path(provider)
     if (
         yes
         or confirmation(
@@ -189,8 +190,8 @@ def clean(yes: bool = False) -> None:
     Args:
         yes (bool): Flag to skip confirmation prompt
     """
-    files_path = f"{click.get_app_dir(MLSTACKS_PACKAGE_NAME)}/terraform"
-    if not Path(files_path).exists():
+    files_path = Path(click.get_app_dir(MLSTACKS_PACKAGE_NAME)) / "terraform"
+    if not files_path.exists():
         declare("No Terraform state files found.")
     elif yes or confirmation(
         "WARNING: Are you sure you want to delete all the Terraform state "
