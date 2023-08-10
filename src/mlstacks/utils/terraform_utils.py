@@ -411,7 +411,6 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     if not tf_definitions_present(stack.provider):
         populate_tf_definitions(stack.provider)
     tf_vars = parse_tf_vars(stack)
-    # breakpoint()
     check_tf_definitions_version(stack.provider)
 
     tfr = TerraformRunner(tf_recipe_path)
