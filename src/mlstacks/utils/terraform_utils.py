@@ -134,19 +134,27 @@ def parse_component_variables(
         component_variables[enable_key] = "true"
 
         # set additional config properties
-        config_vals = component.metadata.config
-        if config_vals:
-            # additionally set all other key/value pairs from the configuration
-            component_variables.update(config_vals)
+        if component.metadata:
+            config_vals = component.metadata.config
+            if config_vals:
+                # additionally set all other key/value pairs
+                # from the configuration
+                component_variables.update(config_vals)
 
-        # set additional environment variables
-        env_var_vals = component.metadata.environment_variables
-        if env_var_vals:
-            # additionally set all other key/value pairs from the environment
-            # variables
-            # prefix the keys with TF_VAR_ as required by Terraform
-            prefixed_env_var_vals = {f"TF_VAR_{k}": v for k, v in env_var_vals}
-            component_variables.update(prefixed_env_var_vals)
+            # set additional environment variables
+            env_var_vals = component.metadata.environment_variables
+            if env_var_vals:
+                # additionally set all other key/value pairs
+                # from the environment
+                # variables
+                # prefix the keys with TF_VAR_ as required by Terraform
+                if env_var_vals is not None:
+                    prefixed_env_var_vals = {
+                        f"TF_VAR_{k}": v for k, v in env_var_vals.items()
+                    }
+                else:
+                    prefixed_env_var_vals = {}
+                component_variables.update(prefixed_env_var_vals)
 
     return component_variables
 
@@ -185,7 +193,10 @@ def tf_definitions_present(provider: ProviderEnum) -> bool:
     )
 
 
-def include_files(directory, filenames):  # noqa: ARG001
+def include_files(
+    directory: str,  # noqa: ARG001
+    filenames: List[str],
+) -> List[str]:
     """Include files in Terraform definitions.
 
     Args:
@@ -447,7 +458,6 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
         client=tfr.client,
         tf_vars=tf_vars,
         debug=debug_mode,
-        provider=stack.provider,
     )
 
 

@@ -15,7 +15,8 @@
 from typing import List
 
 from mlstacks.constants import ALLOWED_FLAVORS
-from mlstacks.models import Component, Stack
+from mlstacks.models.component import Component
+from mlstacks.models.stack import Stack
 
 
 def has_valid_flavor_combinations(

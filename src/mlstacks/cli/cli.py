@@ -109,8 +109,8 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
         )
         return
     yaml_dict = load_yaml_as_dict(file)
-    stack_name: str = yaml_dict.get("name")
-    provider: str = yaml_dict.get("provider")
+    stack_name: str = str(yaml_dict.get("name"))
+    provider: str = str(yaml_dict.get("provider"))
     declare(f"Destroying stack '{stack_name}' from '{file}'...")
     destroy_stack(stack_path=file, debug_mode=debug)
 
@@ -205,7 +205,7 @@ def clean(yes: bool = False) -> None:
         declare("No Terraform state files found.")
     elif yes or confirmation(
         "WARNING: Are you sure you want to delete all the Terraform state "
-        f"and definition files from {files_path}?\n",
+        f"and definition files from {files_path}?\n"
         "This action is irreversible.",
     ):
         clean_stack_recipes()
