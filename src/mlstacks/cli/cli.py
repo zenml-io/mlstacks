@@ -64,6 +64,7 @@ def deploy(file: str, debug: bool = False) -> None:
 
     Args:
         file (str): Path to the YAML file for deploy
+        debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
     declare(f"Deploying stack from '{file}'...")
     deploy_stack(stack_path=file, debug_mode=debug)
@@ -98,9 +99,10 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
     Args:
         file (str): Path to the YAML file for destroy
         debug (bool): Flag to enable debug mode to view raw Terraform logging
+        yes (bool): Flag to skip confirmation prompt
     """
     if not confirmation(
-        f"Are you sure you want to destroy the stack defined in '{file}'?"
+        f"Are you sure you want to destroy the stack defined in '{file}'?",
     ):
         declare(
             f"Aborted stack destruction for '{file}'...",
@@ -118,7 +120,7 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
         yes
         or confirmation(
             f"Would you like to delete the spec files and directory (located "
-            f"at '{spec_files_dir}') used to create this stack?"
+            f"at '{spec_files_dir}') used to create this stack?",
         )
     ) and Path(spec_files_dir).exists():
         shutil.rmtree(spec_files_dir)
@@ -126,7 +128,7 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
         yes
         or confirmation(
             f"Would you like to delete the Terraform state files and "
-            f"definitions (located at '{tf_files_dir}') used for your stack?"
+            f"definitions (located at '{tf_files_dir}') used for your stack?",
         )
     ) and Path(tf_files_dir).exists():
         shutil.rmtree(tf_files_dir)
@@ -170,13 +172,14 @@ def output(file: str, key: Optional[str] = "") -> None:
 
     Args:
         file (str): Path to the YAML file for breakdown
+        key (str): Optional key for the output to be printed
     """
     try:
         outputs = get_stack_outputs(file, output_key=key)
     except RuntimeError:
         click.echo(
             "Terraform has not been initialized so there are no outputs to "
-            "show. Please run `mlstacks deploy ...` first."
+            "show. Please run `mlstacks deploy ...` first.",
         )
     if outputs:
         pretty_print_output_vals(outputs)
@@ -206,7 +209,7 @@ def clean(yes: bool = False) -> None:
     ):
         clean_stack_recipes()
         declare(
-            f"Cleaned up all the Terraform state files from '{files_path}'."
+            f"Cleaned up all the Terraform state files from '{files_path}'.",
         )
     else:
         declare("Aborting cleaning!")

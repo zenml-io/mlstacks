@@ -18,7 +18,7 @@ from mlstacks.models import Component, Stack
 
 
 def has_valid_flavor_combinations(
-    stack: Stack, components: List[Component]
+    stack: Stack, components: List[Component],
 ) -> bool:
     """Returns true if flavors have a valid combination.
 

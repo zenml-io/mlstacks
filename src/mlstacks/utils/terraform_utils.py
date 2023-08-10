@@ -69,8 +69,9 @@ class TerraformRunner:
         self.tf_recipe_path = tf_recipe_path
 
         if not Path(tf_recipe_path).exists():
+            msg = f"Terraform recipe path {tf_recipe_path} does not exist."
             raise ValueError(
-                f"Terraform recipe path {tf_recipe_path} does not exist."
+                msg,
             )
         self.client = python_terraform.Terraform(
             working_dir=self.tf_recipe_path,
@@ -212,7 +213,8 @@ def include_files(directory, filenames):
 
 
 def populate_tf_definitions(
-    provider: ProviderEnum, force: bool = False
+    provider: ProviderEnum,
+    force: bool = False,
 ) -> None:
     """Copies Terraform definitions to local config directory.
 
@@ -226,13 +228,13 @@ def populate_tf_definitions(
     modules_destination = Path(CONFIG_DIR) / modules_subdir
     package_path = Path(
         pkg_resources.resource_filename(
-            MLSTACKS_PACKAGE_NAME, str(definitions_subdir)
-        )
+            MLSTACKS_PACKAGE_NAME, str(definitions_subdir),
+        ),
     )
     modules_path = Path(
         pkg_resources.resource_filename(
-            MLSTACKS_PACKAGE_NAME, str(modules_subdir)
-        )
+            MLSTACKS_PACKAGE_NAME, str(modules_subdir),
+        ),
     )
 
     # copy files from package to the directory
@@ -253,7 +255,7 @@ def populate_tf_definitions(
     # write package version into the directory
     with open(Path(destination_path) / MLSTACKS_VERSION_FILE_NAME, "w") as f:
         mlstacks_version = pkg_resources.get_distribution(
-            MLSTACKS_PACKAGE_NAME
+            MLSTACKS_PACKAGE_NAME,
         ).version
         f.write(mlstacks_version)
     logger.debug(f"Wrote mlstacks version {mlstacks_version} to directory.")
@@ -280,17 +282,17 @@ def check_tf_definitions_version(provider: ProviderEnum) -> None:
     """
     definitions_path = Path(_get_tf_recipe_path(provider))
     if definitions_path.exists():
-        with open(definitions_path / MLSTACKS_VERSION_FILE_NAME, "r") as f:
+        with open(definitions_path / MLSTACKS_VERSION_FILE_NAME) as f:
             tf_version = f.read()
             mlstacks_version = pkg_resources.get_distribution(
-                MLSTACKS_PACKAGE_NAME
+                MLSTACKS_PACKAGE_NAME,
             ).version
             if tf_version != mlstacks_version:
                 logger.warning(
                     f"You are running mlstacks version {mlstacks_version}, "
                     f"but the Terraform definitions in {definitions_path} "
                     f"were generated with mlstacks version {tf_version}. "
-                    f"This may lead to unexpected behavior."
+                    f"This may lead to unexpected behavior.",
                 )
 
 
@@ -321,7 +323,7 @@ def tf_client_init(
         The return code, stdout, and stderr.
     """
     base_workspace = _get_tf_recipe_path(provider)
-    state_path = f"path={str(Path(base_workspace) / 'terraform.tfstate')}"
+    state_path = f"path={Path(base_workspace) / 'terraform.tfstate'!s}"
 
     logger.debug(f"Initializing Terraform in {base_workspace}...")
     ret_code, _stdout, _stderr = client.init(
@@ -367,14 +369,14 @@ def tf_client_apply(
         if "The specified location constraint is not valid" in e:
             logger.error(
                 f"The region '{tf_vars['region']}' you provided is invalid. "
-                "Please fix and try again."
+                "Please fix and try again.",
             )
     logger.debug("Terraform changes successfully applied.")
     return ret_code, _stdout, _stderr
 
 
 def tf_client_destroy(
-    client: python_terraform.Terraform, tf_vars: Dict[str, Any], debug: bool
+    client: python_terraform.Terraform, tf_vars: Dict[str, Any], debug: bool,
 ) -> Tuple[Any, Any, Any]:
     """Destroy Terraform changes.
 
@@ -492,16 +494,16 @@ def get_stack_outputs(
 
     tfr = TerraformRunner(tf_recipe_path)
     if not tf_previously_initialized(tf_recipe_path):
+        msg = "Terraform has not been initialized so there are no outputs to show."
         raise RuntimeError(
-            "Terraform has not been initialized so there are no "
-            "outputs to show."
+            msg,
         )
 
     # TODO: add debug mode functionality
     # TODO: extract out into separate helper method
     if output_key:
         full_outputs = tfr.client.output(
-            output_key, full_value=True, state=state_tf_path
+            output_key, full_value=True, state=state_tf_path,
         )
         return {output_key: full_outputs}
     else:
@@ -529,7 +531,7 @@ def verify_infracost_installed() -> bool:
         logger.error(
             "Infracost is not installed or you have not logged in. "
             "Please visit their docs at https://www.infracost.io/docs/ "
-            "and install, then run 'infracost auth login' before retrying."
+            "and install, then run 'infracost auth login' before retrying.",
         )
         return False
 
@@ -548,7 +550,7 @@ def _get_infracost_vars(vars: Dict[str, Any]) -> Dict[str, str]:
 
 
 def infracost_breakdown_stack(
-    stack_path: str, debug_mode: bool = False
+    stack_path: str, debug_mode: bool = False,
 ) -> None:
     """Estimate costs for a stack using Infracost.
 
@@ -576,7 +578,7 @@ def infracost_breakdown_stack(
 
     # Execute the command
     process = subprocess.run(
-        infracost_cmd, shell=True, check=True, capture_output=True, text=True
+        infracost_cmd, shell=True, check=True, capture_output=True, text=True,
     )
 
     # Print the output

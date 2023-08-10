@@ -36,7 +36,8 @@ def load_yaml_as_dict(path: Union[Path, str]) -> Dict[str, Any]:
         path = str(path)
 
     if not Path(path).exists():
-        raise FileNotFoundError(f"File {path} not found.")
+        msg = f"File {path} not found."
+        raise FileNotFoundError(msg)
 
     with open(path) as yaml_file:
         yaml_content = yaml.safe_load(yaml_file)
