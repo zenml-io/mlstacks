@@ -101,7 +101,7 @@ def _get_config_property(
     """
     if component.metadata.config is None:
         return None
-    return component.metadata.config[property_name]
+    return component.metadata.config.get(property_name)
 
 
 def parse_component_variables(
