@@ -235,7 +235,7 @@ def populate_tf_definitions(
 
     logger.info(f"Populated Terraform definitions in {destination_path}")
     # write package version into the directory
-    with open(f"{destination_path}/MLSTACKS_VERSION.txt", "w") as f:
+    with open(os.path.join(destination_path, "MLSTACKS_VERSION.txt"), "w") as f:
         mlstacks_version = pkg_resources.get_distribution(
             MLSTACKS_PACKAGE_NAME
         ).version
