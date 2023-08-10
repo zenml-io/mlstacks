@@ -26,8 +26,8 @@ from mlstacks.models.component import (
 from mlstacks.utils.terraform_utils import TerraformRunner, _compose_enable_key
 
 
-def test_terraform_runner_initialisation_works():
-    """Tests that the TerraformRunner can be initialised."""
+def test_terraform_runner_initialization_works():
+    """Tests that the TerraformRunner can be initialized."""
     # create empty temporary yaml file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
         f.write("")
@@ -35,7 +35,7 @@ def test_terraform_runner_initialisation_works():
     try:
         # initialise TerraformRunner
         runner = TerraformRunner(tf_recipe_path=f_path)
-        # check that the TerraformRunner is initialised
+        # check that the TerraformRunner is initialized
         assert runner is not None
     finally:
         # remove temporary yaml file
