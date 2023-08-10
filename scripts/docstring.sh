@@ -4,4 +4,4 @@ set -x
 
 DOCSTRING_SRC=${1:-"src/mlstacks tests"}
 
-darglint -v 2 $DOCSTRING_SRC
+find $DOCSTRING_SRC -type d -name ".terraform" -prune -o -name "*.py" -print | xargs darglint -v 2
