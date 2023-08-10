@@ -219,26 +219,19 @@ def populate_tf_definitions(
         MLSTACKS_PACKAGE_NAME, modules_subdir
     )
     # copy files from package to the directory
-    if force:
-        _ = shutil.copytree(
-            package_path,
-            destination_path,
-            ignore=include_files,
-            dirs_exist_ok=True,
-        )
-        # also copy the module files
-        _ = shutil.copytree(
-            modules_path,
-            modules_destination,
-            ignore=include_files,
-            dirs_exist_ok=True,
-        )
-    else:
-        _ = shutil.copytree(
-            package_path, destination_path, ignore=include_files
-        )
-        # also copy the module files
-        _ = shutil.copytree(modules_path, modules_destination)
+    shutil.copytree(
+        package_path,
+        destination_path,
+        ignore=include_files,
+        dirs_exist_ok=force,
+    )
+    # also copy the module files
+    shutil.copytree(
+        modules_path,
+        modules_destination,
+        ignore=include_files,
+        dirs_exist_ok=force,
+    )
 
     logger.info(f"Populated Terraform definitions in {destination_path}")
     # write package version into the directory
