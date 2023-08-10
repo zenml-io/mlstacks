@@ -15,9 +15,8 @@
 import logging
 import shutil
 import subprocess
-from functools import wraps
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import pkg_resources
 import python_terraform
@@ -512,39 +511,27 @@ def get_stack_outputs(
         }
 
 
-def infracost_installed(f: Callable[..., Any]) -> Callable[..., Any]:
-    """Decorator checks if Infracost is installed before calling function.
-
-    Args:
-        f: The function to decorate.
-
-    Raises:
-        FileNotFoundError: If Infracost is not installed.
-        CalledProcessError: If Infracost is not installed.
+def verify_infracost_installed() -> bool:
+    """Checks if Infracost is installed and user is logged in.
 
     Returns:
-        The decorated function.
+        bool: True if Infracost is installed, otherwise False.
     """
-
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        try:
-            subprocess.run(
-                ["infracost", "configure", "get", "api_key"],
-                check=True,
-                capture_output=True,
-                text=True,
-            )
-        except (subprocess.CalledProcessError, FileNotFoundError) as e:
-            logger.error(
-                "Infracost is not installed or you have not logged in. "
-                "Please visit their docs at https://www.infracost.io/docs/ "
-                "and install, then run 'infracost auth login' before retrying."
-            )
-            raise e
-        return f(*args, **kwargs)
-
-    return decorated
+    try:
+        subprocess.run(
+            ["infracost", "configure", "get", "api_key"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        logger.error(
+            "Infracost is not installed or you have not logged in. "
+            "Please visit their docs at https://www.infracost.io/docs/ "
+            "and install, then run 'infracost auth login' before retrying."
+        )
+        return False
 
 
 def _get_infracost_vars(vars: Dict[str, Any]) -> Dict[str, str]:
@@ -560,7 +547,6 @@ def _get_infracost_vars(vars: Dict[str, Any]) -> Dict[str, str]:
     return {k: v for k, v in vars.items() if not isinstance(v, dict)}
 
 
-@infracost_installed
 def infracost_breakdown_stack(
     stack_path: str, debug_mode: bool = False
 ) -> None:
@@ -570,6 +556,7 @@ def infracost_breakdown_stack(
         stack_path: The path to the stack.
         debug_mode: Whether to run in debug mode.
     """
+    _ = verify_infracost_installed()
     stack = load_stack_yaml(stack_path)
     infracost_vars = _get_infracost_vars(parse_tf_vars(stack))
 
