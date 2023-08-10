@@ -442,7 +442,6 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
         stack_path: The path to the stack.
         debug_mode: Whether to run in debug mode.
     """
-    # load and parse terraform variables and definitions
     stack = load_stack_yaml(stack_path)
     tf_recipe_path = f"{CONFIG_DIR}/terraform/{stack.provider}-modular"
     if not tf_definitions_present(stack.provider):
@@ -451,7 +450,6 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     # breakpoint()
     check_tf_definitions_version(stack.provider)
 
-    # run Terraform
     tfr = TerraformRunner(tf_recipe_path)
     if not tf_previously_initialized(tf_recipe_path):
         tf_client_init(tfr.client, provider=stack.provider, debug=debug_mode)
