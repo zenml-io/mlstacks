@@ -132,7 +132,7 @@ jobs:
       - name: Loop through subdirectories
         run: |
           for dir in $(ls -d src/mlstacks/terraform/* | grep -Fv -e "modules" -e ".github" | grep "aws*"); do
-              (cd $dir && terraform init)
+              (cd $dir && terraform init -backend-config=$dir)
               (cd $dir && terraform fmt -check)
               (cd $dir && terraform validate)
               (cd $dir && terraform plan -input=false)
@@ -162,7 +162,7 @@ jobs:
       - name: Loop through subdirectories
         run: |
           for dir in $(ls -d src/mlstacks/terraform/* | grep -Fv -e "modules" -e ".github" | grep "gcp*"); do
-              (cd $dir && terraform init)
+              (cd $dir && terraform init -backend-config=$dir)
               (cd $dir && terraform fmt -check)
               (cd $dir && terraform validate)
               (cd $dir && terraform plan -input=false)
@@ -188,7 +188,7 @@ jobs:
       - name: Loop through subdirectories
         run: |
           for dir in $(ls -d src/mlstacks/terraform/* | grep -Fv -e "modules" -e ".github" | grep "azure*"); do
-              (cd $dir && terraform init)
+              (cd $dir && terraform init -backend-config=$dir)
               (cd $dir && terraform fmt -check)
               (cd $dir && terraform validate)
               (cd $dir && terraform plan -input=false)
@@ -213,7 +213,7 @@ jobs:
       - name: Loop through subdirectories
         run: |
           for dir in $(ls -d src/mlstacks/terraform/* | grep -Fv -e "modules" -e ".github" | grep "k3d*"); do
-              (cd $dir && terraform init)
+              (cd $dir && terraform init -backend-config=$dir)
               (cd $dir && terraform fmt -check)
               (cd $dir && terraform validate)
               (cd $dir && terraform plan -input=false)
