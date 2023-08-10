@@ -1,4 +1,3 @@
-# This is a basic workflow to help you get started with Actions
 name: Release Package
 
 # Triggers the workflow on push of a tag
