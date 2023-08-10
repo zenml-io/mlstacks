@@ -479,6 +479,7 @@ def get_stack_outputs(
     Args:
         stack_path: The path to the stack.
         output_key: The output key.
+        debug_mode: Whether to run in debug mode.
 
     Returns:
         The stack outputs.
@@ -506,7 +507,9 @@ def get_stack_outputs(
         return {output_key: full_outputs}
     else:
         full_outputs = tfr.client.output(full_value=True, state=state_tf_path)
-        return {k: v["value"] for k, v in full_outputs.items() if v["value"]}
+        return {
+            k: v["value"] for k, v in full_outputs.items() if v.get("value")
+        }
 
 
 def infracost_installed(f: Callable[..., Any]) -> Callable[..., Any]:

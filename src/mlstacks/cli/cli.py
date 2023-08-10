@@ -12,7 +12,6 @@
 #  permissions and limitations under the License.
 """CLI for mlstacks."""
 
-
 import shutil
 from pathlib import Path
 from typing import Optional
