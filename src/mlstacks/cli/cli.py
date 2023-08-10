@@ -100,6 +100,13 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
         file (str): Path to the YAML file for destroy
         debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
+    if not confirmation(
+        f"Are you sure you want to destroy the stack defined in '{file}'?"
+    ):
+        declare(
+            f"Aborted stack destruction for '{file}'...",
+        )
+        return
     yaml_dict = load_yaml_as_dict(file)
     stack_name: str = yaml_dict.get("name")
     provider: str = yaml_dict.get("provider")
