@@ -91,15 +91,13 @@ def _compose_enable_key(component: Component) -> str:
         The key for enabling the component.
     """
     if component.component_type in HIGH_LEVEL_COMPONENTS:
-        return (
-            f"enable_{component.component_type}_{component.component_flavor}"
-        )
+        return f"enable_{component.component_type.value}_{component.component_flavor.value}"  # noqa: E501
     if (
         component.component_type == "mlops_platform"
         and component.component_flavor == "zenml"
     ):
         return "enable_zenml"
-    return f"enable_{component.component_type}"
+    return f"enable_{component.component_type.value}"
 
 
 # def _get_config_property(
