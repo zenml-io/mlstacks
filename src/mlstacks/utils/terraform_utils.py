@@ -316,8 +316,10 @@ def tf_client_init(
     Returns:
         The return code, stdout, and stderr.
     """
-    base_workspace = f"{CONFIG_DIR}/terraform/{provider}-modular"
-    state_path = f"path={base_workspace}/terraform.tfstate"
+    base_workspace = os.path.join(
+        CONFIG_DIR, "terraform", f"{provider}-modular"
+    )
+    state_path = f"path={os.path.join(base_workspace, 'terraform.tfstate')}"
 
     logger.debug(f"Initializing Terraform in {base_workspace}...")
     ret_code, _stdout, _stderr = client.init(
