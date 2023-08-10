@@ -33,7 +33,6 @@ def test_terraform_runner_initialization_works():
         f.write("")
         f_path = f.name
     try:
-        # initialise TerraformRunner
         runner = TerraformRunner(tf_recipe_path=f_path)
         # check that the TerraformRunner is initialized
         assert runner is not None
