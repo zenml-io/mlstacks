@@ -451,7 +451,6 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     # breakpoint()
     check_tf_definitions_version(stack.provider)
 
-    # run Terraform
     tfr = TerraformRunner(tf_recipe_path)
     if not tf_previously_initialized(tf_recipe_path):
         tf_client_init(tfr.client, provider=stack.provider, debug=debug_mode)
