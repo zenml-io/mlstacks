@@ -182,7 +182,7 @@ def tf_definitions_present(provider: ProviderEnum) -> bool:
     config_dir = get_app_dir(MLSTACKS_PACKAGE_NAME)
     return (
         Path(_get_tf_recipe_path(provider)).exists()
-        and Path(config_dir) / "terraform" / "modules".exists()
+        and (Path(config_dir) / "terraform" / "modules").exists()
     )
 
 
@@ -221,16 +221,21 @@ def populate_tf_definitions(
         provider: The cloud provider.
         force: Whether to force the copy.
     """
-    definitions_subdir = Path("terraform/{provider}-modular")
+    definitions_subdir = Path(f"terraform/{provider}-modular")
     modules_subdir = Path("terraform/modules")
     destination_path = Path(_get_tf_recipe_path(provider))
     modules_destination = Path(CONFIG_DIR) / modules_subdir
-    package_path = pkg_resources.resource_filename(
-        MLSTACKS_PACKAGE_NAME, definitions_subdir
+    package_path = Path(
+        pkg_resources.resource_filename(
+            MLSTACKS_PACKAGE_NAME, str(definitions_subdir)
+        )
     )
-    modules_path = pkg_resources.resource_filename(
-        MLSTACKS_PACKAGE_NAME, modules_subdir
+    modules_path = Path(
+        pkg_resources.resource_filename(
+            MLSTACKS_PACKAGE_NAME, str(modules_subdir)
+        )
     )
+
     # copy files from package to the directory
     shutil.copytree(
         package_path,
@@ -242,8 +247,7 @@ def populate_tf_definitions(
     shutil.copytree(
         modules_path,
         modules_destination,
-        ignore=include_files,
-        dirs_exist_ok=force,
+        dirs_exist_ok=True,
     )
 
     logger.info(f"Populated Terraform definitions in {destination_path}")
@@ -416,7 +420,7 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     stack = load_stack_yaml(stack_path)
     tf_recipe_path = _get_tf_recipe_path(stack.provider)
     if not tf_definitions_present(stack.provider):
-        populate_tf_definitions(stack.provider)
+        populate_tf_definitions(stack.provider, force=True)
     tf_vars = parse_tf_vars(stack)
     check_tf_definitions_version(stack.provider)
 
