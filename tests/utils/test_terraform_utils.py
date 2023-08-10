@@ -98,7 +98,7 @@ def test_enable_key_function_handles_components_without_flavors(
         name=dummy_name,
         component_flavor=comp_flavor,
         component_type=comp_type,
-        provider=random.choice(list(ProviderEnum)),
+        provider=random.choice(list(ProviderEnum)).value,
     )
     key = _compose_enable_key(c)
     assert key == "enable_artifact_store"
