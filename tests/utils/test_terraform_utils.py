@@ -49,7 +49,11 @@ def test_terraform_runner_fails_with_invalid_recipe_path():
 
 @given(text(min_size=1))
 def test_enable_key_function_works(dummy_name: str):
-    """Tests that the enable key function works."""
+    """Tests that the enable key function works.
+
+    Args:
+        dummy_name: A dummy name for the component.
+    """
     c = Component(
         name=dummy_name,
         component_flavor="zenml",
@@ -62,7 +66,11 @@ def test_enable_key_function_works(dummy_name: str):
 
 @given(text(min_size=1))
 def test_enable_key_function_handles_components_with_flavors(dummy_name: str):
-    """Tests that the enable key function works."""
+    """Tests that the enable key function works.
+
+    Args:
+        dummy_name: A dummy name for the component.
+    """
     comp_flavor = "mlflow"
     comp_type = "experiment_tracker"
     c = Component(
@@ -79,7 +87,11 @@ def test_enable_key_function_handles_components_with_flavors(dummy_name: str):
 def test_enable_key_function_handles_components_without_flavors(
     dummy_name: str,
 ):
-    """Tests that the enable key function works."""
+    """Tests that the enable key function works.
+
+    Args:
+        dummy_name: A dummy name for the component.
+    """
     comp_flavor = "s3"
     comp_type = "artifact_store"
     c = Component(

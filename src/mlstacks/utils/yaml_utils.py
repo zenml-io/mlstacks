@@ -31,6 +31,9 @@ def load_yaml_as_dict(path: Union[Path, str]) -> Dict[str, Any]:
 
     Returns:
         The dictionary representation of the yaml file.
+
+    Raises:
+        FileNotFoundError: If the file is not found.
     """
     if isinstance(path, Path):
         path = str(path)

@@ -65,6 +65,9 @@ class TerraformRunner:
 
         Args:
             tf_recipe_path: The path to the Terraform recipe.
+
+        Raises:
+            ValueError: If the Terraform recipe path does not exist.
         """
         self.tf_recipe_path = tf_recipe_path
 
@@ -571,6 +574,9 @@ def infracost_breakdown_stack(
     Args:
         stack_path: The path to the stack.
         debug_mode: Whether to run in debug mode.
+
+    Returns:
+        The cost breakdown.
     """
     _ = verify_infracost_installed()
     stack = load_stack_yaml(stack_path)

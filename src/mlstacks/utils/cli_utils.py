@@ -58,8 +58,6 @@ def confirmation(text: str) -> bool:
 
     Args:
         text: Input text string.
-        *args: Args to be passed to click.confirm().
-        **kwargs: Kwargs to be passed to click.confirm().
 
     Returns:
         Boolean based on user response.
