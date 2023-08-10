@@ -442,7 +442,6 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
         stack_path: The path to the stack.
         debug_mode: Whether to run in debug mode.
     """
-    # load and parse terraform variables and definitions
     stack = load_stack_yaml(stack_path)
     tf_recipe_path = f"{CONFIG_DIR}/terraform/{stack.provider}-modular"
     if not tf_definitions_present(stack.provider):
