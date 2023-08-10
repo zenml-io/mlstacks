@@ -13,6 +13,7 @@
 """Utility functions for Terraform."""
 
 import logging
+import os
 import shutil
 import subprocess
 from functools import wraps
@@ -43,6 +44,7 @@ HIGH_LEVEL_COMPONENTS = [
 
 CONFIG_DIR = get_app_dir(MLSTACKS_PACKAGE_NAME)
 STATE_FILE_NAME = "terraform.tfstate"
+MLSTACKS_VERSION_FILE_NAME = "MLSTACKS_VERSION.txt"
 
 
 class TerraformRunner:
@@ -235,7 +237,9 @@ def populate_tf_definitions(
 
     logger.info(f"Populated Terraform definitions in {destination_path}")
     # write package version into the directory
-    with open(os.path.join(destination_path, "MLSTACKS_VERSION.txt"), "w") as f:
+    with open(
+        os.path.join(destination_path, MLSTACKS_VERSION_FILE_NAME), "w"
+    ) as f:
         mlstacks_version = pkg_resources.get_distribution(
             MLSTACKS_PACKAGE_NAME
         ).version
@@ -268,7 +272,9 @@ def check_tf_definitions_version(provider: ProviderEnum) -> None:
     definitions_subdir = f"terraform/{provider}-modular"
     definitions_path = Path(f"{CONFIG_DIR}/{definitions_subdir}")
     if definitions_path.exists():
-        with open(f"{definitions_path}/MLSTACKS_VERSION.txt", "r") as f:
+        with open(
+            f"{definitions_path}/{MLSTACKS_VERSION_FILE_NAME}", "r"
+        ) as f:
             tf_version = f.read()
             mlstacks_version = pkg_resources.get_distribution(
                 MLSTACKS_PACKAGE_NAME
