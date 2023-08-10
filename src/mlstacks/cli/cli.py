@@ -149,7 +149,8 @@ def breakdown(file: str) -> None:
     Args:
         file (str): Path to the YAML file for breakdown
     """
-    infracost_breakdown_stack(file)
+    cost_output = infracost_breakdown_stack(file)
+    print(cost_output)  # noqa: T201
 
 
 @click.command()

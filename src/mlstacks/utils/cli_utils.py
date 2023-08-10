@@ -10,6 +10,8 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
+"""CLI utilities for mlstacks."""
+
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, NoReturn, Optional, Union
 
@@ -21,6 +23,8 @@ from rich.markup import escape
 from rich.prompt import Confirm
 from rich.style import Style
 from rich.theme import Theme
+
+from mlstacks.constants import MLSTACKS_PACKAGE_NAME
 
 mlstacks_style_defaults = {
     "info": Style(color="cyan", dim=True),
@@ -34,7 +38,7 @@ mlstacks_custom_theme = Theme(mlstacks_style_defaults)
 
 console = Console(theme=mlstacks_custom_theme, markup=True)
 error_console = Console(stderr=True, theme=mlstacks_custom_theme)
-from mlstacks.constants import MLSTACKS_PACKAGE_NAME
+
 
 if TYPE_CHECKING:
     from rich.text import Text
@@ -49,7 +53,7 @@ def title(text: str) -> None:
     console.print(text.upper(), style=mlstacks_style_defaults["title"])
 
 
-def confirmation(text: str, *args: Any, **kwargs: Any) -> bool:
+def confirmation(text: str) -> bool:
     """Echo a confirmation string on the CLI.
 
     Args:
@@ -142,9 +146,9 @@ def print_table(
 ) -> None:
     """Prints the list of dicts in a table format.
 
-    The input object should be a List of Dicts. Each item in that list represent
-    a line in the Table. Each dict should have the same keys. The keys of the
-    dict will be used as headers of the resulting table.
+    The input object should be a List of Dicts. Each item in that list
+    represent a line in the Table. Each dict should have the same keys.
+    The keys of the dict will be used as headers of the resulting table.
 
     Args:
         obj: A List containing dictionaries.
@@ -155,14 +159,18 @@ def print_table(
     column_keys = {key: None for dict_ in obj for key in dict_}
     column_names = [columns.get(key, key.upper()) for key in column_keys]
     rich_table = table.Table(
-        box=box.HEAVY_EDGE, show_lines=True, title=title, caption=caption,
+        box=box.HEAVY_EDGE,
+        show_lines=True,
+        title=title,
+        caption=caption,
     )
     for col_name in column_names:
         if isinstance(col_name, str):
             rich_table.add_column(str(col_name), overflow="fold")
         else:
             rich_table.add_column(
-                str(col_name.header).upper(), overflow="fold",
+                str(col_name.header).upper(),
+                overflow="fold",
             )
     for dict_ in obj:
         values = []

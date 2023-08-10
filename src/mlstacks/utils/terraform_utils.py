@@ -91,13 +91,12 @@ def _compose_enable_key(component: Component) -> str:
         return (
             f"enable_{component.component_type}_{component.component_flavor}"
         )
-    elif (
+    if (
         component.component_type == "mlops_platform"
         and component.component_flavor == "zenml"
     ):
         return "enable_zenml"
-    else:
-        return f"enable_{component.component_type}"
+    return f"enable_{component.component_type}"
 
 
 # def _get_config_property(
@@ -186,7 +185,7 @@ def tf_definitions_present(provider: ProviderEnum) -> bool:
     )
 
 
-def include_files(directory, filenames):
+def include_files(directory, filenames):  # noqa: ARG001
     """Include files in Terraform definitions.
 
     Args:
@@ -228,12 +227,14 @@ def populate_tf_definitions(
     modules_destination = Path(CONFIG_DIR) / modules_subdir
     package_path = Path(
         pkg_resources.resource_filename(
-            MLSTACKS_PACKAGE_NAME, str(definitions_subdir),
+            MLSTACKS_PACKAGE_NAME,
+            str(definitions_subdir),
         ),
     )
     modules_path = Path(
         pkg_resources.resource_filename(
-            MLSTACKS_PACKAGE_NAME, str(modules_subdir),
+            MLSTACKS_PACKAGE_NAME,
+            str(modules_subdir),
         ),
     )
 
@@ -251,14 +252,14 @@ def populate_tf_definitions(
         dirs_exist_ok=True,
     )
 
-    logger.info(f"Populated Terraform definitions in {destination_path}")
+    logger.info("Populated Terraform definitions in %s", destination_path)
     # write package version into the directory
     with open(Path(destination_path) / MLSTACKS_VERSION_FILE_NAME, "w") as f:
         mlstacks_version = pkg_resources.get_distribution(
             MLSTACKS_PACKAGE_NAME,
         ).version
         f.write(mlstacks_version)
-    logger.debug(f"Wrote mlstacks version {mlstacks_version} to directory.")
+    logger.debug("Wrote mlstacks version %s to directory.", mlstacks_version)
 
 
 def get_recipe_metadata(provider: ProviderEnum) -> Dict[str, Any]:
@@ -289,10 +290,12 @@ def check_tf_definitions_version(provider: ProviderEnum) -> None:
             ).version
             if tf_version != mlstacks_version:
                 logger.warning(
-                    f"You are running mlstacks version {mlstacks_version}, "
-                    f"but the Terraform definitions in {definitions_path} "
-                    f"were generated with mlstacks version {tf_version}. "
-                    f"This may lead to unexpected behavior.",
+                    "You are running mlstacks version %s, but the Terraform "
+                    "definitions in %s were generated with mlstacks version "
+                    "%s. This may lead to unexpected behavior.",
+                    mlstacks_version,
+                    definitions_path,
+                    tf_version,
                 )
 
 
@@ -318,6 +321,7 @@ def tf_client_init(
     Args:
         client: The Terraform client.
         provider: The cloud provider.
+        debug: Whether to run in debug mode.
 
     Returns:
         The return code, stdout, and stderr.
@@ -325,7 +329,7 @@ def tf_client_init(
     base_workspace = _get_tf_recipe_path(provider)
     state_path = f"path={Path(base_workspace) / 'terraform.tfstate'!s}"
 
-    logger.debug(f"Initializing Terraform in {base_workspace}...")
+    logger.debug("Initializing Terraform in %s...", base_workspace)
     ret_code, _stdout, _stderr = client.init(
         backend_config=state_path,
         raise_on_error=False,
@@ -337,7 +341,6 @@ def tf_client_init(
 
 def tf_client_apply(
     client: python_terraform.Terraform,
-    provider: str,
     tf_vars: Dict[str, Any],
     debug: bool,
 ) -> Tuple[Any, Any, Any]:
@@ -345,7 +348,6 @@ def tf_client_apply(
 
     Args:
         client: The Terraform client.
-        provider: The cloud provider.
         tf_vars: The Terraform variables.
         debug: Whether to run in debug mode.
 
@@ -367,16 +369,19 @@ def tf_client_apply(
         # TODO: pull all this error handling out to somewhere else
         # TODO: catch the error!
         if "The specified location constraint is not valid" in e:
-            logger.error(
-                f"The region '{tf_vars['region']}' you provided is invalid. "
+            logger.exception(
+                "The region '%s' you provided is invalid. "
                 "Please fix and try again.",
+                tf_vars["region"],
             )
     logger.debug("Terraform changes successfully applied.")
     return ret_code, _stdout, _stderr
 
 
 def tf_client_destroy(
-    client: python_terraform.Terraform, tf_vars: Dict[str, Any], debug: bool,
+    client: python_terraform.Terraform,
+    tf_vars: Dict[str, Any],
+    debug: bool,
 ) -> Tuple[Any, Any, Any]:
     """Destroy Terraform changes.
 
@@ -408,7 +413,7 @@ def clean_stack_recipes() -> None:
     logger.info("Cleaning stack recipes...")
     tf_path = Path(CONFIG_DIR) / "terraform"
     shutil.rmtree(tf_path)
-    logger.info(f"Deleted Terraform directory at {tf_path}")
+    logger.info("Deleted Terraform directory at %s", tf_path)
 
 
 def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
@@ -473,14 +478,12 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
 def get_stack_outputs(
     stack_path: str,
     output_key: Optional[str] = None,
-    debug_mode: bool = False,
 ) -> Dict[str, str]:
     """Get stack outputs.
 
     Args:
         stack_path: The path to the stack.
         output_key: The output key.
-        debug_mode: Whether to run in debug mode.
 
     Returns:
         The stack outputs.
@@ -494,23 +497,23 @@ def get_stack_outputs(
 
     tfr = TerraformRunner(tf_recipe_path)
     if not tf_previously_initialized(tf_recipe_path):
-        msg = "Terraform has not been initialized so there are no outputs to show."
-        raise RuntimeError(
-            msg,
+        msg = (
+            "Terraform has not been initialized so "
+            "there are no outputs to show."
         )
+        raise RuntimeError(msg)
 
     # TODO: add debug mode functionality
     # TODO: extract out into separate helper method
     if output_key:
         full_outputs = tfr.client.output(
-            output_key, full_value=True, state=state_tf_path,
+            output_key,
+            full_value=True,
+            state=state_tf_path,
         )
         return {output_key: full_outputs}
-    else:
-        full_outputs = tfr.client.output(full_value=True, state=state_tf_path)
-        return {
-            k: v["value"] for k, v in full_outputs.items() if v.get("value")
-        }
+    full_outputs = tfr.client.output(full_value=True, state=state_tf_path)
+    return {k: v["value"] for k, v in full_outputs.items() if v.get("value")}
 
 
 def verify_infracost_installed() -> bool:
@@ -521,14 +524,14 @@ def verify_infracost_installed() -> bool:
     """
     try:
         subprocess.run(
-            ["infracost", "configure", "get", "api_key"],
+            ["infracost", "configure", "get", "api_key"],  # noqa: S607,S603
             check=True,
             capture_output=True,
             text=True,
         )
-        return True
+        return True  # noqa: TRY300
     except (subprocess.CalledProcessError, FileNotFoundError):
-        logger.error(
+        logger.exception(
             "Infracost is not installed or you have not logged in. "
             "Please visit their docs at https://www.infracost.io/docs/ "
             "and install, then run 'infracost auth login' before retrying.",
@@ -536,22 +539,23 @@ def verify_infracost_installed() -> bool:
         return False
 
 
-def _get_infracost_vars(vars: Dict[str, Any]) -> Dict[str, str]:
+def _get_infracost_vars(variables: Dict[str, Any]) -> Dict[str, str]:
     """Get Infracost variables.
 
     Args:
-        vars: The Terraform variables.
+        variables: The Terraform variables.
 
     Returns:
         The Infracost variables.
     """
     # remove any k:v pairs that are nested dicts
-    return {k: v for k, v in vars.items() if not isinstance(v, dict)}
+    return {k: v for k, v in variables.items() if not isinstance(v, dict)}
 
 
 def infracost_breakdown_stack(
-    stack_path: str, debug_mode: bool = False,
-) -> None:
+    stack_path: str,
+    debug_mode: bool = False,
+) -> str:
     """Estimate costs for a stack using Infracost.
 
     Args:
@@ -578,8 +582,11 @@ def infracost_breakdown_stack(
 
     # Execute the command
     process = subprocess.run(
-        infracost_cmd, shell=True, check=True, capture_output=True, text=True,
+        infracost_cmd,
+        shell=True,  # noqa: S602
+        check=True,
+        capture_output=True,
+        text=True,
     )
 
-    # Print the output
-    print(process.stdout)
+    return process.stdout

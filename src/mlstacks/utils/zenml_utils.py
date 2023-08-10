@@ -10,6 +10,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
+"""Utilities for mlstacks-ZenML interaction."""
 
 from typing import List
 
@@ -18,7 +19,8 @@ from mlstacks.models import Component, Stack
 
 
 def has_valid_flavor_combinations(
-    stack: Stack, components: List[Component],
+    stack: Stack,
+    components: List[Component],
 ) -> bool:
     """Returns true if flavors have a valid combination.
 
@@ -33,24 +35,24 @@ def has_valid_flavor_combinations(
     Returns:
         A boolean indicating whether the flavors are valid or not.
     """
-    for component in components:
-        if (
-            component.component_flavor
-            not in ALLOWED_FLAVORS[component.component_type]
-        ):
-            return False
-        elif (
-            component.component_flavor in {"s3", "sagemaker", "aws"}
-            and stack.provider != "aws"
-        ):
-            return False
-        elif (
-            component.component_flavor in {"vertex", "gcp"}
-            and stack.provider != "gcp"
-        ):
-            return False
-        elif (
-            component.component_flavor in {"minio"} and stack.provider != "k3d"
-        ):
-            return False
-    return True
+    return not any(
+        (
+            (
+                component.component_flavor
+                not in ALLOWED_FLAVORS[component.component_type]
+            )
+            or (
+                component.component_flavor in {"s3", "sagemaker", "aws"}
+                and stack.provider != "aws"
+            )
+            or (
+                component.component_flavor in {"vertex", "gcp"}
+                and stack.provider != "gcp"
+            )
+            or (
+                component.component_flavor in {"minio"}
+                and stack.provider != "k3d"
+            )
+        )
+        for component in components
+    )
