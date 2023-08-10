@@ -12,7 +12,7 @@
 #  permissions and limitations under the License.
 """Utility functions for loading YAML files into Python objects."""
 from pathlib import Path
-from typing import Any, Dict, Union, cast
+from typing import Any, Dict, Union
 
 import yaml
 
@@ -32,18 +32,17 @@ def load_yaml_as_dict(path: Union[Path, str]) -> Dict[str, Any]:
     Returns:
         The dictionary representation of the yaml file.
     """
-    if type(path) == Path:
+    if isinstance(path, Path):
         path = str(path)
 
     if not Path(path).exists():
         raise FileNotFoundError(f"File {path} not found.")
 
     with open(path) as yaml_file:
-        yaml_dict = yaml.safe_load(yaml_file)
+        yaml_content = yaml.safe_load(yaml_file)
 
-    if yaml_dict is None:
-        yaml_dict = {}
-    return cast(Dict[str, Any], yaml_dict)
+    # If the content isn't a dict or is None, return an empty dict.
+    return yaml_content if isinstance(yaml_content, dict) else {}
 
 
 def load_component_yaml(path: str) -> Component:
