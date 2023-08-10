@@ -342,26 +342,15 @@ def tf_client_apply(
     """
     try:
         logger.debug("Applying Terraform changes...")
-        if debug:
-            ret_code, _stdout, _stderr = client.apply(
-                var=tf_vars,
-                input=True,
-                capture_output=False,
-                raise_on_error=True,
-                refresh=False,
-                auto_approve=False,
-                skip_plan=False,
-            )
-        else:
-            ret_code, _stdout, _stderr = client.apply(
-                var=tf_vars,
-                input=False,
-                capture_output=True,
-                raise_on_error=False,
-                refresh=False,
-                skip_plan=True,
-                auto_approve=True,
-            )
+        ret_code, _stdout, _stderr = client.apply(
+            var=tf_vars,
+            input=debug,
+            capture_output=not debug,
+            raise_on_error=debug,
+            refresh=False,
+            auto_approve=not debug,
+            skip_plan=not debug,
+        )
     except python_terraform.TerraformCommandError as e:
         # TODO: pull all this error handling out to somewhere else
         # TODO: catch the error!
