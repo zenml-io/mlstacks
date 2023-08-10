@@ -13,7 +13,6 @@
 """Utility functions for Terraform."""
 
 import logging
-import os
 import shutil
 import subprocess
 from functools import wraps
@@ -89,21 +88,21 @@ def _compose_enable_key(component: Component) -> str:
         return f"enable_{component.component_type}"
 
 
-def _get_config_property(
-    component: Component, property_name: str
-) -> Optional[str]:
-    """Retrieve a property value from the configuration.
+# def _get_config_property(
+#     component: Component, property_name: str
+# ) -> Optional[str]:
+#     """Retrieve a property value from the configuration.
 
-    Args:
-        component: The component.
-        property_name: The name of the property.
+#     Args:
+#         component: The component.
+#         property_name: The name of the property.
 
-    Returns:
-        The value of the property.
-    """
-    if component.metadata.config is None:
-        return None
-    return component.metadata.config.get(property_name)
+#     Returns:
+#         The value of the property.
+#     """
+#     if component.metadata.config is None:
+#         return None
+#     return component.metadata.config.get(property_name)
 
 
 def parse_component_variables(
