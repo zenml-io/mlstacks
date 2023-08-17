@@ -3,11 +3,11 @@
 ## Getting Started
 
 - [👋 Introduction](introduction.md)
-- [💡 Core Concepts](getting-started/core-concepts.md)
 - [🚀 Quickstart](getting-started/quickstart.md)
   - [AWS Quickstart](getting-started/aws.md)
   - [GCP Quickstart](getting-started/gcp.md)
   - [K3D Quickstart](getting-started/k3d.md)
+- [💡 Core Concepts](getting-started/core-concepts.md)
 
 ## Stacks
 
