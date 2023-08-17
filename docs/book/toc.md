@@ -9,7 +9,7 @@
 
 - [📦 Stacks Overview](stacks/overview.md)
 - [📝 Stack Specification Files](stacks/stack-specification.md)
-- [AWS](stacks/aws.md)
+- [🐱 AWS](stacks/aws.md)
 - [GCP](stacks/gcp.md)
 - [Azure](stacks/azure.md)
 - [K3D](stacks/k3d.md)
