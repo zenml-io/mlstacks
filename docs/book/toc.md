@@ -2,20 +2,20 @@
 
 ## Getting Started
 
-- [👋 Introduction](README.md)
-- [💡 Getting Started](overview/getting-started.md)
+- [👋 Introduction & Quickstart](introduction.md)
+- [💡 Core Concepts](getting-started/core-concepts.md)
 
-## Product Guides
+## Stacks
 
-- [📄 Spec file](product-guides/spec-file.md)
-- [🍡 Integrations](product-guides/integrations.md)
+- [📦 Stacks Ovewview](stacks/overview.md)
+- [AWS](stacks/aws.md)
+- [GCP](stacks/gcp.md)
+- [Azure](stacks/azure.md)
 
-## Fundamentals
+## Reference
 
-- [🛠 How it works](fundamentals/how-it-works.md)
-- [🧑🍳 Contributing deployments](fundamentals/contributing-deployments.md)
-
-## Use Cases
-
-- [🧑🔬 For Data Scientists](use-cases/for-data-scientists.md)
-- [🏗 For MLOps/Platform Engineers](use-cases/for-mlops-platform-engineers.md)
+- [📚 CLI](reference/cli.md)
+- [ZenML 🤝 MLStacks](reference/zenml.md)
+- [🐞 Debugging Tips](reference/debugging.md)
+- [❓ FAQ](reference/faq.md)
+- [🙋 Contributing](reference/contributing.md)
