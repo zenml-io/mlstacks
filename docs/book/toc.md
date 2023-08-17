@@ -10,6 +10,7 @@
 - [📦 Stacks Ovewview](stacks/overview.md)
 - [AWS](stacks/aws.md)
 - [GCP](stacks/gcp.md)
+- [K3D](stacks/k3d.md)
 - [Azure](stacks/azure.md)
 
 ## Reference
