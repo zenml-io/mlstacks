@@ -1,33 +1,39 @@
-# 👋 Introduction
+# 👋 Introduction & Quickstart
 
-{% hint style="info" %}
-**GitBook tip:** your product docs aren't just a reference of all your features! use them to encourage folks to perform certain actions and discover the value in your product.
-{% endhint %}
+When we first created [ZenML](https://zenml.io) as an extensible MLOps framework
+for creating portable, production-ready MLOps pipelines, we saw many of our
+users having to deal with the pain of deploying infrastructure from scratch to
+run these pipelines. The community consistently asked questions like:
 
-## Overview
+- How do I deploy tool X with tool Y?
+- Does a combination of tool X with Y make sense?
+- Isn't there an easy way to just try these stacks out to make an informed
+  decision?
 
-Here are a couple of example overviews from products with really great docs:
+To address these questions, the ZenML team presents you a series of
+Terraform-based recipes to quickly provision popular combinations of MLOps
+tools. These recipes will be useful for you if:
 
-> Loom is a video messaging tool that helps you get your message across through instantly shareable videos.
->
-> With Loom, you can record your camera, microphone, and desktop simultaneously. Your video is then instantly available to share through Loom's patented technology.
->
-> — From the [Loom Docs](https://support.loom.com/hc/en-us/articles/360002158057-What-is-Loom-)
+- You are at the start of your MLOps journey, and would like to explore
+  different tools.
+- You are looking for guidelines for production-grade deployments.
+- You would like to run your pipelines on your chosen
+  [ZenML Stack](https://docs.zenml.io/user-guide/starter-guide/understand-stacks).
 
-> The Mailchimp Marketing API provides programmatic access to Mailchimp data and functionality, allowing developers to build custom features to do things like sync email activity and campaign analytics with their database, manage audiences and campaigns, and more.
->
-> — From the [Mailchimp Marketing API docs](https://mailchimp.com/developer/marketing/docs/fundamentals/)
+🔥 **Do you use these tools or do you want to add one to your MLOps stack?** At
+ZenML, we are looking for design partnerships and collaboration to implement and
+develop these MLOps stacks in a real-world setting.
 
-## Quick links
+If you'd like to learn more, please
+[join our Slack](https://zenml.io/slack-invite/) and leave us a message!
 
-{% content-ref url="overview/getting-started.md" %}
-[getting-started.md](overview/getting-started.md)
-{% endcontent-ref %}
+## Acknowledgements
 
-## Get Started
+Thank you to the folks over at [Fuzzy Labs](https://www.fuzzylabs.ai/) for their
+support and contributions to this repository.
 
-We've put together some helpful guides for you to get setup with our product quickly and easily.
+We'd also like to acknowledge some of the cool inspirations for this project:
 
-{% content-ref url="fundamentals/how-it-works.md" %}
-[how-it-works.md](fundamentals/how-it-works.md)
-{% endcontent-ref %}
+- [FuseML](https://fuseml.github.io/)
+- [Combinator.ML](https://combinator.ml/)
+- [Building a ML Platform From Scratch](https://www.aporia.com/blog/building-an-ml-platform-from-scratch/)
