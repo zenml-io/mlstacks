@@ -7,16 +7,17 @@
 
 ## Stacks
 
-- [📦 Stacks Ovewview](stacks/overview.md)
+- [📦 Stacks Overview](stacks/overview.md)
+- [📝 Stack Specification Files](stacks/stack-specification.md)
 - [AWS](stacks/aws.md)
 - [GCP](stacks/gcp.md)
-- [K3D](stacks/k3d.md)
 - [Azure](stacks/azure.md)
+- [K3D](stacks/k3d.md)
 
 ## Reference
 
-- [📚 CLI](reference/cli.md)
+- [CLI](reference/cli.md)
 - [ZenML 🤝 MLStacks](reference/zenml.md)
-- [🐞 Debugging Tips](reference/debugging.md)
-- [❓ FAQ](reference/faq.md)
-- [🙋 Contributing](reference/contributing.md)
+- [Debugging Tips](reference/debugging.md)
+- [FAQ](reference/faq.md)
+- [Contributing](reference/contributing.md)
