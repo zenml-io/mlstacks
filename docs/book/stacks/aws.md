@@ -1,4 +1,4 @@
-# 🍭 AWS Modular Stack Recipe
+# MLStacks on AWS
 
 There can be many motivations behind taking your ML application setup to a cloud
 environment, from needing specialized compute 💪 for training jobs to having a
