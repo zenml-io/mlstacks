@@ -27,7 +27,7 @@ MLSTACKS_STACK_COMPONENT_FLAGS = [
 ]
 ALLOWED_FLAVORS = {
     "artifact_store": ["s3", "gcp", "minio"],
-    "container_registry": ["gcp", "aws", "k3d"],
+    "container_registry": ["gcp", "aws", "default"],
     "experiment_tracker": ["mlflow"],
     "orchestrator": [
         "kubernetes",
