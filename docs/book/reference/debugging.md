@@ -1,4 +1,4 @@
-## Troubleshoot Known Problems
+# Troubleshoot Known Problems
 
 These are some known problems that might arise out of running this recipe. Some
 of these are terraform commands but running `zenml stack recipe apply` would
