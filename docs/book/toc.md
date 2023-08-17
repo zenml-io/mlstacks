@@ -12,7 +12,7 @@
 ## Stacks
 
 - [📦 Stacks Overview](stacks/overview.md)
-- [📝 Stack Specification Files](stacks/stack-specification.md)
+- [📝 Specification Files](stacks/stack-specification.md)
   - [AWS](stacks/aws.md)
   - [GCP](stacks/gcp.md)
   - [Azure](stacks/azure.md)

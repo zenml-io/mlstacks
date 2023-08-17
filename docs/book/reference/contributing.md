@@ -10,4 +10,4 @@ use case, we have just the ingredients you need!
   [![Extend a stack recipe](https://img.youtube.com/vi/lNnWaKjP3I4/0.jpg)](https://www.youtube.com/watch?v=lNnWaKjP3I4)
 
 - Learn more about the design principles behind a recipe, and more information
-  on testing in the [CONTRIBUTING.md guide](./CONTRIBUTING.md)
+  on testing in the [CONTRIBUTING.md guide](../../../CONTRIBUTING.md)
