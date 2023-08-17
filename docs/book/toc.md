@@ -12,11 +12,12 @@
 ## Stacks
 
 - [📦 Stacks Overview](stacks/overview.md)
-- [📝 Specification Files](stacks/stack-specification.md)
-- [AWS](stacks/aws.md)
-- [GCP](stacks/gcp.md)
-- [Azure](stacks/azure.md)
-- [K3D](stacks/k3d.md)
+- [📝 Specification Files]()
+  - [Writing Stack Spec Files](stacks/stack-specification.md)
+  - [AWS](stacks/aws.md)
+  - [GCP](stacks/gcp.md)
+  - [Azure](stacks/azure.md)
+  - [K3D](stacks/k3d.md)
 
 ## Reference
 
