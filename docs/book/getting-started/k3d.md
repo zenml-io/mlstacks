@@ -6,17 +6,14 @@ TKTKTK: WHAT THE STACK IS / INVOLVES
 
 ## Prerequisites
 
-First, install the CLI:
+First, install the `mlstacks` CLI:
 
 ```bash
 pip install mlstacks
 ```
 
-You'll need an active GCP account and project to get started. (If you don't have
-one, you can create one
-[following these instructions](https://developers.google.com/workspace/guides/create-project).
-You will also need sufficient permissions to be able to create and destroy
-resources.
+You will need to have K3D installed. Please visit the
+[K3D docs](https://k3d.io/) for installation instructions.
 
 If you don't have
 [Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli#install-terraform)

@@ -6,7 +6,7 @@ TKTKTK: WHAT THE STACK IS / INVOLVES
 
 ## Prerequisites
 
-First, install the CLI:
+First, install the `mlstacks` CLI:
 
 ```bash
 pip install mlstacks
