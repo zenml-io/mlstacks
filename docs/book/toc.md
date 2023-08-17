@@ -1,22 +1,22 @@
 # Table of contents
 
-* [👋 Introduction](README.md)
+- [👋 Introduction](README.md)
 
-## Overview
+# Overview
 
-* [💡 Getting Started](overview/getting-started.md)
+- [💡 Getting Started](overview/getting-started.md)
 
-## Product Guides
+# Product Guides
 
-* [📄 Spec file](product-guides/spec-file.md)
-* [🍡 Integrations](product-guides/integrations.md)
+- [📄 Spec file](product-guides/spec-file.md)
+- [🍡 Integrations](product-guides/integrations.md)
 
-## Fundamentals
+# Fundamentals
 
-* [🛠 How it works](fundamentals/how-it-works.md)
-* [🧑🍳 Contributing deployments](fundamentals/contributing-deployments.md)
+- [🛠 How it works](fundamentals/how-it-works.md)
+- [🧑🍳 Contributing deployments](fundamentals/contributing-deployments.md)
 
-## Use Cases
+# Use Cases
 
-* [🧑🔬 For Data Scientists](use-cases/for-data-scientists.md)
-* [🏗 For MLOps/Platform Engineers](use-cases/for-mlops-platform-engineers.md)
+- [🧑🔬 For Data Scientists](use-cases/for-data-scientists.md)
+- [🏗 For MLOps/Platform Engineers](use-cases/for-mlops-platform-engineers.md)
