@@ -12,7 +12,7 @@ as can a list of components that are coming soon.
 | Component          | Flavor(s)                               |
 | ------------------ | --------------------------------------- |
 | Artifact Store     | minio                                   |
-| Container Registry | k3d                                     |
+| Container Registry | default                                 |
 | Experiment Tracker | mlflow                                  |
 | Orchestrator       | kubernetes, kubeflow, tekton, sagemaker |
 | MLOps Platform     | zenml                                   |
