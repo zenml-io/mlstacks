@@ -11,13 +11,13 @@ run these pipelines. The community consistently asked questions like:
   decision?
 
 To address these questions, the ZenML team presents you a series of
-Terraform-based recipes to quickly provision popular combinations of MLOps
-tools. These recipes will be useful for you if:
+Terraform-based stacks to quickly provision popular combinations of MLOps tools.
+These stacks will be useful for you if:
 
 - You are at the start of your MLOps journey, and would like to explore
   different tools.
 - You are looking for guidelines for production-grade deployments.
-- You would like to run your pipelines on your chosen
+- You would like to run your MLOps pipelines on your chosen
   [ZenML Stack](https://docs.zenml.io/user-guide/starter-guide/understand-stacks).
 
 🔥 **Do you use these tools or do you want to add one to your MLOps stack?** At

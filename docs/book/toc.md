@@ -2,8 +2,12 @@
 
 ## Getting Started
 
-- [👋 Introduction & Quickstart](introduction.md)
+- [👋 Introduction](introduction.md)
 - [💡 Core Concepts](getting-started/core-concepts.md)
+- [🚀 Quickstart](getting-started/quickstart.md)
+  - [AWS Quickstart](getting-started/aws.md)
+  - [GCP Quickstart](getting-started/gcp.md)
+  - [K3D Quickstart](getting-started/k3d.md)
 
 ## Stacks
 
@@ -17,6 +21,7 @@
 ## Reference
 
 - [CLI](reference/cli.md)
+- [Terraform usage](reference/terraform.md)
 - [ZenML 🤝 MLStacks](reference/zenml.md)
 - [Debugging Tips](reference/debugging.md)
 - [FAQ](reference/faq.md)
