@@ -22,7 +22,7 @@ Let's go through each of these fields in detail.
 ### `spec_version`
 
 This field defines the version of the `mlstacks` specification that this stack
-uses. This is currently `1`.
+uses. This is currently `1` and is set as the default.
 
 ### `spec_type`
 
@@ -43,6 +43,10 @@ currently one of `k3d`, `gcp`, or `aws`.
 This field defines the default region that the stack will be deployed to. If you
 specify a region that doesn't exist for your particular provider, the stack
 deployment will fail.
+
+If you don't specify a region in your stack specification, `mlstacks` will use
+whatever is set as the default region for your provider. Note that this will
+differ between providers.
 
 ### `default_tags`
 
@@ -82,7 +86,7 @@ Let's go through each of these fields in detail.
 ### `spec_version`
 
 This field defines the version of the `mlstacks` specification that this
-component uses. This is currently `1`.
+component uses. This is currently `1`. This is set as the default.
 
 ### `spec_type`
 
@@ -131,8 +135,8 @@ currently one of `k3d`, `gcp`, or `aws`.
 
 ### `metadata`
 
-This field defines the metadata of the component. This is a dictionary with the
-following fields:
+This field defines the metadata of the component. This is an (optional)
+dictionary with the following fields:
 
 #### `config`
 
@@ -145,18 +149,9 @@ artifact store, as shown
 Config is usually optional (except in the case of GCP deployments when you need
 to specify a `project_id`.)
 
-#### `tags`
+#### `environment_variables`
 
-This field defines the tags of the component. This is a dictionary you can pass
-in arbitrary fields to tag the component. For example for an artifact store, as
-shown [in the quickstart examples](../getting-started/gcp.md), you can pass in a
-`deployed-by` key and a `mlstacks` value to tag the artifact store with the
-deployer.
-
-Tags are optional.
-
-#### `region`
-
-This field defines the region of the component. This is a string that defines
-the region that the component will be deployed to. If you specify a region that
-doesn't exist for your particular provider, the component deployment will fail.
+This field defines the environment variables of the component. This is a
+dictionary you can pass in arbitrary fields to configure the component. For
+example you might want certain environment variables to be set and defined ahead
+of the deployment of certain components. Environment variables are optional.
