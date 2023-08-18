@@ -35,6 +35,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Clone repository
+        run: |
+          git clone https://github.com/safoinme/mlops-stacks.git
+          cd mlops-stacks
+          git checkout develop
+
       #- name: Install k3d
       #  run: |
       #    curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
