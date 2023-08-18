@@ -30,7 +30,7 @@ jobs:
 
   k3d_test:
     name: k3d_test
-    runs-on: mlstack-test-runner
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v2
