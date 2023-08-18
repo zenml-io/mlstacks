@@ -1,0 +1,46 @@
+name: Destroy the test runner vm to azure
+
+on:
+    workflow_call:
+    workflow_dispatch:
+
+jobs:
+  destroy_test_vm:
+    name: Destroy VM to azure
+    runs-on: ubuntu-latest
+    env:
+        ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    defaults:
+      run:
+        working-directory: ./infrastructure
+
+    steps:
+      - name: Checkout the Code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - run: terraform destroy -auto-approve -refresh=False
+        env:
+          TF_VAR_github_runner_token: ${{ secrets.runner_token }}
