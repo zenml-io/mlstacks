@@ -12,6 +12,8 @@ modular MLOps stacks on AWS, GCP and K3D (for local use).
 
 ## 👷 Why We Built MLStacks
 
+[![maintained-by-zenml](https://user-images.githubusercontent.com/3348134/173032050-ad923313-f2ce-4583-b27a-afcaa8b355e2.png)](https://github.com/zenml-io/zenml)
+
 When we first created [ZenML](https://zenml.io) as an extensible MLOps framework
 for creating portable, production-ready MLOps pipelines, we saw many of our
 users having to deal with the pain of deploying infrastructure from scratch to

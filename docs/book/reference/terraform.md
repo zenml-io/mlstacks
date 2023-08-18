@@ -1,15 +1,27 @@
 # Using mlstacks with Terraform
 
-Running a recipe is a matter of two simple commands. You can clone the
-repository, and for a chosen recipe of your choice execute:
+MLStacks uses Terraform under the hood to deploy and destroy the infrastructure
+that you specify in your stack specification files. We specifically designed the
+interface to conceal the Terraform implementation details from you, but if you
+want to use Terraform directly, you can do so.
 
-```
-terraform init
+## Where are the Terraform files stored?
+
+You can download our modular recipes by cloning our GitHub repository:
+
+```bash
+git clone https://github.com/zenml-io/mlops-stacks.git
 ```
 
-```
-terraform apply
-```
+The specific directory you want to look at is `src/mlstacks/terraform`.
 
-> **Note** You need to have credentials for a chosen cloud provider set up
-> before running.
+## Terraform next steps
+
+If you want to use Terraform directly, you can simply navigate to the root of
+one of the `xxx-modular` directories and run (for example) `terraform init` to
+initialize the Terraform directory. You can then run `terraform plan` to see
+what Terraform will do, and `terraform apply` to apply the changes.
+
+You are free to remix and use the Terraform modules and recipes as you see fit,
+but please note that this is not a core use case for MLStacks and you might no
+longer be able to use the MLStacks CLI to manage your stacks any more.
