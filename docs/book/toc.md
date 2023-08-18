@@ -3,6 +3,7 @@
 ## Getting Started
 
 - [👋 Introduction](introduction.md)
+- [🔨 Installation](getting-started/installation.md)
 - [🚀 Quickstart](getting-started/quickstart.md)
   - [AWS Quickstart](getting-started/aws.md)
   - [GCP Quickstart](getting-started/gcp.md)
