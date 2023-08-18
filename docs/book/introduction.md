@@ -1,4 +1,4 @@
-# 👋 Introduction & Quickstart
+# 👋 Introduction
 
 ## 🥜 In a nutshell: What is MLStacks?
 
