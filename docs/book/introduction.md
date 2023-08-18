@@ -1,21 +1,16 @@
 # 👋 Introduction & Quickstart
 
-What is mlstacks for?
+## 🥜 In a nutshell: What is MLStacks?
 
-What is mlstacks NOT for?
+MLStacks is a Python package that allows you to quickly spin up MLOps
+infrastructure using Terraform. It is designed to be used with
+[ZenML](https://zenml.io), but can be used with any MLOps tool or platform.
 
-how does mlstacks work?
+Simply write stack and component YAML specification files and deploy them using
+the MLStacks CLI. MLStacks will take care of the rest. We currently support
+modular MLOps stacks on AWS, GCP and K3D (for local use).
 
-
-
-
-
-
-
-
-
-
-
+## 👷 Why We Built MLStacks
 
 When we first created [ZenML](https://zenml.io) as an extensible MLOps framework
 for creating portable, production-ready MLOps pipelines, we saw many of our
@@ -44,7 +39,15 @@ develop these MLOps stacks in a real-world setting.
 If you'd like to learn more, please
 [join our Slack](https://zenml.io/slack-invite/) and leave us a message!
 
-## Acknowledgements
+## 🤓 Learn More
+
+- Try the [Quickstart example below](./getting-started/) to get started with
+  MLStacks.
+- Discover what you can configure with the different stacks in the
+  [Stacks documentation](./stacks/).
+- Learn about our CLI commands in the [CLI documentation](./reference/cli.md).
+
+## 🙏🏻 Acknowledgements
 
 Thank you to the folks over at [Fuzzy Labs](https://www.fuzzylabs.ai/) for their
 support and contributions to this repository.
