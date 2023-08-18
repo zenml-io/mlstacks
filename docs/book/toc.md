@@ -22,7 +22,7 @@
 
 - [CLI](reference/cli.md)
 - [Terraform usage](reference/terraform.md)
-- [ZenML 🤝 MLStacks](reference/zenml.md)
+- [ZenML & MLStacks](reference/zenml.md)
 - [Debugging Tips](reference/debugging.md)
 - [FAQ](reference/faq.md)
 - [Contributing](reference/contributing.md)

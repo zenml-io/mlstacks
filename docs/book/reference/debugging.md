@@ -1,15 +1,30 @@
 # Troubleshoot Known Problems
 
-These are some known problems that might arise out of running this recipe. Some
-of these are terraform commands but running `zenml stack recipe apply` would
-also achieve similar results as `terraform init` and `terraform apply`.
+These are some known problems that might arise out of running `mlstacks`. Errors
+for mlstacks deployments are usually related to changes that you might have made
+independently the original recipes or they might also relate to network or
+permissions issues.
 
-- Running the script for the first time might result in an error with one of the
-  resources - the Istio Ingressway. This is because of a limitation with the
-  resource `kubectl_manifest` that needs the cluster to be set up before it
-  installs its own resources. \
-   💡 Fix - Run `terraform apply` again in a few minutes and this should get
-  resolved.
+Usually the quickest way to start afresh is to run `zenml clean`, but note that
+this will also delete deployments that you might have made using `mlstacks`.
+
+You can also try to debug the problem by running the terraform commands from
+within the `mlstacks` config directory where the Terraform definition files are
+stored.
+
+You can also run the `mlstacks` commands with the `--debug` flag to get more
+information and decision points along the way.
+
+## Other known problems
+
+These are issues that sometimes get raised in the underlying Terraform
+implementation:
+
+- Running a Kubernetes-based deployment for the first time might result in an
+  error with one of the resources - the Istio Ingressway. This is because of a
+  limitation with the resource `kubectl_manifest` that needs the cluster to be
+  set up before it installs its own resources. 💡 Fix - Run `terraform apply`
+  again in a few minutes and this should get resolved.
 
 - When executing terraform commands, an error like this one:
   `timeout while waiting for plugin to start` \
@@ -23,7 +38,7 @@ also achieve similar results as `terraform init` and `terraform apply`.
   Meanwhile, if you know Terraform, make sure all the modules that are being
   used are on their latest version.
 
-- While running a terraform command, this error might appear too:
+- While running a Terraform command, this error might appear too:
   `context deadline exceeded` \
    💡 Fix - This problem could arise due to strained system resources. Try
   running the command again after some time.
