@@ -94,5 +94,5 @@ resource "azurerm_linux_virtual_machine" "example" {
 
   source_image_id = data.azurerm_image.example.id
 
-  custom_data = base64encode("cd actions-runner\n./config.sh --url https://github.com/safoinme/mlops-stacks --token ${var.github_runner_token}\n./run.sh")
+  custom_data = base64encode("cd actions-runner\n./config.sh --url https://github.com/zenml-io/mlops-stacks --token ${var.github_runner_token}\n./run.sh")
 }
