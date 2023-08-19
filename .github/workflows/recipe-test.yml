@@ -132,6 +132,7 @@ jobs:
             (cd $dir && terraform plan -input=false)
           done
 
+
   destroy_test-runner-vm-to-azure:
     uses: ./.github/workflows/destroy-test-runner.yml
     needs: ["deploy_test-runner-vm-to-azure", "k3d_test"]

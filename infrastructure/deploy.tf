@@ -68,7 +68,7 @@ data "azurerm_ssh_public_key" "example" {
 }
 
 data "azurerm_image" "example" {
-  name                = "mlstack-test-machine-image-20230818085527"
+  name                = "mlstack-github-runner-machine-image-20230819162059"
   resource_group_name = "zenml-developers"
 }
 
@@ -93,6 +93,4 @@ resource "azurerm_linux_virtual_machine" "example" {
   }
 
   source_image_id = data.azurerm_image.example.id
-
-  custom_data = base64encode("cd actions-runner\n./config.sh --url https://github.com/zenml-io/mlops-stacks --token ${var.github_runner_token}\n./run.sh\necho 'OK' >> ./script_success.txt")
 }
