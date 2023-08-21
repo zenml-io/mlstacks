@@ -25,6 +25,7 @@ from mlstacks.utils.cli_utils import (
     _get_spec_dir,
     confirmation,
     declare,
+    error,
     pretty_print_output_vals,
 )
 from mlstacks.utils.terraform_utils import (
@@ -112,7 +113,10 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
     stack_name: str = str(yaml_dict.get("name"))
     provider: str = str(yaml_dict.get("provider"))
     declare(f"Destroying stack '{stack_name}' from '{file}'...")
-    destroy_stack(stack_path=file, debug_mode=debug)
+    try:
+        destroy_stack(stack_path=file, debug_mode=debug)
+    except ValueError:
+        error("Couldn't find stack files to destroy.")
 
     spec_files_dir: str = _get_spec_dir(stack_name)
     tf_files_dir: str = _get_tf_recipe_path(provider)
@@ -149,8 +153,14 @@ def breakdown(file: str) -> None:
     Args:
         file (str): Path to the YAML file for breakdown
     """
-    cost_output = infracost_breakdown_stack(file)
-    print(cost_output)  # noqa: T201
+    try:
+        cost_output = infracost_breakdown_stack(file)
+        print(cost_output)  # noqa: T201
+    except ValueError:
+        error(
+            "Couldn't find stack files to breakdown. Please make sure you "
+            "have deployed the stack first.",
+        )
 
 
 @click.command()
