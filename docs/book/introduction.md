@@ -1,6 +1,6 @@
 # 👋 Introduction
 
-## 🥜 In a nutshell: What is MLStacks?
+## 🌰 In a nutshell: What is MLStacks?
 
 MLStacks is a Python package that allows you to quickly spin up MLOps
 infrastructure using Terraform. It is designed to be used with
