@@ -10,30 +10,14 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
-"""Analytics module for MLStacks."""
 
-import datetime
-import segment.analytics as analytics
+import sys
 
-from mlstacks.enums import AnalyticsEventsEnum
-from mlstacks.utils.analytics_utils import python_version
 
-analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
+def python_version() -> str:
+    """Returns the python version currently running.
 
-user_id = "f4ca124298"
-analytics.identify(
-    user_id,
-    {
-        "name": "Alex Strick van Linschoten",
-        "email": "alex.ext@zenml.io",
-        "created_at": datetime.datetime.now(),
-    },
-)
-
-# analytics.track(
-#     user_id,
-#     AnalyticsEventsEnum.MLSTACKS_SOURCE,
-#     {
-#         "python_version": python_version(),
-#     },
-# )
+    Returns:
+        str: python version
+    """
+    return ".".join(map(str, sys.version_info[:3]))
