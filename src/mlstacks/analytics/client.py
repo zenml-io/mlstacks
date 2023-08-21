@@ -14,18 +14,15 @@
 
 import datetime
 import os
-from typing import Optional
-from uuid import uuid4
+from typing import Any, Dict, Optional, Tuple
 
 import click
-import segment.analytics as analytics
 
+from mlstacks.analytics import analytics
 from mlstacks.constants import MLSTACKS_PACKAGE_NAME
 from mlstacks.enums import AnalyticsEventsEnum
 from mlstacks.utils.analytics_utils import python_version
 from mlstacks.utils.yaml_utils import load_yaml_as_dict
-
-analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
 
 CONFIG_FILENAME = "config.yaml"
 
@@ -58,11 +55,17 @@ def set_analytics_user_id(user_id: str) -> None:
         f.write(f"analytics_user_id: {user_id}")
 
 
-def track_event(event: AnalyticsEventsEnum) -> None:
+def track_event(
+    event: AnalyticsEventsEnum, properties: Optional[Dict[Any, Any]]
+) -> Tuple[bool, str]:
     """Tracks event in Segment.
 
     Args:
         event (AnalyticsEventEnum): event to track
+        properties (Dict[Any, Any]): properties to track
+
+    Returns:
+        Tuple[bool, str]: success, message
     """
     if not os.environ.get("MLSTACKS_ANALYTICS_OPT_OUT"):
         return analytics.track(
@@ -71,19 +74,6 @@ def track_event(event: AnalyticsEventsEnum) -> None:
             {
                 "timestamp": datetime.datetime.now(),
                 "python_version": python_version(),
+                **properties,
             },
         )
-
-
-if (
-    not os.environ.get("MLSTACKS_ANALYTICS_OPT_OUT")
-    and not get_analytics_user_id()
-):
-    user_id = str(uuid4())
-    set_analytics_user_id(user_id)
-    analytics.identify(
-        user_id,
-        {
-            "created_at": datetime.datetime.now(),
-        },
-    )
