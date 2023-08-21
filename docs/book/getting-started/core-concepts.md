@@ -18,19 +18,19 @@ As a shorthand, you can think of a stack as a grouping of these components.
 Components are the building-blocks of stacks. MLStacks currently supports the
 following stack components:
 
-- `artifact_store`: An artifact store is a component that can be used to store
+- `artifact_store`: An [artifact store](https://docs.zenml.io/stacks-and-components/component-guide/artifact-stores) is a component that can be used to store
   artifacts. (e.g. S3 buckets on AWS)
-- `container_registry`: A container registry is a component that can be used to
+- `container_registry`: A [container registry](https://docs.zenml.io/stacks-and-components/component-guide/container-registries) is a component that can be used to
   store container images. (e.g. ECR on AWS)
-- `experiment_tracker`: An experiment tracker is a component that can be used to
+- `experiment_tracker`: An [experiment tracker](https://docs.zenml.io/stacks-and-components/component-guide/experiment-trackers) is a component that can be used to
   track experiments, including metrics, parameters, and artifacts. (e.g. MLFlow)
-- `orchestrator`: An orchestrator is a component that can be used to orchestrate
+- `orchestrator`: An [orchestrator](https://docs.zenml.io/stacks-and-components/component-guide/orchestrators) is a component that can be used to orchestrate
   machine learning pipelines. (e.g. Airflow)
 - `mlops_platform`: An MLOps platform is a component that can be used to deploy,
   monitor, and manage machine learning models. (e.g. ZenML)
-- `model_deployer`: A model deployer is a component that can be used to deploy
+- `model_deployer`: A [model deployer](https://docs.zenml.io/stacks-and-components/component-guide/model-deployers) is a component that can be used to deploy
   machine learning models. (e.g. Seldon Core)
-- `step_operator`: A step operator is a component that can be used to execute
+- `step_operator`: A [step operator](https://docs.zenml.io/stacks-and-components/component-guide/step-operators) is a component that can be used to execute
   steps that require custom hardware.
 
 ## How does MLStacks work?

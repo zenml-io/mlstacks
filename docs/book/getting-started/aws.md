@@ -31,7 +31,7 @@ the `mlstacks` tool. In this file, add the following:
 spec_version: 1
 spec_type: stack
 name: "quickstart_stack"
-provider: gcp
+provider: aws
 default_region: "eu-north-1"
 default_tags:
   deployed-by: "mlstacks"
@@ -41,7 +41,7 @@ components:
 
 This defines our stack using the `mlstacks` specification. We'll now define the
 component that we want to deploy in a separate file called
-`simple_component_gcs.yaml`:
+`simple_component_s3.yaml`:
 
 ```yaml
 spec_version: 1

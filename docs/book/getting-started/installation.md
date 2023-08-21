@@ -34,6 +34,6 @@ MLStacks currently supports the following stack providers:
 - K3D
 
 If you wish to deploy using these providers you'll need to have accounts (for
-AWS and GCP) and the relevant CLIs installed. You will also need to have the
+AWS and GCP) and the relevant CLIs installed and authenticated. You will also need to have the
 relevant permissions to deploy, manage and destroy resources in these accounts.
 Please refer to the documentation for those providers for more information.
