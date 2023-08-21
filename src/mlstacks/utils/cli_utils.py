@@ -53,16 +53,17 @@ def title(text: str) -> None:
     console.print(text.upper(), style=mlstacks_style_defaults["title"])
 
 
-def confirmation(text: str) -> bool:
+def confirmation(text: str, default: str) -> bool:
     """Echo a confirmation string on the CLI.
 
     Args:
         text: Input text string.
+        default: Default value for the confirmation.
 
     Returns:
         Boolean based on user response.
     """
-    return Confirm.ask(text, console=console)
+    return Confirm.ask(text, console=console, default=default)
 
 
 def declare(

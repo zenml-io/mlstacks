@@ -216,11 +216,25 @@ def clean(yes: bool = False) -> None:
         declare("Aborting cleaning!")
 
 
+@click.command()
+def source() -> None:
+    """Prints and opens the location of TF and Spec files."""
+    mlstacks_source_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
+    click.echo(f"Source files are located at: `{mlstacks_source_dir}`")
+    if confirmation(
+        "Would you like to open the source files directory in your "
+        "default file browser?",
+        default=False,
+    ):
+        click.launch(mlstacks_source_dir)
+
+
 cli.add_command(deploy)
 cli.add_command(destroy)
 cli.add_command(breakdown)
 cli.add_command(output)
 cli.add_command(clean)
+cli.add_command(source)
 
 if __name__ == "__main__":
     cli()

@@ -82,6 +82,16 @@ mlstacks breakdown -f stack.yaml
 
 This will print out a cost estimate for your stack.
 
+## Viewing Terraform definitions and Stack Specifications
+
+If you'd like to view the Terraform definitions that MLStacks generates for your
+stack, you can use the `mlstacks source` command. This command will print out
+the location of the Terraform definitions for your stack.
+
+```bash
+mlstacks source
+```
+
 ## Cleaning Up
 
 If you want to clean up all the files and directories created by MLStacks, you
