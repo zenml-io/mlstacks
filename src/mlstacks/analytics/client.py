@@ -19,7 +19,7 @@ from typing import Any, Dict, Optional, Tuple, Type
 from uuid import uuid4
 
 import click
-import segment.analytics as analytics
+from segment import analytics
 
 from mlstacks.constants import (
     ANALYTICS_OPT_OUT_ENV_VARIABLE,
@@ -35,6 +35,8 @@ CONFIG_FILENAME = "config.yaml"
 
 
 class MLStacksAnalyticsContext:
+    """Analytics context manager for MLStacks."""
+
     def __init__(self) -> None:
         """Initialization."""
         self.analytics_opt_out = os.environ.get(ANALYTICS_OPT_OUT_ENV_VARIABLE)
@@ -48,7 +50,9 @@ class MLStacksAnalyticsContext:
             analytics.identify(
                 self.user_id,
                 {
-                    "created_at": datetime.datetime.now(),
+                    "created_at": datetime.datetime.now(
+                        tz=datetime.timezone.utc,
+                    ),
                 },
             )
         else:
@@ -64,7 +68,7 @@ class MLStacksAnalyticsContext:
         """Exit context manager."""
         if exc_val:
             # Handle exception logging if necessary. Here I'm just printing it.
-            print(f"Error occurred: {exc_val}")
+            print(f"Error occurred: {exc_val}")  # noqa: T201
         return True
 
     def track(
@@ -80,11 +84,14 @@ class MLStacksAnalyticsContext:
                 self.user_id,
                 event.value,
                 {
-                    "timestamp": datetime.datetime.now(),
+                    "timestamp": datetime.datetime.now(
+                        tz=datetime.timezone.utc,
+                    ),
                     "python_version": python_version(),
                     **properties,
                 },
             )
+        return False, "Analytics opt-out enabled."
 
     @staticmethod
     def get_analytics_user_id() -> Optional[str]:
@@ -94,6 +101,7 @@ class MLStacksAnalyticsContext:
         if os.path.exists(config_file):
             yaml_dict = load_yaml_as_dict(config_file)
             return yaml_dict.get("analytics_user_id", None)
+        return None
 
     @staticmethod
     def set_analytics_user_id(user_id: str) -> None:
@@ -127,12 +135,10 @@ def track_event(
 
     with MLStacksAnalyticsContext() as analytics:
         success_event = analytics.track(event=event, properties=metadata)
-        success = success and success_event
-
-    return success
+        return success and success_event
 
 
-class event_handler(object):
+class EventHandler:
     """Context handler to enable tracking the success status of an event."""
 
     def __init__(
@@ -151,7 +157,7 @@ class event_handler(object):
         self.event: AnalyticsEventsEnum = event
         self.metadata: Dict[str, Any] = metadata or {}
 
-    def __enter__(self) -> "event_handler":
+    def __enter__(self) -> "EventHandler":
         """Enter function of the event handler.
 
         Returns:
