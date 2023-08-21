@@ -10,3 +10,21 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
+
+import os
+
+import click
+from hypothesis import given
+from hypothesis import strategies as st
+
+from mlstacks.constants import MLSTACKS_PACKAGE_NAME
+from mlstacks.utils.cli_utils import _get_spec_dir
+
+SPEC_BASE_DIR = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
+
+
+@given(st.text(min_size=1))
+def test_get_spec_dir(stack_name: str):
+    spec_dir = _get_spec_dir(stack_name)
+    assert spec_dir == os.path.join(SPEC_BASE_DIR, f"stack_specs/{stack_name}")
+    assert isinstance(spec_dir, str)
