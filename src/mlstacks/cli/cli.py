@@ -26,7 +26,6 @@ from mlstacks.utils.cli_utils import (
     _get_spec_dir,
     confirmation,
     declare,
-    error,
     pretty_print_output_vals,
 )
 from mlstacks.utils.terraform_utils import (
@@ -116,11 +115,7 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
         stack_name: str = str(yaml_dict.get("name"))
         provider: str = str(yaml_dict.get("provider"))
         declare(f"Destroying stack '{stack_name}' from '{file}'...")
-        try:
-            destroy_stack(stack_path=file, debug_mode=debug)
-        except ValueError:
-            # when there are no TF definitions to use for destroy
-            error("Couldn't find stack files to destroy.")
+        destroy_stack(stack_path=file, debug_mode=debug)
 
         spec_files_dir: str = _get_spec_dir(stack_name)
         tf_files_dir: str = _get_tf_recipe_path(provider)
