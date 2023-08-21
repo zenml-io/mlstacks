@@ -1,7 +1,7 @@
 # MLStacks on GCP
 
 The GCP Modular recipe is available in the `mlstacks` repository and you can
-[view the raw Terraform files here](https://github.com/zenml-io/mlops-stacks/tree/main/src/mlstacks/terraform/gcp-modular).
+[view the raw Terraform files here](https://github.com/zenml-io/mlstacks/tree/main/src/mlstacks/terraform/gcp-modular).
 
 A full list of supported components and flavors can be found in the
 [Supported Components and Flavors](#supported-components-and-flavors) section,
@@ -32,4 +32,3 @@ and cannot be created without one.
 - Label Studio Annotator on GCP
 - Model Registry components on GCP
 - Image Builder components on GCP
-

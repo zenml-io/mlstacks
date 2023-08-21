@@ -10,7 +10,7 @@ want to use Terraform directly, you can do so.
 You can download our modular recipes by cloning our GitHub repository:
 
 ```bash
-git clone https://github.com/zenml-io/mlops-stacks.git
+git clone https://github.com/zenml-io/mlstacks.git
 ```
 
 The specific directory you want to look at is `src/mlstacks/terraform`.
