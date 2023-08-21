@@ -68,10 +68,10 @@ class ProviderEnum(str, Enum):
 class AnalyticsEventsEnum(str, Enum):
     """Analytics events enum."""
 
-    MLSTACKS_DEPLOY = "mlstacks_deploy"
-    MLSTACKS_DESTROY = "mlstacks_destroy"
-    MLSTACKS_BREAKDOWN = "mlstacks_breakdown"
-    MLSTACKS_OUTPUT = "mlstacks_output"
-    MLSTACKS_CLEAN = "mlstacks_clean"
-    MLSTACKS_SOURCE = "mlstacks_source"
-    MLSTACKS_EXCEPTION = "mlstacks_exception"
+    MLSTACKS_DEPLOY = "MLStacks Deploy"
+    MLSTACKS_DESTROY = "MLStacks Destroy"
+    MLSTACKS_BREAKDOWN = "MLStacks Breakdown"
+    MLSTACKS_OUTPUT = "MLStacks Output"
+    MLSTACKS_CLEAN = "MLStacks Clean"
+    MLSTACKS_SOURCE = "MLStacks Source"
+    MLSTACKS_EXCEPTION = "MLStacks Exception"
