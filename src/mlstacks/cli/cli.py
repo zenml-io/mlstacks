@@ -67,10 +67,10 @@ def deploy(file: str, debug: bool = False) -> None:
         file (str): Path to the YAML file for deploy
         debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
-    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_DEPLOY)
-    declare(f"Deploying stack from '{file}'...")
-    deploy_stack(stack_path=file, debug_mode=debug)
-    declare("Stack deployed successfully!")
+    with analytics_client.event_handler(AnalyticsEventsEnum.MLSTACKS_DEPLOY):
+        declare(f"Deploying stack from '{file}'...")
+        deploy_stack(stack_path=file, debug_mode=debug)
+        declare("Stack deployed successfully!")
 
 
 @click.command()
@@ -103,39 +103,39 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
         debug (bool): Flag to enable debug mode to view raw Terraform logging
         yes (bool): Flag to skip confirmation prompt
     """
-    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_DESTROY)
-    if not confirmation(
-        f"Are you sure you want to destroy the stack defined in '{file}'?",
-    ):
-        declare(
-            f"Aborted stack destruction for '{file}'...",
-        )
-        return
-    yaml_dict = load_yaml_as_dict(file)
-    stack_name: str = str(yaml_dict.get("name"))
-    provider: str = str(yaml_dict.get("provider"))
-    declare(f"Destroying stack '{stack_name}' from '{file}'...")
-    destroy_stack(stack_path=file, debug_mode=debug)
+    with analytics_client.event_handler(AnalyticsEventsEnum.MLSTACKS_DESTROY):
+        if not confirmation(
+            f"Are you sure you want to destroy the stack defined in '{file}'?",
+        ):
+            declare(
+                f"Aborted stack destruction for '{file}'...",
+            )
+            return
+        yaml_dict = load_yaml_as_dict(file)
+        stack_name: str = str(yaml_dict.get("name"))
+        provider: str = str(yaml_dict.get("provider"))
+        declare(f"Destroying stack '{stack_name}' from '{file}'...")
+        destroy_stack(stack_path=file, debug_mode=debug)
 
-    spec_files_dir: str = _get_spec_dir(stack_name)
-    tf_files_dir: str = _get_tf_recipe_path(provider)
-    if (
-        yes
-        or confirmation(
-            f"Would you like to delete the spec files and directory (located "
-            f"at '{spec_files_dir}') used to create this stack?",
-        )
-    ) and Path(spec_files_dir).exists():
-        shutil.rmtree(spec_files_dir)
-    if (
-        yes
-        or confirmation(
-            f"Would you like to delete the Terraform state files and "
-            f"definitions (located at '{tf_files_dir}') used for your stack?",
-        )
-    ) and Path(tf_files_dir).exists():
-        shutil.rmtree(tf_files_dir)
-    declare(f"Stack '{stack_name}' has been destroyed.")
+        spec_files_dir: str = _get_spec_dir(stack_name)
+        tf_files_dir: str = _get_tf_recipe_path(provider)
+        if (
+            yes
+            or confirmation(
+                f"Would you like to delete the spec files and directory (located "
+                f"at '{spec_files_dir}') used to create this stack?",
+            )
+        ) and Path(spec_files_dir).exists():
+            shutil.rmtree(spec_files_dir)
+        if (
+            yes
+            or confirmation(
+                f"Would you like to delete the Terraform state files and "
+                f"definitions (located at '{tf_files_dir}') used for your stack?",
+            )
+        ) and Path(tf_files_dir).exists():
+            shutil.rmtree(tf_files_dir)
+        declare(f"Stack '{stack_name}' has been destroyed.")
 
 
 @click.command()
@@ -152,9 +152,11 @@ def breakdown(file: str) -> None:
     Args:
         file (str): Path to the YAML file for breakdown
     """
-    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_BREAKDOWN)
-    cost_output = infracost_breakdown_stack(file)
-    print(cost_output)  # noqa: T201
+    with analytics_client.event_handler(
+        AnalyticsEventsEnum.MLSTACKS_BREAKDOWN
+    ):
+        cost_output = infracost_breakdown_stack(file)
+        print(cost_output)  # noqa: T201
 
 
 @click.command()
@@ -179,16 +181,16 @@ def output(file: str, key: Optional[str] = "") -> None:
         file (str): Path to the YAML file for breakdown
         key (str): Optional key for the output to be printed
     """
-    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_OUTPUT)
-    try:
-        outputs = get_stack_outputs(file, output_key=key)
-    except RuntimeError:
-        click.echo(
-            "Terraform has not been initialized so there are no outputs to "
-            "show. Please run `mlstacks deploy ...` first.",
-        )
-    if outputs:
-        pretty_print_output_vals(outputs)
+    with analytics_client.event_handler(AnalyticsEventsEnum.MLSTACKS_OUTPUT):
+        try:
+            outputs = get_stack_outputs(file, output_key=key)
+        except RuntimeError:
+            click.echo(
+                "Terraform has not been initialized so there are no outputs "
+                "to show. Please run `mlstacks deploy ...` first.",
+            )
+        if outputs:
+            pretty_print_output_vals(outputs)
 
 
 @click.command()
@@ -205,36 +207,37 @@ def clean(yes: bool = False) -> None:
     Args:
         yes (bool): Flag to skip confirmation prompt
     """
-    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_CLEAN)
-    files_path = Path(click.get_app_dir(MLSTACKS_PACKAGE_NAME)) / "terraform"
-    if not files_path.exists():
-        declare("No Terraform state files found.")
-    elif yes or confirmation(
-        "WARNING: Are you sure you want to delete all the Terraform state "
-        f"and definition files from {files_path}?\n"
-        "This action is irreversible.",
-    ):
-        clean_stack_recipes()
-        declare(
-            f"Cleaned up all the Terraform state files from '{files_path}'.",
+    with analytics_client.event_handler(AnalyticsEventsEnum.MLSTACKS_CLEAN):
+        files_path = (
+            Path(click.get_app_dir(MLSTACKS_PACKAGE_NAME)) / "terraform"
         )
-    else:
-        declare("Aborting cleaning!")
+        if not files_path.exists():
+            declare("No Terraform state files found.")
+        elif yes or confirmation(
+            "WARNING: Are you sure you want to delete all the Terraform state "
+            f"and definition files from {files_path}?\n"
+            "This action is irreversible.",
+        ):
+            clean_stack_recipes()
+            declare(
+                f"Cleaned up all the Terraform state files from '{files_path}'.",
+            )
+        else:
+            declare("Aborting cleaning!")
 
 
 @click.command()
 def source() -> None:
     """Prints and opens the location of TF and Spec files."""
-    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_SOURCE)
-
-    mlstacks_source_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
-    click.echo(f"Source files are located at: `{mlstacks_source_dir}`")
-    if confirmation(
-        "Would you like to open the source files directory in your "
-        "default file browser?",
-        default=False,
-    ):
-        click.launch(mlstacks_source_dir)
+    with analytics_client.event_handler(AnalyticsEventsEnum.MLSTACKS_SOURCE):
+        mlstacks_source_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
+        click.echo(f"Source files are located at: `{mlstacks_source_dir}`")
+        if confirmation(
+            "Would you like to open the source files directory in your "
+            "default file browser?",
+            default=False,
+        ):
+            click.launch(mlstacks_source_dir)
 
 
 cli.add_command(deploy)

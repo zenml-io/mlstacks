@@ -14,66 +14,172 @@
 
 import datetime
 import os
-from typing import Any, Dict, Optional, Tuple
+from types import TracebackType
+from typing import Any, Dict, Optional, Tuple, Type
+from uuid import uuid4
 
 import click
+import segment.analytics as analytics
 
-from mlstacks.analytics import analytics
 from mlstacks.constants import MLSTACKS_PACKAGE_NAME
 from mlstacks.enums import AnalyticsEventsEnum
 from mlstacks.utils.analytics_utils import python_version
 from mlstacks.utils.yaml_utils import load_yaml_as_dict
 
+analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
+
 CONFIG_FILENAME = "config.yaml"
 
 
-def get_analytics_user_id() -> Optional[str]:
-    """Returns the user id for analytics.
+class MLStacksAnalyticsContext:
+    def __init__(self) -> None:
+        """Initialization."""
+        self.analytics_opt_out = os.environ.get("MLSTACKS_ANALYTICS_OPT_OUT")
+        self.user_id: Optional[str] = None
 
-    Returns:
-        str: user id
-    """
-    # read user_id from config_file
-    config_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
-    config_file = os.path.join(config_dir, CONFIG_FILENAME)
-    if os.path.exists(config_file):
-        yaml_dict = load_yaml_as_dict(config_file)
-        return yaml_dict.get("analytics_user_id", None)
+    def __enter__(self) -> "MLStacksAnalyticsContext":
+        """Enter the analytics context manager."""
+        if not self.analytics_opt_out and not self.get_analytics_user_id():
+            self.user_id = str(uuid4())
+            self.set_analytics_user_id(self.user_id)
+            analytics.identify(
+                self.user_id,
+                {
+                    "created_at": datetime.datetime.now(),
+                },
+            )
+        else:
+            self.user_id = self.get_analytics_user_id()
+        return self
 
+    def __exit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> bool:
+        """Exit context manager."""
+        if exc_val:
+            # Handle exception logging if necessary. Here I'm just printing it.
+            print(f"Error occurred: {exc_val}")
+        return True
 
-def set_analytics_user_id(user_id: str) -> None:
-    """Sets the user id for analytics.
+    def track(
+        self,
+        event: AnalyticsEventsEnum,
+        properties: Optional[Dict[Any, Any]] = None,
+    ) -> Tuple[bool, str]:
+        """Tracks event in Segment."""
+        if properties is None:
+            properties = {}
+        if not self.analytics_opt_out:
+            return analytics.track(
+                self.user_id,
+                event.value,
+                {
+                    "timestamp": datetime.datetime.now(),
+                    "python_version": python_version(),
+                    **properties,
+                },
+            )
 
-    Args:
-        user_id (uuid4): user id
-    """
-    config_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
-    os.makedirs(config_dir, exist_ok=True)
-    config_file = os.path.join(config_dir, CONFIG_FILENAME)
-    # write user_id to config_file
-    with open(config_file, "w") as f:
-        f.write(f"analytics_user_id: {user_id}")
+    @staticmethod
+    def get_analytics_user_id() -> Optional[str]:
+        """Returns the user id for analytics."""
+        config_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
+        config_file = os.path.join(config_dir, CONFIG_FILENAME)
+        if os.path.exists(config_file):
+            yaml_dict = load_yaml_as_dict(config_file)
+            return yaml_dict.get("analytics_user_id", None)
+
+    @staticmethod
+    def set_analytics_user_id(user_id: str) -> None:
+        """Sets the user id for analytics."""
+        config_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
+        os.makedirs(config_dir, exist_ok=True)
+        config_file = os.path.join(config_dir, CONFIG_FILENAME)
+        with open(config_file, "w") as f:
+            f.write(f"analytics_user_id: {user_id}")
 
 
 def track_event(
-    event: AnalyticsEventsEnum, properties: Optional[Dict[Any, Any]]
-) -> Tuple[bool, str]:
-    """Tracks event in Segment.
+    event: AnalyticsEventsEnum,
+    metadata: Optional[Dict[str, Any]] = None,
+) -> bool:
+    """Track segment event if user opted-in.
 
     Args:
-        event (AnalyticsEventEnum): event to track
-        properties (Dict[Any, Any]): properties to track
+        event: Name of event to track in segment.
+        metadata: Dict of metadata to track.
 
     Returns:
-        Tuple[bool, str]: success, message
+        True if event is sent successfully, False is not.
     """
-    if not os.environ.get("MLSTACKS_ANALYTICS_OPT_OUT"):
-        return analytics.track(
-            get_analytics_user_id(),
-            event.value,
-            {
-                "timestamp": datetime.datetime.now(),
-                "python_version": python_version(),
-                **properties,
-            },
-        )
+    success = True
+
+    if metadata is None:
+        metadata = {}
+
+    metadata.setdefault("event_success", True)
+
+    with MLStacksAnalyticsContext() as analytics:
+        success_event = analytics.track(event=event, properties=metadata)
+        success = success and success_event
+
+    return success
+
+
+class event_handler(object):
+    """Context handler to enable tracking the success status of an event."""
+
+    def __init__(
+        self,
+        event: AnalyticsEventsEnum,
+        metadata: Optional[Dict[str, Any]] = None,
+    ):
+        """Initialization of the context manager.
+
+        Args:
+            event: The type of the analytics event
+            metadata: The metadata of the event.
+            v1: Flag to determine whether analytics v1 is included.
+            v2: Flag to determine whether analytics v2 is included.
+        """
+        self.event: AnalyticsEventsEnum = event
+        self.metadata: Dict[str, Any] = metadata or {}
+
+    def __enter__(self) -> "event_handler":
+        """Enter function of the event handler.
+
+        Returns:
+            the handler instance.
+        """
+        return self
+
+    def __exit__(
+        self,
+        type_: Optional[Any],
+        value: Optional[Any],
+        traceback: Optional[Any],
+    ) -> Any:
+        """Exit function of the event handler.
+
+        Checks whether there was a traceback and updates the metadata
+        accordingly. Following the check, it calls the function to track the
+        event.
+
+        Args:
+            type_: The class of the exception
+            value: The instance of the exception
+            traceback: The traceback of the exception
+
+        """
+        if traceback is not None:
+            self.metadata.update({"event_success": False})
+        else:
+            self.metadata.update({"event_success": True})
+
+        if type_ is not None:
+            self.metadata.update({"event_error_type": type_.__name__})
+
+        track_event(self.event, self.metadata)

@@ -74,3 +74,4 @@ class AnalyticsEventsEnum(str, Enum):
     MLSTACKS_OUTPUT = "mlstacks_output"
     MLSTACKS_CLEAN = "mlstacks_clean"
     MLSTACKS_SOURCE = "mlstacks_source"
+    MLSTACKS_EXCEPTION = "mlstacks_exception"
