@@ -12,6 +12,16 @@
 #  permissions and limitations under the License.
 """Analytics module for MLStacks."""
 
+import datetime
 import segment.analytics as analytics
 
-analytics.write_key = "YOUR_WRITE_KEY"
+analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
+
+analytics.identify(
+    "f4ca124298",
+    {
+        "name": "Michael Bolton",
+        "email": "mbolton@example.com",
+        "created_at": datetime.datetime.now(),
+    },
+)
