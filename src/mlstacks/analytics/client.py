@@ -21,7 +21,10 @@ from uuid import uuid4
 import click
 import segment.analytics as analytics
 
-from mlstacks.constants import MLSTACKS_PACKAGE_NAME
+from mlstacks.constants import (
+    ANALYTICS_OPT_OUT_ENV_VARIABLE,
+    MLSTACKS_PACKAGE_NAME,
+)
 from mlstacks.enums import AnalyticsEventsEnum
 from mlstacks.utils.analytics_utils import python_version
 from mlstacks.utils.yaml_utils import load_yaml_as_dict
@@ -34,7 +37,7 @@ CONFIG_FILENAME = "config.yaml"
 class MLStacksAnalyticsContext:
     def __init__(self) -> None:
         """Initialization."""
-        self.analytics_opt_out = os.environ.get("MLSTACKS_ANALYTICS_OPT_OUT")
+        self.analytics_opt_out = os.environ.get(ANALYTICS_OPT_OUT_ENV_VARIABLE)
         self.user_id: Optional[str] = None
 
     def __enter__(self) -> "MLStacksAnalyticsContext":
