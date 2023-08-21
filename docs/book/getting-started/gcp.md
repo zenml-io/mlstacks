@@ -89,3 +89,11 @@ Finally, we can destroy our stack using the `mlstacks` CLI:
 ```bash
 mlstacks destroy -f quickstart_stack.yaml
 ```
+
+## What next?
+
+You can now try adding more components and deploying them to your cloud
+provider. You can also try deploying your stack to a different cloud provider.
+
+Good luck! And if you have any questions, feel free to
+[reach out to us on Slack](https://www.zenml.io/slack-invite)

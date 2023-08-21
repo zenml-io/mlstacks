@@ -1,6 +1,8 @@
 # Quickstart on AWS
 
-TKTKTK: WHAT THE STACK IS / INVOLVES
+This quickstart will guide you through deploying a simple stack on AWS using
+`mlstacks`. We'll be deploying a simple S3 bucket. This is as simple and quick
+an example of how `mlstacks` works as it gets.
 
 ![DIAGRAM GOES HERE]()
 
@@ -85,3 +87,11 @@ Finally, we can destroy our stack using the `mlstacks` CLI:
 ```bash
 mlstacks destroy -f quickstart_stack.yaml
 ```
+
+## What next?
+
+You can now try adding more components and deploying them to your cloud
+provider. You can also try deploying your stack to a different cloud provider.
+
+Good luck! And if you have any questions, feel free to
+[reach out to us on Slack](https://www.zenml.io/slack-invite)
