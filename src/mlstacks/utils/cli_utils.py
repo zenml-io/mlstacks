@@ -53,7 +53,7 @@ def title(text: str) -> None:
     console.print(text.upper(), style=mlstacks_style_defaults["title"])
 
 
-def confirmation(text: str, default: str) -> bool:
+def confirmation(text: str, default: str = False) -> bool:
     """Echo a confirmation string on the CLI.
 
     Args:
