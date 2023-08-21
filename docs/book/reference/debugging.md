@@ -2,10 +2,10 @@
 
 These are some known problems that might arise out of running `mlstacks`. Errors
 for mlstacks deployments are usually related to changes that you might have made
-independently the original recipes or they might also relate to network or
+independently of the original recipes or they might also relate to network or
 permissions issues.
 
-Usually the quickest way to start afresh is to run `zenml clean`, but note that
+Usually the quickest way to start afresh is to run `mlstacks clean`, but note that
 this will also delete deployments that you might have made using `mlstacks`.
 
 You can also try to debug the problem by running the terraform commands from
