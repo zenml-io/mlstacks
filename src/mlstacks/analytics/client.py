@@ -26,7 +26,7 @@ from mlstacks.constants import (
     MLSTACKS_PACKAGE_NAME,
 )
 from mlstacks.enums import AnalyticsEventsEnum
-from mlstacks.utils.analytics_utils import python_version
+from mlstacks.utils.analytics_utils import operating_system, python_version
 from mlstacks.utils.yaml_utils import load_yaml_as_dict
 
 analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
@@ -109,6 +109,7 @@ class MLStacksAnalyticsContext:
                         tz=datetime.timezone.utc,
                     ),
                     "python_version": python_version(),
+                    "operating_system": operating_system(),
                     **properties,
                 },
             )

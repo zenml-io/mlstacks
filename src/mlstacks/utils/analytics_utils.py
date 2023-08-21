@@ -22,3 +22,12 @@ def python_version() -> str:
         str: python version
     """
     return ".".join(map(str, sys.version_info[:3]))
+
+
+def operating_system() -> str:
+    """Returns the operating system currently running.
+
+    Returns:
+        str: operating system
+    """
+    return sys.platform
