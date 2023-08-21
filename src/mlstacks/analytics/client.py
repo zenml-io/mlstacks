@@ -65,7 +65,7 @@ def track_event(event: AnalyticsEventsEnum) -> None:
         event (AnalyticsEventEnum): event to track
     """
     if not os.environ.get("MLSTACKS_ANALYTICS_OPT_OUT"):
-        analytics.track(
+        return analytics.track(
             get_analytics_user_id(),
             event.value,
             {
