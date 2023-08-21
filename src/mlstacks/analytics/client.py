@@ -13,10 +13,8 @@
 """Analytics module for MLStacks."""
 
 import datetime
-import segment.analytics as analytics
 
-from mlstacks.enums import AnalyticsEventsEnum
-from mlstacks.utils.analytics_utils import python_version
+import segment.analytics as analytics
 
 analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
 

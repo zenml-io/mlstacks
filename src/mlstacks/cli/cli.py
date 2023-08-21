@@ -11,20 +11,18 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 """CLI for mlstacks."""
-import datetime
-from mlstacks.analytics.client import analytics
-
-from mlstacks.enums import AnalyticsEventsEnum
-from mlstacks.utils.analytics_utils import python_version
 import shutil
 from pathlib import Path
 from typing import Optional
 
 import click
 
+from mlstacks.analytics.client import analytics
 from mlstacks.constants import (
     MLSTACKS_PACKAGE_NAME,
 )
+from mlstacks.enums import AnalyticsEventsEnum
+from mlstacks.utils.analytics_utils import python_version
 from mlstacks.utils.cli_utils import (
     _get_spec_dir,
     confirmation,
