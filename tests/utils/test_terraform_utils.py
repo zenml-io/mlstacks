@@ -22,8 +22,13 @@ from hypothesis.strategies import text
 from mlstacks.enums import ProviderEnum
 from mlstacks.models.component import (
     Component,
+    ComponentMetadata,
 )
-from mlstacks.utils.terraform_utils import TerraformRunner, _compose_enable_key
+from mlstacks.utils.terraform_utils import (
+    TerraformRunner,
+    _compose_enable_key,
+    parse_component_variables,
+)
 
 
 def test_terraform_runner_initialization_works():
@@ -102,3 +107,21 @@ def test_enable_key_function_handles_components_without_flavors(
     )
     key = _compose_enable_key(c)
     assert key == "enable_artifact_store"
+
+
+def test_component_variable_parsing_works():
+    """Tests that the component variable parsing works."""
+    metadata = ComponentMetadata()
+    components = [
+        Component(
+            name="test",
+            component_flavor="zenml",
+            component_type="mlops_platform",
+            provider=random.choice(list(ProviderEnum)).value,
+            spec_type="component",
+            spec_version=1,
+            metadata=metadata,
+        )
+    ]
+    variables = parse_component_variables(components)
+    assert variables
