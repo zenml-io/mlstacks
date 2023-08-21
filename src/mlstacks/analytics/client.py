@@ -43,7 +43,11 @@ class MLStacksAnalyticsContext:
         self.user_id: Optional[str] = None
 
     def __enter__(self) -> "MLStacksAnalyticsContext":
-        """Enter the analytics context manager."""
+        """Enter the analytics context manager.
+
+        Returns:
+            MLStacksAnalyticsContext: Analytics context manager
+        """
         if not self.analytics_opt_out and not self.get_analytics_user_id():
             self.user_id = str(uuid4())
             self.set_analytics_user_id(self.user_id)
@@ -65,7 +69,16 @@ class MLStacksAnalyticsContext:
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
     ) -> bool:
-        """Exit context manager."""
+        """Exit context manager.
+
+        Args:
+            exc_type (Optional[Type[BaseException]]): Exception type
+            exc_val (Optional[BaseException]): Exception value
+            exc_tb (Optional[TracebackType]): Traceback type
+
+        Returns:
+            True if no exception occurred, False otherwise
+        """
         if exc_val:
             # Handle exception logging if necessary. Here I'm just printing it.
             print(f"Error occurred: {exc_val}")  # noqa: T201
@@ -76,7 +89,15 @@ class MLStacksAnalyticsContext:
         event: AnalyticsEventsEnum,
         properties: Optional[Dict[Any, Any]] = None,
     ) -> Any:
-        """Tracks event in Segment."""
+        """Tracks event in Segment.
+
+        Args:
+            event (AnalyticsEventsEnum): Event to track
+            properties (Optional[Dict[Any, Any]]): Properties to track
+
+        Returns:
+            Result of the tracking
+        """
         if properties is None:
             properties = {}
         if not self.analytics_opt_out:
@@ -95,7 +116,11 @@ class MLStacksAnalyticsContext:
 
     @staticmethod
     def get_analytics_user_id() -> Optional[str]:
-        """Returns the user id for analytics."""
+        """Returns the user id for analytics.
+
+        Returns:
+            The user id for analytics.
+        """
         config_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
         config_file = os.path.join(config_dir, CONFIG_FILENAME)
         if os.path.exists(config_file):
@@ -105,7 +130,11 @@ class MLStacksAnalyticsContext:
 
     @staticmethod
     def set_analytics_user_id(user_id: str) -> None:
-        """Sets the user id for analytics."""
+        """Sets the user id for analytics.
+
+        Args:
+            user_id: The user id for analytics.
+        """
         config_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
         os.makedirs(config_dir, exist_ok=True)
         config_file = os.path.join(config_dir, CONFIG_FILENAME)
@@ -152,8 +181,6 @@ class EventHandler:
         Args:
             event: The type of the analytics event
             metadata: The metadata of the event.
-            v1: Flag to determine whether analytics v1 is included.
-            v2: Flag to determine whether analytics v2 is included.
         """
         self.event: AnalyticsEventsEnum = event
         self.metadata: Dict[str, Any] = metadata or {}
