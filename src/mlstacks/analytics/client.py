@@ -15,7 +15,7 @@
 import datetime
 import os
 from types import TracebackType
-from typing import Any, Dict, Optional, Tuple, Type
+from typing import Any, Dict, Optional, Type
 from uuid import uuid4
 
 import click
@@ -75,7 +75,7 @@ class MLStacksAnalyticsContext:
         self,
         event: AnalyticsEventsEnum,
         properties: Optional[Dict[Any, Any]] = None,
-    ) -> Tuple[bool, str]:
+    ) -> Any:
         """Tracks event in Segment."""
         if properties is None:
             properties = {}
@@ -91,7 +91,7 @@ class MLStacksAnalyticsContext:
                     **properties,
                 },
             )
-        return False, "Analytics opt-out enabled."
+        return None
 
     @staticmethod
     def get_analytics_user_id() -> Optional[str]:
@@ -136,6 +136,7 @@ def track_event(
     with MLStacksAnalyticsContext() as analytics:
         success_event = analytics.track(event=event, properties=metadata)
         return success and success_event
+    return False
 
 
 class EventHandler:
