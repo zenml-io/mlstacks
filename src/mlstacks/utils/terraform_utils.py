@@ -378,14 +378,13 @@ def tf_client_apply(
             skip_plan=not debug,
         )
     except python_terraform.TerraformCommandError as e:
-        # TODO: pull all this error handling out to somewhere else
-        # TODO: catch the error!
-        if "The specified location constraint is not valid" in e:
+        if "The specified location constraint is not valid" in e.out:
             logger.exception(
                 "The region '%s' you provided is invalid. "
                 "Please fix and try again.",
                 tf_vars["region"],
             )
+            return 1, None, None
     logger.debug("Terraform changes successfully applied.")
     return ret_code, _stdout, _stderr
 
@@ -450,11 +449,6 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
         # to prevent Terraform from initializing the recipe
         (Path(tf_recipe_path) / MLSTACKS_INITIALIZATION_FILE_FLAG).touch()
 
-    # TODO: confirm the logging of progress doesn't require user input still
-    # confirm the plan
-    # log what's being deployed
-    # spinner to state that Terraform is running
-    # output the outputs at the end (or in CLI?)
     tf_client_apply(
         client=tfr.client,
         tf_vars=tf_vars,
