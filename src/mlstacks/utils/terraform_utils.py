@@ -480,6 +480,33 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
     tf_client_destroy(tfr.client, tf_vars, debug_mode)
 
 
+def tf_client_output(
+    runner: TerraformRunner,
+    state_path: str,
+    output_key: Optional[str] = None,
+) -> Dict[str, str]:
+    """Destroy Terraform changes.
+
+    Args:
+        runner: The Terraform runner.
+        state_path: The path to the Terraform state file.
+        output_key: The output key.
+
+    Returns:
+        Output key:value pairs.
+    """
+    logger.debug("Getting Terraform outputs...")
+    if output_key:
+        full_outputs = runner.client.output(
+            output_key,
+            full_value=True,
+            state=state_path,
+        )
+        return {output_key: full_outputs}
+    full_outputs = runner.client.output(full_value=True, state=state_path)
+    return {k: v["value"] for k, v in full_outputs.items() if v.get("value")}
+
+
 def get_stack_outputs(
     stack_path: str,
     output_key: Optional[str] = None,
@@ -508,17 +535,11 @@ def get_stack_outputs(
         )
         raise RuntimeError(msg)
 
-    # TODO: add debug mode functionality
-    # TODO: extract out into separate helper method
-    if output_key:
-        full_outputs = tfr.client.output(
-            output_key,
-            full_value=True,
-            state=state_tf_path,
-        )
-        return {output_key: full_outputs}
-    full_outputs = tfr.client.output(full_value=True, state=state_tf_path)
-    return {k: v["value"] for k, v in full_outputs.items() if v.get("value")}
+    return tf_client_output(
+        runner=tfr,
+        state_path=state_tf_path,
+        output_key=output_key,
+    )
 
 
 def verify_infracost_installed() -> bool:
