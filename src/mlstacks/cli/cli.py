@@ -153,8 +153,14 @@ def breakdown(file: str) -> None:
     Args:
         file (str): Path to the YAML file for breakdown
     """
-    cost_output = infracost_breakdown_stack(file)
-    print(cost_output)  # noqa: T201
+    try:
+        cost_output = infracost_breakdown_stack(file)
+        print(cost_output)  # noqa: T201
+    except ValueError:
+        error(
+            "Couldn't find stack files to breakdown. Please make sure you "
+            "have deployed the stack first.",
+        )
 
 
 @click.command()
