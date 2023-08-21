@@ -52,7 +52,9 @@ If you'd like to learn more, please
 ## 🙏🏻 Acknowledgements
 
 Thank you to the folks over at [Fuzzy Labs](https://www.fuzzylabs.ai/) for their
-support and contributions to this repository.
+support and contributions to this repository. Also many thanks to
+[Ali Abbas Jaffri](https://github.com/aliabbasjaffri) for several stimulating
+discussions around the architecture of this project.
 
 We'd also like to acknowledge some of the cool inspirations for this project:
 
