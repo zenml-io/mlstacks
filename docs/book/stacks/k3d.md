@@ -1,7 +1,7 @@
 # MLStacks on K3D
 
 The K3D Modular recipe is available in the `mlstacks` repository and you can
-[view the raw Terraform files here](https://github.com/zenml-io/mlops-stacks/tree/main/src/mlstacks/terraform/k3d-modular).
+[view the raw Terraform files here](https://github.com/zenml-io/mlstacks/tree/main/src/mlstacks/terraform/k3d-modular).
 
 A full list of supported components and flavors can be found in the
 [Supported Components and Flavors](#supported-components-and-flavors) section,
