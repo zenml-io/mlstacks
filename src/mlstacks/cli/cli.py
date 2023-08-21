@@ -17,7 +17,7 @@ from typing import Optional
 
 import click
 
-from mlstacks.analytics.client import analytics
+from mlstacks.analytics import client as analytics_client
 from mlstacks.constants import (
     MLSTACKS_PACKAGE_NAME,
 )
@@ -221,13 +221,10 @@ def clean(yes: bool = False) -> None:
 @click.command()
 def source() -> None:
     """Prints and opens the location of TF and Spec files."""
-    user_id = "f4ca124298"
-    analytics.track(
-        user_id,
+    analytics_client.analytics.track(
+        analytics_client.get_analytics_user_id(),
         AnalyticsEventsEnum.MLSTACKS_SOURCE,
-        {
-            "python_version": python_version(),
-        },
+        {"python_version": python_version()},
     )
 
     mlstacks_source_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
