@@ -21,6 +21,8 @@ import click
 import segment.analytics as analytics
 
 from mlstacks.constants import MLSTACKS_PACKAGE_NAME
+from mlstacks.enums import AnalyticsEventsEnum
+from mlstacks.utils.analytics_utils import python_version
 from mlstacks.utils.yaml_utils import load_yaml_as_dict
 
 analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
@@ -54,6 +56,23 @@ def set_analytics_user_id(user_id: str) -> None:
     # write user_id to config_file
     with open(config_file, "w") as f:
         f.write(f"analytics_user_id: {user_id}")
+
+
+def track_event(event: AnalyticsEventsEnum) -> None:
+    """Tracks event in Segment.
+
+    Args:
+        event (AnalyticsEventEnum): event to track
+    """
+    if not os.environ.get("MLSTACKS_ANALYTICS_OPT_OUT"):
+        analytics.track(
+            get_analytics_user_id(),
+            event.value,
+            {
+                "timestamp": datetime.datetime.now(),
+                "python_version": python_version(),
+            },
+        )
 
 
 if (

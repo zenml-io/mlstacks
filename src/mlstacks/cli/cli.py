@@ -22,7 +22,6 @@ from mlstacks.constants import (
     MLSTACKS_PACKAGE_NAME,
 )
 from mlstacks.enums import AnalyticsEventsEnum
-from mlstacks.utils.analytics_utils import python_version
 from mlstacks.utils.cli_utils import (
     _get_spec_dir,
     confirmation,
@@ -68,6 +67,7 @@ def deploy(file: str, debug: bool = False) -> None:
         file (str): Path to the YAML file for deploy
         debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
+    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_DEPLOY)
     declare(f"Deploying stack from '{file}'...")
     deploy_stack(stack_path=file, debug_mode=debug)
     declare("Stack deployed successfully!")
@@ -103,6 +103,7 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
         debug (bool): Flag to enable debug mode to view raw Terraform logging
         yes (bool): Flag to skip confirmation prompt
     """
+    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_DESTROY)
     if not confirmation(
         f"Are you sure you want to destroy the stack defined in '{file}'?",
     ):
@@ -151,6 +152,7 @@ def breakdown(file: str) -> None:
     Args:
         file (str): Path to the YAML file for breakdown
     """
+    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_BREAKDOWN)
     cost_output = infracost_breakdown_stack(file)
     print(cost_output)  # noqa: T201
 
@@ -177,6 +179,7 @@ def output(file: str, key: Optional[str] = "") -> None:
         file (str): Path to the YAML file for breakdown
         key (str): Optional key for the output to be printed
     """
+    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_OUTPUT)
     try:
         outputs = get_stack_outputs(file, output_key=key)
     except RuntimeError:
@@ -202,6 +205,7 @@ def clean(yes: bool = False) -> None:
     Args:
         yes (bool): Flag to skip confirmation prompt
     """
+    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_CLEAN)
     files_path = Path(click.get_app_dir(MLSTACKS_PACKAGE_NAME)) / "terraform"
     if not files_path.exists():
         declare("No Terraform state files found.")
@@ -221,11 +225,7 @@ def clean(yes: bool = False) -> None:
 @click.command()
 def source() -> None:
     """Prints and opens the location of TF and Spec files."""
-    analytics_client.analytics.track(
-        analytics_client.get_analytics_user_id(),
-        AnalyticsEventsEnum.MLSTACKS_SOURCE,
-        {"python_version": python_version()},
-    )
+    analytics_client.track_event(AnalyticsEventsEnum.MLSTACKS_SOURCE)
 
     mlstacks_source_dir = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
     click.echo(f"Source files are located at: `{mlstacks_source_dir}`")
