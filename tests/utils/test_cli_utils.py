@@ -17,13 +17,13 @@ import click
 from hypothesis import given
 from hypothesis import strategies as st
 
-from mlstacks.constants import MLSTACKS_PACKAGE_NAME
+from mlstacks.constants import MLSTACKS_PACKAGE_NAME, PERMITTED_NAME_REGEX
 from mlstacks.utils.cli_utils import _get_spec_dir
 
 SPEC_BASE_DIR = click.get_app_dir(MLSTACKS_PACKAGE_NAME)
 
 
-@given(st.text(min_size=1))
+@given(st.from_regex(PERMITTED_NAME_REGEX))
 def test_get_spec_dir(stack_name: str):
     spec_dir = _get_spec_dir(stack_name)
     assert spec_dir == os.path.join(SPEC_BASE_DIR, f"stack_specs/{stack_name}")

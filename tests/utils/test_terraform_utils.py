@@ -17,8 +17,9 @@ import tempfile
 
 import pytest
 from hypothesis import given
-from hypothesis.strategies import text
+from hypothesis.strategies import from_regex
 
+from mlstacks.constants import PERMITTED_NAME_REGEX
 from mlstacks.enums import ProviderEnum
 from mlstacks.models.component import (
     Component,
@@ -52,7 +53,7 @@ def test_terraform_runner_fails_with_invalid_recipe_path():
         TerraformRunner(tf_recipe_path="invalid_path")
 
 
-@given(text(min_size=1))
+@given(from_regex(PERMITTED_NAME_REGEX))
 def test_enable_key_function_works(dummy_name: str):
     """Tests that the enable key function works.
 
@@ -69,7 +70,7 @@ def test_enable_key_function_works(dummy_name: str):
     assert key == "enable_zenml"
 
 
-@given(text(min_size=1))
+@given(from_regex(PERMITTED_NAME_REGEX))
 def test_enable_key_function_handles_components_with_flavors(dummy_name: str):
     """Tests that the enable key function works.
 
@@ -88,7 +89,7 @@ def test_enable_key_function_handles_components_with_flavors(dummy_name: str):
     assert key == "enable_experiment_tracker_mlflow"
 
 
-@given(text(min_size=1))
+@given(from_regex(PERMITTED_NAME_REGEX))
 def test_enable_key_function_handles_components_without_flavors(
     dummy_name: str,
 ):
