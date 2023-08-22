@@ -276,7 +276,9 @@ def populate_tf_definitions(
     logger.debug("Wrote mlstacks version %s to directory.", mlstacks_version)
 
 
-def get_recipe_metadata(provider: ProviderEnum) -> Dict[str, Any]:
+def get_recipe_metadata(
+    provider: ProviderEnum, base_config_dir: str = CONFIG_DIR
+) -> Dict[str, Any]:
     """Loads modular recipe metadata for a specific provider.
 
     Args:
@@ -285,7 +287,10 @@ def get_recipe_metadata(provider: ProviderEnum) -> Dict[str, Any]:
     Returns:
         The recipe metadata.
     """
-    recipe_metadata = Path(_get_tf_recipe_path(provider)) / "metadata.yaml"
+    recipe_metadata = (
+        Path(_get_tf_recipe_path(provider, base_config_dir=base_config_dir))
+        / "metadata.yaml"
+    )
     return load_yaml_as_dict(recipe_metadata)
 
 

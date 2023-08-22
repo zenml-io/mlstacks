@@ -29,6 +29,7 @@ from mlstacks.models.stack import Stack
 from mlstacks.utils.terraform_utils import (
     TerraformRunner,
     _compose_enable_key,
+    get_recipe_metadata,
     parse_and_extract_component_variables,
     parse_and_extract_tf_vars,
     tf_definitions_present,
@@ -184,8 +185,9 @@ def test_tf_vars_extraction_works():
 
 def test_tf_definitions_present_works():
     """Checks whether Terraform definitions are present."""
+    provider = random.choice(list(ProviderEnum)).value
+
     with tempfile.TemporaryDirectory() as tmp_dir:
-        provider = random.choice(list(ProviderEnum)).value
         modular_dir = os.path.join(tmp_dir, "terraform", f"{provider}-modular")
         modules_dir = os.path.join(tmp_dir, "terraform", "modules")
         assert not tf_definitions_present(provider, tmp_dir)
@@ -200,3 +202,24 @@ def test_tf_definitions_present_works():
         assert tf_definitions_present(
             provider=provider, base_config_dir=tmp_dir
         )
+
+
+def test_recipe_metadata_extraction_works():
+    """Tests that the recipe metadata extraction works."""
+    provider = random.choice(list(ProviderEnum)).value
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        modular_dir = os.path.join(tmp_dir, "terraform", f"{provider}-modular")
+
+        # Create the modular_dir directory
+        os.makedirs(modular_dir)
+
+        # write a metadata.yaml file into that directory containing
+        # {"test_key": "test_value"} as the contents (in YAML form)
+        with open(os.path.join(modular_dir, "metadata.yaml"), "w") as f:
+            f.write("test_key: test_value")
+        metadata = get_recipe_metadata(
+            provider=provider, base_config_dir=tmp_dir
+        )
+        assert metadata
+        assert metadata.get("test_key")
+        assert metadata.get("test_key") == "test_value"
