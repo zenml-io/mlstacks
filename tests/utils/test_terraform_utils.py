@@ -31,6 +31,7 @@ from mlstacks.utils.terraform_utils import (
     _compose_enable_key,
     parse_and_extract_component_variables,
     parse_and_extract_tf_vars,
+    tf_definitions_present,
 )
 
 
@@ -179,3 +180,23 @@ def test_tf_vars_extraction_works():
     assert "region" in variable_keys
     assert "additional_tags" in variable_keys
     assert f"enable_{component_flavor}" in variable_keys
+
+
+def test_tf_definitions_present_works():
+    """Checks whether Terraform definitions are present."""
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        provider = random.choice(list(ProviderEnum)).value
+        modular_dir = os.path.join(tmp_dir, "terraform", f"{provider}-modular")
+        modules_dir = os.path.join(tmp_dir, "terraform", "modules")
+        assert not tf_definitions_present(provider, tmp_dir)
+
+        # Create the directories
+        os.makedirs(modular_dir, exist_ok=True)
+        os.makedirs(modules_dir, exist_ok=True)
+
+        # Assert that the directories were created
+        assert os.path.exists(modular_dir)
+        assert os.path.exists(modules_dir)
+        assert tf_definitions_present(
+            provider=provider, base_config_dir=tmp_dir
+        )

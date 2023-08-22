@@ -45,7 +45,9 @@ STATE_FILE_NAME = "terraform.tfstate"
 MLSTACKS_VERSION_FILE_NAME = "MLSTACKS_VERSION.txt"
 
 
-def _get_tf_recipe_path(provider: str) -> str:
+def _get_tf_recipe_path(
+    provider: str, base_config_dir: str = CONFIG_DIR
+) -> str:
     """Get Terraform recipe path.
 
     Args:
@@ -54,7 +56,7 @@ def _get_tf_recipe_path(provider: str) -> str:
     Returns:
         The Terraform recipe path.
     """
-    return str(Path(CONFIG_DIR) / "terraform" / f"{provider}-modular")
+    return str(Path(base_config_dir) / "terraform" / f"{provider}-modular")
 
 
 class TerraformRunner:
@@ -178,7 +180,10 @@ def parse_and_extract_tf_vars(stack: Stack) -> Dict[str, Any]:
     return tf_vars
 
 
-def tf_definitions_present(provider: ProviderEnum) -> bool:
+def tf_definitions_present(
+    provider: ProviderEnum,
+    base_config_dir: str = CONFIG_DIR,
+) -> bool:
     """Check if Terraform definitions are present.
 
     Args:
@@ -187,10 +192,9 @@ def tf_definitions_present(provider: ProviderEnum) -> bool:
     Returns:
         True if Terraform definitions are present, False otherwise.
     """
-    config_dir = get_app_dir(MLSTACKS_PACKAGE_NAME)
     return (
-        Path(_get_tf_recipe_path(provider)).exists()
-        and (Path(config_dir) / "terraform" / "modules").exists()
+        Path(_get_tf_recipe_path(provider, base_config_dir)).exists()
+        and (Path(base_config_dir) / "terraform" / "modules").exists()
     )
 
 
