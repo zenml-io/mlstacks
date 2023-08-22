@@ -70,6 +70,9 @@ class Component(BaseModel):
 
         Returns:
             The validated name.
+
+        Raises:
+            ValueError: If the name is invalid.
         """
         # Regular expression to ensure the first character is alphanumeric
         # and subsequent characters are alphanumeric, underscore, or hyphen
