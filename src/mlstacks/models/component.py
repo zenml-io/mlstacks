@@ -59,7 +59,7 @@ class Component(BaseModel):
     metadata: Optional[ComponentMetadata] = None
 
     @validator("name")
-    def validate_name(self, name: str) -> str:
+    def validate_name(cls, name: str) -> str:  # noqa: N805
         """Validate the name.
 
         Name must start with an alphanumeric character and can only contain
