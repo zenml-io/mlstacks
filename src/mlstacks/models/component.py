@@ -59,11 +59,25 @@ class Component(BaseModel):
     metadata: Optional[ComponentMetadata] = None
 
     @validator("name")
-    def validate_name(cls, name: str) -> str:
+    def validate_name(self, name: str) -> str:
+        """Validate the name.
+
+        Name must start with an alphanumeric character and can only contain
+        alphanumeric characters, underscores, and hyphens thereafter.
+
+        Args:
+            name: The name.
+
+        Returns:
+            The validated name.
+        """
         # Regular expression to ensure the first character is alphanumeric
         # and subsequent characters are alphanumeric, underscore, or hyphen
         if not re.match(PERMITTED_NAME_REGEX, name):
-            raise ValueError(
-                "Name must start with an alphanumeric character and can only contain alphanumeric characters, underscores, and hyphens thereafter."
+            error_message = (
+                "Name must start with an alphanumeric character and can only "
+                "contain alphanumeric characters, underscores, and hyphens "
+                "thereafter."
             )
+            raise ValueError(error_message)
         return name

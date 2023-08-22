@@ -46,12 +46,14 @@ MLSTACKS_VERSION_FILE_NAME = "MLSTACKS_VERSION.txt"
 
 
 def _get_tf_recipe_path(
-    provider: str, base_config_dir: str = CONFIG_DIR
+    provider: str,
+    base_config_dir: str = CONFIG_DIR,
 ) -> str:
     """Get Terraform recipe path.
 
     Args:
         provider: The cloud provider.
+        base_config_dir: The base configuration directory.
 
     Returns:
         The Terraform recipe path.
@@ -188,6 +190,7 @@ def tf_definitions_present(
 
     Args:
         provider: The provider.
+        base_config_dir: The base configuration directory.
 
     Returns:
         True if Terraform definitions are present, False otherwise.
@@ -199,8 +202,8 @@ def tf_definitions_present(
 
 
 def include_files(
-    directory: str,  # The directory argument is required by Terraform, although not used directly in this function
-    filenames: List[str],  # The list of filenames to process
+    directory: str,  # noqa: ARG001
+    filenames: List[str],
 ) -> List[str]:
     """Include files in Terraform definitions.
 
@@ -209,7 +212,8 @@ def include_files(
         filenames: The list of filenames to filter.
 
     Returns:
-        The list of files to include in Terraform definitions, after filtering out any unwanted files.
+        The list of files to include in Terraform definitions, after
+            filtering out any unwanted files.
     """
     return [
         filename
@@ -277,12 +281,14 @@ def populate_tf_definitions(
 
 
 def get_recipe_metadata(
-    provider: ProviderEnum, base_config_dir: str = CONFIG_DIR
+    provider: ProviderEnum,
+    base_config_dir: str = CONFIG_DIR,
 ) -> Dict[str, Any]:
     """Loads modular recipe metadata for a specific provider.
 
     Args:
         provider: The cloud provider.
+        base_config_dir: The base config directory.
 
     Returns:
         The recipe metadata.
