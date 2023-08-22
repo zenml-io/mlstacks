@@ -12,9 +12,10 @@
 #  permissions and limitations under the License.
 """Stack model."""
 
+import re
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from mlstacks.enums import (
     DeploymentMethodEnum,
@@ -47,3 +48,14 @@ class Stack(BaseModel):
         DeploymentMethodEnum
     ] = DeploymentMethodEnum.KUBERNETES
     components: List[Component] = []
+
+    @validator("name")
+    def validate_name(cls, name: str) -> str:
+        # Regular expression to ensure the first character is alphanumeric
+        # and subsequent characters are alphanumeric, underscore, or hyphen
+        pattern = r"^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
+        if not re.match(pattern, name):
+            raise ValueError(
+                "Name must start with an alphanumeric character and can only contain alphanumeric characters, underscores, and hyphens thereafter."
+            )
+        return name
