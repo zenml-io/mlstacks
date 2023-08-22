@@ -40,3 +40,4 @@ ALLOWED_FLAVORS = {
     "model_deployer": ["seldon", "kserve"],
     "step_operator": ["sagemaker", "vertex"],
 }
+PERMITTED_NAME_REGEX = r"^[a-zA-Z0-9][a-zA-Z0-9_-]*$"

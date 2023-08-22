@@ -18,6 +18,7 @@ from typing import Dict, Optional
 
 from pydantic import BaseModel, validator
 
+from mlstacks.constants import PERMITTED_NAME_REGEX
 from mlstacks.enums import (
     ComponentFlavorEnum,
     ComponentTypeEnum,
@@ -61,8 +62,7 @@ class Component(BaseModel):
     def validate_name(cls, name: str) -> str:
         # Regular expression to ensure the first character is alphanumeric
         # and subsequent characters are alphanumeric, underscore, or hyphen
-        pattern = r"^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
-        if not re.match(pattern, name):
+        if not re.match(PERMITTED_NAME_REGEX, name):
             raise ValueError(
                 "Name must start with an alphanumeric character and can only contain alphanumeric characters, underscores, and hyphens thereafter."
             )
