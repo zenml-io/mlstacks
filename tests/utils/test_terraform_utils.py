@@ -29,6 +29,7 @@ from mlstacks.models.stack import Stack
 from mlstacks.utils.terraform_utils import (
     TerraformRunner,
     _compose_enable_key,
+    _get_infracost_vars,
     get_recipe_metadata,
     parse_and_extract_component_variables,
     parse_and_extract_tf_vars,
@@ -223,3 +224,18 @@ def test_recipe_metadata_extraction_works():
         assert metadata
         assert metadata.get("test_key")
         assert metadata.get("test_key") == "test_value"
+
+
+def test_infracost_type_coercion_works():
+    """Tests that the infracost type coercion works."""
+    tf_vars = {"aria_age": "13"}
+    infracost_vars = _get_infracost_vars(tf_vars)
+    # assert all keys and values are strings
+    assert all(isinstance(k, str) for k in infracost_vars.keys())
+    assert all(isinstance(v, str) for v in infracost_vars.values())
+
+    tf_vars_with_dict = {"aria_age": {"value": "13"}}
+    infracost_vars_2 = _get_infracost_vars(tf_vars_with_dict)
+    # assert all keys and values are strings
+    assert all(isinstance(k, str) for k in infracost_vars_2.keys())
+    assert all(isinstance(v, str) for v in infracost_vars_2.values())
