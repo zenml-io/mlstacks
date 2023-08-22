@@ -25,10 +25,12 @@ from mlstacks.models.component import (
     Component,
     ComponentMetadata,
 )
+from mlstacks.models.stack import Stack
 from mlstacks.utils.terraform_utils import (
     TerraformRunner,
     _compose_enable_key,
     parse_and_extract_component_variables,
+    parse_and_extract_tf_vars,
 )
 
 
@@ -113,10 +115,11 @@ def test_enable_key_function_handles_components_without_flavors(
 def test_component_variable_parsing_works():
     """Tests that the component variable parsing works."""
     metadata = ComponentMetadata()
+    component_flavor = "zenml"
     components = [
         Component(
             name="test",
-            component_flavor="zenml",
+            component_flavor=component_flavor,
             component_type="mlops_platform",
             provider=random.choice(list(ProviderEnum)).value,
             spec_type="component",
@@ -126,3 +129,53 @@ def test_component_variable_parsing_works():
     ]
     variables = parse_and_extract_component_variables(components)
     assert variables
+    variable_keys = variables.keys()
+    assert f"enable_{component_flavor}" in variable_keys
+
+
+def test_componennt_var_parsing_works_for_env_vars():
+    """Tests that the component variable parsing works."""
+    env_vars = {"ARIA_KEY": "blupus"}
+    metadata = ComponentMetadata(environment_variables=env_vars)
+    components = [
+        Component(
+            name="test",
+            component_flavor="zenml",
+            component_type="mlops_platform",
+            provider=random.choice(list(ProviderEnum)).value,
+            metadata=metadata,
+        )
+    ]
+    variables = parse_and_extract_component_variables(components)
+    assert variables
+    variable_keys = variables.keys()
+    assert "TF_VAR_ARIA_KEY" in variable_keys
+    assert variables.get("TF_VAR_ARIA_KEY")
+    assert variables.get("TF_VAR_ARIA_KEY") == "blupus"
+
+
+def test_tf_vars_extraction_works():
+    """Tests that the Terraform variables extraction works."""
+    provider = random.choice(list(ProviderEnum)).value
+    component_flavor = "zenml"
+    metadata = ComponentMetadata()
+    components = [
+        Component(
+            name="test",
+            component_flavor=component_flavor,
+            component_type="mlops_platform",
+            provider=provider,
+            metadata=metadata,
+        )
+    ]
+    stack = Stack(
+        name="test",
+        provider=provider,
+        components=components,
+    )
+    variables = parse_and_extract_tf_vars(stack)
+    assert variables
+    variable_keys = variables.keys()
+    assert "region" in variable_keys
+    assert "additional_tags" in variable_keys
+    assert f"enable_{component_flavor}" in variable_keys
