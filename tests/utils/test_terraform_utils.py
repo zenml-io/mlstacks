@@ -28,7 +28,7 @@ from mlstacks.models.component import (
 from mlstacks.utils.terraform_utils import (
     TerraformRunner,
     _compose_enable_key,
-    parse_component_variables,
+    parse_and_extract_component_variables,
 )
 
 
@@ -124,5 +124,5 @@ def test_component_variable_parsing_works():
             metadata=metadata,
         )
     ]
-    variables = parse_component_variables(components)
+    variables = parse_and_extract_component_variables(components)
     assert variables
