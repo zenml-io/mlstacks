@@ -160,7 +160,7 @@ def parse_component_variables(
     return component_variables
 
 
-def parse_tf_vars(stack: Stack) -> Dict[str, Any]:
+def parse_and_extract_tf_vars(stack: Stack) -> Dict[str, Any]:
     """Parse Terraform variables.
 
     Args:
@@ -439,7 +439,7 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     tf_recipe_path = _get_tf_recipe_path(stack.provider)
     if not tf_definitions_present(stack.provider):
         populate_tf_definitions(stack.provider, force=True)
-    tf_vars = parse_tf_vars(stack)
+    tf_vars = parse_and_extract_tf_vars(stack)
     check_tf_definitions_version(stack.provider)
 
     tfr = TerraformRunner(tf_recipe_path)
@@ -470,7 +470,7 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
         debug_mode: Whether to run in debug mode.
     """
     stack = load_stack_yaml(stack_path)
-    tf_vars = parse_tf_vars(stack)
+    tf_vars = parse_and_extract_tf_vars(stack)
 
     tf_recipe_path = _get_tf_recipe_path(stack.provider)
 
@@ -578,7 +578,7 @@ def infracost_breakdown_stack(
     """
     _ = verify_infracost_installed()
     stack = load_stack_yaml(stack_path)
-    infracost_vars = _get_infracost_vars(parse_tf_vars(stack))
+    infracost_vars = _get_infracost_vars(parse_and_extract_tf_vars(stack))
 
     tf_recipe_path = _get_tf_recipe_path(stack.provider)
 
