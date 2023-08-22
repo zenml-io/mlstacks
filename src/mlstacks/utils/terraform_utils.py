@@ -199,20 +199,18 @@ def tf_definitions_present(
 
 
 def include_files(
-    directory: str,  # noqa: ARG001
-    filenames: List[str],
+    directory: str,  # The directory argument is required by Terraform, although not used directly in this function
+    filenames: List[str],  # The list of filenames to process
 ) -> List[str]:
     """Include files in Terraform definitions.
 
     Args:
-        directory: The directory.
-        filenames: The filenames.
+        directory: The directory path.
+        filenames: The list of filenames to filter.
 
     Returns:
-        The files to ignore.
+        The list of files to include in Terraform definitions, after filtering out any unwanted files.
     """
-    # Note the directory argument is required byTerraform
-    # though not used directly in this function
     return [
         filename
         for filename in filenames
