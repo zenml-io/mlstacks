@@ -158,17 +158,13 @@ def track_event(
     Returns:
         True if event is sent successfully, False is not.
     """
-    success = True
-
     if metadata is None:
         metadata = {}
 
     metadata.setdefault("event_success", True)
 
-    with MLStacksAnalyticsContext() as analytics:
-        success_event = analytics.track(event=event, properties=metadata)
-        return success and success_event
-    return False
+    with MLStacksAnalyticsContext() as analytics_context:
+        return analytics_context.track(event=event, properties=metadata)
 
 
 class EventHandler:
