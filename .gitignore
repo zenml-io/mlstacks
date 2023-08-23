@@ -134,3 +134,9 @@ dmypy.json
 
 # not the metadata file
 !metadata.yaml
+
+# Infracost local state
+.infracost/
+
+# State initialisation flag file
+IGNORE_ME

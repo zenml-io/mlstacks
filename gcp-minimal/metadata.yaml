@@ -1,4 +1,6 @@
 Description: |
+  NOTE THAT THESE RECIPES HAVE BEEN DEPRECATED. PLEASE UPGRADE YOUR ZENML
+  VERSION OR USE THE `mlstacks` PACKAGE TO BENEFIT FROM LATEST UPDATES.
   A recipe that creates a GKE orchestrator, GCS artifact store, 
   GCR container repository, MLflow experiment tracker and 
   Seldon Core model deployer.

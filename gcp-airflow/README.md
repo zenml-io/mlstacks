@@ -1,13 +1,16 @@
+**NOTE THAT THESE RECIPES HAVE BEEN DEPRECATED. PLEASE UPGRADE YOUR ZENML
+VERSION OR USE THE `mlstacks` PACKAGE TO BENEFIT FROM LATEST UPDATES.**
+
 # 🥙 GCP Cloud Composer Airflow Stack Recipe
 
 There can be many motivations behind taking your ML application setup to a cloud environment, from needing specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
-We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/platform-guide/set-up-your-mlops-platform/deploy-zenml) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). This recipe, however, goes one step further. 
+We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/user-guide/starter-guide/switch-to-production) that shows you different ways of switching to a production-grade setting. This recipe, however, goes one step further. 
 
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources: 
-- A managed Airflow deployment on GCP using Cloud Composer as an [orchestrator](https://docs.zenml.io/user-guide/component-guide/orchestrators) for your workloads.
-- A GCS Bucket as an [artifact store](https://docs.zenml.io/user-guide/component-guide/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
-- A [secrets manager](https://docs.zenml.io/user-guide/component-guide/secrets-managers) enabled for storing your secrets. 
+- A managed Airflow deployment on GCP using Cloud Composer as an [orchestrator](https://docs.zenml.io/stacks-and-components/component-guide/orchestrators) for your workloads.
+- A GCS Bucket as an [artifact store](https://docs.zenml.io/stacks-and-components/component-guide/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc. 
+- A [secrets manager](https://docs.zenml.io/stacks-and-components/component-guide/secrets-managers) enabled for storing your secrets. 
 
 
 ## Prerequisites

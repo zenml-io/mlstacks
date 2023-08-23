@@ -1,4 +1,6 @@
 Description: |
+  NOTE THAT THESE RECIPES HAVE BEEN DEPRECATED. PLEASE UPGRADE YOUR ZENML
+  VERSION OR USE THE `mlstacks` PACKAGE TO BENEFIT FROM LATEST UPDATES.
   A recipe that creates a k3d cluster with a local registry,
   and optionally deploys a Kubeflow and/or Tekton orchestrator on top of it, a
   minio storage as an artifact store, MLfow as an experiment tracker and Seldon
