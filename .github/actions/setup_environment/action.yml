@@ -1,0 +1,39 @@
+name: "Install MLStacks"
+description: "Install MLStacks"
+inputs:
+  python-version:
+    description: 'Python version'
+    type: string
+    required: true
+  os:
+    description: 'OS'
+    type: string
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Delete error-causing bash
+      shell: bash
+      if: ${{ inputs.os == 'windows-latest' }}
+      run: rm.exe "C:/WINDOWS/system32/bash.EXE"
+
+
+    - name: Install MLStacks
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[dev]
+
+    - name: Check Python environment
+      shell: bash
+      run: |
+        pip list
+        pip check || true
