@@ -52,12 +52,16 @@ class Stack(BaseModel):
     @validator("name")
     def validate_name(cls, name: str) -> str:  # noqa: N805
         """Validate the name.
+
         Name must start with an alphanumeric character and can only contain
         alphanumeric characters, underscores, and hyphens thereafter.
+
         Args:
             name: The name.
+
         Returns:
             The validated name.
+
         Raises:
             ValueError: If the name is invalid.
         """

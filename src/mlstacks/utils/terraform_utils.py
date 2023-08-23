@@ -287,6 +287,7 @@ def get_recipe_metadata(
     base_config_dir: str = CONFIG_DIR,
 ) -> Dict[str, Any]:
     """Loads modular recipe metadata for a specific provider.
+
     Args:
         provider: The cloud provider.
         base_config_dir: The base config directory.
