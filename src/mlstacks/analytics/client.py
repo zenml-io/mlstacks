@@ -83,7 +83,7 @@ class MLStacksAnalyticsContext:
             True if no exception occurred, False otherwise
         """
         if exc_val:
-            logger.debug(f"Error occurred: {exc_val}")
+            logger.debug("Error occurred: %s", exc_val)
         return True
 
     def track(
@@ -164,7 +164,8 @@ def track_event(
     metadata.setdefault("event_success", True)
 
     with MLStacksAnalyticsContext() as analytics_context:
-        return analytics_context.track(event=event, properties=metadata)
+        return bool(analytics_context.track(event=event, properties=metadata))
+    return False
 
 
 class EventHandler:
