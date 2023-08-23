@@ -33,7 +33,7 @@ jobs:
           PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
           PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
-          if [ "$(cat src/zenml/VERSION)" = "$(echo ${GITHUB_REF} | sed 's|refs/tags/||g')" ];
+          if [ "$(cat src/mlstacks/VERSION)" = "$(echo ${GITHUB_REF} | sed 's|refs/tags/||g')" ];
           then ./scripts/publish.sh;
           else echo "Version mismatch between src/zenml/VERSION and branch tag" && exit 1;
           fi
