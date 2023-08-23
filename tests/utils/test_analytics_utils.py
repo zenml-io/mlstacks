@@ -18,6 +18,8 @@ import pytest
 
 from mlstacks.utils.analytics_utils import operating_system, python_version
 
+PYTHON_VERSION = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+
 
 @pytest.mark.skipif(
     sys.version_info != (3, 10) and sys.platform != "linux",
@@ -25,5 +27,5 @@ from mlstacks.utils.analytics_utils import operating_system, python_version
 )
 def test_metadata_for_analytics():
     """Tests if Python version and operating system is returned correctly."""
-    assert python_version() == "3.10"
+    assert python_version() == PYTHON_VERSION
     assert operating_system() == "linux"
