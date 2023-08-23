@@ -12,6 +12,7 @@
 #  permissions and limitations under the License.
 """Analytics utils for MLStacks."""
 
+import platform
 import sys
 
 
@@ -21,7 +22,7 @@ def python_version() -> str:
     Returns:
         str: python version
     """
-    return ".".join(map(str, sys.version_info[:3]))
+    return platform.python_version()
 
 
 def operating_system() -> str:
