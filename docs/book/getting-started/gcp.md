@@ -1,8 +1,8 @@
 # Quickstart on GCP
 
-TKTKTK: WHAT THE STACK IS / INVOLVES
-
-![DIAGRAM GOES HERE]()
+This quickstart will guide you through deploying a simple stack on GCP using
+`mlstacks`. We'll be deploying a simple storage bucket. This is as simple and
+quick an example of how `mlstacks` works as it gets.
 
 ## Prerequisites
 
