@@ -2,8 +2,9 @@
 
 ## 🌰 In a nutshell: What is MLStacks?
 
-MLStacks is a Python package that allows you to quickly spin up MLOps
-infrastructure using Terraform. It is designed to be used with
+[MLStacks](https://mlstacks.zenml.io) is a
+[Python package](https://pypi.org/project/mlstacks/) that allows you to quickly
+spin up MLOps infrastructure using Terraform. It is designed to be used with
 [ZenML](https://zenml.io), but can be used with any MLOps tool or platform.
 
 Simply write stack and component YAML specification files and deploy them using
