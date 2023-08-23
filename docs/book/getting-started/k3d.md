@@ -1,8 +1,9 @@
 # Quickstart on K3D
 
-TKTKTK: WHAT THE STACK IS / INVOLVES
-
-![DIAGRAM GOES HERE]()
+This quickstart will guide you through deploying a simple stack using K3D to
+simulate a cloud provider using `mlstacks`. We'll be deploying a simple minio
+bucket. This is as simple and quick an example of how `mlstacks` works as it
+gets.
 
 ## Prerequisites
 

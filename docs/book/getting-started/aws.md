@@ -4,8 +4,6 @@ This quickstart will guide you through deploying a simple stack on AWS using
 `mlstacks`. We'll be deploying a simple S3 bucket. This is as simple and quick
 an example of how `mlstacks` works as it gets.
 
-![DIAGRAM GOES HERE]()
-
 ## Prerequisites
 
 First, install the `mlstacks` CLI:
