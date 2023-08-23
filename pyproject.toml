@@ -69,6 +69,7 @@ exclude = '''
 [tool.poetry.dependencies]
 # pydantic = {version = "2.0.2"}
 # compatible with Core ZenML
+python = ">=3.8,<3.12"
 pydantic = { version = "<1.11,>=1.9.0" }
 pyyaml = { version = "6.0" }
 click = { version = "8.1.3" }
