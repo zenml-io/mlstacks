@@ -41,4 +41,5 @@ ALLOWED_FLAVORS = {
     "step_operator": ["sagemaker", "vertex"],
 }
 
+PERMITTED_NAME_REGEX = r"^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
 ANALYTICS_OPT_OUT_ENV_VARIABLE = "MLSTACKS_ANALYTICS_OPT_OUT"

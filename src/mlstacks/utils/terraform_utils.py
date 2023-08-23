@@ -45,16 +45,20 @@ STATE_FILE_NAME = "terraform.tfstate"
 MLSTACKS_VERSION_FILE_NAME = "MLSTACKS_VERSION.txt"
 
 
-def _get_tf_recipe_path(provider: str) -> str:
+def _get_tf_recipe_path(
+    provider: str,
+    base_config_dir: str = CONFIG_DIR,
+) -> str:
     """Get Terraform recipe path.
 
     Args:
         provider: The cloud provider.
+        base_config_dir: The base configuration directory.
 
     Returns:
         The Terraform recipe path.
     """
-    return str(Path(CONFIG_DIR) / "terraform" / f"{provider}-modular")
+    return str(Path(base_config_dir) / "terraform" / f"{provider}-modular")
 
 
 class TerraformRunner:
@@ -117,7 +121,7 @@ def _compose_enable_key(component: Component) -> str:
 #     return component.metadata.config.get(property_name)
 
 
-def parse_component_variables(
+def parse_and_extract_component_variables(
     components: List[Component],
 ) -> Dict[str, str]:
     """Parse component variables.
@@ -160,7 +164,7 @@ def parse_component_variables(
     return component_variables
 
 
-def parse_tf_vars(stack: Stack) -> Dict[str, Any]:
+def parse_and_extract_tf_vars(stack: Stack) -> Dict[str, Any]:
     """Parse Terraform variables.
 
     Args:
@@ -174,23 +178,26 @@ def parse_tf_vars(stack: Stack) -> Dict[str, Any]:
         "additional_tags": stack.default_tags,
     }
     # update the dict with the component variables
-    tf_vars.update(parse_component_variables(stack.components))
+    tf_vars.update(parse_and_extract_component_variables(stack.components))
     return tf_vars
 
 
-def tf_definitions_present(provider: ProviderEnum) -> bool:
+def tf_definitions_present(
+    provider: ProviderEnum,
+    base_config_dir: str = CONFIG_DIR,
+) -> bool:
     """Check if Terraform definitions are present.
 
     Args:
         provider: The provider.
+        base_config_dir: The base configuration directory.
 
     Returns:
         True if Terraform definitions are present, False otherwise.
     """
-    config_dir = get_app_dir(MLSTACKS_PACKAGE_NAME)
     return (
-        Path(_get_tf_recipe_path(provider)).exists()
-        and (Path(config_dir) / "terraform" / "modules").exists()
+        Path(_get_tf_recipe_path(provider, base_config_dir)).exists()
+        and (Path(base_config_dir) / "terraform" / "modules").exists()
     )
 
 
@@ -201,11 +208,12 @@ def include_files(
     """Include files in Terraform definitions.
 
     Args:
-        directory: The directory.
-        filenames: The filenames.
+        directory: The directory path.
+        filenames: The list of filenames to filter.
 
     Returns:
-        The files to ignore.
+        The list of files to include in Terraform definitions, after
+            filtering out any unwanted files.
     """
     # Note the directory argument is required byTerraform
     # though not used directly in this function
@@ -274,16 +282,22 @@ def populate_tf_definitions(
     logger.debug("Wrote mlstacks version %s to directory.", mlstacks_version)
 
 
-def get_recipe_metadata(provider: ProviderEnum) -> Dict[str, Any]:
+def get_recipe_metadata(
+    provider: ProviderEnum,
+    base_config_dir: str = CONFIG_DIR,
+) -> Dict[str, Any]:
     """Loads modular recipe metadata for a specific provider.
-
     Args:
         provider: The cloud provider.
+        base_config_dir: The base config directory.
 
     Returns:
         The recipe metadata.
     """
-    recipe_metadata = Path(_get_tf_recipe_path(provider)) / "metadata.yaml"
+    recipe_metadata = (
+        Path(_get_tf_recipe_path(provider, base_config_dir=base_config_dir))
+        / "metadata.yaml"
+    )
     return load_yaml_as_dict(recipe_metadata)
 
 
@@ -438,7 +452,7 @@ def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
     tf_recipe_path = _get_tf_recipe_path(stack.provider)
     if not tf_definitions_present(stack.provider):
         populate_tf_definitions(stack.provider, force=True)
-    tf_vars = parse_tf_vars(stack)
+    tf_vars = parse_and_extract_tf_vars(stack)
     check_tf_definitions_version(stack.provider)
 
     tfr = TerraformRunner(tf_recipe_path)
@@ -464,7 +478,7 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
         debug_mode: Whether to run in debug mode.
     """
     stack = load_stack_yaml(stack_path)
-    tf_vars = parse_tf_vars(stack)
+    tf_vars = parse_and_extract_tf_vars(stack)
 
     tf_recipe_path = _get_tf_recipe_path(stack.provider)
 
@@ -593,7 +607,7 @@ def infracost_breakdown_stack(
     """
     _ = verify_infracost_installed()
     stack = load_stack_yaml(stack_path)
-    infracost_vars = _get_infracost_vars(parse_tf_vars(stack))
+    infracost_vars = _get_infracost_vars(parse_and_extract_tf_vars(stack))
 
     tf_recipe_path = _get_tf_recipe_path(stack.provider)
 
