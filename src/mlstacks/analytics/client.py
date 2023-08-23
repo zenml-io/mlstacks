@@ -14,6 +14,7 @@
 
 import datetime
 import os
+from logging import getLogger
 from types import TracebackType
 from typing import Any, Dict, Optional, Type
 from uuid import uuid4
@@ -28,6 +29,8 @@ from mlstacks.constants import (
 from mlstacks.enums import AnalyticsEventsEnum
 from mlstacks.utils.analytics_utils import operating_system, python_version
 from mlstacks.utils.yaml_utils import load_yaml_as_dict
+
+logger = getLogger(__name__)
 
 analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
 
@@ -80,8 +83,7 @@ class MLStacksAnalyticsContext:
             True if no exception occurred, False otherwise
         """
         if exc_val:
-            # Handle exception logging if necessary. Here I'm just printing it.
-            print(f"Error occurred: {exc_val}")  # noqa: T201
+            logger.debug(f"Error occurred: {exc_val}")
         return True
 
     def track(
