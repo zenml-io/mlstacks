@@ -29,9 +29,6 @@ being valuable, is not enough to seriously better the tool as a whole.
 MLStacks uses [Segment](https://segment.com/) as the data aggregation library
 for all our analytics. The entire code is entirely visible and can be seen at
 [client.py](https://github.com/zenml-io/mlstacks/blob/main/src/mlstacks/analytics/client.py).
-The main work is done in the `track(...)` method that triggers a Segment
-Analytics Track event, which runs on a separate background thread from the main
-thread.
 
 None of the data sent can identify you individually but allows us to understand
 how MLStacks is being used holistically.
