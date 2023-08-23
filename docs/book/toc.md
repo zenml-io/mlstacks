@@ -24,5 +24,6 @@
 - [Terraform usage](reference/terraform.md)
 - [ZenML & MLStacks](reference/zenml.md)
 - [Debugging Tips](reference/debugging.md)
+- [Analytics](reference/analytics.md)
 - [FAQ](reference/faq.md)
 - [Contributing](reference/contributing.md)

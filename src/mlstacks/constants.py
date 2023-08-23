@@ -40,3 +40,5 @@ ALLOWED_FLAVORS = {
     "model_deployer": ["seldon", "kserve"],
     "step_operator": ["sagemaker", "vertex"],
 }
+
+ANALYTICS_OPT_OUT_ENV_VARIABLE = "MLSTACKS_ANALYTICS_OPT_OUT"

@@ -63,3 +63,15 @@ class ProviderEnum(str, Enum):
     AZURE = "azure"
     GCP = "gcp"
     K3D = "k3d"
+
+
+class AnalyticsEventsEnum(str, Enum):
+    """Analytics events enum."""
+
+    MLSTACKS_DEPLOY = "MLStacks Deploy"
+    MLSTACKS_DESTROY = "MLStacks Destroy"
+    MLSTACKS_BREAKDOWN = "MLStacks Breakdown"
+    MLSTACKS_OUTPUT = "MLStacks Output"
+    MLSTACKS_CLEAN = "MLStacks Clean"
+    MLSTACKS_SOURCE = "MLStacks Source"
+    MLSTACKS_EXCEPTION = "MLStacks Exception"
