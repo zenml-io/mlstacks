@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "example" {
-  name     = "zenml-test"
+  name     = "zenml-github-test"
   location = "West Europe"
 }
 

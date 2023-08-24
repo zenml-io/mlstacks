@@ -1,8 +1,13 @@
 name: Deploy the test runner vm to azure
 
 on:
-    workflow_call:
-    workflow_dispatch:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+    paths-ignore: ["**.md"]
 
 jobs:
   deploy_test_vm:
