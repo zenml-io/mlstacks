@@ -1,11 +1,11 @@
 # Usage Analytics
 
 In order to help us better understand how the community uses ZenML, the pip
-package reports anonymized usage statistics. You can always opt-out by setting
-the `MLSTACKS_ANALYTICS_OPT_OUT` environment variable to `True`:
+package reports anonymized usage statistics. You can always opt out by setting
+the `MLSTACKS_ANALYTICS_OPT_IN` environment variable to `False`:
 
 ```bash
-export MLSTACKS_ANALYTICS_OPT_OUT=True
+export MLSTACKS_ANALYTICS_OPT_IN=False
 ```
 
 ## Why does MLStacks collect analytics?

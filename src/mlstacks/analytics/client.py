@@ -23,8 +23,9 @@ import click
 from segment import analytics
 
 from mlstacks.constants import (
-    ANALYTICS_OPT_OUT_ENV_VARIABLE,
+    ANALYTICS_OPT_IN_ENV_VARIABLE,
     MLSTACKS_PACKAGE_NAME,
+    handle_bool_env_var,
 )
 from mlstacks.enums import AnalyticsEventsEnum
 from mlstacks.utils.analytics_utils import operating_system, python_version
@@ -42,7 +43,10 @@ class MLStacksAnalyticsContext:
 
     def __init__(self) -> None:
         """Initialization."""
-        self.analytics_opt_out = os.environ.get(ANALYTICS_OPT_OUT_ENV_VARIABLE)
+        self.analytics_opt_in = handle_bool_env_var(
+            var=ANALYTICS_OPT_IN_ENV_VARIABLE,
+            default=True,
+        )
         self.user_id: Optional[str] = None
 
     def __enter__(self) -> "MLStacksAnalyticsContext":
@@ -51,7 +55,7 @@ class MLStacksAnalyticsContext:
         Returns:
             MLStacksAnalyticsContext: Analytics context manager
         """
-        if not self.analytics_opt_out and not self.get_analytics_user_id():
+        if self.analytics_opt_in and not self.get_analytics_user_id():
             self.user_id = str(uuid4())
             self.set_analytics_user_id(self.user_id)
             analytics.identify(
@@ -100,9 +104,10 @@ class MLStacksAnalyticsContext:
         Returns:
             Result of the tracking
         """
-        if properties is None:
-            properties = {}
-        if not self.analytics_opt_out:
+        if self.analytics_opt_in:
+            if properties is None:
+                properties = {}
+
             return analytics.track(
                 self.user_id,
                 event.value,
