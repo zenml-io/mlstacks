@@ -48,6 +48,7 @@ class ComponentFlavorEnum(str, Enum):
     TEKTON = "tekton"
     MINIO = "minio"
     GCP = "gcp"
+    AWS = "aws"
 
 
 class DeploymentMethodEnum(str, Enum):
