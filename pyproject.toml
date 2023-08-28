@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mlstacks"
-version = "0.7.2"
+version = "0.7.3"
 packages = [{ include = "mlstacks", from = "src" }]
 description = "MLStacks MLStacks."
 authors = ["ZenML GmbH <info@zenml.io>"]
