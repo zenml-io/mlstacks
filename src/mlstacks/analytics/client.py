@@ -25,10 +25,10 @@ from segment import analytics
 from mlstacks.constants import (
     ANALYTICS_OPT_IN_ENV_VARIABLE,
     MLSTACKS_PACKAGE_NAME,
-    handle_bool_env_var,
 )
 from mlstacks.enums import AnalyticsEventsEnum
 from mlstacks.utils.analytics_utils import operating_system, python_version
+from mlstacks.utils.environment_utils import handle_bool_env_var
 from mlstacks.utils.yaml_utils import load_yaml_as_dict
 
 logger = getLogger(__name__)
