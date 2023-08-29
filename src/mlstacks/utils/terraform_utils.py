@@ -386,7 +386,7 @@ def tf_client_apply(
             )
         else:
             logger.exception(
-                "An unknown error occurred while applying Terraform changes."
+                "An unknown error occurred while applying Terraform changes.",
             )
         return 1, None, None
     logger.debug("Terraform changes successfully applied.")
