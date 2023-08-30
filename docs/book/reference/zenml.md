@@ -14,7 +14,7 @@ for more but a quick example is shown below.
 
 ```shell
 # after installing ZenML
-zenml stack deploy -p gcp -a -n basic -r us-east1 -t env=dev -x bucket_name=zenml-goes-pypi -x project_id=zenml-core
+zenml stack deploy -p gcp -a -n basic -r us-east1 -t env=dev -x bucket_name=my-new-bucket -x project_id=zenml
 ```
 
 This command will deploy a GCP artifact store to `us-east1` region with a
