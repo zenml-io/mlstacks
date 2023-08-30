@@ -393,13 +393,17 @@ def tf_client_apply(
             skip_plan=not debug,
         )
     except python_terraform.TerraformCommandError as e:
-        if "The specified location constraint is not valid" in e.out:
+        if e.out and "The specified location constraint is not valid" in e.out:
             logger.exception(
                 "The region '%s' you provided is invalid. "
                 "Please fix and try again.",
                 tf_vars["region"],
             )
-            return 1, None, None
+        else:
+            logger.exception(
+                "An unknown error occurred while applying Terraform changes.",
+            )
+        return 1, None, None
     logger.debug("Terraform changes successfully applied.")
     return ret_code, _stdout, _stderr
 
