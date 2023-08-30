@@ -140,3 +140,6 @@ dmypy.json
 
 # State initialisation flag file
 IGNORE_ME
+
+# poetry
+*poetry.lock*
