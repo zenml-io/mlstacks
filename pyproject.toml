@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mlstacks"
-version = "0.7.3"
+version = "0.7.4"
 packages = [{ include = "mlstacks", from = "src" }]
 description = "MLStacks MLStacks."
 authors = ["ZenML GmbH <info@zenml.io>"]
@@ -75,7 +75,7 @@ pyyaml = { version = ">=6.0.1" }
 click = { version = "^8.0.1,<8.1.4" }
 python-terraform = { version = "^0.10.1" }
 rich = { version = "^12.0.0" }
-segment-analytics-python = { version = "^2.2.3" }
+analytics-python = { version = "^1.4.0" }
 
 # dev dependencies
 black = { version = "^23.3.0", optional = true }
