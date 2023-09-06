@@ -43,3 +43,10 @@ ALLOWED_FLAVORS = {
 
 PERMITTED_NAME_REGEX = r"^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
 ANALYTICS_OPT_IN_ENV_VARIABLE = "MLSTACKS_ANALYTICS_OPT_IN"
+
+# Shared error messages
+INVALID_NAME_ERROR_MESSAGE = (
+    "Name must start with an alphanumeric character and can only "
+    "contain alphanumeric characters, underscores, and hyphens "
+    "thereafter."
+)

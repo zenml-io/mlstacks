@@ -11,17 +11,17 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 """Stack model."""
-import re
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel, validator
 
-from mlstacks.constants import PERMITTED_NAME_REGEX
+from mlstacks.constants import INVALID_NAME_ERROR_MESSAGE
 from mlstacks.enums import (
     DeploymentMethodEnum,
     ProviderEnum,
 )
 from mlstacks.models.component import Component
+from mlstacks.utils.model_utils import is_valid_name
 
 
 class Stack(BaseModel):
@@ -67,11 +67,6 @@ class Stack(BaseModel):
         """
         # Regular expression to ensure the first character is alphanumeric
         # and subsequent characters are alphanumeric, underscore, or hyphen
-        if not re.match(PERMITTED_NAME_REGEX, name):
-            error_message = (
-                "Name must start with an alphanumeric character "
-                "and can only contain alphanumeric characters, "
-                "underscores, and hyphens thereafter."
-            )
-            raise ValueError(error_message)
+        if not is_valid_name(name):
+            raise ValueError(INVALID_NAME_ERROR_MESSAGE)
         return name

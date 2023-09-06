@@ -18,6 +18,10 @@ from mlstacks.utils.zenml_utils import has_valid_flavor_combinations
 
 
 def test_has_valid_flavor_combinations():
+    """Checks that the flavor combination validator works.
+
+    Testing positive cases.
+    """
     valid_stack = Stack(
         name="aria-stack",
         provider="aws",
@@ -35,7 +39,11 @@ def test_has_valid_flavor_combinations():
     )
 
 
-def test_flavor_combination_validator_fails():
+def test_flavor_combination_validator_fails_aws_gcp():
+    """Checks that the flavor combination validator fails.
+
+    Tests a known failure case. (AWS Stack with a GCP artifact store.)
+    """
     valid_stack = Stack(
         name="aria-stack",
         provider="aws",
@@ -53,7 +61,11 @@ def test_flavor_combination_validator_fails():
     )
 
 
-def test_flavor_combination_validator_fails_again():
+def test_flavor_combination_validator_fails_k3d_s3():
+    """Checks that the flavor combination validator fails.
+
+    Tests a known failure case. (K3D Stack with a S3 artifact store.)
+    """
     valid_stack = Stack(
         name="aria-stack",
         provider="k3d",

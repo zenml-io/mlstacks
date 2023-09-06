@@ -136,7 +136,7 @@ def test_component_variable_parsing_works():
     assert f"enable_{component_flavor}" in variable_keys
 
 
-def test_componennt_var_parsing_works_for_env_vars():
+def test_component_var_parsing_works_for_env_vars():
     """Tests that the component variable parsing works."""
     env_vars = {"ARIA_KEY": "blupus"}
     metadata = ComponentMetadata(environment_variables=env_vars)
@@ -157,8 +157,8 @@ def test_componennt_var_parsing_works_for_env_vars():
     assert variables.get("TF_VAR_ARIA_KEY") == "blupus"
 
 
-def test_tf_vars_extraction_works():
-    """Tests that the Terraform variables extraction works."""
+def test_tf_variable_parsing_from_stack_works():
+    """Tests that the Terraform variables extraction (from a stack) works."""
     provider = random.choice(list(ProviderEnum)).value
     component_flavor = "zenml"
     metadata = ComponentMetadata()
