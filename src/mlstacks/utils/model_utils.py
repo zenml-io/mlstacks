@@ -28,4 +28,4 @@ def is_valid_name(name: str) -> bool:
     Returns:
         True if the name is valid, False otherwise.
     """
-    return re.match(PERMITTED_NAME_REGEX, name)
+    return re.match(PERMITTED_NAME_REGEX, name) is not None
