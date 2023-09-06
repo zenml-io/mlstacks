@@ -14,11 +14,12 @@
 from hypothesis import given
 from hypothesis import strategies as st
 
+from mlstacks.constants import PERMITTED_NAME_REGEX
 from mlstacks.enums import DeploymentMethodEnum, ProviderEnum
 from mlstacks.models.stack import Stack
 
 
-@given(st.builds(Stack))
+@given(st.builds(Stack, name=st.from_regex(PERMITTED_NAME_REGEX)))
 def test_stack(instance):
     assert isinstance(instance.spec_version, int)
     assert isinstance(instance.spec_type, str)
