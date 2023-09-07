@@ -44,10 +44,10 @@ If you'd like to learn more, please
 
 ## 🤓 Learn More
 
-- Try the [Quickstart example below](./getting-started/) to get started with
-  MLStacks.
+- Try the [Quickstart example below](./getting-started/quickstart/README.md) to
+  get started with MLStacks.
 - Discover what you can configure with the different stacks in the
-  [Stacks documentation](./stacks/).
+  [Stacks documentation](./stacks/stack-specification.md).
 - Learn about our CLI commands in the [CLI documentation](./reference/cli.md).
 
 ## 🙏🏻 Acknowledgements
