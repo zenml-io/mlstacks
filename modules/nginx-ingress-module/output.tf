@@ -12,7 +12,7 @@ output "ingress-ip-address" {
 }
 
 data "external" "getIP" {
-  program = ["sh", "${path.module}/dig.sh"]
+  program = ["${path.module}/dig.sh"]
 
   query = {
     hostname = data.kubernetes_service.nginx-ingress-controller.status.0.load_balancer.0.ingress.0.hostname
