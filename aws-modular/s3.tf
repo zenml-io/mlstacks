@@ -24,13 +24,13 @@ resource "aws_s3_bucket_public_access_block" "example" {
 }
 
 resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
-  count  = local.enable_eks ? 1 : 0
+  count  = var.enable_artifact_store ? 1 : 0
   bucket = aws_s3_bucket.zenml-artifact-store[0].id
   policy = data.aws_iam_policy_document.allow_access_from_another_account[0].json
 }
 
 data "aws_iam_policy_document" "allow_access_from_another_account" {
-  count = local.enable_eks ? 1 : 0
+  count = var.enable_artifact_store ? 1 : 0
   statement {
     principals {
       type        = "AWS"
