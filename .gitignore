@@ -143,3 +143,6 @@ IGNORE_ME
 
 # poetry
 *poetry.lock*
+
+# Terraform lock file
+.terraform.lock.hcl
