@@ -1,3 +1,3 @@
-output "artifact_store_configuration" {
+output "bucket_url" {
   value = "gs://${google_storage_bucket.terraform_state.name}"
 }
