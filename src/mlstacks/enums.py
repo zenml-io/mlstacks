@@ -49,6 +49,7 @@ class ComponentFlavorEnum(str, Enum):
     MINIO = "minio"
     GCP = "gcp"
     AWS = "aws"
+    VERTEX = "vertex"
 
 
 class DeploymentMethodEnum(str, Enum):
