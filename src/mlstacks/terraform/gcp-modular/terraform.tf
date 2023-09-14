@@ -35,6 +35,11 @@ terraform {
     config = {}
   }
 
+  # backend "gcs" {
+  #   bucket = "mlstacks-gcp-state-easy-delete"
+  #   prefix = "terraform/state"
+  # }
+
   required_version = ">= 0.14.8"
 }
 
