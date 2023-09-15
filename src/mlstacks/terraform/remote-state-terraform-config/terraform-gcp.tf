@@ -31,8 +31,9 @@ terraform {
     }
   }
 
-  backend "local" {
-    config = {}
+  backend "gcs" {
+    bucket = "BUCKETNAMEREPLACEME"
+    prefix = "terraform/state"
   }
 
   required_version = ">= 0.14.8"

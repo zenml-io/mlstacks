@@ -19,6 +19,7 @@ import click
 
 from mlstacks.analytics import client as analytics_client
 from mlstacks.constants import (
+    DEFAULT_REMOTE_STATE_BUCKET_NAME,
     MLSTACKS_PACKAGE_NAME,
 )
 from mlstacks.enums import AnalyticsEventsEnum
@@ -30,9 +31,12 @@ from mlstacks.utils.cli_utils import (
     pretty_print_output_vals,
 )
 from mlstacks.utils.terraform_utils import (
+    _get_remote_state_dir_path,
     _get_tf_recipe_path,
     clean_stack_recipes,
+    deploy_remote_state,
     deploy_stack,
+    destroy_remote_state,
     destroy_stack,
     get_stack_outputs,
     infracost_breakdown_stack,
@@ -54,6 +58,15 @@ def cli() -> None:
     type=click.Path(exists=True),
     help="Path to the YAML file for deploy",
 )
+# @click.option(
+#     "-b",
+#     "--bucket_name",
+#     "bucket_name",
+#     type=click.STRING,
+#     default=DEFAULT_REMOTE_STATE_BUCKET_NAME,
+#     required=False,
+#     help="URL of a pre-existing remote state bucket",
+# )
 @click.option(
     "-d",
     "--debug",
@@ -61,7 +74,11 @@ def cli() -> None:
     default=False,
     help="Flag to enable debug mode to view raw Terraform logging",
 )
-def deploy(file: str, debug: bool = False) -> None:
+def deploy(
+    file: str,
+    # bucket_name: str = DEFAULT_REMOTE_STATE_BUCKET_NAME,
+    debug: bool = False,
+) -> None:
     """Deploys a stack based on a YAML file.
 
     Args:
@@ -69,8 +86,23 @@ def deploy(file: str, debug: bool = False) -> None:
         debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
     with analytics_client.EventHandler(AnalyticsEventsEnum.MLSTACKS_DEPLOY):
+        # Remote state deployment
+        declare(
+            f"Deploying remote state to bucket '{DEFAULT_REMOTE_STATE_BUCKET_NAME}'..."
+        )
+        deployed_bucket_url = deploy_remote_state(
+            stack_path=file,
+            debug_mode=debug,
+        )
+        declare("Remote state successfully deployed!")
+
+        # Stack deployment
         declare(f"Deploying stack from '{file}'...")
-        deploy_stack(stack_path=file, debug_mode=debug)
+        deploy_stack(
+            stack_path=file,
+            debug_mode=debug,
+            remote_state_bucket=deployed_bucket_url,
+        )
         declare("Stack deployed successfully!")
 
 
@@ -142,6 +174,18 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
         ) and Path(tf_files_dir).exists():
             shutil.rmtree(tf_files_dir)
         declare(f"Stack '{stack_name}' has been destroyed.")
+
+        remote_state_dir = _get_remote_state_dir_path(provider)
+        if (
+            yes
+            or confirmation(
+                f"Would you like to destroy the Terraform remote state used "
+                f"for this stack on {provider}?"
+            )
+        ) and Path(remote_state_dir).exists():
+            destroy_remote_state(provider)
+            shutil.rmtree(remote_state_dir)
+        declare(f"Remote state for {provider} has been destroyed.")
 
 
 @click.command()
