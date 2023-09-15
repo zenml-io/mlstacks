@@ -528,8 +528,11 @@ def get_remote_state_bucket_name(tf_definitions_path: str) -> str:
     Args:
         tf_definitions_path: The path to the Terraform definitions.
     """
-    # TODO: use the local json file to get the deployed bucket name
-    return ""
+    with open(
+        os.path.join(tf_definitions_path, REMOTE_STATE_VALUES_FILENAME)
+    ) as f:
+        remote_state_variables = json.load(f)
+    return remote_state_variables.get("bucket_name")
 
 
 def deploy_remote_state(
@@ -555,17 +558,19 @@ def deploy_remote_state(
     # check whether remote state files already exist locally
     # CONFIG/mlstacks/terraform/gcp-remote-state/
     if remote_state_deployed(remote_state_tf_definitions_path):
-        # TODO: use the local json file to get the deployed bucket name
+        # use the local json file to get the deployed bucket name
         return get_remote_state_bucket_name(remote_state_tf_definitions_path)
 
     # copy remote state TF definitions
-    tf_vars = populate_remote_state_tf_definitions(
+    populate_remote_state_tf_definitions(
         provider=stack.provider,
         definitions_destination_path=remote_state_tf_definitions_path,
     )
 
     # write json file with (bucket_name, region, project)
-    write_remote_state_tf_variables(bucket_name=bucket_name, stack=stack)
+    tf_vars = write_remote_state_tf_variables(
+        bucket_name=bucket_name, stack=stack
+    )
 
     tfr = TerraformRunner(remote_state_tf_definitions_path)
     # tf init
