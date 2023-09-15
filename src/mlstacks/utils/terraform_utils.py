@@ -12,7 +12,9 @@
 #  permissions and limitations under the License.
 """Utility functions for Terraform."""
 
+import json
 import logging
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -43,6 +45,7 @@ HIGH_LEVEL_COMPONENTS = [
 CONFIG_DIR = get_app_dir(MLSTACKS_PACKAGE_NAME)
 STATE_FILE_NAME = "terraform.tfstate"
 MLSTACKS_VERSION_FILE_NAME = "MLSTACKS_VERSION.txt"
+REMOTE_STATE_VALUES_FILENAME = "remote_state_values.tfvars.json"
 
 
 def _get_tf_recipe_path(
@@ -444,6 +447,147 @@ def clean_stack_recipes() -> None:
     tf_path = Path(CONFIG_DIR) / "terraform"
     shutil.rmtree(tf_path)
     logger.info("Deleted Terraform directory at %s", tf_path)
+
+
+def remote_state_deployed(tf_definitions_path: str) -> bool:
+    """Returns whether remote state is deployed.
+
+    Args:
+        tf_definitions_path: The path to the Terraform definitions.
+    """
+    return (
+        Path(tf_definitions_path).exists()
+        and Path(
+            os.path.join(tf_definitions_path, "terraform.tfstate")
+        ).exists()
+    )
+
+
+def populate_remote_state_tf_definitions(
+    provider: str, definitions_destination_path: str
+) -> None:
+    """Populates remote state TF definitions.
+
+    Args:
+        provider: The provider
+    """
+    definitions_subdir = Path(f"terraform/{provider}-remote-state")
+    package_path = Path(
+        pkg_resources.resource_filename(
+            MLSTACKS_PACKAGE_NAME,
+            str(definitions_subdir),
+        ),
+    )
+
+    # copy files from package to the directory
+    shutil.copytree(
+        package_path,
+        definitions_destination_path,
+        ignore=include_files,
+        # dirs_exist_ok=force,
+    )
+
+
+def write_remote_state_tf_variables(
+    bucket_name: str, stack: Stack
+) -> Dict[str, str]:
+    """Writes remote state variables to a json file.
+
+    Args:
+        bucket_name: The name of the bucket.
+        stack: The stack
+
+    Returns:
+        The remote state variables as a dictionary
+    """
+    provider = stack.provider
+    remote_state_tf_definitions = os.path.join(
+        CONFIG_DIR, "terraform", f"{provider}-remote-state"
+    )
+    project_id = parse_and_extract_tf_vars(stack).get("project_id")
+    remote_state_variables = {
+        "bucket_name": bucket_name,
+        "region": stack.default_region,
+    }
+    if project_id:
+        remote_state_variables["project_id"] = project_id
+    with open(
+        os.path.join(
+            remote_state_tf_definitions, REMOTE_STATE_VALUES_FILENAME
+        ),
+        "w",
+    ) as f:
+        json.dump(remote_state_variables, f)
+
+    return remote_state_variables
+
+
+def get_remote_state_bucket_name(tf_definitions_path: str) -> str:
+    """Gets the remote state bucket name.
+
+    Args:
+        tf_definitions_path: The path to the Terraform definitions.
+    """
+    # TODO: use the local json file to get the deployed bucket name
+    return ""
+
+
+def deploy_remote_state(
+    stack_path: str,
+    bucket_name: str = "zenml-mlstacks-state",
+    debug_mode: bool = False,
+) -> str:
+    """Deploy remote state.
+
+    Args:
+        stack_path: The path to the stack.
+        bucket_name: The name of the bucket.
+        debug_mode: Whether to run in debug mode.
+
+    Returns:
+        The bucket name used for remote state
+    """
+    stack: Stack = load_stack_yaml(stack_path)
+    remote_state_tf_definitions_path = os.path.join(
+        CONFIG_DIR, "terraform", f"{stack.provider}-remote-state"
+    )
+
+    # check whether remote state files already exist locally
+    # CONFIG/mlstacks/terraform/gcp-remote-state/
+    if remote_state_deployed(remote_state_tf_definitions_path):
+        # TODO: use the local json file to get the deployed bucket name
+        return get_remote_state_bucket_name(remote_state_tf_definitions_path)
+
+    # copy remote state TF definitions
+    tf_vars = populate_remote_state_tf_definitions(
+        provider=stack.provider,
+        definitions_destination_path=remote_state_tf_definitions_path,
+    )
+
+    # write json file with (bucket_name, region, project)
+    write_remote_state_tf_variables(bucket_name=bucket_name, stack=stack)
+
+    tfr = TerraformRunner(remote_state_tf_definitions_path)
+    # tf init
+    if not tf_previously_initialized(remote_state_tf_definitions_path):
+        tf_client_init(tfr.client, provider=stack.provider, debug=debug_mode)
+
+        # write a file with name `IGNORE_ME` to the Terraform recipe directory
+        # to prevent Terraform from re-initializing the recipe
+        (
+            Path(remote_state_tf_definitions_path)
+            / MLSTACKS_INITIALIZATION_FILE_FLAG
+        ).touch()
+
+    # tf apply
+    tf_client_apply(
+        client=tfr.client,
+        tf_vars=tf_vars,
+        debug=debug_mode,
+    )
+
+    # return the remote state URL
+    return get_remote_state_bucket_name(remote_state_tf_definitions_path)
 
 
 def deploy_stack(stack_path: str, debug_mode: bool = False) -> None:
