@@ -11,6 +11,19 @@ resource "aws_s3_bucket" "terraform_state" {
   }
 }
 
+resource "aws_s3_bucket_ownership_controls" "tf_state_ownership" {
+  bucket = aws_s3_bucket.terraform_state.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_request_payment_configuration" "tf_state_payment" {
+  bucket = aws_s3_bucket.terraform_state.id
+  payer  = "Requester"
+}
+
 resource "aws_s3_bucket_versioning" "enabled" {
   bucket = aws_s3_bucket.terraform_state.id
   versioning_configuration {
