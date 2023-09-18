@@ -450,11 +450,18 @@ def tf_client_init(
 
     logger.debug("Initializing Terraform in %s...", base_workspace)
     if remote_state_bucket:
+        if not remote_state_bucket_exists(remote_state_bucket):
+            raise ValueError(
+                "Tried to initialize Terraform with remote state bucket "
+                f"'{remote_state_bucket}' but it does not exist."
+            )
+        logger.debug("Initializing Terraform with remote state...")
         ret_code, _stdout, _stderr = client.init(
             raise_on_error=False,
             capture_output=not debug,
         )
     else:
+        logger.debug("Initializing Terraform with local state...")
         ret_code, _stdout, _stderr = client.init(
             backend_config=state_path,
             raise_on_error=False,
