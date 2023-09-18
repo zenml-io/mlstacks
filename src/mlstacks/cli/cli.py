@@ -11,7 +11,9 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 """CLI for mlstacks."""
+import random
 import shutil
+import string
 from pathlib import Path
 from typing import Optional
 
@@ -19,7 +21,6 @@ import click
 
 from mlstacks.analytics import client as analytics_client
 from mlstacks.constants import (
-    DEFAULT_REMOTE_STATE_BUCKET_NAME,
     MLSTACKS_PACKAGE_NAME,
 )
 from mlstacks.enums import AnalyticsEventsEnum
@@ -87,13 +88,23 @@ def deploy(
     """
     with analytics_client.EventHandler(AnalyticsEventsEnum.MLSTACKS_DEPLOY):
         if not bucket_name:
+            # generate random bucket name
+            letters = string.ascii_lowercase + string.digits
+            random_bucket_suffix = "".join(
+                random.choice(letters) for _ in range(6)
+            )
+            random_bucket_name = (
+                f"DEFAULT_REMOTE_STATE_BUCKET_NAME-{random_bucket_suffix}"
+            )
+
             # Remote state deployment
             declare(
                 "Deploying remote state to bucket "
-                f"'{DEFAULT_REMOTE_STATE_BUCKET_NAME}'..."
+                f"'{random_bucket_name}'..."
             )
             deployed_bucket_url = deploy_remote_state(
                 stack_path=file,
+                bucket_name=random_bucket_name,
                 debug_mode=debug,
             )
             declare("Remote state successfully deployed!")
