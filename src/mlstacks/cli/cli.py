@@ -88,7 +88,8 @@ def deploy(
     with analytics_client.EventHandler(AnalyticsEventsEnum.MLSTACKS_DEPLOY):
         # Remote state deployment
         declare(
-            f"Deploying remote state to bucket '{DEFAULT_REMOTE_STATE_BUCKET_NAME}'..."
+            "Deploying remote state to bucket "
+            f"'{DEFAULT_REMOTE_STATE_BUCKET_NAME}'..."
         )
         deployed_bucket_url = deploy_remote_state(
             stack_path=file,
