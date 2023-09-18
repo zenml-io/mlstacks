@@ -101,6 +101,7 @@ dev = [
     "darglint",
     "hypothesis",
     "types-PyYAML",
+    "types-requests",
     "pytest-clarity",
     "pytest-randomly",
     "pytest-cov",

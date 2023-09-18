@@ -76,7 +76,7 @@ def cli() -> None:
 )
 def deploy(
     file: str,
-    bucket_name: str = None,
+    bucket_name: Optional[str] = None,
     debug: bool = False,
 ) -> None:
     """Deploys a stack based on a YAML file.
@@ -91,7 +91,7 @@ def deploy(
             # generate random bucket name
             letters = string.ascii_lowercase + string.digits
             random_bucket_suffix = "".join(
-                random.choice(letters) for _ in range(6)
+                random.choice(letters) for _ in range(6)  # noqa: S311
             )
             random_bucket_name = (
                 f"DEFAULT_REMOTE_STATE_BUCKET_NAME-{random_bucket_suffix}"
@@ -100,7 +100,7 @@ def deploy(
             # Remote state deployment
             declare(
                 "Deploying remote state to bucket "
-                f"'{random_bucket_name}'..."
+                f"'{random_bucket_name}'...",
             )
             deployed_bucket_url = deploy_remote_state(
                 stack_path=file,
@@ -196,7 +196,7 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
             yes
             or confirmation(
                 f"Would you like to destroy the Terraform remote state used "
-                f"for this stack on {provider}?"
+                f"for this stack on {provider}?",
             )
         ) and Path(remote_state_dir).exists():
             destroy_remote_state(provider)

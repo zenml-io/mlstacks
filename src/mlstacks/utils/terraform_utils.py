@@ -18,7 +18,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, cast
 
 import pkg_resources
 import python_terraform
@@ -67,7 +67,8 @@ def _get_tf_recipe_path(
 
 
 def _get_remote_state_dir_path(
-    provider: str, base_config_dir: str = CONFIG_DIR
+    provider: str,
+    base_config_dir: str = CONFIG_DIR,
 ) -> str:
     """Get remote state dir path.
 
@@ -79,7 +80,7 @@ def _get_remote_state_dir_path(
         The remote files path.
     """
     return str(
-        Path(base_config_dir) / "terraform" / f"{provider}-remote-state"
+        Path(base_config_dir) / "terraform" / f"{provider}-remote-state",
     )
 
 
@@ -268,7 +269,7 @@ def populate_tf_definitions(
     definitions_subdir = Path(f"terraform/{provider}-modular")
     modules_subdir = Path("terraform/modules")
     remote_state_tf_config_subdir = Path(
-        "terraform/remote-state-terraform-config"
+        "terraform/remote-state-terraform-config",
     )
     destination_path = Path(_get_tf_recipe_path(provider))
     modules_destination = Path(CONFIG_DIR) / modules_subdir
@@ -310,13 +311,10 @@ def populate_tf_definitions(
         bucket_name_without_prefix = remote_state_bucket.split("://", 1)[-1]
         # get the text of the terraform config file from
         # remote_state_terraform_config_subdir
-        with open(
+        tf_config = Path(
             remote_state_terraform_config_subdir
             / f"terraform-{provider.value}.tf",
-            "r",
-        ) as f:
-            tf_config = f.read()
-
+        ).read_text()
         # replace the string "BUCKETNAMEREPLACEME" in the file with
         # remote_state_bucket but removing the url prefix
         tf_config = tf_config.replace(
@@ -418,14 +416,16 @@ def remote_state_bucket_exists(remote_state_bucket_url: str) -> bool:
             f"https://storage.googleapis.com/{remote_state_bucket_url[5:]}"
         )
     else:
-        raise ValueError("Unsupported URL scheme / type")
+        remote_state_failure_error = "Unsupported URL scheme / type"
+        raise ValueError(remote_state_failure_error)
 
     # check if the bucket exists
     try:
-        response = requests.head(http_url)
-        return response.status_code in {200, 403}
+        response = requests.head(http_url, timeout=60)
     except Exception:
         return False
+    else:
+        return response.status_code in {200, 403}
 
 
 def tf_client_init(
@@ -451,10 +451,11 @@ def tf_client_init(
     logger.debug("Initializing Terraform in %s...", base_workspace)
     if remote_state_bucket:
         if not remote_state_bucket_exists(remote_state_bucket):
-            raise ValueError(
+            bucket_exists_error_msg = (
                 "Tried to initialize Terraform with remote state bucket "
-                f"'{remote_state_bucket}' but it does not exist."
+                f"'{remote_state_bucket}' but it does not exist.",
             )
+            raise ValueError(bucket_exists_error_msg)
         logger.debug("Initializing Terraform with remote state...")
         ret_code, _stdout, _stderr = client.init(
             raise_on_error=False,
@@ -560,18 +561,20 @@ def remote_state_deployed(tf_definitions_path: str) -> bool:
     return (
         Path(tf_definitions_path).exists()
         and Path(
-            os.path.join(tf_definitions_path, "terraform.tfstate")
+            os.path.join(tf_definitions_path, "terraform.tfstate"),
         ).exists()
     )
 
 
 def populate_remote_state_tf_definitions(
-    provider: str, definitions_destination_path: str
+    provider: str,
+    definitions_destination_path: str,
 ) -> None:
     """Populates remote state TF definitions.
 
     Args:
         provider: The provider
+        definitions_destination_path: The destination path
     """
     definitions_subdir = Path(f"terraform/{provider}-remote-state")
     package_path = Path(
@@ -591,7 +594,8 @@ def populate_remote_state_tf_definitions(
 
 
 def write_remote_state_tf_variables(
-    bucket_name: str, stack: Stack
+    bucket_name: str,
+    stack: Stack,
 ) -> Dict[str, str]:
     """Writes remote state variables to a json file.
 
@@ -604,18 +608,21 @@ def write_remote_state_tf_variables(
     """
     provider = stack.provider
     remote_state_tf_definitions = os.path.join(
-        CONFIG_DIR, "terraform", f"{provider}-remote-state"
+        CONFIG_DIR,
+        "terraform",
+        f"{provider}-remote-state",
     )
     project_id = parse_and_extract_tf_vars(stack).get("project_id")
     remote_state_variables = {
-        "bucket_name": bucket_name,
-        "region": stack.default_region,
+        "bucket_name": str(bucket_name),
+        "region": str(stack.default_region),
     }
     if project_id:
-        remote_state_variables["project_id"] = project_id
+        remote_state_variables["project_id"] = str(project_id)
     with open(
         os.path.join(
-            remote_state_tf_definitions, REMOTE_STATE_VALUES_FILENAME
+            remote_state_tf_definitions,
+            REMOTE_STATE_VALUES_FILENAME,
         ),
         "w",
     ) as f:
@@ -631,10 +638,10 @@ def get_remote_state_bucket_name(tf_definitions_path: str) -> str:
         tf_definitions_path: The path to the Terraform definitions.
     """
     with open(
-        os.path.join(tf_definitions_path, REMOTE_STATE_VALUES_FILENAME)
+        os.path.join(tf_definitions_path, REMOTE_STATE_VALUES_FILENAME),
     ) as f:
         remote_state_variables = json.load(f)
-    return remote_state_variables.get("bucket_name")
+    return cast(str, remote_state_variables.get("bucket_name"))
 
 
 def deploy_remote_state(
@@ -654,7 +661,9 @@ def deploy_remote_state(
     """
     stack: Stack = load_stack_yaml(stack_path)
     remote_state_tf_definitions_path = os.path.join(
-        CONFIG_DIR, "terraform", f"{stack.provider}-remote-state"
+        CONFIG_DIR,
+        "terraform",
+        f"{stack.provider}-remote-state",
     )
 
     # check whether remote state files already exist locally
@@ -671,7 +680,8 @@ def deploy_remote_state(
 
     # write json file with (bucket_name, region, project)
     tf_vars = write_remote_state_tf_variables(
-        bucket_name=bucket_name, stack=stack
+        bucket_name=bucket_name,
+        stack=stack,
     )
 
     tfr = TerraformRunner(remote_state_tf_definitions_path)
@@ -693,13 +703,17 @@ def deploy_remote_state(
         debug=debug_mode,
     )
 
-    return tf_client_output(
-        runner=tfr,
-        state_path=os.path.join(
-            remote_state_tf_definitions_path, "terraform.tfstate"
-        ),
-        output_key="bucket_url",
-    ).get("bucket_url")
+    return (
+        tf_client_output(
+            runner=tfr,
+            state_path=os.path.join(
+                remote_state_tf_definitions_path,
+                "terraform.tfstate",
+            ),
+            output_key="bucket_url",
+        ).get("bucket_url")
+        or ""
+    )
 
 
 def deploy_stack(
@@ -718,7 +732,9 @@ def deploy_stack(
     tf_recipe_path = _get_tf_recipe_path(stack.provider)
     if not tf_definitions_present(stack.provider):
         populate_tf_definitions(
-            stack.provider, force=True, remote_state_bucket=remote_state_bucket
+            stack.provider,
+            force=True,
+            remote_state_bucket=remote_state_bucket,
         )
     tf_vars = parse_and_extract_tf_vars(stack)
     check_tf_definitions_version(stack.provider)
@@ -776,7 +792,7 @@ def set_force_destroy(tf_definitions_path: str) -> None:
         tf_definitions_path: The path to the Terraform definitions
     """
     main_definition = Path(
-        os.path.join(tf_definitions_path, "main.tf")
+        os.path.join(tf_definitions_path, "main.tf"),
     ).read_text()
     main_definition = main_definition.replace(
         "# force_destroy = true",
@@ -802,8 +818,9 @@ def destroy_remote_state(provider: str, debug_mode: bool = False) -> None:
     # load tf_vars from the REMOTE_STATE_VALUES_FILENAME custom json file
     with open(
         os.path.join(
-            remote_state_tf_definitions_path, REMOTE_STATE_VALUES_FILENAME
-        )
+            remote_state_tf_definitions_path,
+            REMOTE_STATE_VALUES_FILENAME,
+        ),
     ) as f:
         tf_vars = json.load(f)
 
