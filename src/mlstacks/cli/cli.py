@@ -21,6 +21,7 @@ import click
 
 from mlstacks.analytics import client as analytics_client
 from mlstacks.constants import (
+    DEFAULT_REMOTE_STATE_BUCKET_NAME,
     MLSTACKS_PACKAGE_NAME,
 )
 from mlstacks.enums import AnalyticsEventsEnum
@@ -94,7 +95,7 @@ def deploy(
                 random.choice(letters) for _ in range(6)  # noqa: S311
             )
             random_bucket_name = (
-                f"DEFAULT_REMOTE_STATE_BUCKET_NAME-{random_bucket_suffix}"
+                f"{DEFAULT_REMOTE_STATE_BUCKET_NAME}-{random_bucket_suffix}"
             )
 
             # Remote state deployment
