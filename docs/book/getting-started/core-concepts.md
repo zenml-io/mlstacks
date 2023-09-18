@@ -43,10 +43,13 @@ combinations) must be defined within the context of a stack.)
 
 Once you write your stack specification, you can then use MLStacks' CLI to
 deploy your stack to your preferred cloud (or local K3d) provider. Terraform
-definitions and state are stored in your global configuration directory along
-with any state files generated while deploying your stack.
+definitions are stored in your global configuration directory. MLStacks allows
+you to deploy or connect to a remote state store (e.g. S3, GCS, etc.) so that
+you can collaborate on your stacks and deployed infrastructure with your
+colleagues.
 
-Your configuration directory could be in a number of different places depending
+Your global configuration directory could be in a number of different places depending
 on your operating system, but read more about it in the
 [Click docs](https://click.palletsprojects.com/en/8.1.x/api/#click.get_app_dir)
-to see which location applies to your situation.
+to see which location applies to your situation. This is where the stack specs
+and the Terraform definition files are located.
