@@ -68,11 +68,11 @@ Now, we can deploy our stack using the `mlstacks` CLI:
 mlstacks deploy -f quickstart_stack.yaml
 ```
 
-This will deploy our stack to GCP. It will also deploy/provision an GCS bucket (called
-`zenml-mlstacks-remote-state` by default) which will be used as a remote state
-store and backend for your Terraform assets. This will happen first before the
-deployment of your stack. You can now check your GCP console to see
-that the stack (and remote state bucket) has been deployed.
+This will deploy our stack to GCP. It will also deploy/provision an GCS bucket
+(beginning with `zenml-mlstacks-remote-state` by default) which will be used as
+a remote state store and backend for your Terraform assets. This will happen
+first before the deployment of your stack. You can now check your GCP console to
+see that the stack (and remote state bucket) has been deployed.
 
 ## Get stack outputs
 
@@ -87,7 +87,8 @@ pipelines.
 
 ## Destroying our stack
 
-Finally, we can destroy our stack (and the remote state GCS bucket) using the `mlstacks` CLI:
+Finally, we can destroy our stack (and the remote state GCS bucket) using the
+`mlstacks` CLI:
 
 ```bash
 mlstacks destroy -f quickstart_stack.yaml
