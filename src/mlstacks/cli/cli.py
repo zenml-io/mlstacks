@@ -58,15 +58,14 @@ def cli() -> None:
     type=click.Path(exists=True),
     help="Path to the YAML file for deploy",
 )
-# @click.option(
-#     "-b",
-#     "--bucket_name",
-#     "bucket_name",
-#     type=click.STRING,
-#     default=DEFAULT_REMOTE_STATE_BUCKET_NAME,
-#     required=False,
-#     help="URL of a pre-existing remote state bucket",
-# )
+@click.option(
+    "-b",
+    "--bucket_name",
+    "bucket_name",
+    type=click.STRING,
+    required=False,
+    help="Full URL of a pre-existing remote state bucket",
+)
 @click.option(
     "-d",
     "--debug",
@@ -76,26 +75,31 @@ def cli() -> None:
 )
 def deploy(
     file: str,
-    # bucket_name: str = DEFAULT_REMOTE_STATE_BUCKET_NAME,
+    bucket_name: str = None,
     debug: bool = False,
 ) -> None:
     """Deploys a stack based on a YAML file.
 
     Args:
         file (str): Path to the YAML file for deploy
+        bucket_name (str): URL of a pre-existing remote state bucket
         debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
     with analytics_client.EventHandler(AnalyticsEventsEnum.MLSTACKS_DEPLOY):
-        # Remote state deployment
-        declare(
-            "Deploying remote state to bucket "
-            f"'{DEFAULT_REMOTE_STATE_BUCKET_NAME}'..."
-        )
-        deployed_bucket_url = deploy_remote_state(
-            stack_path=file,
-            debug_mode=debug,
-        )
-        declare("Remote state successfully deployed!")
+        if not bucket_name:
+            # Remote state deployment
+            declare(
+                "Deploying remote state to bucket "
+                f"'{DEFAULT_REMOTE_STATE_BUCKET_NAME}'..."
+            )
+            deployed_bucket_url = deploy_remote_state(
+                stack_path=file,
+                debug_mode=debug,
+            )
+            declare("Remote state successfully deployed!")
+        else:
+            deployed_bucket_url = bucket_name
+            declare(f"Using '{deployed_bucket_url}' for remote state...")
 
         # Stack deployment
         declare(f"Deploying stack from '{file}'...")
