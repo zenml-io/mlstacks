@@ -22,6 +22,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import pkg_resources
 import python_terraform
+import requests
 from click import get_app_dir
 
 from mlstacks.constants import (
@@ -392,6 +393,39 @@ def tf_previously_initialized(tf_recipe_path: str) -> bool:
         True if Terraform has been previously initialized, False otherwise.
     """
     return (Path(tf_recipe_path) / MLSTACKS_INITIALIZATION_FILE_FLAG).exists()
+
+
+def remote_state_bucket_exists(remote_state_bucket_url: str) -> bool:
+    """Checks if a remote state bucket exists.
+
+    Args:
+        remote_state_bucket_url: The remote state bucket URL.
+
+    Returns:
+        True if the remote state bucket exists, False otherwise.
+
+    Raises:
+        ValueError: If the remote state bucket URL is invalid.
+    """
+    # Remove trailing slash if present
+    remote_state_bucket_url = remote_state_bucket_url.rstrip("/")
+
+    # Convert to HTTP URL format
+    if remote_state_bucket_url.startswith("s3://"):
+        http_url = f"https://{remote_state_bucket_url[5:]}.s3.amazonaws.com"
+    elif remote_state_bucket_url.startswith("gs://"):
+        http_url = (
+            f"https://storage.googleapis.com/{remote_state_bucket_url[5:]}"
+        )
+    else:
+        raise ValueError("Unsupported URL scheme / type")
+
+    # check if the bucket exists
+    try:
+        response = requests.head(http_url)
+        return response.status_code in {200, 403}
+    except Exception:
+        return False
 
 
 def tf_client_init(
