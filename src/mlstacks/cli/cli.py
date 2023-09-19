@@ -40,6 +40,7 @@ from mlstacks.utils.terraform_utils import (
     deploy_stack,
     destroy_remote_state,
     destroy_stack,
+    get_remote_state_bucket,
     get_stack_outputs,
     infracost_breakdown_stack,
 )
@@ -256,12 +257,20 @@ def output(file: str, key: Optional[str] = "") -> None:
         try:
             outputs = get_stack_outputs(file, output_key=key)
         except RuntimeError:
-            click.echo(
+            declare(
                 "Terraform has not been initialized so there are no outputs "
                 "to show. Please run `mlstacks deploy ...` first.",
             )
         if outputs:
             pretty_print_output_vals(outputs)
+
+        try:
+            remote_state_bucket = get_remote_state_bucket(stack_path=file)
+        except FileNotFoundError:
+            return
+
+        if remote_state_bucket:
+            declare(f"Remote state bucket: {remote_state_bucket}")
 
 
 @click.command()

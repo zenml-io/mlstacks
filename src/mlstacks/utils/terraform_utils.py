@@ -48,6 +48,7 @@ CONFIG_DIR = get_app_dir(MLSTACKS_PACKAGE_NAME)
 STATE_FILE_NAME = "terraform.tfstate"
 MLSTACKS_VERSION_FILE_NAME = "MLSTACKS_VERSION"
 REMOTE_STATE_VALUES_FILENAME = "remote_state_values.tfvars.json"
+REMOTE_STATE_BUCKET_URL_FILE_NAME = "REMOTE_STATE_BUCKET_URL"
 
 
 def _get_tf_recipe_path(
@@ -329,7 +330,10 @@ def populate_tf_definitions(
 
         # write remote_state_bucket url to destination_path
         # in file named REMOTE_STATE_BUCKET_URL
-        with open(destination_path / "REMOTE_STATE_BUCKET_URL", "w") as f:
+        with open(
+            destination_path / REMOTE_STATE_BUCKET_URL_FILE_NAME,
+            "w",
+        ) as f:
             f.write(remote_state_bucket)
 
     logger.info("Populated Terraform definitions in %s", destination_path)
@@ -840,6 +844,35 @@ def destroy_remote_state(provider: str, debug_mode: bool = False) -> None:
 
     # destroy the infrastructure
     tf_client_destroy(tfr.client, tf_vars=tf_vars, debug=debug_mode)
+
+
+def get_remote_state_bucket(stack_path: str) -> str:
+    """Get remote state bucket.
+
+    Args:
+        stack_path: The path to the stack spec definition.
+
+    Returns:
+        The remote state bucket.
+
+    Raises:
+        FileNotFoundError: when file does not exist
+    """
+    stack = load_stack_yaml(stack_path)
+    tf_recipe_path = _get_tf_recipe_path(stack.provider)
+    bucket_url_file = os.path.join(
+        tf_recipe_path,
+        REMOTE_STATE_BUCKET_URL_FILE_NAME,
+    )
+    if not os.path.exists(bucket_url_file):
+        bucket_not_found_error_message = (
+            f"File {bucket_url_file} does not exist. "
+            "Please deploy the remote state first.",
+        )
+        raise FileNotFoundError(bucket_not_found_error_message)
+    # open REMOTE_STATE_BUCKET_URL_FILE_NAME within tf_recipe_path
+    with open(os.path.join(bucket_url_file)) as f:
+        return f.read()
 
 
 def tf_client_output(
