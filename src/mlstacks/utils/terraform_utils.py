@@ -46,7 +46,7 @@ HIGH_LEVEL_COMPONENTS = [
 
 CONFIG_DIR = get_app_dir(MLSTACKS_PACKAGE_NAME)
 STATE_FILE_NAME = "terraform.tfstate"
-MLSTACKS_VERSION_FILE_NAME = "MLSTACKS_VERSION.txt"
+MLSTACKS_VERSION_FILE_NAME = "MLSTACKS_VERSION"
 REMOTE_STATE_VALUES_FILENAME = "remote_state_values.tfvars.json"
 
 
@@ -326,6 +326,11 @@ def populate_tf_definitions(
         # and overwriting any pre-existing file
         with open(destination_path / "terraform.tf", "w") as f:
             f.write(tf_config)
+
+        # write remote_state_bucket url to destination_path
+        # in file named REMOTE_STATE_BUCKET_URL
+        with open(destination_path / "REMOTE_STATE_BUCKET_URL", "w") as f:
+            f.write(remote_state_bucket)
 
     logger.info("Populated Terraform definitions in %s", destination_path)
     # write package version into the directory
