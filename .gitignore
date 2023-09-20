@@ -149,3 +149,6 @@ IGNORE_ME
 .terraform
 terraform.tfstate
 terraform.tfstate.backup
+
+# used for testing
+src/mlstacks/terraform/aws-remote-state/values.tfvars.json
