@@ -142,7 +142,7 @@ output "model_deployer_configuration" {
 }
 
 # project id
-output "project-id" {
+output "project_id" {
   value = var.project_id
 }
 
