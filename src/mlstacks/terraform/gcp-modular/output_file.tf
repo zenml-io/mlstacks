@@ -47,6 +47,12 @@ resource "local_file" "stack_file" {
         name: gke_kubernetes_orchestrator
         configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "synchronous": True}
 %{else}
+%{if var.enable_orchestrator_skypilot}
+        id: ${uuid()}
+        flavor: vm-gcp
+        name: gcp_skypilot_orchestrator
+        configuration: {"project_id": "${var.project_id}"}
+%{else}
 %{if var.enable_orchestrator_vertex}
         id: ${uuid()}
         flavor: vertex

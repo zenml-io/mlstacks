@@ -41,6 +41,12 @@ resource "local_file" "stack_file" {
         name: eks_tekton_orchestrator
         configuration: {"kubernetes_context": "${aws_eks_cluster.cluster[0].arn}"}
 %{else}
+%{if var.enable_orchestrator_skypilot}
+        id: ${uuid()}
+        flavor: vm-aws
+        name: aws_skypilot_orchestrator
+        configuration: {}
+%{else}
 %{if var.enable_orchestrator_kubernetes}
         id: ${uuid()}
         flavor: kubernetes
