@@ -7,6 +7,10 @@ variable "enable_orchestrator_kubernetes" {
   description = "Enable Kubernetes deployment"
   default     = false
 }
+variable "enable_orchestrator_skypilot" {
+  description = "Enable SkyPilot orchestrator deployment"
+  default     = false
+}
 variable "enable_orchestrator_kubeflow" {
   description = "Enable Kubeflow deployment"
   default     = false
