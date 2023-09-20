@@ -9,14 +9,14 @@ as can a list of components that are coming soon.
 
 ## Supported components and flavors
 
-| Component          | Flavor(s)                               |
-| ------------------ | --------------------------------------- |
-| Artifact Store     | minio                                   |
-| Container Registry | default                                 |
-| Experiment Tracker | mlflow                                  |
-| Orchestrator       | kubernetes, kubeflow, tekton, sagemaker |
-| MLOps Platform     | zenml                                   |
-| Model Deployer     | seldon, kserve                          |
+| Component          | Flavor(s)                                         |
+| ------------------ | ------------------------------------------------- |
+| Artifact Store     | minio                                             |
+| Container Registry | default                                           |
+| Experiment Tracker | mlflow                                            |
+| Orchestrator       | kubeflow, kubernetes, sagemaker, skypilot, tekton |
+| MLOps Platform     | zenml                                             |
+| Model Deployer     | seldon, kserve                                    |
 
 ## Coming Soon!
 
