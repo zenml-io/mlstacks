@@ -315,15 +315,13 @@ def populate_tf_definitions(
         # get the text of the terraform config file from
         # remote_state_terraform_config_subdir
         tf_config = Path(
-            remote_state_terraform_config_subdir
-            / f"terraform-{provider.value}.tf",
+            remote_state_terraform_config_subdir / "terraform.tf",
         ).read_text()
-        # replace the string "BUCKETNAMEREPLACEME" in the file with
-        # remote_state_bucket but removing the url prefix
+        # replace backend config as per provider
         tf_config = tf_config.replace(
             "BUCKETNAMEREPLACEME",
             bucket_name_without_prefix,
-        )
+        ).replace("BACKENDREPLACEME", "s3" if provider == "aws" else "gcs")
 
         # write the string to destination_path using filename `terraform.tf`
         # and overwriting any pre-existing file

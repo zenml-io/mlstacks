@@ -85,7 +85,8 @@ def deploy(
 
     Args:
         file (str): Path to the YAML file for deploy
-        remote_state_bucket_name (str): URL of a pre-existing remote state bucket
+        remote_state_bucket_name (str): URL of a pre-existing remote
+            state bucket
         debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
     with analytics_client.EventHandler(AnalyticsEventsEnum.MLSTACKS_DEPLOY):

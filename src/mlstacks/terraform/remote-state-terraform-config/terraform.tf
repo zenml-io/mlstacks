@@ -31,7 +31,7 @@ terraform {
     }
   }
 
-  backend "gcs" {
+  backend "BACKENDREPLACEME" {
     bucket = "BUCKETNAMEREPLACEME"
     prefix = "terraform/state"
   }
