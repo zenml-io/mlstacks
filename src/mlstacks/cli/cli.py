@@ -267,12 +267,9 @@ def output(file: str, key: Optional[str] = "") -> None:
 
         try:
             remote_state_bucket = get_remote_state_bucket(stack_path=file)
+            declare(f"Remote state bucket: {remote_state_bucket}")
         except FileNotFoundError:
             return
-
-        if remote_state_bucket:
-            declare(f"Remote state bucket: {remote_state_bucket}")
-
 
 @click.command()
 @click.option(
