@@ -68,7 +68,7 @@ Now, we can deploy our stack using the `mlstacks` CLI:
 mlstacks deploy -f quickstart_stack.yaml
 ```
 
-This will deploy our stack to GCP. It will also deploy/provision an GCS bucket
+This will deploy our stack to GCP. It will also deploy/provision a GCS bucket
 (beginning with `zenml-mlstacks-remote-state` by default) which will be used as
 a remote state store and backend for your Terraform assets. This will happen
 first before the deployment of your stack. You can now check your GCP console to
