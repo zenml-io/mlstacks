@@ -38,8 +38,8 @@ have already created, you can do so by passing the bucket name to the
 `mlstacks deploy` command:
 
 ```bash
-mlstacks deploy -f stack.yaml -b <BUCKET_NAME_GOES_HERE>
-# e.g. mlstacks deploy -f stack.yaml -b s3://zenml-mlstacks-remote-state-3d3r6
+mlstacks deploy -f stack.yaml -rb <BUCKET_NAME_GOES_HERE>
+# e.g. mlstacks deploy -f stack.yaml -rb s3://zenml-mlstacks-remote-state-3d3r6
 ```
 
 This will then connect to the remote state bucket and use that as the backend

@@ -62,9 +62,9 @@ def cli() -> None:
     help="Path to the YAML file for deploy",
 )
 @click.option(
-    "-b",
-    "--bucket_name",
-    "bucket_name",
+    "--remote_state_bucket_name",
+    "-rb",
+    "remote_state_bucket_name",
     type=click.STRING,
     required=False,
     help="Full URL of a pre-existing remote state bucket",
@@ -78,18 +78,18 @@ def cli() -> None:
 )
 def deploy(
     file: str,
-    bucket_name: Optional[str] = None,
+    remote_state_bucket_name: Optional[str] = None,
     debug: bool = False,
 ) -> None:
     """Deploys a stack based on a YAML file.
 
     Args:
         file (str): Path to the YAML file for deploy
-        bucket_name (str): URL of a pre-existing remote state bucket
+        remote_state_bucket_name (str): URL of a pre-existing remote state bucket
         debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
     with analytics_client.EventHandler(AnalyticsEventsEnum.MLSTACKS_DEPLOY):
-        if not bucket_name:
+        if not remote_state_bucket_name:
             # generate random bucket name
             letters = string.ascii_lowercase + string.digits
             random_bucket_suffix = "".join(
@@ -111,7 +111,7 @@ def deploy(
             )
             declare("Remote state successfully deployed!")
         else:
-            deployed_bucket_url = bucket_name
+            deployed_bucket_url = remote_state_bucket_name
             declare(f"Using '{deployed_bucket_url}' for remote state...")
 
         # Stack deployment
