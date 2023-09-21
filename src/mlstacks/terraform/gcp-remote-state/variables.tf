@@ -8,5 +8,5 @@ variable "project_id" {
 }
 
 variable "bucket_name" {
-  description = "The name of the GCS bucket"
+  description = "The name of the GCS bucket to deploy"
 }
