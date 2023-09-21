@@ -269,9 +269,7 @@ def populate_tf_definitions(
     """
     definitions_subdir = Path(f"terraform/{provider}-modular")
     modules_subdir = Path("terraform/modules")
-    remote_state_tf_config_subdir = Path(
-        "terraform/remote-state-terraform-config",
-    )
+
     destination_path = Path(_get_tf_recipe_path(provider))
     modules_destination = Path(CONFIG_DIR) / modules_subdir
     package_path = Path(
@@ -284,12 +282,6 @@ def populate_tf_definitions(
         pkg_resources.resource_filename(
             MLSTACKS_PACKAGE_NAME,
             str(modules_subdir),
-        ),
-    )
-    remote_state_terraform_config_subdir = Path(
-        pkg_resources.resource_filename(
-            MLSTACKS_PACKAGE_NAME,
-            str(remote_state_tf_config_subdir),
         ),
     )
 
@@ -309,6 +301,16 @@ def populate_tf_definitions(
 
     # rename and overwrite terraform config definitions
     if remote_state_bucket:
+        remote_state_tf_config_subdir = os.path.join(
+            "terraform",
+            "remote-state-terraform-config",
+        )
+        remote_state_terraform_config_subdir = Path(
+            pkg_resources.resource_filename(
+                MLSTACKS_PACKAGE_NAME,
+                str(remote_state_tf_config_subdir),
+            ),
+        )
         bucket_name_without_prefix = remote_state_bucket.split("://", 1)[-1]
         # get the text of the terraform config file from
         # remote_state_terraform_config_subdir
@@ -996,7 +998,6 @@ def infracost_breakdown_stack(
     if not tf_previously_initialized(tf_recipe_path):
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
-        # TODO: update for remote state
         tf_client_init(tfr.client, provider=stack.provider, debug=debug_mode)
         (Path(tf_recipe_path) / MLSTACKS_INITIALIZATION_FILE_FLAG).touch()
 
