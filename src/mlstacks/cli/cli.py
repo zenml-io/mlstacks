@@ -271,6 +271,7 @@ def output(file: str, key: Optional[str] = "") -> None:
         except FileNotFoundError:
             return
 
+
 @click.command()
 @click.option(
     "--yes",
