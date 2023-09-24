@@ -37,17 +37,19 @@ class ComponentTypeEnum(str, Enum):
 class ComponentFlavorEnum(str, Enum):
     """Component flavor enum."""
 
-    ZENML = "zenml"
+    AWS = "aws"
+    GCP = "gcp"
+    MINIO = "minio"
     MLFLOW = "mlflow"
     KUBEFLOW = "kubeflow"
-    KSERVE = "kserve"
     KUBERNETES = "kubernetes"
+    KSERVE = "kserve"
     S3 = "s3"
     SAGEMAKER = "sagemaker"
     SELDON = "seldon"
     TEKTON = "tekton"
-    MINIO = "minio"
-    GCP = "gcp"
+    VERTEX = "vertex"
+    ZENML = "zenml"
 
 
 class DeploymentMethodEnum(str, Enum):

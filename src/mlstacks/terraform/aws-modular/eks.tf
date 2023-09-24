@@ -85,7 +85,7 @@ resource "aws_eks_node_group" "nodegroup" {
 }
 
 resource "aws_iam_role" "ng" {
-  count = local.enable_eks || var.enable_artifact_store ? 1 : 0
+  count = local.enable_eks ? 1 : 0
 
   name_prefix = "${local.prefix}-${local.eks.cluster_name}-ng"
   assume_role_policy = jsonencode({
