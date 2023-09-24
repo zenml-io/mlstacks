@@ -1,6 +1,14 @@
 resource "azurerm_resource_group" "example" {
   name     = "zenml-github-test"
   location = "West Europe"
+
+  tags = {
+    z-env = "dev"
+    z-owner = "safoine-ext"
+    z-project = "testing"
+    z-team = "oss"
+    z-description = "resources for integration testing"
+  }
 }
 
 resource "azurerm_virtual_network" "example" {

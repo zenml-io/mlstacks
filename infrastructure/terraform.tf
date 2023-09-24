@@ -19,13 +19,4 @@ terraform {
 
 provider "azurerm" {
   features {}
-  default_tags {
-    tags = {
-      z-env = "dev"
-      z-owner       = "safoine-ext"
-      z-project = "testing"
-      z-team = "oss"
-      z-description = "resources for integration testing"
-    }
-  }
 }
