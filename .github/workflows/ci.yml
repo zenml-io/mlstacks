@@ -201,7 +201,7 @@ jobs:
   k3d_test:
     name: k3d_test
     runs-on: self-hosted
-    needs: 
+    needs:
       - provion-self-hosted-runner
     steps:
       - name: Checkout
