@@ -61,4 +61,4 @@ jobs:
       - name: Create blob
         run: |
           echo "Creating blob..."
-          echo "" | az storage blob upload --account-name zenmlstorageaccount --container-name github-runner-tf --name github-run-${{ github.run_id }} --type block --data ""
+          az storage blob upload --account-name zenmlstorageaccount --container-name github-runner-tf --name github-run-${{ github.run_id }} --type block --data "${{ github.run_id }}"
