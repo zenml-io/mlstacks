@@ -1,12 +1,17 @@
-name: Destroy the test runner vm to azure
+name: Deploy the test runner vm to azure
 
 on:
-    workflow_call:
-    workflow_dispatch:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - develop
+    paths-ignore: ["**.md"]
 
 jobs:
-  destroy_test_vm:
-    name: Destroy VM to azure
+  deploy_test_vm:
+    name: Deploy VM to azure
     runs-on: ubuntu-latest
     env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -25,6 +30,14 @@ jobs:
       - name: Checkout the Code
         uses: actions/checkout@v3
 
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+      - name: Login to Azure
+        run: |
+          az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
@@ -41,6 +54,11 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
-      - run: terraform destroy -auto-approve -refresh=False
+      - run: terraform apply -auto-approve
         env:
           TF_VAR_github_runner_token: ${{ secrets.runner_token }}
+
+      - name: Create blob
+        run: |
+          echo "Creating blob..."
+          echo "" | az storage blob upload --account-name zenmlstorageaccount --container-name github-runner-tf --name github-run-${{ github.run_id }} --type block 

@@ -194,9 +194,16 @@ jobs:
               (cd $dir && terraform plan -input=false)
           done
 
+  provion-self-hosted-runner:
+    name: provion-self-hosted-runner
+    uses: ./.github/workflows/deploy-self-hosted-runner.yml
+    secrets: inherit
+
   k3d_test:
     name: k3d_test
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    needs: 
+      - provion-self-hosted-runner
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -218,3 +225,9 @@ jobs:
               (cd $dir && terraform validate)
               (cd $dir && terraform plan -input=false)
           done
+
+  destory-self-hosted-runner:
+    name: destory-self-hosted-runner
+    needs: k3d_test
+    if: always()
+    uses: ./.github/workflows/destroy-self-hosted-runner.yml

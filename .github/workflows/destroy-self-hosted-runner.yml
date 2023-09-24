@@ -1,17 +1,12 @@
-name: Deploy the test runner vm to azure
+name: Destroy the test runner vm to azure
 
 on:
-  workflow_call:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-      - develop
-    paths-ignore: ["**.md"]
+    workflow_call:
+    workflow_dispatch:
 
 jobs:
-  deploy_test_vm:
-    name: Deploy VM to azure
+  destroy_test_vm:
+    name: Destroy VM to azure
     runs-on: ubuntu-latest
     env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -46,6 +41,18 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
-      - run: terraform apply -auto-approve
+      - name: Delete blob
+        run: |
+          az storage blob delete --account-name zenmlstorageaccount --container-name github-runner-tf --name ${{ github.run_id }}
+
+      - name: Check if any blobs left
+        id: check_blobs
+        run: |
+          blobs=$(az storage blob list --account-name zenmlstorageaccount --container-name github-runner-tf --prefix github-run --output tsv)
+          echo "BLOBS=$blobs" >> $GITHUB_ENV
+
+      - name: Destroy VM
+        run: terraform destroy -auto-approve -refresh=False
         env:
           TF_VAR_github_runner_token: ${{ secrets.runner_token }}
+        if: env.BLOBS == ''
