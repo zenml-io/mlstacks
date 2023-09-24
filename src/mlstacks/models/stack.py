@@ -11,16 +11,17 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 """Stack model."""
-
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
+from mlstacks.constants import INVALID_NAME_ERROR_MESSAGE
 from mlstacks.enums import (
     DeploymentMethodEnum,
     ProviderEnum,
 )
 from mlstacks.models.component import Component
+from mlstacks.utils.model_utils import is_valid_name
 
 
 class Stack(BaseModel):
@@ -47,3 +48,25 @@ class Stack(BaseModel):
         DeploymentMethodEnum
     ] = DeploymentMethodEnum.KUBERNETES
     components: List[Component] = []
+
+    @validator("name")
+    def validate_name(cls, name: str) -> str:  # noqa: N805
+        """Validate the name.
+
+        Name must start with an alphanumeric character and can only contain
+        alphanumeric characters, underscores, and hyphens thereafter.
+
+        Args:
+            name: The name.
+
+        Returns:
+            The validated name.
+
+        Raises:
+            ValueError: If the name is invalid.
+        """
+        # Regular expression to ensure the first character is alphanumeric
+        # and subsequent characters are alphanumeric, underscore, or hyphen
+        if not is_valid_name(name):
+            raise ValueError(INVALID_NAME_ERROR_MESSAGE)
+        return name

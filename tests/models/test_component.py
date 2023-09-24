@@ -14,6 +14,7 @@
 from hypothesis import given
 from hypothesis import strategies as st
 
+from mlstacks.constants import PERMITTED_NAME_REGEX
 from mlstacks.enums import ComponentFlavorEnum, ComponentTypeEnum
 from mlstacks.models.component import Component, ComponentMetadata
 
@@ -26,7 +27,7 @@ def test_component_metadata(instance):
     )
 
 
-@given(st.builds(Component))
+@given(st.builds(Component, name=st.from_regex(PERMITTED_NAME_REGEX)))
 def test_component(instance):
     assert isinstance(instance.spec_version, int)
     assert isinstance(instance.spec_type, str)
