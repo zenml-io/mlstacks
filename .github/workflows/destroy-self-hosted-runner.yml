@@ -13,7 +13,6 @@ jobs:
         ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-        MLSTACKS_ANALYTICS_OPT_IN=false
     permissions:
       contents: "read"
       id-token: "write"
