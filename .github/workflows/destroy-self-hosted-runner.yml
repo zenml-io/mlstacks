@@ -48,7 +48,7 @@ jobs:
       - name: Check if any blobs left
         id: check_blobs
         run: |
-          blobs=$(az storage blob list --account-name zenmlstorageaccount --container-name github-runner-tf --prefix github-run --output tsv)
+          blobs=$(az storage blob list --account-name zenmlstorageaccount --container-name github-runner-tf --query "[?starts_with(name, 'github-run')].name" --output tsv)
           echo "BLOBS=$blobs" >> $GITHUB_ENV
 
       - name: Destroy VM
