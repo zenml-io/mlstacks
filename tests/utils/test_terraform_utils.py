@@ -38,6 +38,7 @@ from mlstacks.utils.terraform_utils import (
 )
 
 EXISTING_S3_BUCKET_URL = "s3://public-flavor-logos"
+EXISTING_S3_BUCKET_REGION = "eu-central-1"
 EXISTING_GCS_BUCKET_URL = "gs://zenml-public-bucket"
 
 
@@ -257,12 +258,22 @@ def test_existing_gcs_bucket_with_trailing_slash():
 
 def test_existing_s3_bucket():
     """Test that the function correctly identifies an existing S3 bucket."""
-    assert remote_state_bucket_exists(EXISTING_S3_BUCKET_URL) == True
+    assert (
+        remote_state_bucket_exists(
+            EXISTING_S3_BUCKET_URL, EXISTING_S3_BUCKET_REGION
+        )
+        == True
+    )
 
 
 def test_existing_s3_bucket_with_trailing_slash():
     """Test that the function correctly identifies an existing S3 bucket, even with a trailing slash."""
-    assert remote_state_bucket_exists(f"{EXISTING_S3_BUCKET_URL}/") == True
+    assert (
+        remote_state_bucket_exists(
+            f"{EXISTING_S3_BUCKET_URL}/", EXISTING_S3_BUCKET_REGION
+        )
+        == True
+    )
 
 
 def test_unsupported_url_scheme():
@@ -278,4 +289,9 @@ def test_invalid_gcs_bucket():
 
 def test_invalid_s3_bucket():
     """Test that the function correctly identifies a non-existing S3 bucket."""
-    assert remote_state_bucket_exists("s3://non-existent-s3-bucket") == False
+    assert (
+        remote_state_bucket_exists(
+            "s3://non-existent-s3-bucket", EXISTING_S3_BUCKET_REGION
+        )
+        == False
+    )
