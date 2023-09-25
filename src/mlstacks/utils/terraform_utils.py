@@ -653,7 +653,7 @@ def get_remote_state_bucket_name(tf_definitions_path: str) -> str:
         tf_definitions_path: The path to the Terraform definitions.
 
     Returns:
-        The remote state bucket name
+        The remote state bucket name.
     """
     with open(
         os.path.join(tf_definitions_path, REMOTE_STATE_VALUES_FILENAME),
