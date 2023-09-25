@@ -402,11 +402,15 @@ def tf_previously_initialized(tf_recipe_path: str) -> bool:
     return (Path(tf_recipe_path) / MLSTACKS_INITIALIZATION_FILE_FLAG).exists()
 
 
-def remote_state_bucket_exists(remote_state_bucket_url: str) -> bool:
+def remote_state_bucket_exists(
+    remote_state_bucket_url: str,
+    region: str,
+) -> bool:
     """Checks if a remote state bucket exists.
 
     Args:
         remote_state_bucket_url: The remote state bucket URL.
+        region: The region the bucket exists in.
 
     Returns:
         True if the remote state bucket exists, False otherwise.
@@ -419,7 +423,9 @@ def remote_state_bucket_exists(remote_state_bucket_url: str) -> bool:
 
     # Convert to HTTP URL format
     if remote_state_bucket_url.startswith("s3://"):
-        http_url = f"https://{remote_state_bucket_url[5:]}.s3.amazonaws.com"
+        http_url = (
+            f"https://{remote_state_bucket_url[5:]}.s3.{region}.amazonaws.com"
+        )
     elif remote_state_bucket_url.startswith("gs://"):
         http_url = (
             f"https://storage.googleapis.com/{remote_state_bucket_url[5:]}"
