@@ -453,6 +453,9 @@ def tf_client_init(
 
     Returns:
         The return code, stdout, and stderr.
+
+    Raises:
+        ValueError: If the remote state bucket doesn't exist.
     """
     base_workspace = _get_tf_recipe_path(provider)
     state_path = f"path={Path(base_workspace) / 'terraform.tfstate'!s}"
@@ -566,6 +569,9 @@ def remote_state_deployed(tf_definitions_path: str) -> bool:
 
     Args:
         tf_definitions_path: The path to the Terraform definitions.
+
+    Returns:
+        True if remote state is deployed, False otherwise.
     """
     return (
         Path(tf_definitions_path).exists()
@@ -645,6 +651,9 @@ def get_remote_state_bucket_name(tf_definitions_path: str) -> str:
 
     Args:
         tf_definitions_path: The path to the Terraform definitions.
+
+    Returns:
+        The remote state bucket name
     """
     with open(
         os.path.join(tf_definitions_path, REMOTE_STATE_VALUES_FILENAME),
