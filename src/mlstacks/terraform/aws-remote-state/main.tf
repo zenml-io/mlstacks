@@ -3,12 +3,15 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "terraform-up-and-running-state"
+  bucket = var.bucket_name
 
   # Prevent accidental deletion of this S3 bucket
   lifecycle {
     prevent_destroy = true
   }
+
+  # set to true when you want to delete the bucket
+  # force_destroy = true
 }
 
 resource "aws_s3_bucket_ownership_controls" "tf_state_ownership" {
