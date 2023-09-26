@@ -67,6 +67,7 @@ resource "local_file" "stack_file" {
 %{endif}
 %{endif}
 %{endif}
+%{endif}
 
 %{if var.enable_step_operator_vertex}
       step_operator:

@@ -60,6 +60,7 @@ resource "local_file" "stack_file" {
 %{endif}
 %{endif}
 %{endif}
+%{endif}
 
 %{if var.enable_secrets_manager}
       secrets_manager:
