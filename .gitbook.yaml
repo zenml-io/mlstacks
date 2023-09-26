@@ -1,0 +1,6 @@
+root: ./docs/book/
+
+structure:
+  readme: introduction.md
+  summary: toc.md
+

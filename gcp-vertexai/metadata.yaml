@@ -1,0 +1,15 @@
+Description: |
+  NOTE THAT THESE RECIPES HAVE BEEN DEPRECATED. PLEASE UPGRADE YOUR ZENML
+  VERSION OR USE THE `mlstacks` PACKAGE TO BENEFIT FROM LATEST UPDATES.
+  A recipe that creates a Vertex AI orchestrator, GCS artifact store, 
+  GCR container registry and an optional MLflow experiment tracker.
+
+Cloud: gcp
+
+Prerequisites: |
+  * The gcloud CLI on your local machine must be configured with 
+    the account you want to deploy resources to. Run `gcloud auth login`.
+  * Install the gcloud beta component by running `gcloud components install beta`.
+  * You must have the project already setup and with billing enabled.
+  * You should have `gke-gcloud-auth-plugin` installed.
+    Run `gcloud components install gke-gcloud-auth-plugin` to install.

@@ -14,7 +14,7 @@ resource "helm_release" "seldon" {
   # dependency on seldon-ns
   namespace = kubernetes_namespace.seldon-ns.metadata[0].name
 
-  # values dervied from the zenml seldon-core example at
+  # values derived from the zenml seldon-core example at
   # https://github.com/zenml-io/zenml/blob/main/examples/seldon_deployment/README.md#installing-seldon-core-eg-in-an-eks-cluster
   set {
     name  = "usageMetrics.enabled"

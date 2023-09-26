@@ -12,7 +12,7 @@ variable "mlflow-password" {
 }
 
 # this variable only needs to be set if you're using a 
-# pre-exisiting storage account (outside the scope of this recipe).
+# pre-existing storage account (outside the scope of this recipe).
 variable "mlflow-artifact-Azure-Access-Key" {
   description = "The access key for your Azure Storage account that you wish to use with MLflow"
   default     = ""

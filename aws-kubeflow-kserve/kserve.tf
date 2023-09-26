@@ -47,5 +47,3 @@ resource "kubernetes_cluster_role_binding_v1" "example" {
     namespace = "kubeflow"
   }
 }
-
-# TODO

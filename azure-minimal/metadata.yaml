@@ -1,4 +1,6 @@
 Description: |
+  NOTE THAT THESE RECIPES HAVE BEEN DEPRECATED. PLEASE UPGRADE YOUR ZENML
+  VERSION OR USE THE `mlstacks` PACKAGE TO BENEFIT FROM LATEST UPDATES.
   A recipe that creates an MLOps stack with an AKS cluster as 
   orchestrator, Azure Blob Storage container artifact store,
   ACR container registry, MLflow experiment tracker and 

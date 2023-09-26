@@ -1,23 +1,31 @@
+resource "random_string" "unique" {
+  length  = 4
+  special = false
+  upper   = false
+}
+
 # config values to use across the module
 locals {
-  prefix = "mystack"
+  prefix = "zenml"
 
   # if you're using europe-west1, please make the following modification in
   # the gke.tf file:
-  # For zones in module.gke, replace "${local.region}-a" to "${local.region}-d"
+  # For zones in google_container_cluster.gke, replace "${var.region}-a" to "${var.region}-d"
   # This is because "europe-west1-a" doesn't exist for some reason.
-  region     = "us-east4"
-  project_id = "zenml-ci"
 
   gke = {
-    cluster_name = "mycluster"
+    cluster_name = "mycluster-${random_string.unique.result}"
     # important to use 1.22 or above due to a bug with Istio in older versions
     cluster_version      = "1.25"
     service_account_name = "account"
-    workloads_namespace  = "zenml-workloads-k8s"
+    workloads_namespace  = "zenml"
   }
   vpc = {
     name = "vpc"
+  }
+
+  vertex = {
+    service_account_id = "zenml-vertex-sa"
   }
 
   container_registry = {
@@ -25,7 +33,7 @@ locals {
   }
 
   gcs = {
-    name     = "store"
+    name     = var.bucket_name == "" ? "store-${random_string.unique.result}" : var.bucket_name
     location = "US-EAST4"
   }
 
@@ -57,9 +65,7 @@ locals {
     version                 = "0.7.13"
     artifact_Proxied_Access = "false"
     artifact_GCS            = "true"
-    # if not set, the bucket created as part of the deployment will be used
-    artifact_GCS_Bucket = ""
-    ingress_host_prefix = "mlflow"
+    ingress_host_prefix     = "mlflow"
   }
 
   kserve = {

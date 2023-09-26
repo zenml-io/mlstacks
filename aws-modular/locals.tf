@@ -1,23 +1,29 @@
+resource "random_string" "unique" {
+  length  = 4
+  special = false
+  upper   = false
+}
+
 # config values to use across the module
 locals {
-  prefix = "mystack"
-  region = "us-east-1"
+  prefix = "zenml"
+
   eks = {
-    cluster_name = "mycluster"
+    cluster_name = "mycluster-${random_string.unique.result}"
     # important to use 1.22 or above due to a bug with Istio in older versions
     cluster_version     = "1.22"
-    workloads_namespace = "zenml-workloads-k8s"
+    workloads_namespace = "zenml"
   }
   vpc = {
-    name = "vpc"
+    name = "vpc-${random_string.unique.result}"
   }
 
   ecr = {
-    name = "container-registry"
+    name = var.repo_name == "" ? "container-registry-${random_string.unique.result}" : var.repo_name
   }
 
   s3 = {
-    name = "store"
+    name = var.bucket_name == "" ? "store-${random_string.unique.result}" : var.bucket_name
   }
 
   cert_manager = {
@@ -33,14 +39,14 @@ locals {
   }
 
   kubeflow = {
-    version      = "1.8.3"
-    ingress_host = "kubeflow.example.com"
+    version             = "1.8.3"
+    ingress_host_prefix = "kubeflow"
   }
 
   tekton = {
     version             = "0.40.2"
     dashboard_version   = "0.31.0"
-    ingress_host        = "tekton..example.com"
+    ingress_host_prefix = "tekton"
     workloads_namespace = "zenml-workloads-tekton"
   }
 
@@ -48,9 +54,8 @@ locals {
     version                 = "0.7.13"
     artifact_Proxied_Access = "false"
     artifact_S3             = "true"
-    # if not set, the bucket created as part of the deployment will be used
-    artifact_S3_Bucket = ""
-    ingress_host       = "mlflow.example.com"
+
+    ingress_host_prefix = "mlflow"
   }
 
   kserve = {
@@ -75,7 +80,7 @@ locals {
     database_ssl_cert               = ""
     database_ssl_key                = ""
     database_ssl_verify_server_cert = false
-    ingress_host                    = "zenml.example.com"
+    ingress_host_prefix             = "zenml"
     ingress_tls                     = true
     image_tag                       = ""
   }

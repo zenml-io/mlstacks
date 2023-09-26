@@ -1,13 +1,16 @@
+**NOTE THAT THESE RECIPES HAVE BEEN DEPRECATED. PLEASE UPGRADE YOUR ZENML
+VERSION OR USE THE `mlstacks` PACKAGE TO BENEFIT FROM LATEST UPDATES.**
+
 # 🥙 AzureML Minimal MLOps Stack Recipe
 
-There can be many motivations behind taking your ML application setup to a cloud environment, from neeeding specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
+There can be many motivations behind taking your ML application setup to a cloud environment, from needing specialized compute 💪 for training jobs to having a 24x7 load-balanced deployment of your trained model serving user requests 🚀.
 
-We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/cloud-guide/overview) that takes you step-by-step through the entire journey in a cloud platform of your choice (AWS, GCP and Azure supported for now). This recipe, however, goes one step further.
+We know that the process to set up an MLOps stack can be daunting. There are many components (ever increasing) and each have their own requirements. To make your life easier, we already have a [documentation page](https://docs.zenml.io/user-guide/starter-guide/switch-to-production) that shows you different ways of switching to a production-grade setting. This recipe, however, goes one step further.
 
 You can have a simple MLOps stack ready for running your machine learning workloads after you execute this recipe 😍. It sets up the following resources:
 
-- An Azure ML Workspace and cluster that can act as an [step operator](https://docs.zenml.io/mlops-stacks/step-operators) for your workloads.
-- An Azure Blob Storage Container as an [artifact store](https://docs.zenml.io/mlops-stacks/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc.
+- An Azure ML Workspace and cluster that can act as an [step operator](https://docs.zenml.io/stacks-and-components/component-guide/step-operators) for your workloads.
+- An Azure Blob Storage Container as an [artifact store](https://docs.zenml.io/stacks-and-components/component-guide/artifact-stores), which can be used to store all your ML artifacts like the model, checkpoints, etc.
 
 For each AzureML Worskpace, azureml automatically provisions a storage account, application insights, key vault, container registry and mlflow server.  
 
@@ -33,7 +36,7 @@ Before starting, you should know the values that you have to keep ready for use 
 
 ## 🧑‍🍳 Cooking the recipe
 
-It is not neccessary to use the MLOps stacks recipes presented here alongisde the
+It is not necessary to use the MLOps stacks recipes presented here alongside the
 [ZenML](https://github.com/zenml-io/zenml) framework. You can simply use the Terraform scripts
 directly.
 
@@ -193,7 +196,7 @@ As mentioned above, you can still use the recipe without having using the `zenml
 
 2. 🔐 Add your secret information like keys and passwords into the `values.tfvars.json` file which is not committed and only exists locally.
 
-3. Initiliaze Terraform modules and download provider definitions.
+3. Initialize Terraform modules and download provider definitions.
 
     ```bash
     terraform init
@@ -238,7 +241,7 @@ export AZURE_STORAGE_CONNECTION_STRING=$(terraform output storage-account-connec
 export CONTAINER_PATH=$(terraform output blobstorage-container-path)
 
 # azureml
-export WORKSPACE_NAME=$(terraform output azureml-workpsace-name)
+export WORKSPACE_NAME=$(terraform output azureml-workspace-name)
 export CLUSTER_NAME=$(terraform output azureml-compute-cluster-name)
 export KEY_VAULT_NAME=$(terraform output key-vault-name)
 

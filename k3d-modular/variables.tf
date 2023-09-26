@@ -1,25 +1,33 @@
 # enable services
-variable "enable_kubeflow" {
+variable "enable_container_registry" {
+  description = "Enable K3D registry deployment"
+  default     = false
+}
+variable "enable_orchestrator_kubernetes" {
+  description = "Enable Kubernetes deployment"
+  default     = false
+}
+variable "enable_orchestrator_kubeflow" {
   description = "Enable Kubeflow deployment"
-  default     = true
+  default     = false
 }
-variable "enable_minio" {
+variable "enable_artifact_store" {
   description = "Enable Minio deployment"
-  default     = true
+  default     = false
 }
-variable "enable_tekton" {
+variable "enable_orchestrator_tekton" {
   description = "Enable Tekton deployment"
   default     = false
 }
-variable "enable_mlflow" {
+variable "enable_experiment_tracker_mlflow" {
   description = "Enable MLflow deployment"
-  default     = true
+  default     = false
 }
-variable "enable_kserve" {
+variable "enable_model_deployer_kserve" {
   description = "Enable KServe deployment"
   default     = false
 }
-variable "enable_seldon" {
+variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
   default     = false
 }
@@ -27,6 +35,7 @@ variable "enable_zenml" {
   description = "Enable ZenML deployment"
   default     = false
 }
+
 
 # variables for the MLflow tracking server and Minio S3 bucket
 variable "zenml-minio-store-access-key" {
@@ -39,12 +48,15 @@ variable "zenml-minio-store-secret-key" {
   default     = "JbtUCfSc211GYkmZ5MmBF1"
   type        = string
 }
+variable "mlflow_minio_bucket" {
+  description = "The name of the Minio bucket to use for MLflow artifact store. If no name is provided, a new bucket will be created."
+  default     = ""
+}
 variable "mlflow-username" {
   description = "The username for the MLflow Tracking Server"
   default     = "admin"
   type        = string
 }
-
 variable "mlflow-password" {
   description = "The password for the MLflow Tracking Server"
   default     = "supersafepassword"
