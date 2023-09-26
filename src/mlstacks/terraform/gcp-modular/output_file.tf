@@ -33,19 +33,19 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: kubeflow
         name: gke_kubeflow_orchestrator
-        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "synchronous": True}
+        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}", "synchronous": True}
 %{else}
 %{if var.enable_orchestrator_tekton}
         id: ${uuid()}
         flavor: tekton
         name: gke_tekton_orchestrator
-        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}}
+        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}"}
 %{else}
 %{if var.enable_orchestrator_kubernetes}
         id: ${uuid()}
         flavor: kubernetes
         name: gke_kubernetes_orchestrator
-        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "synchronous": True}
+        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}", "synchronous": True}
 %{else}
 %{if var.enable_orchestrator_skypilot}
         id: ${uuid()}
@@ -99,7 +99,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: kserve
         name: gke_kserve
-        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}, "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_model_deployer_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
+        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_model_deployer_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
 %{else}
 %{if var.enable_model_deployer_seldon}
       model_deployer:
