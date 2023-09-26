@@ -11,7 +11,9 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 """CLI for mlstacks."""
+import random
 import shutil
+import string
 from pathlib import Path
 from typing import Optional
 
@@ -19,6 +21,7 @@ import click
 
 from mlstacks.analytics import client as analytics_client
 from mlstacks.constants import (
+    DEFAULT_REMOTE_STATE_BUCKET_NAME,
     MLSTACKS_PACKAGE_NAME,
 )
 from mlstacks.enums import AnalyticsEventsEnum
@@ -30,10 +33,14 @@ from mlstacks.utils.cli_utils import (
     pretty_print_output_vals,
 )
 from mlstacks.utils.terraform_utils import (
+    _get_remote_state_dir_path,
     _get_tf_recipe_path,
     clean_stack_recipes,
+    deploy_remote_state,
     deploy_stack,
+    destroy_remote_state,
     destroy_stack,
+    get_remote_state_bucket,
     get_stack_outputs,
     infracost_breakdown_stack,
 )
@@ -55,22 +62,66 @@ def cli() -> None:
     help="Path to the YAML file for deploy",
 )
 @click.option(
+    "--remote_state_bucket_name",
+    "-rb",
+    "remote_state_bucket_name",
+    type=click.STRING,
+    required=False,
+    help="Full URL of a pre-existing remote state bucket",
+)
+@click.option(
     "-d",
     "--debug",
     is_flag=True,
     default=False,
     help="Flag to enable debug mode to view raw Terraform logging",
 )
-def deploy(file: str, debug: bool = False) -> None:
+def deploy(
+    file: str,
+    remote_state_bucket_name: Optional[str] = None,
+    debug: bool = False,
+) -> None:
     """Deploys a stack based on a YAML file.
 
     Args:
         file (str): Path to the YAML file for deploy
+        remote_state_bucket_name (str): URL of a pre-existing remote
+            state bucket
         debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
     with analytics_client.EventHandler(AnalyticsEventsEnum.MLSTACKS_DEPLOY):
+        if not remote_state_bucket_name:
+            # generate random bucket name
+            letters = string.ascii_lowercase + string.digits
+            random_bucket_suffix = "".join(
+                random.choice(letters) for _ in range(6)  # noqa: S311
+            )
+            random_bucket_name = (
+                f"{DEFAULT_REMOTE_STATE_BUCKET_NAME}-{random_bucket_suffix}"
+            )
+
+            # Remote state deployment
+            declare(
+                "Deploying remote state to bucket "
+                f"'{random_bucket_name}'...",
+            )
+            deployed_bucket_url = deploy_remote_state(
+                stack_path=file,
+                bucket_name=random_bucket_name,
+                debug_mode=debug,
+            )
+            declare("Remote state successfully deployed!")
+        else:
+            deployed_bucket_url = remote_state_bucket_name
+            declare(f"Using '{deployed_bucket_url}' for remote state...")
+
+        # Stack deployment
         declare(f"Deploying stack from '{file}'...")
-        deploy_stack(stack_path=file, debug_mode=debug)
+        deploy_stack(
+            stack_path=file,
+            debug_mode=debug,
+            remote_state_bucket=deployed_bucket_url,
+        )
         declare("Stack deployed successfully!")
 
 
@@ -143,6 +194,18 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
             shutil.rmtree(tf_files_dir)
         declare(f"Stack '{stack_name}' has been destroyed.")
 
+        remote_state_dir = _get_remote_state_dir_path(provider)
+        if (
+            yes
+            or confirmation(
+                f"Would you like to destroy the Terraform remote state used "
+                f"for this stack on {provider}?",
+            )
+        ) and Path(remote_state_dir).exists():
+            destroy_remote_state(provider)
+            shutil.rmtree(remote_state_dir)
+        declare(f"Remote state for {provider} has been destroyed.")
+
 
 @click.command()
 @click.option(
@@ -195,12 +258,18 @@ def output(file: str, key: Optional[str] = "") -> None:
         try:
             outputs = get_stack_outputs(file, output_key=key)
         except RuntimeError:
-            click.echo(
+            declare(
                 "Terraform has not been initialized so there are no outputs "
                 "to show. Please run `mlstacks deploy ...` first.",
             )
         if outputs:
             pretty_print_output_vals(outputs)
+
+        try:
+            remote_state_bucket = get_remote_state_bucket(stack_path=file)
+            declare(f"Remote state bucket: {remote_state_bucket}")
+        except FileNotFoundError:
+            return
 
 
 @click.command()

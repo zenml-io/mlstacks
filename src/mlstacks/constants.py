@@ -49,3 +49,5 @@ INVALID_NAME_ERROR_MESSAGE = (
     "contain alphanumeric characters, underscores, and hyphens "
     "thereafter."
 )
+DEFAULT_REMOTE_STATE_BUCKET_NAME = "zenml-mlstacks-remote-state"
+TERRAFORM_CONFIG_BUCKET_REPLACEMENT_STRING = "BUCKETNAMEREPLACEME"

@@ -143,3 +143,12 @@ IGNORE_ME
 
 # poetry
 *poetry.lock*
+
+# Terraform lock file
+.terraform.lock.hcl
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+
+# used for testing
+src/mlstacks/terraform/aws-remote-state/values.tfvars.json
