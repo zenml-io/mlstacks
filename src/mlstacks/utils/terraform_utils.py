@@ -257,6 +257,7 @@ def include_files(
 
 def populate_tf_definitions(
     provider: ProviderEnum,
+    region: str,
     force: bool = False,
     remote_state_bucket: Optional[str] = None,
 ) -> None:
@@ -264,6 +265,7 @@ def populate_tf_definitions(
 
     Args:
         provider: The cloud provider.
+        region: The region.
         force: Whether to force the copy.
         remote_state_bucket: The remote state bucket URL.
     """
@@ -315,13 +317,19 @@ def populate_tf_definitions(
         # get the text of the terraform config file from
         # remote_state_terraform_config_subdir
         tf_config = Path(
-            remote_state_terraform_config_subdir / "terraform.tf",
+            remote_state_terraform_config_subdir / f"terraform-{provider}.tf",
         ).read_text()
         # replace backend config as per provider
-        tf_config = tf_config.replace(
-            "BUCKETNAMEREPLACEME",
-            bucket_name_without_prefix,
-        ).replace("BACKENDREPLACEME", "s3" if provider == "aws" else "gcs")
+        if provider == "aws":
+            tf_config = tf_config.replace(
+                "BUCKETNAMEREPLACEME",
+                bucket_name_without_prefix,
+            ).replace("REGIONNAMEREPLACEME", region)
+        else:
+            tf_config = tf_config.replace(
+                "BUCKETNAMEREPLACEME",
+                bucket_name_without_prefix,
+            )
 
         # write the string to destination_path using filename `terraform.tf`
         # and overwriting any pre-existing file
@@ -443,9 +451,10 @@ def remote_state_bucket_exists(
         return response.status_code in {200, 403}
 
 
-def tf_client_init(
+def _tf_client_init(
     client: python_terraform.Terraform,
     provider: str,
+    region: str,
     debug: bool = False,
     remote_state_bucket: Optional[str] = None,
 ) -> Tuple[Any, Any, Any]:
@@ -454,6 +463,7 @@ def tf_client_init(
     Args:
         client: The Terraform client.
         provider: The cloud provider.
+        region: The region.
         debug: Whether to run in debug mode.
         remote_state_bucket: The remote state bucket URL.
 
@@ -468,7 +478,10 @@ def tf_client_init(
 
     logger.debug("Initializing Terraform in %s...", base_workspace)
     if remote_state_bucket:
-        if not remote_state_bucket_exists(remote_state_bucket):
+        if not remote_state_bucket_exists(
+            remote_state_bucket_url=remote_state_bucket,
+            region=region,
+        ):
             no_bucket_exists_error_msg = (
                 "Tried to initialize Terraform with remote state bucket "
                 f"'{remote_state_bucket}' but it does not exist.",
@@ -490,7 +503,7 @@ def tf_client_init(
     return ret_code, _stdout, _stderr
 
 
-def tf_client_apply(
+def _tf_client_apply(
     client: python_terraform.Terraform,
     tf_vars: Dict[str, Any],
     debug: bool,
@@ -532,7 +545,7 @@ def tf_client_apply(
     return ret_code, _stdout, _stderr
 
 
-def tf_client_destroy(
+def _tf_client_destroy(
     client: python_terraform.Terraform,
     tf_vars: Dict[str, Any],
     debug: bool,
@@ -711,7 +724,12 @@ def deploy_remote_state(
     tfr = TerraformRunner(remote_state_tf_definitions_path)
     # tf init
     if not tf_previously_initialized(remote_state_tf_definitions_path):
-        tf_client_init(tfr.client, provider=stack.provider, debug=debug_mode)
+        _tf_client_init(
+            tfr.client,
+            provider=stack.provider,
+            region=stack.default_region,
+            debug=debug_mode,
+        )
 
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from re-initializing the recipe
@@ -721,14 +739,14 @@ def deploy_remote_state(
         ).touch()
 
     # tf apply
-    tf_client_apply(
+    _tf_client_apply(
         client=tfr.client,
         tf_vars=tf_vars,
         debug=debug_mode,
     )
 
     return (
-        tf_client_output(
+        _tf_client_output(
             runner=tfr,
             state_path=os.path.join(
                 remote_state_tf_definitions_path,
@@ -757,6 +775,7 @@ def deploy_stack(
     if not tf_definitions_present(stack.provider):
         populate_tf_definitions(
             stack.provider,
+            region=stack.default_region,
             force=True,
             remote_state_bucket=remote_state_bucket,
         )
@@ -765,9 +784,10 @@ def deploy_stack(
 
     tfr = TerraformRunner(tf_recipe_path)
     if not tf_previously_initialized(tf_recipe_path):
-        tf_client_init(
+        _tf_client_init(
             tfr.client,
             provider=stack.provider,
+            region=stack.default_region,
             debug=debug_mode,
             remote_state_bucket=remote_state_bucket,
         )
@@ -776,7 +796,7 @@ def deploy_stack(
         # to prevent Terraform from initializing the recipe
         (Path(tf_recipe_path) / MLSTACKS_INITIALIZATION_FILE_FLAG).touch()
 
-    tf_client_apply(
+    _tf_client_apply(
         client=tfr.client,
         tf_vars=tf_vars,
         debug=debug_mode,
@@ -798,30 +818,46 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
     tfr = TerraformRunner(tf_recipe_path)
 
     if not tf_previously_initialized(tf_recipe_path):
-        tf_client_init(tfr.client, provider=stack.provider, debug=debug_mode)
+        _tf_client_init(
+            tfr.client,
+            provider=stack.provider,
+            region=stack.default_region,
+            debug=debug_mode,
+        )
 
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
         (Path(tf_recipe_path) / MLSTACKS_INITIALIZATION_FILE_FLAG).touch()
 
-    tf_client_destroy(tfr.client, tf_vars, debug_mode)
+    _tf_client_destroy(tfr.client, tf_vars, debug_mode)
 
 
-def set_force_destroy(tf_definitions_path: str) -> None:
+def set_force_destroy(
+    tf_definitions_path: str,
+    provider: str,
+) -> None:
     """Set force destroy flag on remote state bucket file.
 
     Overwrites the file with force_destroy set to true.
 
     Args:
         tf_definitions_path: The path to the Terraform definitions
+        provider: The provider
     """
     main_definition = Path(
         os.path.join(tf_definitions_path, "main.tf"),
     ).read_text()
+    if provider == "aws":
+        main_definition = main_definition.replace(
+            "prevent_destroy = true",
+            "prevent_destroy = false",
+        )
+
     main_definition = main_definition.replace(
         "# force_destroy = true",
         "force_destroy = true",
     )
+
     with open(
         os.path.join(tf_definitions_path, "main.tf"),
         "w",
@@ -848,17 +884,20 @@ def destroy_remote_state(provider: str, debug_mode: bool = False) -> None:
     ) as f:
         tf_vars = json.load(f)
 
-    # overwrites 'main.tf' file with force_destroy set to true
-    set_force_destroy(remote_state_tf_definitions_path)
+    # overwrites 'main.tf' file to allow destruction
+    set_force_destroy(
+        remote_state_tf_definitions_path,
+        provider=provider,
+    )
     # apply the force_destroy update
-    tf_client_apply(
+    _tf_client_apply(
         client=tfr.client,
         tf_vars=tf_vars,
         debug=debug_mode,
     )
 
     # destroy the infrastructure
-    tf_client_destroy(tfr.client, tf_vars=tf_vars, debug=debug_mode)
+    _tf_client_destroy(tfr.client, tf_vars=tf_vars, debug=debug_mode)
 
 
 def get_remote_state_bucket(stack_path: str) -> str:
@@ -890,7 +929,7 @@ def get_remote_state_bucket(stack_path: str) -> str:
         return f.read()
 
 
-def tf_client_output(
+def _tf_client_output(
     runner: TerraformRunner,
     state_path: str,
     output_key: Optional[str] = None,
@@ -945,7 +984,7 @@ def get_stack_outputs(
         )
         raise RuntimeError(msg)
 
-    return tf_client_output(
+    return _tf_client_output(
         runner=tfr,
         state_path=state_tf_path,
         output_key=output_key,
@@ -1011,7 +1050,12 @@ def infracost_breakdown_stack(
     if not tf_previously_initialized(tf_recipe_path):
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
-        tf_client_init(tfr.client, provider=stack.provider, debug=debug_mode)
+        _tf_client_init(
+            tfr.client,
+            provider=stack.provider,
+            region=stack.default_region,
+            debug=debug_mode,
+        )
         (Path(tf_recipe_path) / MLSTACKS_INITIALIZATION_FILE_FLAG).touch()
 
     # Constructing the infracost command
