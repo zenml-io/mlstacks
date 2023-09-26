@@ -695,6 +695,9 @@ def deploy_remote_state(
 
     Returns:
         The bucket name used for remote state
+
+    Raises:
+        RuntimeError: If Terraform raises an error.
     """
     stack: Stack = load_stack_yaml(stack_path)
     remote_state_tf_definitions_path = os.path.join(
@@ -727,7 +730,7 @@ def deploy_remote_state(
         ret_code, _, _stderr = _tf_client_init(
             tfr.client,
             provider=stack.provider,
-            region=stack.default_region,
+            region=stack.default_region or "",
             debug=debug_mode,
         )
         if ret_code != 0:
@@ -773,13 +776,16 @@ def deploy_stack(
         stack_path: The path to the stack.
         debug_mode: Whether to run in debug mode.
         remote_state_bucket: The remote state bucket URL (if used).
+
+    Raises:
+        RuntimeError: when Terraform raises an error.
     """
     stack = load_stack_yaml(stack_path)
     tf_recipe_path = _get_tf_recipe_path(stack.provider)
     if not tf_definitions_present(stack.provider):
         populate_tf_definitions(
             stack.provider,
-            region=stack.default_region,
+            region=stack.default_region or "",
             force=True,
             remote_state_bucket=remote_state_bucket,
         )
@@ -791,7 +797,7 @@ def deploy_stack(
         ret_code, _, _stderr = _tf_client_init(
             tfr.client,
             provider=stack.provider,
-            region=stack.default_region,
+            region=stack.default_region or "",
             debug=debug_mode,
             remote_state_bucket=remote_state_bucket,
         )
@@ -817,6 +823,9 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
     Args:
         stack_path: The path to the stack.
         debug_mode: Whether to run in debug mode.
+
+    Raises:
+        RuntimeError: when Terraform raises an error.
     """
     stack = load_stack_yaml(stack_path)
     tf_vars = parse_and_extract_tf_vars(stack)
@@ -829,7 +838,7 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
         ret_code, _, _stderr = _tf_client_init(
             tfr.client,
             provider=stack.provider,
-            region=stack.default_region,
+            region=stack.default_region or "",
             debug=debug_mode,
         )
         if ret_code != 0:
@@ -887,6 +896,9 @@ def destroy_remote_state(provider: str, debug_mode: bool = False) -> None:
     Args:
         provider: The provider
         debug_mode: Whether to run in debug mode
+
+    Raises:
+        RuntimeError: when Terraform raises an error.
     """
     remote_state_tf_definitions_path = _get_remote_state_dir_path(provider)
     tfr = TerraformRunner(remote_state_tf_definitions_path)
@@ -1063,6 +1075,9 @@ def infracost_breakdown_stack(
 
     Returns:
         The cost breakdown.
+
+    Raises:
+        RuntimeError: If an error is raised during initialization.
     """
     _ = verify_infracost_installed()
     stack = load_stack_yaml(stack_path)
@@ -1077,7 +1092,7 @@ def infracost_breakdown_stack(
         ret_code, _, _stderr = _tf_client_init(
             tfr.client,
             provider=stack.provider,
-            region=stack.default_region,
+            region=stack.default_region or "",
             debug=debug_mode,
         )
         if ret_code != 0:
