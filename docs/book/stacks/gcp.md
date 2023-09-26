@@ -15,15 +15,15 @@ and cannot be created without one.
 
 ## Supported components and flavors
 
-| Component          | Flavor(s)                            |
-| ------------------ | ------------------------------------ |
-| Artifact Store     | gcp                                  |
-| Container Registry | gcp                                  |
-| Experiment Tracker | mlflow                               |
-| Orchestrator       | kubernetes, kubeflow, tekton, vertex |
-| MLOps Platform     | zenml                                |
-| Model Deployer     | seldon, kserve                       |
-| Step Operator      | vertex                               |
+| Component          | Flavor(s)                                      |
+| ------------------ | ---------------------------------------------- |
+| Artifact Store     | gcp                                            |
+| Container Registry | gcp                                            |
+| Experiment Tracker | mlflow                                         |
+| Orchestrator       | kubeflow, kubernetes, skypilot, tekton, vertex |
+| MLOps Platform     | zenml                                          |
+| Model Deployer     | seldon, kserve                                 |
+| Step Operator      | vertex                                         |
 
 ## Coming Soon!
 

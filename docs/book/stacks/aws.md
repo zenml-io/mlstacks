@@ -9,15 +9,15 @@ as can a list of components that are coming soon.
 
 ## Supported components and flavors
 
-| Component          | Flavor(s)                               |
-| ------------------ | --------------------------------------- |
-| Artifact Store     | s3                                      |
-| Container Registry | aws                                     |
-| Experiment Tracker | mlflow                                  |
-| Orchestrator       | kubernetes, kubeflow, tekton, sagemaker |
-| MLOps Platform     | zenml                                   |
-| Model Deployer     | seldon, kserve                          |
-| Step Operator      | sagemaker                               |
+| Component          | Flavor(s)                                         |
+| ------------------ | ------------------------------------------------- |
+| Artifact Store     | s3                                                |
+| Container Registry | aws                                               |
+| Experiment Tracker | mlflow                                            |
+| Orchestrator       | kubeflow, kubernetes, sagemaker, skypilot, tekton |
+| MLOps Platform     | zenml                                             |
+| Model Deployer     | seldon, kserve                                    |
+| Step Operator      | sagemaker                                         |
 
 ## Coming Soon!
 
