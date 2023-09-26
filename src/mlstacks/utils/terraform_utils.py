@@ -724,12 +724,14 @@ def deploy_remote_state(
     tfr = TerraformRunner(remote_state_tf_definitions_path)
     # tf init
     if not tf_previously_initialized(remote_state_tf_definitions_path):
-        _tf_client_init(
+        ret_code, _, _stderr = _tf_client_init(
             tfr.client,
             provider=stack.provider,
             region=stack.default_region,
             debug=debug_mode,
         )
+        if ret_code != 0:
+            raise RuntimeError(_stderr)
 
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from re-initializing the recipe
@@ -739,11 +741,13 @@ def deploy_remote_state(
         ).touch()
 
     # tf apply
-    _tf_client_apply(
+    ret_code, _, _stderr = _tf_client_apply(
         client=tfr.client,
         tf_vars=tf_vars,
         debug=debug_mode,
     )
+    if ret_code != 0:
+        raise RuntimeError(_stderr)
 
     return (
         _tf_client_output(
@@ -784,23 +788,27 @@ def deploy_stack(
 
     tfr = TerraformRunner(tf_recipe_path)
     if not tf_previously_initialized(tf_recipe_path):
-        _tf_client_init(
+        ret_code, _, _stderr = _tf_client_init(
             tfr.client,
             provider=stack.provider,
             region=stack.default_region,
             debug=debug_mode,
             remote_state_bucket=remote_state_bucket,
         )
+        if ret_code != 0:
+            raise RuntimeError(_stderr)
 
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
         (Path(tf_recipe_path) / MLSTACKS_INITIALIZATION_FILE_FLAG).touch()
 
-    _tf_client_apply(
+    ret_code, _, _stderr = _tf_client_apply(
         client=tfr.client,
         tf_vars=tf_vars,
         debug=debug_mode,
     )
+    if ret_code != 0:
+        raise RuntimeError(_stderr)
 
 
 def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
@@ -818,18 +826,26 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
     tfr = TerraformRunner(tf_recipe_path)
 
     if not tf_previously_initialized(tf_recipe_path):
-        _tf_client_init(
+        ret_code, _, _stderr = _tf_client_init(
             tfr.client,
             provider=stack.provider,
             region=stack.default_region,
             debug=debug_mode,
         )
+        if ret_code != 0:
+            raise RuntimeError(_stderr)
 
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
         (Path(tf_recipe_path) / MLSTACKS_INITIALIZATION_FILE_FLAG).touch()
 
-    _tf_client_destroy(tfr.client, tf_vars, debug_mode)
+    ret_code, _, _stderr = _tf_client_destroy(
+        tfr.client,
+        tf_vars,
+        debug_mode,
+    )
+    if ret_code != 0:
+        raise RuntimeError(_stderr)
 
 
 def set_force_destroy(
@@ -890,14 +906,22 @@ def destroy_remote_state(provider: str, debug_mode: bool = False) -> None:
         provider=provider,
     )
     # apply the force_destroy update
-    _tf_client_apply(
+    ret_code, _, _stderr = _tf_client_apply(
         client=tfr.client,
         tf_vars=tf_vars,
         debug=debug_mode,
     )
+    if ret_code != 0:
+        raise RuntimeError(_stderr)
 
     # destroy the infrastructure
-    _tf_client_destroy(tfr.client, tf_vars=tf_vars, debug=debug_mode)
+    ret_code, _, _stderr = _tf_client_destroy(
+        tfr.client,
+        tf_vars=tf_vars,
+        debug=debug_mode,
+    )
+    if ret_code != 0:
+        raise RuntimeError(_stderr)
 
 
 def get_remote_state_bucket(stack_path: str) -> str:
@@ -1050,12 +1074,15 @@ def infracost_breakdown_stack(
     if not tf_previously_initialized(tf_recipe_path):
         # write a file with name `IGNORE_ME` to the Terraform recipe directory
         # to prevent Terraform from initializing the recipe
-        _tf_client_init(
+        ret_code, _, _stderr = _tf_client_init(
             tfr.client,
             provider=stack.provider,
             region=stack.default_region,
             debug=debug_mode,
         )
+        if ret_code != 0:
+            raise RuntimeError(_stderr)
+
         (Path(tf_recipe_path) / MLSTACKS_INITIALIZATION_FILE_FLAG).touch()
 
     # Constructing the infracost command
