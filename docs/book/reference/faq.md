@@ -47,3 +47,12 @@ work (well) with ZenML, but it can also be used independently of ZenML.
 Yes! You can use MLStacks to deploy infrastructure for any MLOps tooling you
 like and it is designed to offer a range of components and flavors to support
 the full variety of MLOps tools.
+
+## How do I use mlstacks within a team setting?
+
+MLStacks is designed to be used in a team setting. It is designed to support
+the full range of infrastructure that you might need for your MLOps tooling. We
+also spin up a remote state backend with every deployment (unless you're
+connecting to one that already exists) so that other team members can
+collaborate on your stacks and deployed infrastructure. Please see the section
+of the docs on [using remote state](../reference/cli.md#using-remote-state) for more information.

@@ -26,6 +26,25 @@ on debug mode with the `-d` or `--debug` flag:
 mlstacks deploy -f stack.yaml -d
 ```
 
+## Using remote state with a team
+
+MLStacks deploys a remote state bucket to the same cloud provider as you're
+using for your stack by default. This remote state backend has a default name
+that begins with `zenml-mlstacks-remote-state` and is deployed first before your
+stack gets deployed.
+
+If you'd like to connect to a pre-existing state bucket that you or a colleague
+have already created, you can do so by passing the bucket name to the
+`mlstacks deploy` command:
+
+```bash
+mlstacks deploy -f stack.yaml -rb <BUCKET_NAME_GOES_HERE>
+# e.g. mlstacks deploy -f stack.yaml -rb s3://zenml-mlstacks-remote-state-3d3r6
+```
+
+This will then connect to the remote state bucket and use that as the backend
+for your stack deployment.
+
 ## Getting stack outputs
 
 Once you have a stack deployed, you can get the outputs of the stack using the
