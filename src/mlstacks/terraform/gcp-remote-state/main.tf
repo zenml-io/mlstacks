@@ -15,4 +15,3 @@ module "gcp-remote-state" {
   block_public_access = var.block_public_access
   labels              = var.labels
 }
-
