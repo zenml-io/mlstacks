@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "aws-remote-state" {
-  source  = "zenml-io/terraform-aws-remote-state"
+  source  = "zenml-io/remote-state/aws"
   version = ">=0.1.3"
 
   region        = var.region
