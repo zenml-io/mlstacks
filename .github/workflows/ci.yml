@@ -162,9 +162,9 @@ jobs:
         run: |
           for dir in $(ls -d src/mlstacks/terraform/* | grep -Fv -e "modules" -e ".github" | grep "gcp*"); do
               (cd $dir && terraform init -backend-config="path=$dir")
-              (cd $dir && terraform fmt -check -var="project_id=something" -var="bucket_name=something")
-              (cd $dir && terraform validate -var="project_id=something" -var="bucket_name=something")
-              (cd $dir && terraform plan -input=false -var="project_id=something" -var="bucket_name=something")
+              (cd $dir && terraform fmt -check -var='project_id=something' -var='bucket_name=something')
+              (cd $dir && terraform validate -var='project_id=something' -var='bucket_name=something')
+              (cd $dir && terraform plan -input=false -var='project_id=something' -var='bucket_name=something')
           done
 
   azure_test:
