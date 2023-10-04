@@ -49,6 +49,7 @@ STATE_FILE_NAME = "terraform.tfstate"
 MLSTACKS_VERSION_FILE_NAME = "MLSTACKS_VERSION"
 REMOTE_STATE_VALUES_FILENAME = "remote_state_values.tfvars.json"
 REMOTE_STATE_BUCKET_URL_FILE_NAME = "REMOTE_STATE_BUCKET_URL"
+REMOTE_STATE_BUCKET_URL_OUTPUT_KEY = "remote_state_bucket_url"
 
 
 def _get_tf_recipe_path(
@@ -575,6 +576,33 @@ def _tf_client_destroy(
     return ret_code, _stdout, _stderr
 
 
+def _tf_client_output(
+    runner: TerraformRunner,
+    state_path: str,
+    output_key: Optional[str] = None,
+) -> Dict[str, str]:
+    """Destroy Terraform changes.
+
+    Args:
+        runner: The Terraform runner.
+        state_path: The path to the Terraform state file.
+        output_key: The output key.
+
+    Returns:
+        Output key:value pairs.
+    """
+    logger.debug("Getting Terraform outputs...")
+    if output_key:
+        full_outputs = runner.client.output(
+            output_key,
+            full_value=True,
+            state=state_path,
+        )
+        return {output_key: full_outputs}
+    full_outputs = runner.client.output(full_value=True, state=state_path)
+    return {k: v["value"] for k, v in full_outputs.items() if v.get("value")}
+
+
 def clean_stack_recipes() -> None:
     """Deletes stack recipe files from config directory."""
     logger.info("Cleaning stack recipes...")
@@ -752,6 +780,7 @@ def deploy_remote_state(
     if ret_code != 0:
         raise RuntimeError(_stderr)
 
+    # return the (deployed) remote state bucket url
     return (
         _tf_client_output(
             runner=tfr,
@@ -759,8 +788,8 @@ def deploy_remote_state(
                 remote_state_tf_definitions_path,
                 "terraform.tfstate",
             ),
-            output_key="bucket_url",
-        ).get("bucket_url")
+            output_key=REMOTE_STATE_BUCKET_URL_OUTPUT_KEY,
+        ).get(REMOTE_STATE_BUCKET_URL_OUTPUT_KEY)
         or ""
     )
 
@@ -817,12 +846,17 @@ def deploy_stack(
         raise RuntimeError(_stderr)
 
 
-def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
+def destroy_stack(
+    stack_path: str,
+    debug_mode: bool = False,
+    remote_state_bucket: Optional[str] = None,
+) -> None:
     """Destroy stack.
 
     Args:
         stack_path: The path to the stack.
         debug_mode: Whether to run in debug mode.
+        remote_state_bucket: The remote state bucket URL (if used).
 
     Raises:
         RuntimeError: when Terraform raises an error.
@@ -840,6 +874,7 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
             provider=stack.provider,
             region=stack.default_region or "",
             debug=debug_mode,
+            remote_state_bucket=remote_state_bucket,
         )
         if ret_code != 0:
             raise RuntimeError(_stderr)
@@ -855,39 +890,6 @@ def destroy_stack(stack_path: str, debug_mode: bool = False) -> None:
     )
     if ret_code != 0:
         raise RuntimeError(_stderr)
-
-
-def set_force_destroy(
-    tf_definitions_path: str,
-    provider: str,
-) -> None:
-    """Set force destroy flag on remote state bucket file.
-
-    Overwrites the file with force_destroy set to true.
-
-    Args:
-        tf_definitions_path: The path to the Terraform definitions
-        provider: The provider
-    """
-    main_definition = Path(
-        os.path.join(tf_definitions_path, "main.tf"),
-    ).read_text()
-    if provider == "aws":
-        main_definition = main_definition.replace(
-            "prevent_destroy = true",
-            "prevent_destroy = false",
-        )
-
-    main_definition = main_definition.replace(
-        "# force_destroy = true",
-        "force_destroy = true",
-    )
-
-    with open(
-        os.path.join(tf_definitions_path, "main.tf"),
-        "w",
-    ) as f:
-        f.write(main_definition)
 
 
 def destroy_remote_state(provider: str, debug_mode: bool = False) -> None:
@@ -912,11 +914,9 @@ def destroy_remote_state(provider: str, debug_mode: bool = False) -> None:
     ) as f:
         tf_vars = json.load(f)
 
-    # overwrites 'main.tf' file to allow destruction
-    set_force_destroy(
-        remote_state_tf_definitions_path,
-        provider=provider,
-    )
+    # sets force_destroy variable to allow destruction
+    tf_vars.update({"force_destroy": True})
+
     # apply the force_destroy update
     ret_code, _, _stderr = _tf_client_apply(
         client=tfr.client,
@@ -963,33 +963,6 @@ def get_remote_state_bucket(stack_path: str) -> str:
     # open REMOTE_STATE_BUCKET_URL_FILE_NAME within tf_recipe_path
     with open(os.path.join(bucket_url_file)) as f:
         return f.read()
-
-
-def _tf_client_output(
-    runner: TerraformRunner,
-    state_path: str,
-    output_key: Optional[str] = None,
-) -> Dict[str, str]:
-    """Destroy Terraform changes.
-
-    Args:
-        runner: The Terraform runner.
-        state_path: The path to the Terraform state file.
-        output_key: The output key.
-
-    Returns:
-        Output key:value pairs.
-    """
-    logger.debug("Getting Terraform outputs...")
-    if output_key:
-        full_outputs = runner.client.output(
-            output_key,
-            full_value=True,
-            state=state_path,
-        )
-        return {output_key: full_outputs}
-    full_outputs = runner.client.output(full_value=True, state=state_path)
-    return {k: v["value"] for k, v in full_outputs.items() if v.get("value")}
 
 
 def get_stack_outputs(
