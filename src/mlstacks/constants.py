@@ -12,8 +12,6 @@
 #  permissions and limitations under the License.
 """MLStacks constants."""
 
-# enum for deployment types
-# deployment_type.KUBERNETES = "KUBERNETES"
 MLSTACKS_PACKAGE_NAME = "mlstacks"
 MLSTACKS_INITIALIZATION_FILE_FLAG = "IGNORE_ME"
 MLSTACKS_STACK_COMPONENT_FLAGS = [
@@ -30,10 +28,11 @@ ALLOWED_FLAVORS = {
     "container_registry": ["gcp", "aws", "default"],
     "experiment_tracker": ["mlflow"],
     "orchestrator": [
-        "kubernetes",
         "kubeflow",
-        "tekton",
+        "kubernetes",
         "sagemaker",
+        "skypilot",
+        "tekton",
         "vertex",
     ],
     "mlops_platform": ["zenml"],
@@ -50,3 +49,5 @@ INVALID_NAME_ERROR_MESSAGE = (
     "contain alphanumeric characters, underscores, and hyphens "
     "thereafter."
 )
+DEFAULT_REMOTE_STATE_BUCKET_NAME = "zenml-mlstacks-remote-state"
+TERRAFORM_CONFIG_BUCKET_REPLACEMENT_STRING = "BUCKETNAMEREPLACEME"

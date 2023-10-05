@@ -33,8 +33,14 @@ from mlstacks.utils.terraform_utils import (
     get_recipe_metadata,
     parse_and_extract_component_variables,
     parse_and_extract_tf_vars,
+    remote_state_bucket_exists,
     tf_definitions_present,
 )
+
+EXISTING_S3_BUCKET_URL = "s3://public-flavor-logos"
+EXISTING_S3_BUCKET_REGION = "eu-central-1"
+EXISTING_GCS_BUCKET_URL = "gs://zenml-public-bucket"
+EXISTING_GCS_BUCKET_REGION = "europe-north1"
 
 
 def test_terraform_runner_initialization_works():
@@ -239,3 +245,71 @@ def test_infracost_type_coercion_works():
     # assert all keys and values are strings
     assert all(isinstance(k, str) for k in infracost_vars_2.keys())
     assert all(isinstance(v, str) for v in infracost_vars_2.values())
+
+
+def test_existing_gcs_bucket():
+    """Test that the function correctly identifies an existing GCS bucket."""
+    assert (
+        remote_state_bucket_exists(
+            EXISTING_GCS_BUCKET_URL, EXISTING_GCS_BUCKET_REGION
+        )
+        == True
+    )
+
+
+def test_existing_gcs_bucket_with_trailing_slash():
+    """Test that the function correctly identifies an existing GCS bucket, even with a trailing slash."""
+    assert (
+        remote_state_bucket_exists(
+            f"{EXISTING_GCS_BUCKET_URL}/", EXISTING_GCS_BUCKET_REGION
+        )
+        == True
+    )
+
+
+def test_existing_s3_bucket():
+    """Test that the function correctly identifies an existing S3 bucket."""
+    assert (
+        remote_state_bucket_exists(
+            EXISTING_S3_BUCKET_URL, EXISTING_S3_BUCKET_REGION
+        )
+        == True
+    )
+
+
+def test_existing_s3_bucket_with_trailing_slash():
+    """Test that the function correctly identifies an existing S3 bucket, even with a trailing slash."""
+    assert (
+        remote_state_bucket_exists(
+            f"{EXISTING_S3_BUCKET_URL}/", EXISTING_S3_BUCKET_REGION
+        )
+        == True
+    )
+
+
+def test_unsupported_url_scheme():
+    """Test that the function raises a ValueError for unsupported URL schemes."""
+    with pytest.raises(ValueError):
+        remote_state_bucket_exists(
+            "ftp://some-bucket", EXISTING_GCS_BUCKET_REGION
+        )
+
+
+def test_invalid_gcs_bucket():
+    """Test that the function correctly identifies a non-existing GCS bucket."""
+    assert (
+        remote_state_bucket_exists(
+            "gs://non-existent-gcs-bucket", EXISTING_GCS_BUCKET_REGION
+        )
+        == False
+    )
+
+
+def test_invalid_s3_bucket():
+    """Test that the function correctly identifies a non-existing S3 bucket."""
+    assert (
+        remote_state_bucket_exists(
+            "s3://non-existent-s3-bucket", EXISTING_S3_BUCKET_REGION
+        )
+        == False
+    )
