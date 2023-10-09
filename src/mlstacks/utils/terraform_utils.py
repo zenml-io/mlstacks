@@ -581,7 +581,7 @@ def _tf_client_output(
     state_path: str,
     output_key: Optional[str] = None,
 ) -> Dict[str, str]:
-    """Destroy Terraform changes.
+    """Get Terraform outputs.
 
     Args:
         runner: The Terraform runner.
