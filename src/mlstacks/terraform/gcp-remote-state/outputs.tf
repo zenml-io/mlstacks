@@ -1,3 +1,3 @@
-output "bucket_url" {
-  value = "gs://${google_storage_bucket.terraform_state.name}"
+output "remote_state_bucket_url" {
+  value = module.gcp-remote-state.bucket_url
 }

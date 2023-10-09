@@ -164,7 +164,7 @@ jobs:
               (cd $dir && terraform init -backend-config="path=$dir")
               (cd $dir && terraform fmt -check)
               (cd $dir && terraform validate)
-              (cd $dir && terraform plan -input=false)
+              (cd $dir && terraform plan -input=false -var='project_id=something' -var='bucket_name=something')
           done
 
   azure_test:
