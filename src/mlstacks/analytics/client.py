@@ -16,7 +16,7 @@ import datetime
 import os
 from logging import getLogger
 from types import TracebackType
-from typing import Any, Dict, Optional, Type
+from typing import Any, Dict, Optional, Type, cast
 from uuid import uuid4
 
 import click
@@ -133,7 +133,7 @@ class MLStacksAnalyticsContext:
         config_file = os.path.join(config_dir, CONFIG_FILENAME)
         if os.path.exists(config_file):
             yaml_dict = load_yaml_as_dict(config_file)
-            return yaml_dict.get("analytics_user_id", None)
+            return cast(str, yaml_dict.get("analytics_user_id", None))
         return None
 
     @staticmethod
