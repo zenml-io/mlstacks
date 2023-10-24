@@ -1,3 +1,3 @@
-output "bucket_url" {
-  value = "s3://${aws_s3_bucket.terraform_state.bucket}"
+output "remote_state_bucket_url" {
+  value = module.aws-remote-state.bucket_url
 }
