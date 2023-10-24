@@ -47,6 +47,7 @@ class ComponentFlavorEnum(str, Enum):
     S3 = "s3"
     SAGEMAKER = "sagemaker"
     SELDON = "seldon"
+    SKYPILOT = "skypilot"
     TEKTON = "tekton"
     VERTEX = "vertex"
     ZENML = "zenml"

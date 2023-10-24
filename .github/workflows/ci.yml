@@ -114,6 +114,7 @@ jobs:
   aws_test:
     name: aws_test
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.fork == false
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
@@ -140,6 +141,7 @@ jobs:
   gcp_test:
     name: gcp_test
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.fork == false
 
     steps:
       - name: Checkout
@@ -164,12 +166,14 @@ jobs:
               (cd $dir && terraform init -backend-config="path=$dir")
               (cd $dir && terraform fmt -check)
               (cd $dir && terraform validate)
-              (cd $dir && terraform plan -input=false)
+              (cd $dir && terraform plan -input=false -var='project_id=something' -var='bucket_name=something')
           done
 
   azure_test:
     name: azure-test
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.fork == false
+
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}

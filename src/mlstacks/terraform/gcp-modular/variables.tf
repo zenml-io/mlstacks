@@ -23,6 +23,10 @@ variable "enable_orchestrator_kubernetes" {
   description = "Enable Kubernetes deployment"
   default     = false
 }
+variable "enable_orchestrator_skypilot" {
+  description = "Enable SkyPilot orchestrator deployment"
+  default     = false
+}
 variable "enable_experiment_tracker_mlflow" {
   description = "Enable MLflow deployment"
   default     = false

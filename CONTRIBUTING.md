@@ -93,5 +93,83 @@ if any existing recipes cover their creation.
   essential for the user to communicate with the resource (for example, those
   that are required as inputs for the corresponding ZenML stack component)
 
+## Pull Requests: Rebase Your Branch on Develop
+
+1. When making pull requests to `mlstacks`, you should always make your changes
+   on a branch that is based on `develop`. You can create a new branch based on
+   `develop` by running the following command:
+   ```
+   git checkout -b <new-branch-name> develop
+   ```
+2. Fetch the latest changes from the remote `develop` branch:
+   ```
+   git fetch origin develop
+   ```
+3. Switch to your branch:
+   ```
+   git checkout <your-branch-name>
+   ```
+4. Rebase your branch on `develop`:
+   ```
+   git rebase origin/develop
+   ```
+   This will apply your branch's changes on top of the latest changes in
+   `develop`, one commit at a time.
+5. Resolve any conflicts that may arise during the rebase. Git will notify you
+   if there are any conflicts that need to be resolved. Use a text editor to
+   manually resolve the conflicts in the affected files.
+6. After resolving the conflicts, stage the changes:
+   ```
+   git add .
+   ```
+7. Continue the rebase for all of your commits and go to 5) if there are
+   conflicts.
+   ```
+   git rebase --continue
+   ```
+8. Push the rebased branch to your remote repository:
+   ```
+   git push origin --force <your-branch-name>
+   ```
+9. Open a pull request targeting the `develop` branch. The changes from your
+   rebased branch will now be based on the latest `develop` branch.
+
+## 🧐 Linting, formatting, and tests
+
+To install `mlstacks` from your local checked out files including all core
+dev-dependencies, run:
+
+```bash
+pip install -e ".[dev]"
+```
+
+Optionally, you might want to run the following commands to ensure you have all
+integrations for `mypy` checks:
+
+```bash
+mypy --install-types
+```
+
+You can now run the following scripts to automatically format your code and to
+check whether the code formatting, linting, docstrings, and spelling is in
+order:
+
+```
+bash scripts/format.sh
+bash scripts/lint.sh
+```
+
+Tests can be run as follows:
+
+```
+pytest tests
+```
+
+Please note that it is good practice to run the above commands before submitting
+any Pull Request: The CI GitHub Action will run it anyway, so you might as well
+catch the errors locally!
+
+## Good Luck!
+
 This should set you up to create new recipes quickly. If you're still unsure or
 need help, feel free to connect with us on Slack or create an issue!

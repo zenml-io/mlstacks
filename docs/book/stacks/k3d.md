@@ -14,7 +14,7 @@ as can a list of components that are coming soon.
 | Artifact Store     | minio                                   |
 | Container Registry | default                                 |
 | Experiment Tracker | mlflow                                  |
-| Orchestrator       | kubernetes, kubeflow, tekton, sagemaker |
+| Orchestrator       | kubeflow, kubernetes, sagemaker, tekton |
 | MLOps Platform     | zenml                                   |
 | Model Deployer     | seldon, kserve                          |
 

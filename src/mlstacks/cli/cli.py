@@ -166,9 +166,17 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
         yaml_dict = load_yaml_as_dict(file)
         stack_name: str = str(yaml_dict.get("name"))
         provider: str = str(yaml_dict.get("provider"))
+        try:
+            remote_state_bucket = get_remote_state_bucket(stack_path=file)
+        except FileNotFoundError:
+            remote_state_bucket = None
         declare(f"Destroying stack '{stack_name}' from '{file}'...")
         try:
-            destroy_stack(stack_path=file, debug_mode=debug)
+            destroy_stack(
+                stack_path=file,
+                debug_mode=debug,
+                remote_state_bucket=remote_state_bucket,
+            )
         except ValueError:
             error("Couldn't find stack files to destroy.")
 
