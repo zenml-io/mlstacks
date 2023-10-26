@@ -120,3 +120,12 @@ affecting all stacks), so you don't need to pass in a stack specification file.
 ```bash
 mlstacks clean
 ```
+
+## Check your mlstacks version
+
+To see what version of `mlstacks` package you're using, please use the following
+command:
+
+```bash
+mlstacks version
+```
