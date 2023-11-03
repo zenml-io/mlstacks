@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Optional
 
 import click
+import pkg_resources
 
 from mlstacks.analytics import client as analytics_client
 from mlstacks.constants import (
@@ -328,12 +329,26 @@ def source() -> None:
             click.launch(mlstacks_source_dir)
 
 
+@click.command()
+def version() -> None:
+    """Prints the version of mlstacks package in use."""
+    with analytics_client.EventHandler(AnalyticsEventsEnum.MLSTACKS_VERSION):
+        try:
+            package_version = pkg_resources.get_distribution(
+                "mlstacks",
+            ).version
+            declare(f"mlstacks version: {package_version}")
+        except pkg_resources.DistributionNotFound:  # should never happen
+            declare("mlstacks package is not installed.")
+
+
 cli.add_command(deploy)
 cli.add_command(destroy)
 cli.add_command(breakdown)
 cli.add_command(output)
 cli.add_command(clean)
 cli.add_command(source)
+cli.add_command(version)
 
 if __name__ == "__main__":
     cli()
