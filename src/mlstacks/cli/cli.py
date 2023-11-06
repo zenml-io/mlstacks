@@ -15,7 +15,7 @@ import random
 import shutil
 import string
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import click
 import pkg_resources
@@ -26,7 +26,6 @@ from mlstacks.constants import (
     MLSTACKS_PACKAGE_NAME,
 )
 from mlstacks.enums import AnalyticsEventsEnum
-from mlstacks.models.stack import Stack
 from mlstacks.utils.cli_utils import (
     _get_spec_dir,
     confirmation,
@@ -47,6 +46,9 @@ from mlstacks.utils.terraform_utils import (
     infracost_breakdown_stack,
 )
 from mlstacks.utils.yaml_utils import load_stack_yaml, load_yaml_as_dict
+
+if TYPE_CHECKING:
+    from mlstacks.models.stack import Stack
 
 
 @click.group()
@@ -211,8 +213,8 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
             if (
                 yes
                 or confirmation(
-                    f"Would you like to destroy the Terraform remote state used "
-                    f"for this stack on {provider}?",
+                    f"Would you like to destroy the Terraform remote state "
+                    f"used for this stack on {provider}?",
                 )
             ) and Path(remote_state_dir).exists():
                 destroy_remote_state(provider)
