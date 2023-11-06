@@ -5,8 +5,8 @@ packages = [{ include = "mlstacks", from = "src" }]
 description = "MLStacks MLStacks."
 authors = ["ZenML GmbH <info@zenml.io>"]
 readme = "README.md"
-homepage = ""
-documentation = ""
+homepage = "https://mlstacks.zenml.io"
+documentation = "https://mlstacks.zenml.io/"
 repository = "https://github.com/zenml-io/mlstacks"
 license = "Apache-2.0"
 keywords = ["machine learning", "production", "pipeline", "mlops", "devops"]
