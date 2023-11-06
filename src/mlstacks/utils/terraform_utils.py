@@ -668,7 +668,7 @@ def write_remote_state_tf_variables(
     Returns:
         The remote state variables as a dictionary
     """
-    provider = stack.provider
+    provider = stack.provider.value
     remote_state_tf_definitions = os.path.join(
         CONFIG_DIR,
         "terraform",
@@ -731,7 +731,7 @@ def deploy_remote_state(
     remote_state_tf_definitions_path = os.path.join(
         CONFIG_DIR,
         "terraform",
-        f"{stack.provider}-remote-state",
+        f"{stack.provider.value}-remote-state",
     )
 
     # check whether remote state files already exist locally
@@ -742,7 +742,7 @@ def deploy_remote_state(
 
     # copy remote state TF definitions
     populate_remote_state_tf_definitions(
-        provider=stack.provider,
+        provider=stack.provider.value,
         definitions_destination_path=remote_state_tf_definitions_path,
     )
 
@@ -757,7 +757,7 @@ def deploy_remote_state(
     if not tf_previously_initialized(remote_state_tf_definitions_path):
         ret_code, _, _stderr = _tf_client_init(
             tfr.client,
-            provider=stack.provider,
+            provider=stack.provider.value,
             region=stack.default_region or "",
             debug=debug_mode,
         )
@@ -810,22 +810,22 @@ def deploy_stack(
         RuntimeError: when Terraform raises an error.
     """
     stack = load_stack_yaml(stack_path)
-    tf_recipe_path = _get_tf_recipe_path(stack.provider)
-    if not tf_definitions_present(stack.provider):
+    tf_recipe_path = _get_tf_recipe_path(stack.provider.value)
+    if not tf_definitions_present(stack.provider.value):
         populate_tf_definitions(
-            stack.provider,
+            stack.provider.value,
             region=stack.default_region or "",
             force=True,
             remote_state_bucket=remote_state_bucket,
         )
     tf_vars = parse_and_extract_tf_vars(stack)
-    check_tf_definitions_version(stack.provider)
+    check_tf_definitions_version(stack.provider.value)
 
     tfr = TerraformRunner(tf_recipe_path)
     if not tf_previously_initialized(tf_recipe_path):
         ret_code, _, _stderr = _tf_client_init(
             tfr.client,
-            provider=stack.provider,
+            provider=stack.provider.value,
             region=stack.default_region or "",
             debug=debug_mode,
             remote_state_bucket=remote_state_bucket,
@@ -864,14 +864,14 @@ def destroy_stack(
     stack = load_stack_yaml(stack_path)
     tf_vars = parse_and_extract_tf_vars(stack)
 
-    tf_recipe_path = _get_tf_recipe_path(stack.provider)
+    tf_recipe_path = _get_tf_recipe_path(stack.provider.value)
 
     tfr = TerraformRunner(tf_recipe_path)
 
     if not tf_previously_initialized(tf_recipe_path):
         ret_code, _, _stderr = _tf_client_init(
             tfr.client,
-            provider=stack.provider,
+            provider=stack.provider.value,
             region=stack.default_region or "",
             debug=debug_mode,
             remote_state_bucket=remote_state_bucket,
@@ -949,7 +949,7 @@ def get_remote_state_bucket(stack_path: str) -> str:
         FileNotFoundError: when file does not exist
     """
     stack = load_stack_yaml(stack_path)
-    tf_recipe_path = _get_tf_recipe_path(stack.provider)
+    tf_recipe_path = _get_tf_recipe_path(stack.provider.value)
     bucket_url_file = os.path.join(
         tf_recipe_path,
         REMOTE_STATE_BUCKET_URL_FILE_NAME,
@@ -982,7 +982,7 @@ def get_stack_outputs(
         RuntimeError: If Terraform has not been initialized.
     """
     stack = load_stack_yaml(stack_path)
-    tf_recipe_path = _get_tf_recipe_path(stack.provider)
+    tf_recipe_path = _get_tf_recipe_path(stack.provider.value)
     state_tf_path = f"{tf_recipe_path}/terraform.tfstate"
 
     tfr = TerraformRunner(tf_recipe_path)
@@ -1056,7 +1056,7 @@ def infracost_breakdown_stack(
     stack = load_stack_yaml(stack_path)
     infracost_vars = _get_infracost_vars(parse_and_extract_tf_vars(stack))
 
-    tf_recipe_path = _get_tf_recipe_path(stack.provider)
+    tf_recipe_path = _get_tf_recipe_path(stack.provider.value)
 
     tfr = TerraformRunner(tf_recipe_path)
     if not tf_previously_initialized(tf_recipe_path):
@@ -1064,7 +1064,7 @@ def infracost_breakdown_stack(
         # to prevent Terraform from initializing the recipe
         ret_code, _, _stderr = _tf_client_init(
             tfr.client,
-            provider=stack.provider,
+            provider=stack.provider.value,
             region=stack.default_region or "",
             debug=debug_mode,
         )
