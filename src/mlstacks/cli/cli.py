@@ -15,7 +15,7 @@ import random
 import shutil
 import string
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import click
 import pkg_resources
@@ -45,7 +45,10 @@ from mlstacks.utils.terraform_utils import (
     get_stack_outputs,
     infracost_breakdown_stack,
 )
-from mlstacks.utils.yaml_utils import load_yaml_as_dict
+from mlstacks.utils.yaml_utils import load_stack_yaml, load_yaml_as_dict
+
+if TYPE_CHECKING:
+    from mlstacks.models.stack import Stack
 
 
 @click.group()
@@ -91,7 +94,13 @@ def deploy(
         debug (bool): Flag to enable debug mode to view raw Terraform logging
     """
     with analytics_client.EventHandler(AnalyticsEventsEnum.MLSTACKS_DEPLOY):
-        if not remote_state_bucket_name:
+        stack: Stack = load_stack_yaml(file)
+        if stack.provider.value == "k3d":
+            deployed_bucket_url = None
+        elif remote_state_bucket_name:
+            deployed_bucket_url = remote_state_bucket_name
+            declare(f"Using '{deployed_bucket_url}' for remote state...")
+        else:
             # generate random bucket name
             letters = string.ascii_lowercase + string.digits
             random_bucket_suffix = "".join(
@@ -112,10 +121,6 @@ def deploy(
                 debug_mode=debug,
             )
             declare("Remote state successfully deployed!")
-        else:
-            deployed_bucket_url = remote_state_bucket_name
-            declare(f"Using '{deployed_bucket_url}' for remote state...")
-
         # Stack deployment
         declare(f"Deploying stack from '{file}'...")
         deploy_stack(
@@ -203,17 +208,18 @@ def destroy(file: str, debug: bool = False, yes: bool = False) -> None:
             shutil.rmtree(tf_files_dir)
         declare(f"Stack '{stack_name}' has been destroyed.")
 
-        remote_state_dir = _get_remote_state_dir_path(provider)
-        if (
-            yes
-            or confirmation(
-                f"Would you like to destroy the Terraform remote state used "
-                f"for this stack on {provider}?",
-            )
-        ) and Path(remote_state_dir).exists():
-            destroy_remote_state(provider)
-            shutil.rmtree(remote_state_dir)
-        declare(f"Remote state for {provider} has been destroyed.")
+        if provider != "k3d":
+            remote_state_dir = _get_remote_state_dir_path(provider)
+            if (
+                yes
+                or confirmation(
+                    f"Would you like to destroy the Terraform remote state "
+                    f"used for this stack on {provider}?",
+                )
+            ) and Path(remote_state_dir).exists():
+                destroy_remote_state(provider)
+                shutil.rmtree(remote_state_dir)
+            declare(f"Remote state for {provider} has been destroyed.")
 
 
 @click.command()
