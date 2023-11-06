@@ -93,30 +93,32 @@ def deploy(
     """
     with analytics_client.EventHandler(AnalyticsEventsEnum.MLSTACKS_DEPLOY):
         stack: Stack = load_stack_yaml(file)
-        if stack.provider.value != "k3d":
-            if remote_state_bucket_name:
-                deployed_bucket_url = remote_state_bucket_name
-                declare(f"Using '{deployed_bucket_url}' for remote state...")
-            else:
-                # generate random bucket name
-                letters = string.ascii_lowercase + string.digits
-                random_bucket_suffix = "".join(
-                    random.choice(letters) for _ in range(6)  # noqa: S311
-                )
-                random_bucket_name = f"{DEFAULT_REMOTE_STATE_BUCKET_NAME}-{random_bucket_suffix}"
+        if stack.provider.value == "k3d":
+            deployed_bucket_url = None
+        elif remote_state_bucket_name:
+            deployed_bucket_url = remote_state_bucket_name
+            declare(f"Using '{deployed_bucket_url}' for remote state...")
+        else:
+            # generate random bucket name
+            letters = string.ascii_lowercase + string.digits
+            random_bucket_suffix = "".join(
+                random.choice(letters) for _ in range(6)  # noqa: S311
+            )
+            random_bucket_name = (
+                f"{DEFAULT_REMOTE_STATE_BUCKET_NAME}-{random_bucket_suffix}"
+            )
 
-                # Remote state deployment
-                declare(
-                    "Deploying remote state to bucket "
-                    f"'{random_bucket_name}'...",
-                )
-                deployed_bucket_url = deploy_remote_state(
-                    stack_path=file,
-                    bucket_name=random_bucket_name,
-                    debug_mode=debug,
-                )
-                declare("Remote state successfully deployed!")
-
+            # Remote state deployment
+            declare(
+                "Deploying remote state to bucket "
+                f"'{random_bucket_name}'...",
+            )
+            deployed_bucket_url = deploy_remote_state(
+                stack_path=file,
+                bucket_name=random_bucket_name,
+                debug_mode=debug,
+            )
+            declare("Remote state successfully deployed!")
         # Stack deployment
         declare(f"Deploying stack from '{file}'...")
         deploy_stack(
