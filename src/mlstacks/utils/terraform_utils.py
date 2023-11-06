@@ -208,7 +208,7 @@ def parse_and_extract_tf_vars(stack: Stack) -> Dict[str, Any]:
 
 
 def tf_definitions_present(
-    provider: ProviderEnum,
+    provider: str,
     base_config_dir: str = CONFIG_DIR,
 ) -> bool:
     """Check if Terraform definitions are present.
@@ -257,7 +257,7 @@ def include_files(
 
 
 def populate_tf_definitions(
-    provider: ProviderEnum,
+    provider: str,
     region: str,
     force: bool = False,
     remote_state_bucket: Optional[str] = None,
@@ -375,7 +375,7 @@ def get_recipe_metadata(
     return load_yaml_as_dict(recipe_metadata)
 
 
-def check_tf_definitions_version(provider: ProviderEnum) -> None:
+def check_tf_definitions_version(provider: str) -> None:
     """Checks for a Terraform version mismatch.
 
     Args:
