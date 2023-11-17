@@ -23,14 +23,14 @@ resource "local_file" "stack_file" {
         name: default
         configuration: {}
 %{endif}
-      container_registry:
 %{if var.enable_container_registry || var.enable_orchestrator_kubeflow || var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes}
+      container_registry:
         id: ${uuid()}
         flavor: default
         name: k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}
         configuration:
           uri: "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
-%{endif}          
+%{endif}
       orchestrator:
 %{if var.enable_orchestrator_kubeflow}
         id: ${uuid()}
@@ -63,7 +63,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: local
         name: default
-        configuration: {}        
+        configuration: {}
 %{endif}
 %{endif}
 %{endif}
