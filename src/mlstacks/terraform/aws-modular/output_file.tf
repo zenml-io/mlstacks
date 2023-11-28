@@ -29,7 +29,7 @@ resource "local_file" "stack_file" {
 %{endif}
 
       orchestrator:
-%{if var.enable_orchestrator_kubeflow}      
+%{if var.enable_orchestrator_kubeflow}
         id: ${uuid()}
         flavor: kubeflow
         name: eks_kubeflow_orchestrator
@@ -43,7 +43,7 @@ resource "local_file" "stack_file" {
 %{else}
 %{if var.enable_orchestrator_skypilot}
         id: ${uuid()}
-        flavor: vm-aws
+        flavor: vm_aws
         name: aws_skypilot_orchestrator
         configuration: {}
 %{else}

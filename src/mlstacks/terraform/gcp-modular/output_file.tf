@@ -49,7 +49,7 @@ resource "local_file" "stack_file" {
 %{else}
 %{if var.enable_orchestrator_skypilot}
         id: ${uuid()}
-        flavor: vm-gcp
+        flavor: vm_gcp
         name: gcp_skypilot_orchestrator
         configuration: {"project_id": "${var.project_id}"}
 %{else}
