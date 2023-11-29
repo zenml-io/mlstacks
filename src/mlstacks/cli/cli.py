@@ -104,7 +104,8 @@ def deploy(
             # generate random bucket name
             letters = string.ascii_lowercase + string.digits
             random_bucket_suffix = "".join(
-                random.choice(letters) for _ in range(6)  # noqa: S311
+                random.choice(letters)
+                for _ in range(6)  # noqa: S311
             )
             random_bucket_name = (
                 f"{DEFAULT_REMOTE_STATE_BUCKET_NAME}-{random_bucket_suffix}"
