@@ -50,21 +50,17 @@ testpaths = "tests"
 xfail_strict = true
 
 
-[tool.black]
-line-length = 79
-include = '\.pyi?$'
-exclude = '''
-/(
-	\.git
-| \.hg
-| \.mypy_cache
-| \.tox
-| \.venv
-| _build
-| buck-out
-| build
-)/
-'''
+[tool.ruff.format]
+exclude = [
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".tox",
+    ".venv",
+    "_build",
+    "buck-out",
+    "build",
+]
 
 [tool.poetry.dependencies]
 # pydantic = {version = "2.0.2"}
@@ -165,7 +161,8 @@ select = [
     "TRY",
     "RUF",
 ]
-# ignore = ["E501", "F401", "F403", "D301", "D401", "D403", "D407", "D213", "D203", "S101", "S104", "S105", "S106", "S107"]
+ignore = ["COM812", "ISC001"]
+
 src = ["src", "tests"]
 # use Python 3.8 as the minimum version for autofixing
 target-version = "py38"
