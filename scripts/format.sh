@@ -8,4 +8,4 @@ ruff $SRC --select F401,F841 --fix --exclude "__init__.py" --isolated
 
 # sorts imports
 ruff $SRC --select I --fix --ignore D
-black $SRC
+ruff format $SRC
