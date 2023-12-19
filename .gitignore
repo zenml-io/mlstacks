@@ -128,10 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# stack yaml files
-*.yaml
-*.yaml
-
 # not the metadata file
 !metadata.yaml
 
@@ -152,3 +148,4 @@ terraform.tfstate.backup
 
 # used for testing
 testing.tfvars.json
+
