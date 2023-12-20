@@ -62,14 +62,6 @@ resource "local_file" "stack_file" {
 %{endif}
 %{endif}
 
-%{if var.enable_secrets_manager}
-      secrets_manager:
-        id: ${uuid()}
-        flavor: aws
-        name: aws_secrets_manager
-        configuration: {"region_name": "${var.region}"}
-%{endif}
-
 %{if var.enable_experiment_tracker_mlflow}
       experiment_tracker:
         id: ${uuid()}
