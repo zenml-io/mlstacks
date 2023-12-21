@@ -78,13 +78,6 @@ resource "local_file" "stack_file" {
         configuration: {"tracking_uri": "${var.enable_experiment_tracker_mlflow ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
 %{endif}
 
-%{if var.enable_model_deployer_kserve}
-      model_deployer:
-        id: ${uuid()}
-        flavor: kserve
-        name: eks_kserve_model_deployer
-        configuration: {"kubernetes_context": "${aws_eks_cluster.cluster[0].arn}", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${module.kserve[0].kserve-base-URL}", "secret": "aws_kserve_secret"}
-%{endif}
 %{if var.enable_model_deployer_seldon}
       model_deployer:
         id: ${uuid()}
