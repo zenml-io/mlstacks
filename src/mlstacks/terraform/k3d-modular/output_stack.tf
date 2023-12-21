@@ -87,11 +87,6 @@ resource "local_file" "stack_file" {
           kubernetes_namespace: "${local.seldon.workloads_namespace}"
           base_url:  "http://${var.enable_model_deployer_seldon ? module.istio[0].ingress-ip-address : ""}"
           kubernetes_secret_name: "${var.seldon-secret-name}"
-      secrets_manager:
-        id: ${uuid()}
-        flavor: local
-        name: k3d-secrets-manager-${random_string.cluster_id.result}
-        configuration: {}
 %{endif}
     ADD
   filename = "./k3d_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"

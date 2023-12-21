@@ -159,7 +159,6 @@ environments:
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
-      - local-secrets-manager
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
@@ -193,7 +192,6 @@ environments:
 %{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
-      - local-secrets-manager
     mandatory_requirements:
       - k3d-kubernetes-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
@@ -222,7 +220,6 @@ environments:
 %{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
-      - local-secrets-manager
     mandatory_requirements:
       - k3d-kubeflow-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
@@ -252,7 +249,6 @@ environments:
 %{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
-      - local-secrets-manager
     mandatory_requirements:
       - k3d-tekton-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
@@ -278,7 +274,6 @@ environments:
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
-      - local-secrets-manager
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
@@ -317,7 +312,6 @@ environments:
 %{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
-      - local-secrets-manager
     mandatory_requirements:
       - k3d-kubernetes-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
@@ -350,7 +344,6 @@ environments:
 %{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
-      - local-secrets-manager
     mandatory_requirements:
       - k3d-kubeflow-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
@@ -383,7 +376,6 @@ environments:
 %{if var.enable_model_deployer_kserve}
       - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
-      - local-secrets-manager
     mandatory_requirements:
       - k3d-tekton-${random_string.cluster_id.result}
       - k3d-container-registry-${random_string.cluster_id.result}
