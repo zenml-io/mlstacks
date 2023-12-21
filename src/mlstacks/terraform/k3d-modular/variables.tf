@@ -23,10 +23,6 @@ variable "enable_experiment_tracker_mlflow" {
   description = "Enable MLflow deployment"
   default     = false
 }
-variable "enable_model_deployer_kserve" {
-  description = "Enable KServe deployment"
-  default     = false
-}
 variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
   default     = false
@@ -66,11 +62,6 @@ variable "mlflow-password" {
 variable "seldon-secret-name" {
   description = "The Seldon Core Model Deployer Secret name"
   default     = "zenml-seldon-secret"
-  type        = string
-}
-variable "kserve-secret-name" {
-  description = "The Kserve Model Deployer Secret name"
-  default     = "zenml-kserve-secret"
   type        = string
 }
 

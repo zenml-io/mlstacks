@@ -36,7 +36,7 @@ ALLOWED_FLAVORS = {
         "vertex",
     ],
     "mlops_platform": ["zenml"],
-    "model_deployer": ["seldon", "kserve"],
+    "model_deployer": ["seldon"],
     "step_operator": ["sagemaker", "vertex"],
 }
 

@@ -22,22 +22,22 @@ output "artifact_store_configuration" {
 # otherwise, set the container registry outputs to empty strings
 output "container_registry_id" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
-    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
+    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
   var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? uuid() : ""
 }
 output "container_registry_flavor" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
-    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
+    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
   var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? "default" : ""
 }
 output "container_registry_name" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
-    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
+    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
   var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}" : ""
 }
 output "container_registry_configuration" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
-    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
+    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
     var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? jsonencode({
       uri = "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
   }) : ""
@@ -93,33 +93,28 @@ output "experiment_tracker_configuration" {
 }
 
 # if seldon is enabled, set the model_deployer outputs to the seldon values
-# if kserve is enabled, set the model_deployer outputs to the kserve values
 # otherwise, set the model_deployer outputs to empty strings
 output "model_deployer_id" {
-  value = var.enable_model_deployer_seldon || var.enable_model_deployer_kserve ? uuid() : ""
+  value = var.enable_model_deployer_seldon ? uuid() : ""
 }
 output "model_deployer_flavor" {
-  value = var.enable_model_deployer_seldon ? "seldon" : var.enable_model_deployer_kserve ? "kserve" : ""
+  value = var.enable_model_deployer_seldon ? "seldon" : ""
 }
 output "model_deployer_name" {
-  value = var.enable_model_deployer_seldon ? "k3d-seldon-${random_string.cluster_id.result}" : var.enable_model_deployer_kserve ? "k3d-kserve-${random_string.cluster_id.result}" : ""
+  value = var.enable_model_deployer_seldon ? "k3d-seldon-${random_string.cluster_id.result}" : ""
 }
 output "model_deployer_configuration" {
   value = var.enable_model_deployer_seldon ? jsonencode({
     kubernetes_context   = "k3d-${k3d_cluster.zenml-cluster[0].name}"
     kubernetes_namespace = local.seldon.workloads_namespace
     base_url             = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
-    }) : var.enable_model_deployer_kserve ? jsonencode({
-    kubernetes_context   = "k3d-${k3d_cluster.zenml-cluster[0].name}"
-    kubernetes_namespace = local.kserve.workloads_namespace
-    base_url             = module.kserve[0].kserve-base-URL
-  }) : ""
+    }) : ""
 }
 
 # output for the k3d cluster
 output "k3d-cluster-name" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
-    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_kserve ||
+    var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
   var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? k3d_cluster.zenml-cluster[0].name : ""
 }
 
@@ -159,15 +154,6 @@ output "mlflow-tracking-URL" {
 }
 output "mlflow-bucket" {
   value = (var.enable_experiment_tracker_mlflow && var.mlflow_minio_bucket == "") ? "mlflow-minio-${random_string.mlflow_bucket_suffix.result}" : ""
-}
-
-# output for kserve model deployer
-output "kserve-workload-namespace" {
-  value       = var.enable_model_deployer_kserve ? local.kserve.workloads_namespace : null
-  description = "The namespace created for hosting your Kserve workloads"
-}
-output "kserve-base-url" {
-  value = var.enable_model_deployer_kserve ? module.kserve[0].kserve-base-URL : null
 }
 
 # output for seldon model deployer

@@ -77,7 +77,7 @@ resource "local_file" "stack_file" {
           tracking_username: "${var.mlflow-username}"
           tracking_password: "${var.mlflow-password}"
 %{endif}
-%{if var.enable_model_deployer_seldon && !var.enable_model_deployer_kserve}
+%{if var.enable_model_deployer_seldon}
       model_deployer:
         id: ${uuid()}
         flavor: seldon

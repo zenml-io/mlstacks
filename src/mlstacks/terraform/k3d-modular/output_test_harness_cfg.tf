@@ -127,23 +127,6 @@ requirements:
 
 %{endif}
 
-%{if var.enable_model_deployer_kserve}
-  - name: k3d-kserve-${random_string.cluster_id.result}
-    description: >-
-      Kserve deployed in a local K3D cluster.
-    system_tools:
-      - kubectl
-    stacks:
-      - name: k3d-kserve-${random_string.cluster_id.result}
-        type: model_deployer
-        flavor: kserve
-        configuration:
-          kubernetes_context: "k3d-${k3d_cluster.zenml-cluster[0].name}"
-          kubernetes_namespace: "${local.kserve.workloads_namespace}"
-          base_url:  "http://${var.enable_model_deployer_kserve ? module.istio[0].ingress-ip-address : ""}"
-          kubernetes_secret_name: "${var.kserve-secret-name}"
-%{endif}
-
 environments:
 
   - name: default-k3d-local-orchestrator
@@ -162,9 +145,6 @@ environments:
       - local-secrets-manager
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
-%{endif}
-%{if var.enable_model_deployer_kserve}
-      - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
     mandatory_requirements:
 %{if var.enable_artifact_store || var.enable_experiment_tracker_mlflow}
@@ -189,9 +169,6 @@ environments:
 %{endif}
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
-%{endif}
-%{if var.enable_model_deployer_kserve}
-      - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
       - local-secrets-manager
     mandatory_requirements:
@@ -219,9 +196,6 @@ environments:
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_model_deployer_kserve}
-      - k3d-kserve-${random_string.cluster_id.result}
-%{endif}
       - local-secrets-manager
     mandatory_requirements:
       - k3d-kubeflow-${random_string.cluster_id.result}
@@ -248,9 +222,6 @@ environments:
 %{endif}
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
-%{endif}
-%{if var.enable_model_deployer_kserve}
-      - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
       - local-secrets-manager
     mandatory_requirements:
@@ -282,9 +253,6 @@ environments:
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_model_deployer_kserve}
-      - k3d-kserve-${random_string.cluster_id.result}
-%{endif}
     mandatory_requirements:
 %{if var.enable_artifact_store || var.enable_experiment_tracker_mlflow}
       - k3d-minio-artifact-store-${random_string.cluster_id.result}
@@ -313,9 +281,6 @@ environments:
 %{endif}
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
-%{endif}
-%{if var.enable_model_deployer_kserve}
-      - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
       - local-secrets-manager
     mandatory_requirements:
@@ -347,9 +312,6 @@ environments:
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
-%{if var.enable_model_deployer_kserve}
-      - k3d-kserve-${random_string.cluster_id.result}
-%{endif}
       - local-secrets-manager
     mandatory_requirements:
       - k3d-kubeflow-${random_string.cluster_id.result}
@@ -379,9 +341,6 @@ environments:
 %{endif}
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
-%{endif}
-%{if var.enable_model_deployer_kserve}
-      - k3d-kserve-${random_string.cluster_id.result}
 %{endif}
       - local-secrets-manager
     mandatory_requirements:
