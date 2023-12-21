@@ -108,7 +108,7 @@ output "model_deployer_configuration" {
     kubernetes_context   = "k3d-${k3d_cluster.zenml-cluster[0].name}"
     kubernetes_namespace = local.seldon.workloads_namespace
     base_url             = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
-    }) : ""
+  }) : ""
 }
 
 # output for the k3d cluster
