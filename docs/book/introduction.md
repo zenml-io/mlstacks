@@ -18,7 +18,7 @@ modular MLOps stacks on AWS, GCP and K3D (for local use).
 When we first created [ZenML](https://zenml.io) as an extensible MLOps framework
 for creating portable, production-ready MLOps pipelines, we saw many of our
 users having to deal with the pain of deploying infrastructure from scratch to
-run these pipelines. The community consistently asked questions quesiotns like:
+run these pipelines. The community consistently asked questions like:
 
 - How do I deploy tool X with tool Y?
 - Does a combination of tool X with Y make sense?
