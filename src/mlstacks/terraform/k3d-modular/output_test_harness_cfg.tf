@@ -142,7 +142,6 @@ environments:
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
-      - local-secrets-manager
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}
@@ -249,7 +248,6 @@ environments:
       - mlflow-local-tracker
       - mlflow-local-deployer
 %{endif}
-      - local-secrets-manager
 %{if var.enable_model_deployer_seldon}
       - k3d-seldon-${random_string.cluster_id.result}
 %{endif}

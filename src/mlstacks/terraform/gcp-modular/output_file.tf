@@ -77,15 +77,6 @@ resource "local_file" "stack_file" {
         configuration: {"project": "${var.project_id}", "region": "${var.region}", "service_account_path": "${local_file.sa_key_file[0].filename}"}
 %{endif}
 
-
-%{if var.enable_secrets_manager}
-      secrets_manager:
-        id: ${uuid()}
-        flavor: gcp
-        name: gcp_secrets_manager
-        configuration: {"project_id": "${var.project_id}"}
-%{endif}
-
 %{if var.enable_experiment_tracker_mlflow}
       experiment_tracker:
         id: ${uuid()}

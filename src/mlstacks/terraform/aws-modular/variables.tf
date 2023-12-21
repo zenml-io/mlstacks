@@ -7,10 +7,6 @@ variable "enable_container_registry" {
   description = "Enable ECR deployment"
   default     = false
 }
-variable "enable_secrets_manager" {
-  description = "Enable Secret Manager deployment"
-  default     = false
-}
 variable "enable_orchestrator_kubeflow" {
   description = "Enable Kubeflow deployment"
   default     = false
@@ -90,7 +86,7 @@ variable "mlflow_bucket" {
 # variables for creating a ZenML stack configuration file
 variable "zenml-version" {
   description = "The version of ZenML being used"
-  default     = "0.50.0"
+  default     = "0.53.1"
   type        = string
 }
 

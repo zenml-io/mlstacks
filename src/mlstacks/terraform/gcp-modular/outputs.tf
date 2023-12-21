@@ -100,23 +100,6 @@ output "experiment_tracker_configuration" {
   }) : ""
 }
 
-# if secrets manager is enabled, set the secrets manager outputs to the secrets manager values
-# otherwise, set the secrets manager outputs to empty strings
-output "secrets_manager_id" {
-  value = var.enable_secrets_manager ? uuid() : ""
-}
-output "secrets_manager_flavor" {
-  value = var.enable_secrets_manager ? "gcp" : ""
-}
-output "secrets_manager_name" {
-  value = var.enable_secrets_manager ? "gcp_secrets_manager_${random_string.unique.result}" : ""
-}
-output "secrets_manager_configuration" {
-  value = var.enable_secrets_manager ? jsonencode({
-    project_id = var.project_id
-  }) : ""
-}
-
 # if seldon is enabled, set the model deployer outputs to the seldon values
 # otherwise, set the model deployer outputs to empty strings
 output "model_deployer_id" {
