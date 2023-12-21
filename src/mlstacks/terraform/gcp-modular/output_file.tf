@@ -101,7 +101,6 @@ resource "local_file" "stack_file" {
         name: gke_seldon
         configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}", "kubernetes_namespace": "${local.seldon.workloads_namespace}", "base_url": "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"}
 %{endif}
-%{endif}
     ADD
   filename = "./gcp_modular_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }
