@@ -8,8 +8,8 @@ to these concepts and how they are used in MLStacks.
 
 A Stack is a collection of stack components, where each component represents the
 respective configuration regarding a particular function in your MLOps pipeline
-such as orchestration systems, artifact repositories, and model deploystrment
-platforrstarms.
+such as orchestration systems, artifact repositories, and model deployment
+platforms.
 
 As a shorthand, you can think of a stack as a grouping of these components.
 
