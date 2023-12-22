@@ -16,7 +16,7 @@ as can a list of components that are coming soon.
 | Experiment Tracker | mlflow                                            |
 | Orchestrator       | kubeflow, kubernetes, sagemaker, skypilot, tekton |
 | MLOps Platform     | zenml                                             |
-| Model Deployer     | seldon, kserve                                    |
+| Model Deployer     | seldon                                    |
 | Step Operator      | sagemaker                                         |
 
 ## Coming Soon!

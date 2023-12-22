@@ -13,7 +13,7 @@ module "kubeflow-pipelines" {
   ]
 
   pipeline_version = local.kubeflow.version
-  ingress_host     = (var.enable_model_deployer_kserve || var.enable_model_deployer_seldon) ? "${local.kubeflow.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.kubeflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_host     = (var.enable_model_deployer_seldon) ? "${local.kubeflow.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.kubeflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   tls_enabled      = false
-  istio_enabled    = (var.enable_model_deployer_kserve || var.enable_model_deployer_seldon) ? true : false
+  istio_enabled    = (var.enable_model_deployer_seldon) ? true : false
 }

@@ -85,20 +85,12 @@ resource "local_file" "stack_file" {
         configuration: {"tracking_uri": "${var.enable_experiment_tracker_mlflow ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
 %{endif}
 
-%{if var.enable_model_deployer_kserve}}
-      model_deployer:
-        id: ${uuid()}
-        flavor: kserve
-        name: gke_kserve
-        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_model_deployer_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
-%{else}
 %{if var.enable_model_deployer_seldon}
       model_deployer:
         id : ${uuid()}
         flavor: seldon
         name: gke_seldon
         configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}", "kubernetes_namespace": "${local.seldon.workloads_namespace}", "base_url": "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"}
-%{endif}
 %{endif}
     ADD
   filename = "./gcp_modular_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"

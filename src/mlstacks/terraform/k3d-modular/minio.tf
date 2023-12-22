@@ -16,10 +16,10 @@ module "minio_server" {
   minio_storage_size   = local.minio.storage_size
   minio_access_key     = var.zenml-minio-store-access-key
   minio_secret_key     = var.zenml-minio-store-secret-key
-  ingress_host         = (var.enable_model_deployer_kserve || var.enable_model_deployer_seldon) ? "${local.minio.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.minio.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
-  ingress_console_host = (var.enable_model_deployer_kserve || var.enable_model_deployer_seldon) ? "${local.minio.ingress_console_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.minio.ingress_console_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_host         = (var.enable_model_deployer_seldon) ? "${local.minio.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.minio.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_console_host = (var.enable_model_deployer_seldon) ? "${local.minio.ingress_console_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.minio.ingress_console_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   tls_enabled          = false
-  istio_enabled        = (var.enable_model_deployer_kserve || var.enable_model_deployer_seldon) ? true : false
+  istio_enabled        = (var.enable_model_deployer_seldon) ? true : false
 }
 
 provider "minio" {

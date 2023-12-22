@@ -84,25 +84,19 @@ output "experiment_tracker_configuration" {
   }) : ""
 }
 
-# if kserve is enabled, set the model deployer outputs to the kserve values
 # if seldon is enabled, set the model deployer outputs to the seldon values
 # otherwise, set the model deployer outputs to empty strings
 output "model_deployer_id" {
-  value = var.enable_model_deployer_kserve ? uuid() : var.enable_model_deployer_seldon ? uuid() : ""
+  value = var.enable_model_deployer_seldon ? uuid() : ""
 }
 output "model_deployer_flavor" {
-  value = var.enable_model_deployer_kserve ? "kserve" : var.enable_model_deployer_seldon ? "seldon" : ""
+  value = var.enable_model_deployer_seldon ? "seldon" : ""
 }
 output "model_deployer_name" {
-  value = var.enable_model_deployer_kserve ? "eks_kserve_model_deployer_${random_string.unique.result}" : var.enable_model_deployer_seldon ? "eks_seldon_model_deployer_${random_string.unique.result}" : ""
+  value = var.enable_model_deployer_seldon ? "eks_seldon_model_deployer_${random_string.unique.result}" : ""
 }
 output "model_deployer_configuration" {
-  value = var.enable_model_deployer_kserve ? jsonencode({
-    kubernetes_context   = "${aws_eks_cluster.cluster[0].arn}"
-    kubernetes_namespace = local.kserve.workloads_namespace
-    base_url             = module.kserve[0].kserve-base-URL
-    secret               = "aws_kserve_secret"
-    }) : var.enable_model_deployer_seldon ? jsonencode({
+  value = var.enable_model_deployer_seldon ? jsonencode({
     kubernetes_context   = "${aws_eks_cluster.cluster[0].arn}"
     kubernetes_namespace = local.seldon.workloads_namespace
     base_url             = "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"
@@ -156,15 +150,6 @@ output "mlflow-tracking-URL" {
 }
 output "mlflow-bucket" {
   value = (var.enable_experiment_tracker_mlflow && var.mlflow_bucket == "") ? "mlflow-s3-${random_string.mlflow_bucket_suffix.result}" : ""
-}
-
-# output for kserve model deployer
-output "kserve-workload-namespace" {
-  value       = var.enable_model_deployer_kserve ? local.kserve.workloads_namespace : null
-  description = "The namespace created for hosting your Kserve workloads"
-}
-output "kserve-base-url" {
-  value = var.enable_model_deployer_kserve ? module.kserve[0].kserve-base-URL : null
 }
 
 # output for seldon model deployer

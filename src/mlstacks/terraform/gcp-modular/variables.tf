@@ -27,10 +27,6 @@ variable "enable_experiment_tracker_mlflow" {
   description = "Enable MLflow deployment"
   default     = false
 }
-variable "enable_model_deployer_kserve" {
-  description = "Enable KServe deployment"
-  default     = false
-}
 variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
   default     = false

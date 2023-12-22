@@ -54,14 +54,6 @@ locals {
     ingress_host_prefix     = "mlflow"
   }
 
-  kserve = {
-    version              = "0.9.0"
-    knative_version      = "1.8.1"
-    workloads_namespace  = "zenml-workloads-kserve"
-    service_account_name = "kserve"
-    ingress_host_prefix  = "kserve"
-  }
-
   seldon = {
     version              = "1.15.0"
     name                 = "seldon"
