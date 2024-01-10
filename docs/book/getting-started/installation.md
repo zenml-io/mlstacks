@@ -8,7 +8,7 @@ MLStacks using the following command:
 pip install mlstacks
 ```
 
-## Other requirements
+## Other requirements and dependencies
 
 MLStacks uses Terraform on the backend to manage infrastructure. You will need
 to have Terraform installed. Please visit the
@@ -19,6 +19,10 @@ MLStacks also uses Helm to deploy Kubernetes resources. You will need to have
 Helm installed. Please visit the
 [Helm docs](https://helm.sh/docs/intro/install/#from-script) for installation
 instructions.
+
+If you're using a Mac, you will need to
+[install `jq`](https://jqlang.github.io/jq/) in order for some of the Terraform
+deployment commands and scripts to work.
 
 If you want to use the `mlstacks breakdown` command to get cost estimates for
 your MLOps stacks, you'll need to also have `infracost` installed as well as to
@@ -34,6 +38,7 @@ MLStacks currently supports the following stack providers:
 - K3D
 
 If you wish to deploy using these providers you'll need to have accounts (for
-AWS and GCP) and the relevant CLIs installed and authenticated. You will also need to have the
-relevant permissions to deploy, manage and destroy resources in these accounts.
-Please refer to the documentation for those providers for more information.
+AWS and GCP) and the relevant CLIs installed and authenticated. You will also
+need to have the relevant permissions to deploy, manage and destroy resources in
+these accounts. Please refer to the documentation for those providers for more
+information.
