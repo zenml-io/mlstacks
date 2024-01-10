@@ -50,7 +50,7 @@ name: "quickstart_s3_bucket"
 provider: aws
 metadata:
   config:
-    bucket_name: "quickstart_s3_bucket"
+    bucket_name: "quickstart-s3-bucket"
   tags:
     deployed-by: "mlstacks"
   region: "eu-north-1"
