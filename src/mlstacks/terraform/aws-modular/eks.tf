@@ -1,8 +1,7 @@
 # eks module to create a cluster
 # newer versions of it had some error so going with v17.23.0 for now
 locals {
-  enable_eks = (var.enable_orchestrator_kubeflow || var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
-    var.enable_model_deployer_kserve || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow ||
+  enable_eks = (var.enable_orchestrator_kubeflow || var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow ||
   var.enable_zenml)
 }
 

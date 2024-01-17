@@ -7,10 +7,6 @@ variable "enable_container_registry" {
   description = "Enable GCR deployment"
   default     = false
 }
-variable "enable_secrets_manager" {
-  description = "Enable Secret Manager deployment"
-  default     = false
-}
 variable "enable_orchestrator_kubeflow" {
   description = "Enable Kubeflow deployment"
   default     = false
@@ -29,10 +25,6 @@ variable "enable_orchestrator_skypilot" {
 }
 variable "enable_experiment_tracker_mlflow" {
   description = "Enable MLflow deployment"
-  default     = false
-}
-variable "enable_model_deployer_kserve" {
-  description = "Enable KServe deployment"
   default     = false
 }
 variable "enable_model_deployer_seldon" {
@@ -86,7 +78,7 @@ variable "mlflow-password" {
 # variables for creating a ZenML stack configuration file
 variable "zenml-version" {
   description = "The version of ZenML being used"
-  default     = "0.12.0"
+  default     = "0.53.1"
   type        = string
 }
 

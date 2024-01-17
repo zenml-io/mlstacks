@@ -22,7 +22,6 @@ class ComponentTypeEnum(str, Enum):
     ARTIFACT_STORE = "artifact_store"
     ORCHESTRATOR = "orchestrator"
     CONTAINER_REGISTRY = "container_registry"
-    SECRETS_MANAGER = "secrets_manager"
     DATA_VALIDATOR = "data_validator"
     EXPERIMENT_TRACKER = "experiment_tracker"
     MODEL_REGISTRY = "model_registry"
@@ -39,7 +38,6 @@ class ComponentFlavorEnum(str, Enum):
 
     AWS = "aws"
     GCP = "gcp"
-    KSERVE = "kserve"
     KUBEFLOW = "kubeflow"
     KUBERNETES = "kubernetes"
     MINIO = "minio"
@@ -78,3 +76,4 @@ class AnalyticsEventsEnum(str, Enum):
     MLSTACKS_CLEAN = "MLStacks Clean"
     MLSTACKS_SOURCE = "MLStacks Source"
     MLSTACKS_EXCEPTION = "MLStacks Exception"
+    MLSTACKS_VERSION = "MLStacks Version"

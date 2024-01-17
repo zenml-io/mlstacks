@@ -100,41 +100,19 @@ output "experiment_tracker_configuration" {
   }) : ""
 }
 
-# if secrets manager is enabled, set the secrets manager outputs to the secrets manager values
-# otherwise, set the secrets manager outputs to empty strings
-output "secrets_manager_id" {
-  value = var.enable_secrets_manager ? uuid() : ""
-}
-output "secrets_manager_flavor" {
-  value = var.enable_secrets_manager ? "gcp" : ""
-}
-output "secrets_manager_name" {
-  value = var.enable_secrets_manager ? "gcp_secrets_manager_${random_string.unique.result}" : ""
-}
-output "secrets_manager_configuration" {
-  value = var.enable_secrets_manager ? jsonencode({
-    project_id = var.project_id
-  }) : ""
-}
-
-# if kserve is enabled, set the model deployer outputs to the kserve values
 # if seldon is enabled, set the model deployer outputs to the seldon values
 # otherwise, set the model deployer outputs to empty strings
 output "model_deployer_id" {
-  value = var.enable_model_deployer_kserve ? uuid() : var.enable_model_deployer_seldon ? uuid() : ""
+  value = var.enable_model_deployer_seldon ? uuid() : ""
 }
 output "model_deployer_flavor" {
-  value = var.enable_model_deployer_kserve ? "kserve" : var.enable_model_deployer_seldon ? "seldon" : ""
+  value = var.enable_model_deployer_seldon ? "seldon" : ""
 }
 output "model_deployer_name" {
-  value = var.enable_model_deployer_kserve ? "gke_kserve_model_deployer_${random_string.unique.result}" : var.enable_model_deployer_seldon ? "gke_seldon_model_deployer_${random_string.unique.result}" : ""
+  value = var.enable_model_deployer_seldon ? "gke_seldon_model_deployer_${random_string.unique.result}" : ""
 }
 output "model_deployer_configuration" {
-  value = var.enable_model_deployer_kserve ? jsonencode({
-    kubernetes_context   = "gke_${var.project_id}_${var.region}_${local.prefix}-${local.gke.cluster_name}"
-    kubernetes_namespace = local.kserve.workloads_namespace
-    base_url             = module.kserve[0].kserve-base-URL
-    }) : var.enable_model_deployer_seldon ? jsonencode({
+  value = var.enable_model_deployer_seldon ? jsonencode({
     kubernetes_context   = "gke_${var.project_id}_${var.region}_${local.prefix}-${local.gke.cluster_name}"
     kubernetes_namespace = local.seldon.workloads_namespace
     base_url             = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
@@ -195,14 +173,6 @@ output "mlflow-bucket" {
   value = (var.enable_experiment_tracker_mlflow && var.mlflow_bucket == "") ? "mlflow-gcs-${random_string.mlflow_bucket_suffix.result}" : ""
 }
 
-# output for kserve model deployer
-output "kserve-workload-namespace" {
-  value       = var.enable_model_deployer_kserve ? local.kserve.workloads_namespace : null
-  description = "The namespace created for hosting your Kserve workloads"
-}
-output "kserve-base-url" {
-  value = var.enable_model_deployer_kserve ? module.kserve[0].kserve-base-URL : null
-}
 
 # output for seldon model deployer
 output "seldon-workload-namespace" {

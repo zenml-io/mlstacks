@@ -3,17 +3,8 @@ data "google_project" "project" {
   project_id = var.project_id
 }
 
-# You must have owner, editor, or service config editor roles 
+# You must have owner, editor, or service config editor roles
 # to be able to enable services.
-
-# enable secret manager
-resource "google_project_service" "secret_manager" {
-  count   = var.enable_secrets_manager ? 1 : 0
-  project = var.project_id
-  service = "secretmanager.googleapis.com"
-
-  disable_on_destroy = false
-}
 
 # enable container registry
 resource "google_project_service" "container_registry" {

@@ -49,7 +49,7 @@ resource "local_file" "stack_file" {
 %{else}
 %{if var.enable_orchestrator_skypilot}
         id: ${uuid()}
-        flavor: vm-gcp
+        flavor: vm_gcp
         name: gcp_skypilot_orchestrator
         configuration: {"project_id": "${var.project_id}"}
 %{else}
@@ -77,15 +77,6 @@ resource "local_file" "stack_file" {
         configuration: {"project": "${var.project_id}", "region": "${var.region}", "service_account_path": "${local_file.sa_key_file[0].filename}"}
 %{endif}
 
-
-%{if var.enable_secrets_manager}
-      secrets_manager:
-        id: ${uuid()}
-        flavor: gcp
-        name: gcp_secrets_manager
-        configuration: {"project_id": "${var.project_id}"}
-%{endif}
-
 %{if var.enable_experiment_tracker_mlflow}
       experiment_tracker:
         id: ${uuid()}
@@ -94,20 +85,12 @@ resource "local_file" "stack_file" {
         configuration: {"tracking_uri": "${var.enable_experiment_tracker_mlflow ? module.mlflow[0].mlflow-tracking-URL : ""}", "tracking_username": "${var.mlflow-username}", "tracking_password": "${var.mlflow-password}"}
 %{endif}
 
-%{if var.enable_model_deployer_kserve}}
-      model_deployer:
-        id: ${uuid()}
-        flavor: kserve
-        name: gke_kserve
-        configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}", "kubernetes_namespace": "${local.kserve.workloads_namespace}", "base_url": "${var.enable_model_deployer_kserve ? module.kserve[0].kserve-base-URL : ""}", "secret": "gcp_kserve_secret"}
-%{else}
 %{if var.enable_model_deployer_seldon}
       model_deployer:
         id : ${uuid()}
         flavor: seldon
         name: gke_seldon
         configuration: {"kubernetes_context": "gke_${local.prefix}-${local.gke.cluster_name}", "kubernetes_namespace": "${local.seldon.workloads_namespace}", "base_url": "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"}
-%{endif}
 %{endif}
     ADD
   filename = "./gcp_modular_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"

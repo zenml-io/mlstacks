@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "mlstacks"
-version = "0.7.7"
+version = "0.8.0"
 packages = [{ include = "mlstacks", from = "src" }]
 description = "MLStacks MLStacks."
 authors = ["ZenML GmbH <info@zenml.io>"]
 readme = "README.md"
-homepage = ""
-documentation = ""
+homepage = "https://mlstacks.zenml.io"
+documentation = "https://mlstacks.zenml.io/"
 repository = "https://github.com/zenml-io/mlstacks"
 license = "Apache-2.0"
 keywords = ["machine learning", "production", "pipeline", "mlops", "devops"]
@@ -50,21 +50,17 @@ testpaths = "tests"
 xfail_strict = true
 
 
-[tool.black]
-line-length = 79
-include = '\.pyi?$'
-exclude = '''
-/(
-	\.git
-| \.hg
-| \.mypy_cache
-| \.tox
-| \.venv
-| _build
-| buck-out
-| build
-)/
-'''
+[tool.ruff.format]
+exclude = [
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".tox",
+    ".venv",
+    "_build",
+    "buck-out",
+    "build",
+]
 
 [tool.poetry.dependencies]
 # pydantic = {version = "2.0.2"}
@@ -78,10 +74,9 @@ rich = { version = "^12.0.0" }
 analytics-python = { version = "^1.4.0" }
 
 # dev dependencies
-black = { version = "^23.10.0", optional = true }
-ruff = { version = "^0.1.0", optional = true }
+ruff = { version = "^0.1.7", optional = true }
 pytest = { version = "^7.4.0", optional = true }
-mypy = { version = "^1.6.1", optional = true }
+mypy = { version = "^1.7.1", optional = true }
 darglint = { version = "^1.8.1", optional = true }
 hypothesis = { version = "^6.43.1", optional = true }
 types-PyYAML = { version = "^6.0.0", optional = true }
@@ -95,7 +90,6 @@ types-setuptools = { version = "^57.4.2", optional = true }
 
 [tool.poetry.extras]
 dev = [
-    "black",
     "ruff",
     "pytest",
     "mypy",
@@ -167,7 +161,8 @@ select = [
     "TRY",
     "RUF",
 ]
-# ignore = ["E501", "F401", "F403", "D301", "D401", "D403", "D407", "D213", "D203", "S101", "S104", "S105", "S106", "S107"]
+ignore = ["COM812", "ISC001"]
+
 src = ["src", "tests"]
 # use Python 3.8 as the minimum version for autofixing
 target-version = "py38"

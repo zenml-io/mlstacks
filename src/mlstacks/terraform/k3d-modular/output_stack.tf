@@ -23,14 +23,14 @@ resource "local_file" "stack_file" {
         name: default
         configuration: {}
 %{endif}
-      container_registry:
 %{if var.enable_container_registry || var.enable_orchestrator_kubeflow || var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes}
+      container_registry:
         id: ${uuid()}
         flavor: default
         name: k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}
         configuration:
           uri: "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
-%{endif}          
+%{endif}
       orchestrator:
 %{if var.enable_orchestrator_kubeflow}
         id: ${uuid()}
@@ -63,7 +63,7 @@ resource "local_file" "stack_file" {
         id: ${uuid()}
         flavor: local
         name: default
-        configuration: {}        
+        configuration: {}
 %{endif}
 %{endif}
 %{endif}
@@ -77,7 +77,7 @@ resource "local_file" "stack_file" {
           tracking_username: "${var.mlflow-username}"
           tracking_password: "${var.mlflow-password}"
 %{endif}
-%{if var.enable_model_deployer_seldon && !var.enable_model_deployer_kserve}
+%{if var.enable_model_deployer_seldon}
       model_deployer:
         id: ${uuid()}
         flavor: seldon
@@ -87,11 +87,6 @@ resource "local_file" "stack_file" {
           kubernetes_namespace: "${local.seldon.workloads_namespace}"
           base_url:  "http://${var.enable_model_deployer_seldon ? module.istio[0].ingress-ip-address : ""}"
           kubernetes_secret_name: "${var.seldon-secret-name}"
-      secrets_manager:
-        id: ${uuid()}
-        flavor: local
-        name: k3d-secrets-manager-${random_string.cluster_id.result}
-        configuration: {}
 %{endif}
     ADD
   filename = "./k3d_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"

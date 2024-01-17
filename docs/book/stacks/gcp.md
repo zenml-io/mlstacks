@@ -22,7 +22,7 @@ and cannot be created without one.
 | Experiment Tracker | mlflow                                         |
 | Orchestrator       | kubeflow, kubernetes, skypilot, tekton, vertex |
 | MLOps Platform     | zenml                                          |
-| Model Deployer     | seldon, kserve                                 |
+| Model Deployer     | seldon                                 |
 | Step Operator      | vertex                                         |
 
 ## Coming Soon!
