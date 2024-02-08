@@ -176,7 +176,8 @@ def track_event(
             )
         except Exception:
             logger.exception("Error occurred during analytics tracking")
-            return False
+
+    return False
 
 
 class EventHandler:
