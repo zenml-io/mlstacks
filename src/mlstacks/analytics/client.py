@@ -175,7 +175,7 @@ def track_event(
                 analytics_context.track(event=event, properties=metadata)
             )
         except Exception:
-            logger.exception("Error occurred during analytics tracking")
+            logger.debug("Unable to log analytics event. Please check network settings.")
 
     return False
 
