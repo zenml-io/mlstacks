@@ -161,7 +161,7 @@ def track_event(
         metadata: Dict of metadata to track.
 
     Returns:
-        True if event is sent successfully, False is not.
+        True if event is sent successfully, False otherwise.
     """
     if metadata is None:
         metadata = {}
@@ -169,8 +169,13 @@ def track_event(
     metadata.setdefault("event_success", True)
 
     with MLStacksAnalyticsContext() as analytics_context:
-        return bool(analytics_context.track(event=event, properties=metadata))
-    return False
+        try:
+            return bool(
+                analytics_context.track(event=event, properties=metadata)
+            )
+        except Exception:
+            logger.exception("Error occurred during analytics tracking")
+            return False
 
 
 class EventHandler:
