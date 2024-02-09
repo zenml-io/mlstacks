@@ -16,7 +16,7 @@ import datetime
 import os
 from logging import getLogger
 from types import TracebackType
-from typing import Any, Dict, Optional, Type, cast
+from typing import Any, Dict, List, Optional, Type, cast
 from uuid import uuid4
 
 import click
@@ -34,9 +34,22 @@ from mlstacks.utils.yaml_utils import load_yaml_as_dict
 logger = getLogger(__name__)
 
 analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
-analytics.max_retries = 5
+analytics.max_retries = 1
 
 CONFIG_FILENAME = "config.yaml"
+
+
+def on_error(error: Exception, batch: List[Dict[str, Any]]) -> None:
+    """Custom error handler for Segment analytics.
+
+    Args:
+        error: The error that occurred.
+        batch: Events processed when the error occurred.
+    """
+    logger.debug("Analytics error: %s; Batch: %s", error, batch)
+
+
+analytics.on_error = on_error
 
 
 class MLStacksAnalyticsContext:
@@ -169,16 +182,10 @@ def track_event(
 
     metadata.setdefault("event_success", True)
 
-    with MLStacksAnalyticsContext() as analytics_context:
-        try:
-            return bool(
-                analytics_context.track(event=event, properties=metadata)
-            )
-        except Exception:
-            logger.debug(
-                "Unable to log analytics event. Please check network settings."
-            )
+    analytics.write_key = "invalid_write_key_for_testing"
 
+    with MLStacksAnalyticsContext() as analytics_context:
+        return bool(analytics_context.track(event=event, properties=metadata))
     return False
 
 
