@@ -1,49 +1,47 @@
-import logging
-from typing import Any, Dict, List
-from unittest.mock import patch
-
-import requests
+import pytest
 from segment import analytics
+import logging
+from unittest.mock import patch, Mock
+import requests
+import uuid
 
-logging.basicConfig(level=logging.DEBUG)
+
 logger = logging.getLogger(__name__)
-
-analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
-analytics.max_retries = 1
+analytics.max_retries = 0
 
 
 def mock_post_failure(*args, **kwargs):
-    """Simulates a request failure."""
     response = requests.Response()
     response.status_code = 500
-    response._content = (
-        b'{"error": "Simulated failure", "code": "internal_error"}'
-    )
-    response.headers["Content-Type"] = "application/json"
+    response._content = b'{"error": "Simulated failure", "code": "internal_error"}'
+    response.headers['Content-Type'] = 'application/json'
     return response
 
 
-def test_with_custom_on_error_handler():
-    """Tests that the custom on_error handler is called on error."""
-    handler_call_info = {"called": False}
+@pytest.fixture(autouse=True)
+def reset_analytics_client():
+    """Sets a unique write_key for each test session to ensure test isolation."""
+    unique_write_key = str(uuid.uuid4())
+    original_write_key = analytics.write_key
+    analytics.write_key = unique_write_key
 
-    def custom_on_error_handler(error: Exception, batch: List[Dict[str, Any]]):
-        handler_call_info["called"] = True
-        logger.debug(
-            "Custom on_error handler invoked:\nError: %s;\nBatch: %s",
-            error,
-            batch,
-        )
+    original_max_retries = analytics.max_retries
+    original_on_error = analytics.on_error
 
-    analytics.on_error = custom_on_error_handler
+    yield
 
-    with patch(
-        "segment.analytics.request._session.post",
-        side_effect=mock_post_failure,
-    ):
-        analytics.track("test_user_id", "Test Event", {"property": "value"})
+    # Reset analytics client configurations after each test
+    analytics.write_key = original_write_key
+    analytics.max_retries = original_max_retries
+    analytics.on_error = original_on_error
+
+
+@pytest.mark.usefixtures("reset_analytics_client")
+def test_segment_custom_on_error_handler_invocation(caplog):
+    with caplog.at_level(logging.CRITICAL), \
+            patch('segment.analytics.request._session.post', side_effect=mock_post_failure), \
+            patch('segment.analytics.on_error', Mock()) as mock_on_error:
+        analytics.track('test_user_id', 'Test Event', {'property': 'value'})
         analytics.flush()
 
-    assert handler_call_info[
-        "called"
-    ], "Custom on_error handler was not invoked"
+    mock_on_error.assert_called()
