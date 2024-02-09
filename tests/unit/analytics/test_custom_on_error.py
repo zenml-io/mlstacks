@@ -1,10 +1,10 @@
-import pytest
-from segment import analytics
 import logging
-from unittest.mock import patch, Mock
-import requests
 import uuid
+from unittest.mock import Mock, patch
 
+import pytest
+import requests
+from segment import analytics
 
 logger = logging.getLogger(__name__)
 analytics.max_retries = 0
@@ -13,8 +13,10 @@ analytics.max_retries = 0
 def mock_post_failure(*args, **kwargs):
     response = requests.Response()
     response.status_code = 500
-    response._content = b'{"error": "Simulated failure", "code": "internal_error"}'
-    response.headers['Content-Type'] = 'application/json'
+    response._content = (
+        b'{"error": "Simulated failure", "code": "internal_error"}'
+    )
+    response.headers["Content-Type"] = "application/json"
     return response
 
 
@@ -38,10 +40,11 @@ def reset_analytics_client():
 
 @pytest.mark.usefixtures("reset_analytics_client")
 def test_segment_custom_on_error_handler_invocation(caplog):
-    with caplog.at_level(logging.CRITICAL), \
-            patch('segment.analytics.request._session.post', side_effect=mock_post_failure), \
-            patch('segment.analytics.on_error', Mock()) as mock_on_error:
-        analytics.track('test_user_id', 'Test Event', {'property': 'value'})
+    with caplog.at_level(logging.CRITICAL), patch(
+        "segment.analytics.request._session.post",
+        side_effect=mock_post_failure,
+    ), patch("segment.analytics.on_error", Mock()) as mock_on_error:
+        analytics.track("test_user_id", "Test Event", {"property": "value"})
         analytics.flush()
 
     mock_on_error.assert_called()
