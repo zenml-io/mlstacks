@@ -34,7 +34,7 @@ from mlstacks.utils.yaml_utils import load_yaml_as_dict
 logger = getLogger(__name__)
 
 analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
-analytics.max_retries = 0
+analytics.max_retries = 5
 
 CONFIG_FILENAME = "config.yaml"
 
