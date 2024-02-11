@@ -1,13 +1,21 @@
 import logging
-import uuid
-from unittest.mock import Mock, patch
+from typing import Any, Dict, List
+from unittest.mock import patch
 
 import pytest
 import requests
 from segment import analytics
 
 logger = logging.getLogger(__name__)
-analytics.max_retries = 0
+
+
+@pytest.fixture(autouse=True)
+def reset_analytics_client():
+    default_on_error = analytics.on_error
+
+    yield
+
+    analytics.on_error = default_on_error
 
 
 def mock_post_failure(*args, **kwargs):
@@ -20,31 +28,20 @@ def mock_post_failure(*args, **kwargs):
     return response
 
 
-@pytest.fixture(autouse=True)
-def reset_analytics_client():
-    """Sets a unique write_key for each test session to ensure test isolation."""
-    unique_write_key = str(uuid.uuid4())
-    original_write_key = analytics.write_key
-    analytics.write_key = unique_write_key
-
-    original_max_retries = analytics.max_retries
-    original_on_error = analytics.on_error
-
-    yield
-
-    # Reset analytics client configurations after each test
-    analytics.write_key = original_write_key
-    analytics.max_retries = original_max_retries
-    analytics.on_error = original_on_error
+def custom_on_error(error: Exception, batch: List[Dict[str, Any]]) -> None:
+    logger.debug("Analytics error: %s; Batch: %s", error, batch)
 
 
 @pytest.mark.usefixtures("reset_analytics_client")
 def test_segment_custom_on_error_handler_invocation(caplog):
-    with caplog.at_level(logging.CRITICAL), patch(
-        "segment.analytics.request._session.post",
-        side_effect=mock_post_failure,
-    ), patch("segment.analytics.on_error", Mock()) as mock_on_error:
-        analytics.track("test_user_id", "Test Event", {"property": "value"})
-        analytics.flush()
+    with caplog.at_level(logging.DEBUG):
+        with patch(
+            "segment.analytics.request._session.post",
+            side_effect=mock_post_failure,
+        ):
+            analytics.track(
+                "test_user_id", "Test Event", {"property": "value"}
+            )
+            analytics.flush()
 
-    mock_on_error.assert_called()
+    assert "Analytics error:" in caplog.text
