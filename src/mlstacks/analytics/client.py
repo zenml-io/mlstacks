@@ -182,8 +182,6 @@ def track_event(
 
     metadata.setdefault("event_success", True)
 
-    analytics.write_key = "invalid_write_key_for_testing"
-
     with MLStacksAnalyticsContext() as analytics_context:
         return bool(analytics_context.track(event=event, properties=metadata))
     return False
