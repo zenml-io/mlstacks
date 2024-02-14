@@ -13,8 +13,8 @@
 """Analytics module for MLStacks."""
 
 import datetime
+import logging
 import os
-from logging import getLogger
 from types import TracebackType
 from typing import Any, Dict, List, Optional, Type, cast
 from uuid import uuid4
@@ -31,7 +31,9 @@ from mlstacks.utils.analytics_utils import operating_system, python_version
 from mlstacks.utils.environment_utils import handle_bool_env_var
 from mlstacks.utils.yaml_utils import load_yaml_as_dict
 
-logger = getLogger(__name__)
+logger = logging.getLogger(__name__)
+logging.getLogger("segment").disabled = True
+
 
 analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
 analytics.max_retries = 1
