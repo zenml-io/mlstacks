@@ -13,10 +13,10 @@
 """Analytics module for MLStacks."""
 
 import datetime
+import logging
 import os
-from logging import getLogger
 from types import TracebackType
-from typing import Any, Dict, Optional, Type, cast
+from typing import Any, Dict, List, Optional, Type, cast
 from uuid import uuid4
 
 import click
@@ -31,11 +31,27 @@ from mlstacks.utils.analytics_utils import operating_system, python_version
 from mlstacks.utils.environment_utils import handle_bool_env_var
 from mlstacks.utils.yaml_utils import load_yaml_as_dict
 
-logger = getLogger(__name__)
+logger = logging.getLogger(__name__)
+logging.getLogger("segment").disabled = True
+
 
 analytics.write_key = "tU9BJvF05TgC29xgiXuKF7CuYP0zhgnx"
+analytics.max_retries = 1
 
 CONFIG_FILENAME = "config.yaml"
+
+
+def on_error(error: Exception, batch: List[Dict[str, Any]]) -> None:
+    """Custom error handler for Segment analytics.
+
+    Args:
+        error: The error that occurred.
+        batch: Events processed when the error occurred.
+    """
+    logger.debug("Analytics error: %s; Batch: %s", error, batch)
+
+
+analytics.on_error = on_error
 
 
 class MLStacksAnalyticsContext:
@@ -161,7 +177,7 @@ def track_event(
         metadata: Dict of metadata to track.
 
     Returns:
-        True if event is sent successfully, False is not.
+        True if event is sent successfully, False otherwise.
     """
     if metadata is None:
         metadata = {}
