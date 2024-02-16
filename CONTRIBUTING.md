@@ -101,6 +101,10 @@ if any existing recipes cover their creation.
    ```
    git checkout -b <new-branch-name> develop
    ```
+   or, if that doesn't work:
+   ```
+   git checkout -b <new-branch-name> origin/develop
+   ```
 2. Fetch the latest changes from the remote `develop` branch:
    ```
    git fetch origin develop
