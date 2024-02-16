@@ -193,7 +193,7 @@ steps:
       rm -f terraform.tfstate.backup
 ```
 
-- **Install terraform-local**: Intalls `terraform-local` for the `tflocal` command, integrating Terraform with LocalStack.
+- **Install terraform-local**: Installs `terraform-local` for the `tflocal` command, integrating Terraform with LocalStack.
 - **Apply Terraform Configuration**: Navigates to the `aws-remote-state` directory, initializes Terraform with LocalStack as the backend, validates the configuration, and applies it using a `.tfvars` file.
 - **Run Tests**: Executes a bash script to verify resource provisioning.
 - **Cleanup Resources**: Destroys provisioned resources and cleans up Terraform-related files.
