@@ -31,3 +31,28 @@ resource "null_resource" "kubeflow" {
     module.gke,
   ]
 }
+
+
+# allow the kubeflow kubernetes sa to access GKE's IAM role
+# the GKE IAM role should have access to Storage resources
+resource "google_service_account_iam_member" "kubeflow-storage-access" {
+  service_account_id = google_service_account.gke-service-account.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "serviceAccount:${local.project_id}.svc.id.goog[kubeflow/default]"
+  depends_on = [
+    null_resource.kubeflow
+  ]
+}
+  
+# add annotation to kubernetes sa pipeline-runner
+resource "kubernetes_annotations" "pipeline-runner" {
+  api_version = "v1"
+  kind        = "ServiceAccount"
+  metadata {
+    name      = "pipeline-runner"
+    namespace = "kubeflow"
+  }
+  annotations = {
+    "iam.gke.io/gcp-service-account" = "${google_service_account.gke-service-account.email}"
+  }
+}
