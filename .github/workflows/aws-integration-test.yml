@@ -1,0 +1,87 @@
+name: AWS Integration Test
+on:
+  workflow_call:
+  workflow_dispatch:
+jobs:
+  aws_remote_state_integration_test:
+    name: aws_remote_state_integration_test
+    runs-on: ubuntu-latest
+    services:
+      setup-localstack-service:
+        image: localstack/localstack
+        ports:
+          - '4566:4566'
+        env:
+          SERVICES: 's3,dynamodb,iam,sts'
+          DEFAULT_REGION: eu-north-1
+          FORCE_NONINTERACTIVE: 1
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install terraform-local
+        run: pip install terraform-local
+
+      - name: Apply Terraform Configuration for aws-remote-state
+        run: |
+          export TF_CLI_ARGS_apply="-compact-warnings"
+          cd src/mlstacks/terraform/aws-remote-state
+          tflocal init
+          tflocal validate
+          tflocal apply -auto-approve -var-file="../../../../tests/integration/aws-remote-state/local.tfvars"
+      - name: Run Tests to Verify Resource Provisioning
+        run: ./tests/integration/aws-remote-state/verify_stack.sh
+
+      - name: Cleanup Resources for aws-remote-state
+        run: |
+          cd src/mlstacks/terraform/aws-remote-state
+          tflocal destroy -auto-approve -var-file="../../../../tests/integration/aws-remote-state/local.tfvars"
+          rm -rf .terraform
+          rm -rf volume
+          rm -f .terraform.lock.hcl
+          rm -f terraform.tfstate
+          rm -f terraform.tfstate.backup
+  aws_modular_integration_test:
+    name: aws_modular_integration_test
+    runs-on: ubuntu-latest
+    services:
+      setup-localstack-service:
+        image: localstack/localstack
+        ports:
+          - '4566:4566'
+        env:
+          SERVICES: 's3,iam,sts'
+          DEFAULT_REGION: eu-north-1
+          FORCE_NONINTERACTIVE: 1
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install terraform-local
+        run: pip install terraform-local
+
+      - name: Apply Terraform Configuration for aws-modular with SkyPilot
+        run: |
+          export TF_CLI_ARGS_apply="-compact-warnings"
+          cd src/mlstacks/terraform/aws-modular
+          tflocal init -backend-config="path=./terraform.tfstate"
+          tflocal validate
+          tflocal apply -auto-approve -var-file="../../../../tests/integration/aws-modular/local.tfvars"
+      - name: Run Tests to Verify Resource Provisioning
+        run: |
+          STACK_YAML_PATH=$(terraform output -raw stack-yaml-path)
+          ../../../../tests/integration/aws-modular/verify_stack.sh "$STACK_YAML_PATH"
+      - name: Cleanup Resources for aws-modular
+        run: |
+          cd src/mlstacks/terraform/aws-modular
+          tflocal destroy -auto-approve -var-file="../../../../tests/integration/aws-modular/local.tfvars"
+          rm -rf .terraform
+          rm -rf volume
+          rm -f .terraform.lock.hcl
+          rm -f terraform.tfstate
+          rm -f terraform.tfstate.backup
+          rm -f aws_modular_stack_*.yaml
