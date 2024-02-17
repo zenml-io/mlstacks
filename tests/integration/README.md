@@ -8,60 +8,78 @@
 ## LocalStack
 
 LocalStack is a powerful tool that simulates AWS cloud services on your local machine, providing a development environment that closely mirrors the live AWS environment without incurring the costs associated with real AWS services. It supports a wide range of AWS services, allowing you to test various deployment configurations before pushing them to AWS. For more information and a complete guide on how to use LocalStack, visit the [LocalStack Documentation](https://docs.localstack.cloud/getting-started/).
+
 ### Installation
 
 Installation can be done via Homebrew, PIP, Docker CLI, or Docker Compose. For detailed instructions, refer to the [LocalStack Installation Guide](https://docs.localstack.cloud/getting-started/installation/).
 
-**Using Homebrew:**
+**Homebrew**
 ```bash
 brew install localstack/tap/localstack-cli
 ```
 
-**Using PIP:**
+**PIP**
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install localstack
 ```
 
-**Using Docker CLI:**
-```bash
-docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack
-```
-
-**Using Docker Compose:**
-Refer to the [LocalStack Docker Compose guide](https://docs.localstack.cloud/getting-started/installation/#starting-localstack-with-docker-compose).
-
 ### Starting LocalStack
 
-Before starting LocalStack, ensure Docker is running. LocalStack can be started in detached mode, accessible at port 4566.
+First, ensure Docker is running. Then, you can start LocalStack using the LocalStack CLI, Docker or Docker Compose.
 
+**LocalStack CLI**
 ```bash
 localstack start -d
 ```
 
-Example command to create an S3 bucket:
+**Docker CLI**
+
+```bash
+docker run --rm -it -p 4566:4566 -p 4510-4559:4510-4559 localstack/localstack
+```
+
+**Docker Compose**
+
+Use the `docker-compose.localstack.yml` file in `test/integration` for an easy setup. From that directory, run:
+
+```bash
+docker-compose -f docker-compose.localstack.yml up -d
+```
+
+> You may customize this file as needed. If you don't specify any services, LocalStack defaults to running all supported AWS services. Refer to the [LocalStack Docker Compose guide](https://docs.localstack.cloud/getting-started/installation/#starting-localstack-with-docker-compose) for more details.
+
+
+
+### Interacting with LocalStack
+
+Once LocalStack is running, interact with it using `aws` commands by specifying the `endpoint-url`. 
+For instance, to create an S3 bucket:
 
 ```bash
 aws --endpoint-url=http://localhost:4566 s3 mb mybucket
 ```
 
-### Setting up LocalStack's AWS CLI (optional)
+To avoid having to specify the `endpoint-url` with each command, you can install the [awscli-local](https://github.com/localstack/awscli-local) package. It provides the `awslocal` command, which automatically targets the LocalStack endpoint.
 
-The [awscli-local](https://github.com/localstack/awscli-local) package simplifies interactions with LocalStack by providing the `awslocal` command, which automatically targets LocalStack's endpoints.
+So you can simply do this...
+```bash
+awslocal s3 mb s3://test-bucket
+```
 
-**Installation**
+Instead of this...
+```bash
+aws --endpoint-url=http://localhost:4566 s3 mb mybucket
+```
+
+#### Installation
 
 ```bash
 pip install awscli-local
 ```
 
-**Usage Examples**
-
-Create an S3 bucket:
-```bash
-awslocal s3 mb s3://test-bucket
-```
+#### Usage examples
 
 List all buckets:
 ```bash
@@ -84,7 +102,7 @@ awslocal dynamodb list-tables --region eu-north-1
 ```
 
 > **Note:**
-> Most AWS services require specifying the region when using LocalStack, except for S3, which is globally accessible.
+> **Most AWS services require specifying the region when using LocalStack, except for S3, which is globally accessible.**
 
 
 ## Provisioning AWS resources with Terraform + LocalStack
@@ -116,11 +134,11 @@ force_destroy     = true
 
 ## GitHub Actions Workflow for AWS Integration Testing
 
-This documentation outlines the GitHub Actions workflow designed for comprehensive integration testing of AWS deployments within MLStacks using LocalStack. The workflow consists of two main jobs: `aws_remote_state_integration_test` and `aws_modular_integration_test`, each responsible for provisioning AWS resources in a local testing environment and verifying their setup.
+This documentation describes the GitHub Actions workflow for LocalStack-based AWS integration testing within MLStacks. It features two primary jobs: `aws_remote_state_integration_test` and `aws_modular_integration_test`, aimed at provisioning and validating AWS resources in a local setup.
 
-The actual provisioning of resources leverages `terraform-local`
+> **The actual provisioning of resources leverages `terraform-local`**
 
-### terraform-local
+### [terraform-local](https://docs.localstack.cloud/user-guide/integrations/terraform/)
 
 `terraform-local` is a package that provides the `tflocal` command, a tool that adapts Terraform commands for use within the LocalStack environment, and eliminates the need for manual endpoint configuration. In our framework, `tflocal` is utilized to ensure AWS resources are provisioned in a simulated environment for integration testing.
 
@@ -253,6 +271,7 @@ steps:
       rm -f .terraform.lock.hcl
       rm -f terraform.tfstate
       rm -f terraform.tfstate.backup
+      rm -f localstack_providers_override.tf
       rm -f aws_modular_stack_*.yaml 
 ```
 
@@ -279,3 +298,13 @@ In this documentation, we covered:
 - Using `awslocal` for simplified AWS service interaction.
 - Integrating Terraform with LocalStack using `tflocal` and `.tfvars` files for resource provisioning.
 - Configuring GitHub Actions for AWS integration testing with LocalStack.
+
+## Links
+
+- [LocalStack Documentation](https://docs.localstack.cloud/getting-started/)
+- [LocalStack Installation Guide](https://docs.localstack.cloud/getting-started/installation/)
+- [LocalStack GitHub Actions Integration Guide](https://docs.localstack.cloud/user-guide/ci/github-actions/)
+- [LocalStack terraform-local (`tflocal`) integration](https://docs.localstack.cloud/user-guide/integrations/terraform/)
+- [terraform-local package](https://github.com/localstack/terraform-local)
+- [`.tfvars` documentation](https://developer.hashicorp.com/terraform/language/values/variables#variable-definitions-tfvars-files)
+- [awscli-local package](https://github.com/localstack/awscli-local)
