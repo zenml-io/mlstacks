@@ -84,4 +84,5 @@ jobs:
           rm -f .terraform.lock.hcl
           rm -f terraform.tfstate
           rm -f terraform.tfstate.backup
+          rm -f localstack_providers_override.tf
           rm -f aws_modular_stack_*.yaml
