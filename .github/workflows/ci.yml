@@ -111,6 +111,10 @@ jobs:
           files: "."
           config: ./.typos.toml
 
+  localstack-aws-integration-test:
+    uses: ./.github/workflows/aws-integration-test.yml
+    secrets: inherit
+
   aws_test:
     name: aws_test
     runs-on: ubuntu-latest
