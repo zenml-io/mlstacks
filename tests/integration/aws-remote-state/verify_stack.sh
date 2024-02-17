@@ -1,23 +1,18 @@
 #!/bin/bash
 
-#  Copyright (c) ZenML GmbH 2023. All Rights Reserved.
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at:
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-#  or implied. See the License for the specific language governing
-#  permissions and limitations under the License.
 ENDPOINT_URL="http://localhost:4566"
 AWS_REGION="eu-north-1"
 
+# Debugging
+echo "Listing S3 buckets:"
+aws s3 ls --endpoint-url="$ENDPOINT_URL"
+echo "Listing DynamoDB tables:"
+aws dynamodb list-tables --endpoint-url="$ENDPOINT_URL" --region "$AWS_REGION"
+
 # Verifying S3 bucket creation
 BUCKET_NAME="local-aws-remote-artifact-store"
-if aws s3 ls --endpoint-url="$ENDPOINT_URL" | grep -q "$BUCKET_NAME"; then
+BUCKET_LIST=$(aws s3 ls --endpoint-url="$ENDPOINT_URL")
+if echo "$BUCKET_LIST" | grep -q "$BUCKET_NAME"; then
     echo "S3 bucket '$BUCKET_NAME' creation verification succeeded."
 else
     echo "S3 bucket '$BUCKET_NAME' creation verification failed."
@@ -26,7 +21,8 @@ fi
 
 # Verifying DynamoDB table creation
 TABLE_NAME="local-aws-remote-terraform-state-locks"
-if aws dynamodb list-tables --endpoint-url="$ENDPOINT_URL" --region "$AWS_REGION" | grep -q "$TABLE_NAME"; then
+TABLE_LIST=$(aws dynamodb list-tables --endpoint-url="$ENDPOINT_URL" --region "$AWS_REGION")
+if echo "$TABLE_LIST" | grep -q "$TABLE_NAME"; then
     echo "DynamoDB table '$TABLE_NAME' creation verification succeeded."
 else
     echo "DynamoDB table '$TABLE_NAME' creation verification failed."
