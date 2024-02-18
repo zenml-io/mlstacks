@@ -236,7 +236,6 @@ steps:
     run: |
       STACK_YAML_PATH="${{ steps.set_output.outputs.stack_yaml_path }}"
       ABSOLUTE_PATH="${GITHUB_WORKSPACE}/src/mlstacks/terraform/aws-modular/${STACK_YAML_PATH}"
-      echo "Absolute YAML path: $ABSOLUTE_PATH"
       ../../../../tests/integration/aws-modular/verify_stack.sh "$ABSOLUTE_PATH"
     working-directory: src/mlstacks/terraform/aws-modular
 
