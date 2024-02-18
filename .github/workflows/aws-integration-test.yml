@@ -76,7 +76,7 @@ jobs:
       - name: Ensure _override.tf Deletion
         if: always()
         run: |
-          rm -f src/mlstacks/terraform/aws-remote-state/_override.tf
+          rm -f src/mlstacks/terraform/aws-modular/_override.tf
         working-directory: ${{ github.workspace }}
 
   aws_remote_state_integration_test:
