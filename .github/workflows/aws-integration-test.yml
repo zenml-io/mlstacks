@@ -3,6 +3,7 @@ permissions:
 name: LocalStack AWS Integration Test
 on:
   workflow_call:
+  workflow_dispatch:
 jobs:
   aws_modular_integration_test:
     name: aws_modular_integration_test
@@ -55,7 +56,6 @@ jobs:
       - name: Run Tests to Verify Resource Provisioning
         run: |
           STACK_YAML_PATH="${{ steps.set_output.outputs.stack_yaml_path }}"
-          echo "Using YAML path: $STACK_YAML_PATH"
           ABSOLUTE_PATH="${GITHUB_WORKSPACE}/src/mlstacks/terraform/aws-modular/${STACK_YAML_PATH}"
           echo "Absolute YAML path: $ABSOLUTE_PATH"
           ../../../../tests/integration/aws-modular/verify_stack.sh "$ABSOLUTE_PATH"
