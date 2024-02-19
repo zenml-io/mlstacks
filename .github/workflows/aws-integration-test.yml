@@ -1,0 +1,103 @@
+permissions:
+  contents: read
+name: LocalStack AWS Integration Test
+on:
+  workflow_call:
+  workflow_dispatch:
+jobs:
+  aws_modular_integration_test:
+    name: aws_modular_integration_test
+    runs-on: ubuntu-latest
+    services:
+      setup-localstack-service:
+        image: localstack/localstack
+        ports:
+          - '4566:4566'
+        env:
+          SERVICES: 's3,iam,sts'
+          DEFAULT_REGION: eu-north-1
+          FORCE_NONINTERACTIVE: 1
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3.0.0
+        with:
+          terraform_version: 1.6.0
+
+      - name: Copy Override File
+        run: |
+          cp tests/integration/_override.tf src/mlstacks/terraform/aws-modular/_override.tf
+
+      - name: Apply Terraform Configuration
+        run: |
+          export TF_CLI_ARGS_apply="-compact-warnings"
+          terraform init -backend-config="path=./terraform.tfstate"
+          terraform validate
+          terraform apply -auto-approve -var-file="../../../../tests/integration/aws-modular/local.tfvars"
+        working-directory: src/mlstacks/terraform/aws-modular
+
+      - name: Refresh Terraform State
+        run: terraform refresh
+        working-directory: src/mlstacks/terraform/aws-modular
+
+      - name: Output Stack YAML Path
+        id: set_output
+        run: |
+          OUTPUT=$(terraform-bin output -raw stack-yaml-path)
+          echo "stack_yaml_path=$OUTPUT" >> $GITHUB_OUTPUT
+        working-directory: src/mlstacks/terraform/aws-modular
+        env:
+          terraform_wrapper: false
+
+      - name: Run Tests to Verify Resource Provisioning
+        run: |
+          STACK_YAML_PATH="${{ steps.set_output.outputs.stack_yaml_path }}"
+          ABSOLUTE_PATH="${GITHUB_WORKSPACE}/src/mlstacks/terraform/aws-modular/${STACK_YAML_PATH}"
+          ../../../../tests/integration/aws-modular/verify_stack.sh "$ABSOLUTE_PATH"
+        working-directory: src/mlstacks/terraform/aws-modular
+
+  aws_remote_state_integration_test:
+    name: aws_remote_state_integration_test
+    runs-on: ubuntu-latest
+    services:
+      setup-localstack-service:
+        image: localstack/localstack
+        ports:
+          - '4566:4566'
+        env:
+          SERVICES: 's3,dynamodb,iam,sts'
+          DEFAULT_REGION: eu-north-1
+          FORCE_NONINTERACTIVE: 1
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.1.1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3.0.0
+        with:
+          terraform_version: 1.6.0
+
+      - name: Copy Override File
+        run: |
+          cp tests/integration/_override.tf src/mlstacks/terraform/aws-remote-state/_override.tf
+
+      - name: Apply Terraform Configuration for aws-remote-state
+        run: |
+          export TF_CLI_ARGS_apply="-compact-warnings"
+          cd src/mlstacks/terraform/aws-remote-state
+          terraform init -backend-config="path=./terraform.tfstate"
+          terraform validate
+          terraform apply -auto-approve -var-file="../../../../tests/integration/aws-remote-state/local.tfvars"
+
+      - name: Run Tests to Verify Resource Provisioning
+        run: ./tests/integration/aws-remote-state/verify_stack.sh
+        env:
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          AWS_DEFAULT_REGION: eu-north-1
