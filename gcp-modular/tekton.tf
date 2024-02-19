@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # using the tekton pipelines module to create a tekton pipelines deployment
 module "tekton-pipelines" {
   source = "../modules/tekton-pipelines-module"

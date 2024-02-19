@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 resource "null_resource" "kserve" {
   triggers = {
     kserve_version = var.kserve_version

@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # using the zenml module to create a zenml deployment
 module "zenml" {
   source = "../modules/zenml-module"

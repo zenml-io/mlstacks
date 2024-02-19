@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # workload service account for Vertex pipelines
 resource "google_service_account" "sa" {
   account_id   = "${local.prefix}-${local.service_account.account_id}"

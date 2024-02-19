@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 resource "null_resource" "knative-serving" {
   triggers = {
     knative_version = var.knative_version

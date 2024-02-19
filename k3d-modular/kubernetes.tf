@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # a default (non-aliased) provider configuration for "kubernetes"
 provider "kubernetes" {
   host = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||

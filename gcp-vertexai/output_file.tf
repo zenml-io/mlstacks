@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # Export Terraform output variable values to a stack yaml file 
 # that can be consumed by zenml stack import
 resource "local_file" "stack_file_mlflow" {
