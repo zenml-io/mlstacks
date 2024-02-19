@@ -7,7 +7,7 @@
 
 ## LocalStack
 
-LocalStack is a powerful tool that simulates AWS cloud services on your local machine, providing a development environment that closely mirrors the live AWS environment without incurring the costs associated with real AWS services. It supports a wide range of AWS services, allowing you to test various deployment configurations before pushing them to AWS. For more information and a complete guide on how to use LocalStack, visit the [LocalStack Documentation](https://docs.localstack.cloud/getting-started/).
+[LocalStack](https://www.localstack.cloud/) is a powerful tool that simulates AWS cloud services on your local machine, providing a development environment that closely mirrors the live AWS environment without incurring the costs associated with real AWS services. It supports a wide range of AWS services, allowing you to test various deployment configurations before pushing them to AWS. For more information and a complete guide on how to use LocalStack, visit the [LocalStack Documentation](https://docs.localstack.cloud/getting-started/).
 
 ### Installation
 
