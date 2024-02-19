@@ -21,7 +21,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: test
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
