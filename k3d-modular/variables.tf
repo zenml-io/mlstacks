@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # enable services
 variable "enable_container_registry" {
   description = "Enable K3D registry deployment"

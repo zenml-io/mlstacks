@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # if gcs is enabled, set the artifact store outputs to the gcs values
 # otherwise, set the artifact store outputs to empty strings
 output "artifact_store_id" {

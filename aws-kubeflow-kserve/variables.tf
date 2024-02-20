@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # variables for the MLflow tracking server
 variable "mlflow-artifact-S3-access-key" {
   description = "Your AWS access key for using S3 as MLflow artifact store"

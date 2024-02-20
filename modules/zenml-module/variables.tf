@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 
 variable "chart_version" {
   description = "The ZenML chart version to use. Leave empty to use the latest."

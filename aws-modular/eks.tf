@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # eks module to create a cluster
 # newer versions of it had some error so going with v17.23.0 for now
 locals {

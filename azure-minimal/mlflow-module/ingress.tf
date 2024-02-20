@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # set up the nginx ingress controller and the ingress with basic auth
 
 resource "kubernetes_namespace" "nginx-ns" {

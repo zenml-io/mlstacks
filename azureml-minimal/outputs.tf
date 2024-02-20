@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # subscription id
 output "subscription-id" {
   value     = data.azurerm_client_config.current.subscription_id

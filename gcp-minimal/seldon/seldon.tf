@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # creating the namespace for the seldon deployment
 resource "kubernetes_namespace" "seldon-ns" {
   metadata {

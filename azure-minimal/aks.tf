@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 data "azurerm_kubernetes_cluster" "cluster" {
   name                = azurerm_kubernetes_cluster.aks.name
   resource_group_name = azurerm_resource_group.rg.name
