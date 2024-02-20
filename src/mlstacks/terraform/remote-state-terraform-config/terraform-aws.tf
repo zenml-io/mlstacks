@@ -1,8 +1,13 @@
 # defining the providers for the recipe module
 terraform {
   required_providers {
-    google = {
-      source = "hashicorp/google"
+    aws = {
+      source = "hashicorp/aws"
+    }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "3.1.0"
     }
 
     local = {
@@ -40,6 +45,6 @@ terraform {
   required_version = ">= 0.14.8"
 }
 
-provider "google" {
-  project = var.project_id
+provider "aws" {
+  region = var.region
 }
