@@ -16,6 +16,7 @@ from typing import Any, Dict, Union
 
 import yaml
 
+from mlstacks.constants import STACK_COMPONENT_PROVIDER_MISMATCH_ERROR_MESSAGE
 from mlstacks.models.component import (
     Component,
     ComponentMetadata,
@@ -58,8 +59,15 @@ def load_component_yaml(path: str) -> Component:
     Returns:
         The component model.
     """
-    with open(path) as file:
-        component_data = yaml.safe_load(file)
+
+    try:
+        with open(path) as file:
+            component_data = yaml.safe_load(file)
+    except FileNotFoundError as exc:
+        # Not sure what to do here, as I'd like to specify the path that caused the problem, but I don't think that's possible while using a constant for the error message.
+        raise FileNotFoundError(
+            f'Component file at "{path}" specified in the stack spec file could not be found.'
+        ) from exc
 
     if component_data.get("metadata") is None:
         component_data["metadata"] = {}
@@ -95,7 +103,8 @@ def load_stack_yaml(path: str) -> Stack:
 
     if component_data is None:
         component_data = []
-    return Stack(
+
+    stack = Stack(
         spec_version=stack_data.get("spec_version"),
         spec_type=stack_data.get("spec_type"),
         name=stack_data.get("name"),
@@ -107,3 +116,9 @@ def load_stack_yaml(path: str) -> Stack:
             load_component_yaml(component) for component in component_data
         ],
     )
+
+    for component in stack.components:
+        if component.provider != stack.provider:
+            raise ValueError(STACK_COMPONENT_PROVIDER_MISMATCH_ERROR_MESSAGE)
+
+    return stack

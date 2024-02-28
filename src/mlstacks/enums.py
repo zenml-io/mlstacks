@@ -77,3 +77,22 @@ class AnalyticsEventsEnum(str, Enum):
     MLSTACKS_SOURCE = "MLStacks Source"
     MLSTACKS_EXCEPTION = "MLStacks Exception"
     MLSTACKS_VERSION = "MLStacks Version"
+
+
+class SpecTypeEnum(str, Enum):
+    """Spec type enum."""
+
+    STACK = "stack"
+    COMPONENT = "component"
+
+
+class StackSpecVersionEnum(int, Enum):
+    """Spec version enum."""
+
+    ONE = 1
+
+
+class ComponentSpecVersionEnum(int, Enum):
+    """Spec version enum."""
+
+    ONE = 1

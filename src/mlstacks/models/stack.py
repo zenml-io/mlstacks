@@ -19,6 +19,8 @@ from mlstacks.constants import INVALID_NAME_ERROR_MESSAGE
 from mlstacks.enums import (
     DeploymentMethodEnum,
     ProviderEnum,
+    SpecTypeEnum,
+    StackSpecVersionEnum,
 )
 from mlstacks.models.component import Component
 from mlstacks.utils.model_utils import is_valid_name
@@ -38,8 +40,8 @@ class Stack(BaseModel):
         components: The components of the stack.
     """
 
-    spec_version: int = 1
-    spec_type: str = "stack"
+    spec_version: StackSpecVersionEnum = 1
+    spec_type: SpecTypeEnum = "stack"
     name: str
     provider: ProviderEnum
     default_region: Optional[str]
