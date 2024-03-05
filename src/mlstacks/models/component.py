@@ -68,7 +68,7 @@ class Component(BaseModel):
     metadata: Optional[ComponentMetadata] = None
 
     @validator("name")
-    def validate_name(self, cls, name: str) -> str:  # noqa: N805
+    def validate_name(cls, name: str) -> str:  # noqa: N805
         """Validate the name.
 
         Name must start with an alphanumeric character and can only contain
@@ -90,7 +90,9 @@ class Component(BaseModel):
         return name
 
     @validator("component_type")
-    def validate_component_type(self, cls, component_type: str, values: dict) -> str:
+    def validate_component_type(
+        cls, component_type: str, values: dict
+    ) -> str:
         """Validate the component type.
 
         Artifact Store, Container Registry, Experiment Tracker, Orchestrator,
@@ -113,11 +115,14 @@ class Component(BaseModel):
 
     @validator("component_flavor")
     def validate_component_flavor(
-        self, cls, component_flavor: str, values: dict
+        cls, component_flavor: str, values: dict
     ) -> str:
         """Validate the component flavor.
 
-        Only certain flavors are allowed for a given provider-component type combination. For more information, consult the tables for your specified provider at the MLStacks documentation: https://mlstacks.zenml.io/stacks/stack-specification.
+        Only certain flavors are allowed for a given provider-component
+        type combination. For more information, consult the tables for
+        your specified provider at the MLStacks documentation:
+        https://mlstacks.zenml.io/stacks/stack-specification.
 
         Args:
             component_flavor: The component flavor.

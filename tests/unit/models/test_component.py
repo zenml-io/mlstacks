@@ -15,7 +15,11 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from mlstacks.constants import PERMITTED_NAME_REGEX
-from mlstacks.enums import ComponentFlavorEnum, ComponentTypeEnum
+from mlstacks.enums import (
+  ComponentFlavorEnum,
+  ComponentTypeEnum,
+  ProviderEnum,
+)
 from mlstacks.models.component import Component, ComponentMetadata
 
 
@@ -29,13 +33,18 @@ def test_component_metadata(instance):
 
 @given(st.builds(Component, name=st.from_regex(PERMITTED_NAME_REGEX)))
 def test_component(instance):
+    print(f"instance: {instance}")
     assert isinstance(instance.spec_version, int)
     assert isinstance(instance.spec_type, str)
     assert isinstance(instance.name, str)
     assert instance.name is not None
     assert instance.spec_version is not None
     assert instance.spec_type is not None
+    print("!!!!!!!!!!!!!!!!!!!!!!!!")
+    print("just prior to component type test")
     assert isinstance(instance.component_type, ComponentTypeEnum)
+    print("just after component type test")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!")
     assert isinstance(instance.component_flavor, ComponentFlavorEnum)
     assert isinstance(instance.provider, str)
     assert instance.provider is not None

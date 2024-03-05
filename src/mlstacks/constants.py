@@ -55,6 +55,7 @@ ALLOWED_COMPONENT_TYPES = {
         "model_deployer": ["seldon"],
         "step_operator": ["sagemaker"],
     },
+    "azure": {},
     "gcp": {
         "artifact_store": ["gcp"],
         "container_registry": ["gcp"],
@@ -95,14 +96,14 @@ INVALID_NAME_ERROR_MESSAGE = (
     "thereafter."
 )
 INVALID_COMPONENT_TYPE_ERROR_MESSAGE = (
-    "Artifact Store, Container Registry, Experiment Tracker, Orchestrator,"
-    "MLOps Platform, and Model Deployer may be used with aws, gcp, and k3d"
+    "Artifact Store, Container Registry, Experiment Tracker, Orchestrator, "
+    "MLOps Platform, and Model Deployer may be used with aws, gcp, and k3d "
     "providers. Step Operator may only be used with aws and gcp."
 )
 INVALID_COMPONENT_FLAVOR_ERROR_MESSAGE = (
-    "Only certain flavors are allowed for a given provider-component type"
-    "combination. For more information, consult the tables for your specified"
-    "provider at the MLStacks documentation:"
+    "Only certain flavors are allowed for a given provider-component type "
+    "combination. For more information, consult the tables for your specified "
+    "provider at the MLStacks documentation: "
     "https://mlstacks.zenml.io/stacks/stack-specification."
 )
 STACK_COMPONENT_PROVIDER_MISMATCH_ERROR_MESSAGE = (

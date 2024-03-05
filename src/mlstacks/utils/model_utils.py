@@ -58,7 +58,19 @@ def is_valid_component_flavor(component_flavor: str, specs: dict) -> bool:
     Returns:
         True if the component flavor is valid, False otherwise.
     """
+    print("----------------------")
+    print(f"component_flavor: {component_flavor}")
+    print(f"specs: {specs}")
+    try:
+        t = component_flavor in ALLOWED_COMPONENT_TYPES[specs["provider"]][specs["component_type"]]
+    except:
+        return False
+    print(f"result: {t}")
+    print("----------------------")
+
+
     return (
-        component_flavor
-        in ALLOWED_COMPONENT_TYPES[specs["provider"]][specs["component_type"]]
+        t
+        # component_flavor
+        # in ALLOWED_COMPONENT_TYPES[specs["provider"]][specs["component_type"]]
     )
