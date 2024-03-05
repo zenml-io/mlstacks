@@ -49,6 +49,9 @@ class ComponentFlavorEnum(str, Enum):
     TEKTON = "tekton"
     VERTEX = "vertex"
     ZENML = "zenml"
+    DEFAULT = "default"
+
+    
 
 
 class DeploymentMethodEnum(str, Enum):
