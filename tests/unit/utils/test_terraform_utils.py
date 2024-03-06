@@ -129,12 +129,11 @@ def test_component_variable_parsing_works():
     """Tests that the component variable parsing works."""
     metadata = ComponentMetadata()
     component_flavor = "zenml"
-    
+
     # random_test = random.choice(list(ProviderEnum)).value
     allowed_providers = get_allowed_providers()
     random_test = random.choice(allowed_providers)
 
-    print(f"variable parsing: {random_test}")
     components = [
         Component(
             name="test",
@@ -157,13 +156,11 @@ def test_component_var_parsing_works_for_env_vars():
     env_vars = {"ARIA_KEY": "blupus"}
     metadata = ComponentMetadata(environment_variables=env_vars)
 
-
     # EXCLUDE AZURE
     allowed_providers = get_allowed_providers()
     random_test = random.choice(allowed_providers)
     # random_test = random.choice(list(ProviderEnum)).value
 
-    print(f"env vars: {random_test}")
     components = [
         Component(
             name="test",
@@ -187,7 +184,6 @@ def test_tf_variable_parsing_from_stack_works():
     allowed_providers = get_allowed_providers()
     provider = random.choice(allowed_providers)
 
-    print(f"parsing_from_stack: {provider}")
     component_flavor = "zenml"
     metadata = ComponentMetadata()
     components = [

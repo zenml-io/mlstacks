@@ -51,8 +51,6 @@ class ComponentFlavorEnum(str, Enum):
     ZENML = "zenml"
     DEFAULT = "default"
 
-    
-
 
 class DeploymentMethodEnum(str, Enum):
     """Deployment method enum."""

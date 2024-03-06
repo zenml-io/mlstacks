@@ -75,6 +75,7 @@ def test_flavor_combination_validator_fails_aws_gcp():
 
     assert not valid
 
+
 def test_flavor_combination_validator_fails_k3d_s3():
     """Checks that the flavor combination validator fails.
 

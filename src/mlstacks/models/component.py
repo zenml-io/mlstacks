@@ -12,7 +12,7 @@
 #  permissions and limitations under the License.
 """Component model."""
 
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, validator
 
@@ -59,8 +59,8 @@ class Component(BaseModel):
         metadata: The metadata of the component.
     """
 
-    spec_version: ComponentSpecVersionEnum = 1
-    spec_type: SpecTypeEnum = "component"
+    spec_version: ComponentSpecVersionEnum = ComponentSpecVersionEnum.ONE
+    spec_type: SpecTypeEnum = SpecTypeEnum.COMPONENT
     name: str
     provider: ProviderEnum
     component_type: ComponentTypeEnum
@@ -68,7 +68,7 @@ class Component(BaseModel):
     metadata: Optional[ComponentMetadata] = None
 
     @validator("name")
-    def validate_name(cls, name: str) -> str:  # noqa: N805
+    def validate_name(cls, name: str) -> str:  # noqa
         """Validate the name.
 
         Name must start with an alphanumeric character and can only contain
@@ -91,7 +91,9 @@ class Component(BaseModel):
 
     @validator("component_type")
     def validate_component_type(
-        cls, component_type: str, values: dict
+        cls,  # noqa
+        component_type: str,
+        values: Dict[str, Any],
     ) -> str:
         """Validate the component type.
 
@@ -115,7 +117,9 @@ class Component(BaseModel):
 
     @validator("component_flavor")
     def validate_component_flavor(
-        cls, component_flavor: str, values: dict
+        cls,  # noqa
+        component_flavor: str,
+        values: Dict[str, Any],
     ) -> str:
         """Validate the component flavor.
 

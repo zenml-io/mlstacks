@@ -12,6 +12,8 @@
 #  permissions and limitations under the License.
 """MLStacks constants."""
 
+from typing import Dict, List
+
 MLSTACKS_PACKAGE_NAME = "mlstacks"
 MLSTACKS_INITIALIZATION_FILE_FLAG = "IGNORE_ME"
 MLSTACKS_STACK_COMPONENT_FLAGS = [
@@ -39,7 +41,7 @@ ALLOWED_FLAVORS = {
     "model_deployer": ["seldon"],
     "step_operator": ["sagemaker", "vertex"],
 }
-ALLOWED_COMPONENT_TYPES = {
+ALLOWED_COMPONENT_TYPES: Dict[str, Dict[str, List[str]]] = {
     "aws": {
         "artifact_store": ["s3"],
         "container_registry": ["aws"],

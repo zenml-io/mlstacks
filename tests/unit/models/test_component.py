@@ -11,16 +11,15 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-from hypothesis import given
+from hypothesis import assume, given
 from hypothesis import strategies as st
 from hypothesis.strategies import composite
-from hypothesis import assume
 
-from mlstacks.constants import PERMITTED_NAME_REGEX, ALLOWED_COMPONENT_TYPES
+from mlstacks.constants import ALLOWED_COMPONENT_TYPES, PERMITTED_NAME_REGEX
 from mlstacks.enums import (
-  ComponentFlavorEnum,
-  ComponentTypeEnum,
-  ProviderEnum,
+    ComponentFlavorEnum,
+    ComponentTypeEnum,
+    ProviderEnum,
 )
 from mlstacks.models.component import Component, ComponentMetadata
 
@@ -40,7 +39,9 @@ def valid_components(draw):
     assume(component_flavors)
 
     component_flavor_str = draw(st.sampled_from(component_flavors))
-    component_flavor_enum = ComponentFlavorEnum(component_flavor_str)  # Convert string to enum
+    component_flavor_enum = ComponentFlavorEnum(
+        component_flavor_str
+    )  # Convert string to enum
 
     # Constructing the Component instance with valid fields
     return Component(
@@ -50,7 +51,7 @@ def valid_components(draw):
         component_flavor=component_flavor_enum,
         spec_version=1,
         spec_type="component",
-        metadata=None
+        metadata=None,
     )
 
 

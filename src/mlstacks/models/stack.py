@@ -40,8 +40,8 @@ class Stack(BaseModel):
         components: The components of the stack.
     """
 
-    spec_version: StackSpecVersionEnum = 1
-    spec_type: SpecTypeEnum = "stack"
+    spec_version: StackSpecVersionEnum = StackSpecVersionEnum.ONE
+    spec_type: SpecTypeEnum = SpecTypeEnum.STACK
     name: str
     provider: ProviderEnum
     default_region: Optional[str]
@@ -52,7 +52,7 @@ class Stack(BaseModel):
     components: List[Component] = []
 
     @validator("name")
-    def validate_name(cls, name: str) -> str:  # noqa: N805
+    def validate_name(cls, name: str) -> str:  # noqa
         """Validate the name.
 
         Name must start with an alphanumeric character and can only contain
