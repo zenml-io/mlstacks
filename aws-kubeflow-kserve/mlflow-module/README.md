@@ -1,5 +1,8 @@
 # MLflow Terraform Module 
 
+**Deprecation warning:** this code and documentation has been deprecated. Please
+visit the corresponding location from `src/mlstacks/terraform` for the latest code and documentation.
+
 ## Input Variables
 
 Input | Description

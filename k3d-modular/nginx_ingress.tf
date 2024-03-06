@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # using the nginx-ingress module to create an nginx-ingress deployment
 module "nginx-ingress" {
   source = "../modules/nginx-ingress-module"

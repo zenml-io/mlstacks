@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 variable "minio_storage_size" {
   description = "The size of the Minio storage volume"
   default     = "20Gi"

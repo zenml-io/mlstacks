@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # workspace keyvault
 resource "azurerm_key_vault" "secret_manager" {
   name                        = local.key_vault.name

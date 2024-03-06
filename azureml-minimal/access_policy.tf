@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # create a access role based on service principal created in compute cluster
 data "azurerm_client_config" "config" {
   depends_on = [

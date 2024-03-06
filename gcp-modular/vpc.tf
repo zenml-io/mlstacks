@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 module "vpc" {
   count = (var.enable_orchestrator_kubeflow || var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
     var.enable_model_deployer_kserve || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow ||

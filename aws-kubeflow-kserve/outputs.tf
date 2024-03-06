@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # output for eks cluster
 output "eks-cluster-name" {
   value = data.aws_eks_cluster.cluster.name

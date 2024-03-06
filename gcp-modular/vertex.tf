@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 locals {
   enable_vertex = (var.enable_step_operator_vertex || var.enable_orchestrator_vertex)
 }

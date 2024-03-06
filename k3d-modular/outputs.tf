@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # if minio is enabled, set the artifact store outputs to the minio values
 # otherwise, set the artifact store outputs to empty strings
 output "artifact_store_id" {

@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # Export Terraform output variable values to a ZenML test framework
 # configuration file that can be used to run ZenML integration tests
 # against the deployed MLOps stack.

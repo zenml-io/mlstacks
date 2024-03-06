@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # using the mlflow module to create an mlflow deployment
 module "mlflow" {
   source = "../modules/mlflow-module"
