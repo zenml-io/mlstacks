@@ -13,8 +13,9 @@
 """Util functions for Pydantic models and validation."""
 
 import re
+from typing import Any, Dict
 
-from mlstacks.constants import PERMITTED_NAME_REGEX
+from mlstacks.constants import ALLOWED_COMPONENT_TYPES, PERMITTED_NAME_REGEX
 
 
 def is_valid_name(name: str) -> bool:
@@ -29,3 +30,46 @@ def is_valid_name(name: str) -> bool:
         True if the name is valid, False otherwise.
     """
     return re.match(PERMITTED_NAME_REGEX, name) is not None
+
+
+def is_valid_component_type(component_type: str, provider: str) -> bool:
+    """Check if the component type is valid.
+
+    Used for components.
+
+    Args:
+        component_type: The component type.
+        provider: The provider.
+
+    Returns:
+        True if the component type is valid, False otherwise.
+    """
+    allowed_types = list(ALLOWED_COMPONENT_TYPES[provider].keys())
+    return component_type in allowed_types
+
+
+def is_valid_component_flavor(
+    component_flavor: str, specs: Dict[str, Any]
+) -> bool:
+    """Check if the component flavor is valid.
+
+    Used for components.
+
+    Args:
+        component_flavor: The component flavor.
+        specs: The previously validated component specs.
+
+    Returns:
+        True if the component flavor is valid, False otherwise.
+    """
+    try:
+        is_valid = (
+            component_flavor
+            in ALLOWED_COMPONENT_TYPES[specs["provider"]][
+                specs["component_type"]
+            ]
+        )
+    except KeyError:
+        return False
+
+    return is_valid
