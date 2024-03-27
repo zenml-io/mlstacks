@@ -12,7 +12,6 @@
 #  permissions and limitations under the License.
 """Tests for utilities for mlstacks-ZenML interaction."""
 
-import pydantic
 
 from mlstacks.models.component import Component
 from mlstacks.models.stack import Stack
@@ -46,34 +45,21 @@ def test_flavor_combination_validator_fails_aws_gcp():
 
     Tests a known failure case. (AWS Stack with a GCP artifact store.)
     """
-    # valid_stack = Stack(
-    #     name="aria-stack",
-    #     provider="aws",
-    #     components=[],
-    # )
-    # invalid_component = Component(
-    #     name="blupus-component",
-    #     component_type="artifact_store",
-    #     component_flavor="gcp",
-    #     provider=valid_stack.provider,
-    # )
-    # assert not has_valid_flavor_combinations(
-    #     stack=valid_stack,
-    #     components=[invalid_component],
-    # )
-
-    valid = True
-    try:
-        Component(
-            name="blupus-component",
-            component_type="artifact_store",
-            component_flavor="gcp",
-            provider="aws",
-        )
-    except pydantic.error_wrappers.ValidationError:
-        valid = False
-
-    assert not valid
+    valid_stack = Stack(
+        name="aria-stack",
+        provider="aws",
+        components=[],
+    )
+    invalid_component = Component(
+        name="blupus-component",
+        component_type="artifact_store",
+        component_flavor="gcp",
+        provider="gcp",
+    )
+    assert not has_valid_flavor_combinations(
+        stack=valid_stack,
+        components=[invalid_component],
+    )
 
 
 def test_flavor_combination_validator_fails_k3d_s3():
@@ -81,31 +67,18 @@ def test_flavor_combination_validator_fails_k3d_s3():
 
     Tests a known failure case. (K3D Stack with a S3 artifact store.)
     """
-    # valid_stack = Stack(
-    #     name="aria-stack",
-    #     provider="k3d",
-    #     components=[],
-    # )
-    # invalid_component = Component(
-    #     name="blupus-component",
-    #     component_type="artifact_store",
-    #     component_flavor="s3",
-    #     provider="k3d",
-    # )
-    # assert not has_valid_flavor_combinations(
-    #     stack=valid_stack,
-    #     components=[invalid_component],
-    # )
-
-    valid = True
-    try:
-        Component(
-            name="blupus-component",
-            component_type="artifact_store",
-            component_flavor="s3",
-            provider="k3d",
-        )
-    except pydantic.error_wrappers.ValidationError:
-        valid = False
-
-    assert not valid
+    valid_stack = Stack(
+        name="aria-stack",
+        provider="k3d",
+        components=[],
+    )
+    invalid_component = Component(
+        name="blupus-component",
+        component_type="artifact_store",
+        component_flavor="s3",
+        provider="aws",
+    )
+    assert not has_valid_flavor_combinations(
+        stack=valid_stack,
+        components=[invalid_component],
+    )

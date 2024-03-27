@@ -58,6 +58,9 @@ def load_component_yaml(path: str) -> Component:
 
     Returns:
         The component model.
+
+    Raises:
+        FileNotFoundError: If the file is not found.
     """
     try:
         with open(path) as file:
@@ -97,6 +100,9 @@ def load_stack_yaml(path: str) -> Stack:
 
     Returns:
         The stack model.
+
+    Raises:
+        ValueError: If the stack and component have different providers
     """
     with open(path) as yaml_file:
         stack_data = yaml.safe_load(yaml_file)

@@ -69,7 +69,7 @@ def is_valid_component_flavor(
                 specs["component_type"]
             ]
         )
-    except ValueError:
+    except KeyError:
         return False
 
     return is_valid

@@ -36,7 +36,7 @@ from mlstacks.utils.terraform_utils import (
     remote_state_bucket_exists,
     tf_definitions_present,
 )
-from mlstacks.utils.test_utils import get_allowed_providers
+from tests.test_utils import get_allowed_providers
 
 EXISTING_S3_BUCKET_URL = "s3://public-flavor-logos"
 EXISTING_S3_BUCKET_REGION = "eu-central-1"
@@ -117,8 +117,6 @@ def test_enable_key_function_handles_components_without_flavors(
         name=dummy_name,
         component_flavor=comp_flavor,
         component_type=comp_type,
-        # provider=random.choice(list(ProviderEnum)).value,
-        # Not sure why the above line was used when only "aws" is valid here
         provider=comp_provider,
     )
     key = _compose_enable_key(c)
@@ -130,7 +128,6 @@ def test_component_variable_parsing_works():
     metadata = ComponentMetadata()
     component_flavor = "zenml"
 
-    # random_test = random.choice(list(ProviderEnum)).value
     allowed_providers = get_allowed_providers()
     random_test = random.choice(allowed_providers)
 
@@ -159,7 +156,6 @@ def test_component_var_parsing_works_for_env_vars():
     # EXCLUDE AZURE
     allowed_providers = get_allowed_providers()
     random_test = random.choice(allowed_providers)
-    # random_test = random.choice(list(ProviderEnum)).value
 
     components = [
         Component(
@@ -180,7 +176,6 @@ def test_component_var_parsing_works_for_env_vars():
 
 def test_tf_variable_parsing_from_stack_works():
     """Tests that the Terraform variables extraction (from a stack) works."""
-    # provider = random.choice(list(ProviderEnum)).value
     allowed_providers = get_allowed_providers()
     provider = random.choice(allowed_providers)
 

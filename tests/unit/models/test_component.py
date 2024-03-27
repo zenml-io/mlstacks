@@ -63,7 +63,6 @@ def test_component_metadata(instance):
     )
 
 
-# @given(st.builds(Component, name=st.from_regex(PERMITTED_NAME_REGEX), provider=st.sampled_from(["aws", "gcp", "k3d"])))
 @given(valid_components())
 def test_component(instance):
     print(f"instance: {instance}")
@@ -73,11 +72,7 @@ def test_component(instance):
     assert instance.name is not None
     assert instance.spec_version is not None
     assert instance.spec_type is not None
-    print("!!!!!!!!!!!!!!!!!!!!!!!!")
-    print("just prior to component type test")
     assert isinstance(instance.component_type, ComponentTypeEnum)
-    print("just after component type test")
-    print("!!!!!!!!!!!!!!!!!!!!!!!!")
     assert isinstance(instance.component_flavor, ComponentFlavorEnum)
     assert isinstance(instance.provider, str)
     assert instance.provider is not None
