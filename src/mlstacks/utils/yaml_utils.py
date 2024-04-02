@@ -66,9 +66,6 @@ def load_component_yaml(path: str) -> Component:
         with open(path) as file:
             component_data = yaml.safe_load(file)
     except FileNotFoundError as exc:
-        # Not sure what to do here, as I'd like to specify the path that
-        # caused the problem, but I don't think that's possible while using
-        # a constant for the error message.
         error_message = f"""Component file at "{path}" specified in 
                         the stack spec file could not be found."""
         raise FileNotFoundError(error_message) from exc
