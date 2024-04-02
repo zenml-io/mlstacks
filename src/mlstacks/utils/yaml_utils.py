@@ -16,6 +16,7 @@ from typing import Any, Dict, Union
 
 import yaml
 
+from mlstacks.constants import STACK_COMPONENT_PROVIDER_MISMATCH_ERROR_MESSAGE
 from mlstacks.models.component import (
     Component,
     ComponentMetadata,
@@ -57,9 +58,17 @@ def load_component_yaml(path: str) -> Component:
 
     Returns:
         The component model.
+
+    Raises:
+        FileNotFoundError: If the file is not found.
     """
-    with open(path) as file:
-        component_data = yaml.safe_load(file)
+    try:
+        with open(path) as file:
+            component_data = yaml.safe_load(file)
+    except FileNotFoundError as exc:
+        error_message = f"""Component file at "{path}" specified in 
+                        the stack spec file could not be found."""
+        raise FileNotFoundError(error_message) from exc
 
     if component_data.get("metadata") is None:
         component_data["metadata"] = {}
@@ -88,6 +97,9 @@ def load_stack_yaml(path: str) -> Stack:
 
     Returns:
         The stack model.
+
+    Raises:
+        ValueError: If the stack and component have different providers
     """
     with open(path) as yaml_file:
         stack_data = yaml.safe_load(yaml_file)
@@ -95,7 +107,8 @@ def load_stack_yaml(path: str) -> Stack:
 
     if component_data is None:
         component_data = []
-    return Stack(
+
+    stack = Stack(
         spec_version=stack_data.get("spec_version"),
         spec_type=stack_data.get("spec_type"),
         name=stack_data.get("name"),
@@ -107,3 +120,9 @@ def load_stack_yaml(path: str) -> Stack:
             load_component_yaml(component) for component in component_data
         ],
     )
+
+    for component in stack.components:
+        if component.provider != stack.provider:
+            raise ValueError(STACK_COMPONENT_PROVIDER_MISMATCH_ERROR_MESSAGE)
+
+    return stack

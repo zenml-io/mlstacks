@@ -12,17 +12,27 @@
 #  permissions and limitations under the License.
 """Component model."""
 
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, validator
 
-from mlstacks.constants import INVALID_NAME_ERROR_MESSAGE
+from mlstacks.constants import (
+    INVALID_COMPONENT_FLAVOR_ERROR_MESSAGE,
+    INVALID_COMPONENT_TYPE_ERROR_MESSAGE,
+    INVALID_NAME_ERROR_MESSAGE,
+)
 from mlstacks.enums import (
     ComponentFlavorEnum,
+    ComponentSpecVersionEnum,
     ComponentTypeEnum,
     ProviderEnum,
+    SpecTypeEnum,
 )
-from mlstacks.utils.model_utils import is_valid_name
+from mlstacks.utils.model_utils import (
+    is_valid_component_flavor,
+    is_valid_component_type,
+    is_valid_name,
+)
 
 
 class ComponentMetadata(BaseModel):
@@ -49,16 +59,16 @@ class Component(BaseModel):
         metadata: The metadata of the component.
     """
 
-    spec_version: int = 1
-    spec_type: str = "component"
+    spec_version: ComponentSpecVersionEnum = ComponentSpecVersionEnum.ONE
+    spec_type: SpecTypeEnum = SpecTypeEnum.COMPONENT
     name: str
+    provider: ProviderEnum
     component_type: ComponentTypeEnum
     component_flavor: ComponentFlavorEnum
-    provider: ProviderEnum
     metadata: Optional[ComponentMetadata] = None
 
     @validator("name")
-    def validate_name(cls, name: str) -> str:  # noqa: N805
+    def validate_name(cls, name: str) -> str:  # noqa
         """Validate the name.
 
         Name must start with an alphanumeric character and can only contain
@@ -78,3 +88,56 @@ class Component(BaseModel):
         if not is_valid_name(name):
             raise ValueError(INVALID_NAME_ERROR_MESSAGE)
         return name
+
+    @validator("component_type")
+    def validate_component_type(
+        cls,  # noqa
+        component_type: str,
+        values: Dict[str, Any],
+    ) -> str:
+        """Validate the component type.
+
+        Artifact Store, Container Registry, Experiment Tracker, Orchestrator,
+        MLOps Platform, and Model Deployer may be used with aws, gcp, and k3d
+        providers. Step Operator may only be used with aws and gcp.
+
+        Args:
+            component_type: The component type.
+            values: The previously validated component specs.
+
+        Returns:
+            The validated component type.
+
+        Raises:
+            ValueError: If the component type is invalid.
+        """
+        if not is_valid_component_type(component_type, values["provider"]):
+            raise ValueError(INVALID_COMPONENT_TYPE_ERROR_MESSAGE)
+        return component_type
+
+    @validator("component_flavor")
+    def validate_component_flavor(
+        cls,  # noqa
+        component_flavor: str,
+        values: Dict[str, Any],
+    ) -> str:
+        """Validate the component flavor.
+
+        Only certain flavors are allowed for a given provider-component
+        type combination. For more information, consult the tables for
+        your specified provider at the MLStacks documentation:
+        https://mlstacks.zenml.io/stacks/stack-specification.
+
+        Args:
+            component_flavor: The component flavor.
+            values: The previously validated component specs.
+
+        Returns:
+            The validated component flavor.
+
+        Raises:
+            ValueError: If the component flavor is invalid.
+        """
+        if not is_valid_component_flavor(component_flavor, values):
+            raise ValueError(INVALID_COMPONENT_FLAVOR_ERROR_MESSAGE)
+        return component_flavor

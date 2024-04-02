@@ -19,6 +19,8 @@ from mlstacks.constants import INVALID_NAME_ERROR_MESSAGE
 from mlstacks.enums import (
     DeploymentMethodEnum,
     ProviderEnum,
+    SpecTypeEnum,
+    StackSpecVersionEnum,
 )
 from mlstacks.models.component import Component
 from mlstacks.utils.model_utils import is_valid_name
@@ -38,8 +40,8 @@ class Stack(BaseModel):
         components: The components of the stack.
     """
 
-    spec_version: int = 1
-    spec_type: str = "stack"
+    spec_version: StackSpecVersionEnum = StackSpecVersionEnum.ONE
+    spec_type: SpecTypeEnum = SpecTypeEnum.STACK
     name: str
     provider: ProviderEnum
     default_region: Optional[str]
@@ -50,7 +52,7 @@ class Stack(BaseModel):
     components: List[Component] = []
 
     @validator("name")
-    def validate_name(cls, name: str) -> str:  # noqa: N805
+    def validate_name(cls, name: str) -> str:  # noqa
         """Validate the name.
 
         Name must start with an alphanumeric character and can only contain
