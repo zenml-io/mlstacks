@@ -1,0 +1,11 @@
+spec_version: 1
+spec_type: stack
+name: "quickstart_stack"
+provider: gcp
+default_region: "us-west2"
+default_tags:
+  deployed-by: "mlstacks"
+components:
+  - simple_component_label_studio.yaml
+  - simple_component_gcs.yaml
+
