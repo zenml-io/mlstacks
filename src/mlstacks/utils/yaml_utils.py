@@ -122,7 +122,7 @@ def load_stack_yaml(path: str) -> Stack:
     )
 
     for component in stack.components:
-        if component.provider != stack.provider:
+        if component.provider != stack.provider and component.provider != "huggingface":
             raise ValueError(STACK_COMPONENT_PROVIDER_MISMATCH_ERROR_MESSAGE)
 
     return stack
