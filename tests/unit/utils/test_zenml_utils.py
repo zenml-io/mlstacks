@@ -53,7 +53,7 @@ def test_flavor_combination_validator_fails_aws_gcp():
         name="blupus-component",
         component_type="artifact_store",
         component_flavor="gcp",
-        provider=valid_stack.provider,
+        provider="gcp",
     )
     assert not has_valid_flavor_combinations(
         stack=valid_stack,
@@ -75,7 +75,7 @@ def test_flavor_combination_validator_fails_k3d_s3():
         name="blupus-component",
         component_type="artifact_store",
         component_flavor="s3",
-        provider=valid_stack.provider,
+        provider="aws",
     )
     assert not has_valid_flavor_combinations(
         stack=valid_stack,

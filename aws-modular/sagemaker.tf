@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # Create an IAM role for SageMaker
 resource "aws_iam_role" "sagemaker_role" {
   count              = var.enable_orchestrator_sagemaker || var.enable_step_operator_sagemaker ? 1 : 0

@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # create a namespace for cert-manager resources
 resource "kubernetes_namespace" "cert-manager-ns" {
   metadata {

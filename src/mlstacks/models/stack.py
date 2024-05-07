@@ -11,14 +11,17 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 """Stack model."""
+
 from typing import Dict, List, Optional
 
-from pydantic import field_validator, BaseModel
+from pydantic import BaseModel, field_validator
 
 from mlstacks.constants import INVALID_NAME_ERROR_MESSAGE
 from mlstacks.enums import (
     DeploymentMethodEnum,
     ProviderEnum,
+    SpecTypeEnum,
+    StackSpecVersionEnum,
 )
 from mlstacks.models.component import Component
 from mlstacks.utils.model_utils import is_valid_name
@@ -38,15 +41,15 @@ class Stack(BaseModel):
         components: The components of the stack.
     """
 
-    spec_version: int = 1
-    spec_type: str = "stack"
+    spec_version: StackSpecVersionEnum = StackSpecVersionEnum.ONE
+    spec_type: SpecTypeEnum = SpecTypeEnum.STACK
     name: str
     provider: ProviderEnum
     default_region: Optional[str] = None
     default_tags: Optional[Dict[str, str]] = None
-    deployment_method: Optional[
-        DeploymentMethodEnum
-    ] = DeploymentMethodEnum.KUBERNETES
+    deployment_method: Optional[DeploymentMethodEnum] = (
+        DeploymentMethodEnum.KUBERNETES
+    )
     components: List[Component] = []
 
     @field_validator("name")

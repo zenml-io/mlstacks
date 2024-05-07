@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # get URI for  MLflow tracking server
 data "kubernetes_service" "mlflow_tracking" {
   count = var.enable_mlflow ? 1 : 0

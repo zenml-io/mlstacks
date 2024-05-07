@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 data "google_project" "project" {
   count      = local.enable_vertex ? 1 : 0
   project_id = var.project_id

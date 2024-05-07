@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 data "azurerm_client_config" "current" {}
 
 # create a key vault instance that can be used for storing secrets

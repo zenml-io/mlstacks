@@ -36,6 +36,7 @@ from mlstacks.utils.terraform_utils import (
     remote_state_bucket_exists,
     tf_definitions_present,
 )
+from tests.test_utils import get_allowed_providers
 
 EXISTING_S3_BUCKET_URL = "s3://public-flavor-logos"
 EXISTING_S3_BUCKET_REGION = "eu-central-1"
@@ -111,11 +112,12 @@ def test_enable_key_function_handles_components_without_flavors(
     """
     comp_flavor = "s3"
     comp_type = "artifact_store"
+    comp_provider = "aws"
     c = Component(
         name=dummy_name,
         component_flavor=comp_flavor,
         component_type=comp_type,
-        provider=random.choice(list(ProviderEnum)).value,
+        provider=comp_provider,
     )
     key = _compose_enable_key(c)
     assert key == "enable_artifact_store"
@@ -125,12 +127,16 @@ def test_component_variable_parsing_works():
     """Tests that the component variable parsing works."""
     metadata = ComponentMetadata()
     component_flavor = "zenml"
+
+    allowed_providers = get_allowed_providers()
+    random_test = random.choice(allowed_providers)
+
     components = [
         Component(
             name="test",
             component_flavor=component_flavor,
             component_type="mlops_platform",
-            provider=random.choice(list(ProviderEnum)).value,
+            provider=random_test,
             spec_type="component",
             spec_version=1,
             metadata=metadata,
@@ -146,12 +152,17 @@ def test_component_var_parsing_works_for_env_vars():
     """Tests that the component variable parsing works."""
     env_vars = {"ARIA_KEY": "blupus"}
     metadata = ComponentMetadata(environment_variables=env_vars)
+
+    # EXCLUDE AZURE
+    allowed_providers = get_allowed_providers()
+    random_test = random.choice(allowed_providers)
+
     components = [
         Component(
             name="test",
             component_flavor="zenml",
             component_type="mlops_platform",
-            provider=random.choice(list(ProviderEnum)).value,
+            provider=random_test,
             metadata=metadata,
         )
     ]
@@ -165,7 +176,9 @@ def test_component_var_parsing_works_for_env_vars():
 
 def test_tf_variable_parsing_from_stack_works():
     """Tests that the Terraform variables extraction (from a stack) works."""
-    provider = random.choice(list(ProviderEnum)).value
+    allowed_providers = get_allowed_providers()
+    provider = random.choice(allowed_providers)
+
     component_flavor = "zenml"
     metadata = ComponentMetadata()
     components = [

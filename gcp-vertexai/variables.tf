@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # variables for the MLflow tracking server
 variable "enable_mlflow" {
   description = "Whether to deploy MLflow"

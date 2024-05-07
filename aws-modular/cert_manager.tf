@@ -1,3 +1,7 @@
+# DEPRECATION WARNING: This code has been deprecated
+# The maintained & current code can be found at src/mlstacks/terraform/
+# under the same relative location.
+
 # using the cert-manager module to create a cert-manager deployment
 module "cert-manager" {
   source = "../modules/cert-manager-module"
