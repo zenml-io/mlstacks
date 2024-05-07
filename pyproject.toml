@@ -74,7 +74,7 @@ rich = { version = "^12.0.0" }
 analytics-python = { version = "^1.4.0" }
 
 # dev dependencies
-ruff = { version = "^0.1.7", optional = true }
+ruff = { version = ">=0.1.7", optional = true }
 pytest = { version = "^7.4.0", optional = true }
 mypy = { version = "^1.7.1", optional = true }
 darglint = { version = "^1.8.1", optional = true }
