@@ -54,7 +54,7 @@ class Stack(BaseModel):
 
     @field_validator("name")
     @classmethod
-    def validate_name(cls, name: str) -> str:  # noqa: N805
+    def validate_name(cls, name: str) -> str:
         """Validate the name.
 
         Name must start with an alphanumeric character and can only contain
