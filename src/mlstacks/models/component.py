@@ -14,7 +14,7 @@
 
 from typing import Dict, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import field_validator, BaseModel
 
 from mlstacks.constants import INVALID_NAME_ERROR_MESSAGE
 from mlstacks.enums import (
@@ -57,7 +57,8 @@ class Component(BaseModel):
     provider: ProviderEnum
     metadata: Optional[ComponentMetadata] = None
 
-    @validator("name")
+    @field_validator("name")
+    @classmethod
     def validate_name(cls, name: str) -> str:  # noqa: N805
         """Validate the name.
 

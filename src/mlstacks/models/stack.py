@@ -13,7 +13,7 @@
 """Stack model."""
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import field_validator, BaseModel
 
 from mlstacks.constants import INVALID_NAME_ERROR_MESSAGE
 from mlstacks.enums import (
@@ -42,14 +42,15 @@ class Stack(BaseModel):
     spec_type: str = "stack"
     name: str
     provider: ProviderEnum
-    default_region: Optional[str]
+    default_region: Optional[str] = None
     default_tags: Optional[Dict[str, str]] = None
     deployment_method: Optional[
         DeploymentMethodEnum
     ] = DeploymentMethodEnum.KUBERNETES
     components: List[Component] = []
 
-    @validator("name")
+    @field_validator("name")
+    @classmethod
     def validate_name(cls, name: str) -> str:  # noqa: N805
         """Validate the name.
 
