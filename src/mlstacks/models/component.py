@@ -14,7 +14,7 @@
 
 from typing import Dict, Optional
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 from mlstacks.constants import (
     INVALID_COMPONENT_FLAVOR_ERROR_MESSAGE,
@@ -90,45 +90,35 @@ class Component(BaseModel):
             raise ValueError(INVALID_NAME_ERROR_MESSAGE)
         return name
 
-    @field_validator("component_type", mode="after")
-    def validate_component_type(self, component_type: str) -> str:
-        """Validate the component type.
+    @model_validator(mode="after")
+    def validate_component_type_and_flavor(self) -> "Component":
+        """Validate the component type and flavor.
 
         Artifact Store, Container Registry, Experiment Tracker, Orchestrator,
         MLOps Platform, and Model Deployer may be used with aws, gcp, and k3d
         providers. Step Operator may only be used with aws and gcp.
 
-        Args:
-            component_type: The component type.
-
-        Returns:
-            The validated component type.
-
-        Raises:
-            ValueError: If the component type is invalid.
-        """
-        if not is_valid_component_type(component_type, self.provider):
-            raise ValueError(INVALID_COMPONENT_TYPE_ERROR_MESSAGE)
-        return component_type
-
-    @field_validator("component_flavor", mode="after")
-    def validate_component_flavor(self, component_flavor: str) -> str:
-        """Validate the component flavor.
-
-        Only certain flavors are allowed for a given provider-component
-        type combination. For more information, consult the tables for
-        your specified provider at the MLStacks documentation:
+        Moreover, only certain flavors are allowed for a given
+        provider-component type combination. For more information, consult
+        the tables for your specified provider at the MLStacks documentation:
         https://mlstacks.zenml.io/stacks/stack-specification.
 
-        Args:
-            component_flavor: The component flavor.
-
         Returns:
-            The validated component flavor.
+            The validated component instance.
 
         Raises:
-            ValueError: If the component flavor is invalid.
+            ValueError: If the component type or flavor is invalid.
         """
-        if not is_valid_component_flavor(component_flavor, dict(self)):
+        if not is_valid_component_type(
+            component_type=self.component_type, provider=self.provider
+        ):
+            raise ValueError(INVALID_COMPONENT_TYPE_ERROR_MESSAGE)
+
+        if not is_valid_component_flavor(
+            component_flavor=self.component_flavor,
+            component_type=self.component_type,
+            provider=self.provider,
+        ):
             raise ValueError(INVALID_COMPONENT_FLAVOR_ERROR_MESSAGE)
-        return component_flavor
+
+        return self
