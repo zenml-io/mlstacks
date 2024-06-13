@@ -16,7 +16,7 @@ as can a list of components that are coming soon.
 | Experiment Tracker | mlflow                                  |
 | Orchestrator       | kubeflow, kubernetes, sagemaker, tekton |
 | MLOps Platform     | zenml                                   |
-| Model Deployer     | seldon                          |
+| Model Deployer     | seldon, huggingface                     |
 
 ## Coming Soon!
 
