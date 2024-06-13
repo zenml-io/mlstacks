@@ -35,6 +35,10 @@ variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
   default     = false
 }
+variable "enable_model_deployer_huggingface" {
+  description = "Enable Huggingface deployment"
+  default     = false
+}
 variable "enable_step_operator_sagemaker" {
   description = "Enable SageMaker as step operator"
   default     = false
