@@ -38,7 +38,7 @@ ALLOWED_FLAVORS = {
         "vertex",
     ],
     "mlops_platform": ["zenml"],
-    "model_deployer": ["seldon"],
+    "model_deployer": ["seldon","huggingface"],
     "step_operator": ["sagemaker", "vertex"],
 }
 ALLOWED_COMPONENT_TYPES: Dict[str, Dict[str, List[str]]] = {
