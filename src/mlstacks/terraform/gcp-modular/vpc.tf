@@ -1,6 +1,6 @@
 module "vpc" {
   count = (var.enable_orchestrator_kubeflow || var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
-    var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow ||
+    var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow ||
   var.enable_zenml) ? 1 : 0
   source  = "terraform-google-modules/network/google"
   version = "~> 4.0"

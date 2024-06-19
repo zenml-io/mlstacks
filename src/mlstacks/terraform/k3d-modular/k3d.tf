@@ -17,7 +17,7 @@ resource "k3d_registry" "zenml-registry" {
   image = "docker.io/registry:2"
   count = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
-  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? 1 : 0
+  var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? 1 : 0
 
   port {
     host_port = local.k3d_registry.port
@@ -53,7 +53,7 @@ resource "k3d_cluster" "zenml-cluster" {
   agents  = 2
   count = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
-  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? 1 : 0
+  var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? 1 : 0
 
   kube_api {
     host    = local.k3d_kube_api.host

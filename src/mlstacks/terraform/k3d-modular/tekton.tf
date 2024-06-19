@@ -12,9 +12,9 @@ module "tekton-pipelines" {
 
   pipeline_version  = local.tekton.version
   dashboard_version = local.tekton.dashboard_version
-  ingress_host      = (var.enable_model_deployer_seldon) ? "${local.tekton.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.tekton.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_host      = (var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon) ? "${local.tekton.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.tekton.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   tls_enabled       = false
-  istio_enabled     = (var.enable_model_deployer_seldon) ? true : false
+  istio_enabled     = (var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon) ? true : false
 }
 
 # the namespace where zenml will run tekton pipelines

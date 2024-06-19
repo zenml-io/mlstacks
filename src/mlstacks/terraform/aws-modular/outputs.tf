@@ -102,7 +102,7 @@ output "model_deployer_configuration" {
     kubernetes_namespace = local.huggingface.workloads_namespace
     base_url             = "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"
   }) :
-  value = var.enable_model_deployer_seldon ? jsonencode({
+    var.enable_model_deployer_seldon ? jsonencode({
     kubernetes_context   = "${aws_eks_cluster.cluster[0].arn}"
     kubernetes_namespace = local.seldon.workloads_namespace
     base_url             = "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"
