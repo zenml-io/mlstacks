@@ -31,6 +31,12 @@ runs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .[dev]
+    
+
+    - name: Install setuptools on Python 3.12
+      if: ${{ inputs.python-version == '3.12' }}
+      shell: bash
+      run: pip install setuptools
 
     - name: Check Python environment
       shell: bash
