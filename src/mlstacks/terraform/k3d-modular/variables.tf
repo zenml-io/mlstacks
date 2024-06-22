@@ -36,6 +36,17 @@ variable "enable_zenml" {
   default     = false
 }
 
+# variables for huggingface model model deployer
+variable "huggingface_token"{
+  description = "The Hugging Face authentication token."
+  default = "huggingfaceauthenticationtoken"
+}
+
+variable "huggingface_namespace" {
+  description = "The namespace where the Inference Endpoint will be created."
+  default = "huggingfacenamespace"
+}
+
 
 # variables for the MLflow tracking server and Minio S3 bucket
 variable "zenml-minio-store-access-key" {

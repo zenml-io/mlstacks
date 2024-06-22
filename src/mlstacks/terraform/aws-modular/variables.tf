@@ -61,6 +61,17 @@ variable "region" {
   default     = "eu-west-1"
 }
 
+# variables for huggingface model model deployer
+variable "huggingface_token"{
+  description = "The Hugging Face authentication token."
+  default = "huggingfaceauthenticationtoken"
+}
+
+variable "huggingface_namespace" {
+  description = "The namespace where the Inference Endpoint will be created."
+  default = "huggingfacenamespace"
+} cb cb
+
 # variables for the MLflow tracking server
 variable "mlflow-artifact-S3-access-key" {
   description = "Your AWS access key for using S3 as MLflow artifact store"

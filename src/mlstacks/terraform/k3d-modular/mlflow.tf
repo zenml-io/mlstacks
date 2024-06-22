@@ -14,9 +14,9 @@ module "mlflow" {
 
   # details about the mlflow deployment
   chart_version            = local.mlflow.version
-  ingress_host             = (var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon) ? "${local.mlflow.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
+  ingress_host             = (var.enable_model_deployer_seldon) ? "${local.mlflow.ingress_host_prefix}.${module.istio[0].ingress-ip-address}.nip.io" : "${local.mlflow.ingress_host_prefix}.${module.nginx-ingress[0].ingress-ip-address}.nip.io"
   tls_enabled              = false
-  istio_enabled            = (var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon) ? true : false
+  istio_enabled            = (var.enable_model_deployer_seldon) ? true : false
   htpasswd                 = "${var.mlflow-username}:${htpasswd_password.hash.apr1}"
   artifact_Proxied_Access  = local.mlflow.artifact_Proxied_Access
   artifact_S3              = "true"
