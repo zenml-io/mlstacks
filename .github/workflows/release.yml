@@ -31,7 +31,7 @@ jobs:
         run: pip install -e .
 
       - name: Install zenml package
-        run: pip install zenml
+        run: pip install -e git+https://github.com/zenml-io/zenml.git@develop#egg=zenml
 
       - name: Check for broken dependencies
         run: pip check
