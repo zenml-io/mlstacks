@@ -75,14 +75,6 @@ locals {
     workloads_namespace  = "zenml-workloads-seldon"
     service_account_name = "seldon"
   }
-
-  huggingface = {
-    version              = "4.41.3"
-    name                 = "huggingface"
-    namespace            = "huggingface-system"
-    workloads_namespace  = "zenml-workloads-huggingface"
-    service_account_name = "huggingface"
-  }
   
   zenml = {
     version                         = ""

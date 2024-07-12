@@ -92,31 +92,6 @@ output "experiment_tracker_configuration" {
   }) : ""
 }
 
-# if huggingface is enabled, set the model deployer outputs to the huggingface values
-# if seldon is enabled, set the model_deployer outputs to the seldon values
-# otherwise, set the model_deployer outputs to empty strings
-output "model_deployer_id" {
-  value = var.enable_model_deployer_seldon || var.enable_model_deployer_huggingface ? uuid() : ""
-}
-output "model_deployer_flavor" {
-  value = var.enable_model_deployer_seldon ? "seldon" : var.enable_model_deployer_huggingface ? "huggingface" :""
-}
-output "model_deployer_name" {
-  value = var.enable_model_deployer_seldon ? "k3d-seldon-${random_string.cluster_id.result}" : var.enable_model_deployer_huggingface ? "k3d-huggingface-${random_string.cluster_id.result}" :""
-}
-output "model_deployer_configuration" {
-  value = var.enable_model_deployer_seldon ? jsonencode({
-    kubernetes_context   = "k3d-${k3d_cluster.zenml-cluster[0].name}"
-    kubernetes_namespace = local.seldon.workloads_namespace
-    base_url             = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
-  }) : 
-  var.enable_model_deployer_huggingface ? jsonencode({
-    kubernetes_context   = "${aws_eks_cluster.cluster[0].arn}"
-    kubernetes_namespace = local.huggingface.workloads_namespace
-    base_url             = "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"
-  }) : ""
-}
-
 # output for the k3d cluster
 output "k3d-cluster-name" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||

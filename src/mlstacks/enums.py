@@ -31,7 +31,6 @@ class ComponentTypeEnum(str, Enum):
     FEATURE_STORE = "feature_store"
     ANNOTATOR = "annotator"
     IMAGE_BUILDER = "image_builder"
-    
 
 
 class ComponentFlavorEnum(str, Enum):
@@ -39,6 +38,7 @@ class ComponentFlavorEnum(str, Enum):
 
     AWS = "aws"
     GCP = "gcp"
+    HUGGINGFACE = "huggingface"
     KUBEFLOW = "kubeflow"
     KUBERNETES = "kubernetes"
     MINIO = "minio"
@@ -51,7 +51,6 @@ class ComponentFlavorEnum(str, Enum):
     VERTEX = "vertex"
     ZENML = "zenml"
     DEFAULT = "default"
-    HUGGINGFACE = "huggingface"
 
 
 class DeploymentMethodEnum(str, Enum):
