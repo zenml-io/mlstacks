@@ -12,7 +12,6 @@
 #  permissions and limitations under the License.
 """Tests for utilities for mlstacks-ZenML interaction."""
 
-
 from mlstacks.models.component import Component
 from mlstacks.models.stack import Stack
 from mlstacks.utils.zenml_utils import has_valid_flavor_combinations
