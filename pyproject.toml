@@ -71,7 +71,7 @@ pyyaml = { version = ">=6.0.1" }
 click = { version = "^8.0.1,<8.1.4" }
 python-terraform = { version = "^0.10.1" }
 rich = { version = "^12.0.0" }
-analytics-python = { version = "^1.4.0" }
+segment-analytics-python = { version = "^2.2.0" }
 
 # dev dependencies
 ruff = { version = ">=0.1.7", optional = true }
