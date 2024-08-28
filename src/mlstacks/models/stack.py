@@ -47,9 +47,9 @@ class Stack(BaseModel):
     provider: ProviderEnum
     default_region: Optional[str] = None
     default_tags: Optional[Dict[str, str]] = None
-    deployment_method: Optional[DeploymentMethodEnum] = (
-        DeploymentMethodEnum.KUBERNETES
-    )
+    deployment_method: Optional[
+        DeploymentMethodEnum
+    ] = DeploymentMethodEnum.KUBERNETES
     components: List[Component] = []
 
     @field_validator("name")
