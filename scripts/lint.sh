@@ -10,7 +10,7 @@ TESTS=${1:-"tests"}
 ruff $SRC_NO_TESTS
 
 # autoflake replacement: checks for unused imports and variables
-ruff $SRC --select F401,F841 --exclude "__init__.py" --isolated
+ruff check $SRC --select F401,F841 --exclude "__init__.py" --isolated
 
 ruff format $SRC  --check
 
