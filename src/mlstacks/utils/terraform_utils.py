@@ -250,8 +250,8 @@ def include_files(
             or filename.endswith(".md")
             or filename.endswith(".yaml")
             or filename.endswith(".sh")
-            or filename == ".terraformignore"
-            or filename == MLSTACKS_INITIALIZATION_FILE_FLAG
+            or filename
+            in {".terraformignore", MLSTACKS_INITIALIZATION_FILE_FLAG}
         )
     ]
 
@@ -1007,8 +1007,8 @@ def verify_infracost_installed() -> bool:
         bool: True if Infracost is installed, otherwise False.
     """
     try:
-        subprocess.run(
-            ["infracost", "configure", "get", "api_key"],  # noqa: S607,S603
+        subprocess.run(  # noqa: S603
+            ["infracost", "configure", "get", "api_key"],  # noqa: S607
             check=True,
             capture_output=True,
             text=True,
@@ -1079,9 +1079,9 @@ def infracost_breakdown_stack(
         infracost_cmd += f" --terraform-var {k}={v}"
 
     # Execute the command
-    process = subprocess.run(
+    process = subprocess.run(  # noqa: S602
         infracost_cmd,
-        shell=True,  # noqa: S602
+        shell=True,
         check=True,
         capture_output=True,
         text=True,
