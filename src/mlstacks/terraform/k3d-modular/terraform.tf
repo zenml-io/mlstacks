@@ -20,8 +20,8 @@ terraform {
     }
 
     kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = "1.14.0"
+      source  = "alekc/kubectl"
+      version = "2.0.4"
     }
 
     random = {
