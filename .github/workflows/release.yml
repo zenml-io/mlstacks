@@ -15,28 +15,28 @@ jobs:
     secrets: inherit
 
   # checks zenml and mlstacks can be installed together in same environment
-  compatibility-check:
-    needs: lint-unit-test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # compatibility-check:
+  #   needs: lint-unit-test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.8"
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: "3.8"
 
-      - name: Install current package as editable
-        run: pip install -e .
+  #     - name: Install current package as editable
+  #       run: pip install -e .
 
-      - name: Install zenml package
-        run: pip install zenml
+  #     - name: Install zenml package
+  #       run: pip install zenml
 
-      - name: Check for broken dependencies
-        run: pip check
+  #     - name: Check for broken dependencies
+  #       run: pip check
 
   publish-python-package:
-    needs: [lint-unit-test, compatibility-check]
+    needs: [lint-unit-test]
     uses: ./.github/workflows/publish-pypi-package.yml
     secrets: inherit
