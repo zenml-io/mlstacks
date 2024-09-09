@@ -25,6 +25,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: System :: Distributed Computing",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
@@ -63,15 +64,14 @@ exclude = [
 ]
 
 [tool.poetry.dependencies]
-# pydantic = {version = "2.0.2"}
-# compatible with Core ZenML
-python = ">=3.8,<3.12"
-pydantic = { version = "~2.7" }
+python = ">=3.8,<3.13"
+pydantic = { version = "~2.8" }
 pyyaml = { version = ">=6.0.1" }
 click = { version = "^8.0.1,<8.1.4" }
 python-terraform = { version = "^0.10.1" }
 rich = { version = "^12.0.0" }
 analytics-python = { version = "^1.4.0" }
+setuptools = "*"
 
 # dev dependencies
 ruff = { version = ">=0.1.7", optional = true }
