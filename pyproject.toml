@@ -21,7 +21,6 @@ classifiers = [
     "Intended Audience :: System Administrators",
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -64,7 +63,7 @@ exclude = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.13"
+python = ">=3.9,<3.13"
 pydantic = { version = "~2.8" }
 pyyaml = { version = ">=6.0.1" }
 click = { version = "^8.0.1,<8.1.4" }
@@ -164,8 +163,8 @@ select = [
 ignore = ["COM812", "ISC001"]
 
 src = ["src", "tests"]
-# use Python 3.8 as the minimum version for autofixing
-target-version = "py38"
+# use Python 3.9 as the minimum version for autofixing
+target-version = "py39"
 ignore-init-module-imports = true
 # # Disable autofix for unused imports (`F401`).
 # unfixable = ["F401"]
