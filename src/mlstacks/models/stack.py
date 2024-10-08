@@ -12,7 +12,7 @@
 #  permissions and limitations under the License.
 """Stack model."""
 
-from typing import Dict, List, Optional
+from typing import Optional
 
 from pydantic import BaseModel, field_validator
 
@@ -46,11 +46,11 @@ class Stack(BaseModel):
     name: str
     provider: ProviderEnum
     default_region: Optional[str] = None
-    default_tags: Optional[Dict[str, str]] = None
+    default_tags: Optional[dict[str, str]] = None
     deployment_method: Optional[DeploymentMethodEnum] = (
         DeploymentMethodEnum.KUBERNETES
     )
-    components: List[Component] = []
+    components: list[Component] = []
 
     @field_validator("name")
     @classmethod

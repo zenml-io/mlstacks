@@ -13,7 +13,7 @@
 """CLI utilities for mlstacks."""
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, NoReturn, Optional, Union
+from typing import TYPE_CHECKING, Any, NoReturn, Optional, Union
 
 import click
 from rich import box, table
@@ -138,7 +138,7 @@ def print_markdown_with_pager(text: str) -> None:
 
 
 def print_table(
-    obj: List[Dict[str, Any]],
+    obj: list[dict[str, Any]],
     title: Optional[str] = None,
     caption: Optional[str] = None,
     **columns: table.Column,
@@ -189,7 +189,7 @@ def print_table(
 
 
 def pretty_print_output_vals(
-    output_vals: Dict[str, str],
+    output_vals: dict[str, str],
 ) -> None:
     """Prints dictionary values as a rich table.
 

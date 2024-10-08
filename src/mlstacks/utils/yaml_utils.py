@@ -13,7 +13,7 @@
 """Utility functions for loading YAML files into Python objects."""
 
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any, Union
 
 import yaml
 
@@ -25,7 +25,7 @@ from mlstacks.models.component import (
 from mlstacks.models.stack import Stack
 
 
-def load_yaml_as_dict(path: Union[Path, str]) -> Dict[str, Any]:
+def load_yaml_as_dict(path: Union[Path, str]) -> dict[str, Any]:
     """Loads a yaml file as a dictionary.
 
     Args:

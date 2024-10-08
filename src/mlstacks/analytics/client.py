@@ -16,7 +16,7 @@ import datetime
 import logging
 import os
 from types import TracebackType
-from typing import Any, Dict, List, Optional, Type, cast
+from typing import Any, Optional, cast
 from uuid import uuid4
 
 import click
@@ -41,7 +41,7 @@ analytics.max_retries = 1
 CONFIG_FILENAME = "config.yaml"
 
 
-def on_error(error: Exception, batch: List[Dict[str, Any]]) -> None:
+def on_error(error: Exception, batch: list[dict[str, Any]]) -> None:
     """Custom error handler for Segment analytics.
 
     Args:
@@ -88,7 +88,7 @@ class MLStacksAnalyticsContext:
 
     def __exit__(
         self,
-        exc_type: Optional[Type[BaseException]],
+        exc_type: Optional[type[BaseException]],
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
     ) -> bool:
@@ -109,7 +109,7 @@ class MLStacksAnalyticsContext:
     def track(
         self,
         event: AnalyticsEventsEnum,
-        properties: Optional[Dict[Any, Any]] = None,
+        properties: Optional[dict[Any, Any]] = None,
     ) -> Any:
         """Tracks event in Segment.
 
@@ -168,7 +168,7 @@ class MLStacksAnalyticsContext:
 
 def track_event(
     event: AnalyticsEventsEnum,
-    metadata: Optional[Dict[str, Any]] = None,
+    metadata: Optional[dict[str, Any]] = None,
 ) -> bool:
     """Track segment event if user opted-in.
 
@@ -195,7 +195,7 @@ class EventHandler:
     def __init__(
         self,
         event: AnalyticsEventsEnum,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: Optional[dict[str, Any]] = None,
     ):
         """Initialization of the context manager.
 
@@ -204,7 +204,7 @@ class EventHandler:
             metadata: The metadata of the event.
         """
         self.event: AnalyticsEventsEnum = event
-        self.metadata: Dict[str, Any] = metadata or {}
+        self.metadata: dict[str, Any] = metadata or {}
 
     def __enter__(self) -> "EventHandler":
         """Enter function of the event handler.
