@@ -18,7 +18,7 @@ import os
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, cast
+from typing import Any, Optional, cast
 
 import pkg_resources
 import python_terraform
@@ -147,8 +147,8 @@ def _compose_enable_key(component: Component) -> str:
 
 
 def parse_and_extract_component_variables(
-    components: List[Component],
-) -> Dict[str, str]:
+    components: list[Component],
+) -> dict[str, str]:
     """Parse component variables.
 
     Args:
@@ -189,7 +189,7 @@ def parse_and_extract_component_variables(
     return component_variables
 
 
-def parse_and_extract_tf_vars(stack: Stack) -> Dict[str, Any]:
+def parse_and_extract_tf_vars(stack: Stack) -> dict[str, Any]:
     """Parse Terraform variables.
 
     Args:
@@ -228,8 +228,8 @@ def tf_definitions_present(
 
 def include_files(
     directory: str,  # noqa: ARG001
-    filenames: List[str],
-) -> List[str]:
+    filenames: list[str],
+) -> list[str]:
     """Include files in Terraform definitions.
 
     Args:
@@ -358,7 +358,7 @@ def populate_tf_definitions(
 def get_recipe_metadata(
     provider: ProviderEnum,
     base_config_dir: str = CONFIG_DIR,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Loads modular recipe metadata for a specific provider.
 
     Args:
@@ -458,7 +458,7 @@ def _tf_client_init(
     region: str,
     debug: bool = False,
     remote_state_bucket: Optional[str] = None,
-) -> Tuple[Any, Any, Any]:
+) -> tuple[Any, Any, Any]:
     """Initialize Terraform client.
 
     Args:
@@ -506,9 +506,9 @@ def _tf_client_init(
 
 def _tf_client_apply(
     client: python_terraform.Terraform,
-    tf_vars: Dict[str, Any],
+    tf_vars: dict[str, Any],
     debug: bool,
-) -> Tuple[Any, Any, Any]:
+) -> tuple[Any, Any, Any]:
     """Apply Terraform changes.
 
     Args:
@@ -548,9 +548,9 @@ def _tf_client_apply(
 
 def _tf_client_destroy(
     client: python_terraform.Terraform,
-    tf_vars: Dict[str, Any],
+    tf_vars: dict[str, Any],
     debug: bool,
-) -> Tuple[Any, Any, Any]:
+) -> tuple[Any, Any, Any]:
     """Destroy Terraform changes.
 
     Args:
@@ -580,7 +580,7 @@ def _tf_client_output(
     runner: TerraformRunner,
     state_path: str,
     output_key: Optional[str] = None,
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Get Terraform outputs.
 
     Args:
@@ -658,7 +658,7 @@ def populate_remote_state_tf_definitions(
 def write_remote_state_tf_variables(
     bucket_name: str,
     stack: Stack,
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Writes remote state variables to a json file.
 
     Args:
@@ -968,7 +968,7 @@ def get_remote_state_bucket(stack_path: str) -> str:
 def get_stack_outputs(
     stack_path: str,
     output_key: Optional[str] = None,
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Get stack outputs.
 
     Args:
@@ -1023,7 +1023,7 @@ def verify_infracost_installed() -> bool:
         return False
 
 
-def _get_infracost_vars(variables: Dict[str, Any]) -> Dict[str, str]:
+def _get_infracost_vars(variables: dict[str, Any]) -> dict[str, str]:
     """Get Infracost variables.
 
     Args:

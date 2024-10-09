@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
       fail-fast: false
     uses: ./.github/workflows/setup-python-environment.yml
     with:
@@ -38,7 +38,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
       fail-fast: false
     uses: ./.github/workflows/setup-python-environment.yml
     with:
@@ -51,7 +51,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
       fail-fast: false
     uses: ./.github/workflows/setup-python-environment.yml
     with:
@@ -64,7 +64,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
       fail-fast: false
     uses: ./.github/workflows/lint-unit-test.yml
     with:
@@ -77,7 +77,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
       fail-fast: false
     uses: ./.github/workflows/lint-unit-test.yml
     with:
@@ -90,7 +90,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
       fail-fast: false
     uses: ./.github/workflows/lint-unit-test.yml
     with:

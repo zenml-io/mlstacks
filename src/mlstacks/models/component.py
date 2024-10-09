@@ -12,7 +12,7 @@
 #  permissions and limitations under the License.
 """Component model."""
 
-from typing import Dict, Optional
+from typing import Optional
 
 from pydantic import BaseModel, field_validator, model_validator
 
@@ -43,8 +43,8 @@ class ComponentMetadata(BaseModel):
         environment_variables: The environment variables for the component.
     """
 
-    config: Optional[Dict[str, str]] = None
-    environment_variables: Optional[Dict[str, str]] = None
+    config: Optional[dict[str, str]] = None
+    environment_variables: Optional[dict[str, str]] = None
 
 
 class Component(BaseModel):

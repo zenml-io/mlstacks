@@ -11,7 +11,7 @@ jobs:
     uses: ./.github/workflows/lint-unit-test.yml
     with:
       os: "ubuntu-latest"
-      python-version: "3.8"
+      python-version: "3.9"
     secrets: inherit
 
   # checks zenml and mlstacks can be installed together in same environment
@@ -25,7 +25,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.8"
+          python-version: "3.9"
 
       - name: Install current package as editable
         run: pip install -e .

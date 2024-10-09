@@ -12,8 +12,6 @@
 #  permissions and limitations under the License.
 """Utilities for mlstacks-ZenML interaction."""
 
-from typing import List
-
 from mlstacks.constants import ALLOWED_FLAVORS
 from mlstacks.models.component import Component
 from mlstacks.models.stack import Stack
@@ -21,7 +19,7 @@ from mlstacks.models.stack import Stack
 
 def has_valid_flavor_combinations(
     stack: Stack,
-    components: List[Component],
+    components: list[Component],
 ) -> bool:
     """Returns true if flavors have a valid combination.
 
