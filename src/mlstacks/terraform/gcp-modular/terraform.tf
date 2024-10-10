@@ -29,10 +29,15 @@ terraform {
       source  = "loafoe/htpasswd"
       version = "1.0.3"
     }
+
+    huggingface-spaces = {
+      source  = "strickvl/huggingface-spaces"
+      version = ">= 0.0.4"  # Specify the version or version constraint here
+    }
   }
 
   backend "local" {
-    config = {}
+    # config = {}
   }
 
   required_version = ">= 0.14.8"

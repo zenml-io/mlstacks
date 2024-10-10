@@ -27,6 +27,20 @@ variable "enable_experiment_tracker_mlflow" {
   description = "Enable MLflow deployment"
   default     = false
 }
+
+variable "enable_annotator" {
+  description = "Enable Label Studio deployment"
+  type        = bool
+  default     = true
+}
+
+variable "huggingface_token" {
+  description = "Huggingface token"
+  type        = string
+  # sensitive     = true
+  default     = ""
+}
+
 variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
   default     = false

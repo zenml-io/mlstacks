@@ -1,0 +1,13 @@
+spec_version: 1
+spec_type: component
+component_type: "annotator"
+component_flavor: "label_studio"
+name: "quickstart_label_studio"
+provider: "huggingface"
+metadata:
+  config:
+    project_id: "supple-snow-244700"
+  tags:
+    deployed-by: "mlstacks"
+
+

@@ -40,6 +40,7 @@ class ComponentFlavorEnum(str, Enum):
     GCP = "gcp"
     KUBEFLOW = "kubeflow"
     KUBERNETES = "kubernetes"
+    LABEL_STUDIO = "label_studio"
     MINIO = "minio"
     MLFLOW = "mlflow"
     S3 = "s3"
@@ -65,6 +66,7 @@ class ProviderEnum(str, Enum):
     AZURE = "azure"
     GCP = "gcp"
     K3D = "k3d"
+    HUGGINGFACE = "huggingface"
 
 
 class AnalyticsEventsEnum(str, Enum):

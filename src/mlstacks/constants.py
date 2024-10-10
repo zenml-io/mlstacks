@@ -15,6 +15,7 @@
 MLSTACKS_PACKAGE_NAME = "mlstacks"
 MLSTACKS_INITIALIZATION_FILE_FLAG = "IGNORE_ME"
 MLSTACKS_STACK_COMPONENT_FLAGS = [
+    "annotator",
     "artifact_store",
     "container_registry",
     "experiment_tracker",  # takes flavor
@@ -24,6 +25,7 @@ MLSTACKS_STACK_COMPONENT_FLAGS = [
     "step_operator",  # takes flavor
 ]
 ALLOWED_FLAVORS = {
+    "annotator": ["label_studio"],
     "artifact_store": ["s3", "gcp", "minio"],
     "container_registry": ["gcp", "aws", "default"],
     "experiment_tracker": ["mlflow"],
@@ -41,7 +43,8 @@ ALLOWED_FLAVORS = {
 }
 ALLOWED_COMPONENT_TYPES: dict[str, dict[str, list[str]]] = {
     "aws": {
-        "artifact_store": ["s3"],
+        "annotator": ["huggingface"],
+        "artifact_store": ["s3"],        
         "container_registry": ["aws"],
         "experiment_tracker": ["mlflow"],
         "orchestrator": [
@@ -57,6 +60,7 @@ ALLOWED_COMPONENT_TYPES: dict[str, dict[str, list[str]]] = {
     },
     "azure": {},
     "gcp": {
+        "annotator": ["huggingface"],
         "artifact_store": ["gcp"],
         "container_registry": ["gcp"],
         "experiment_tracker": ["mlflow"],
@@ -70,6 +74,9 @@ ALLOWED_COMPONENT_TYPES: dict[str, dict[str, list[str]]] = {
         "mlops_platform": ["zenml"],
         "model_deployer": ["seldon"],
         "step_operator": ["vertex"],
+    },
+    "huggingface": {
+        "annotator": ["label_studio"],
     },
     "k3d": {
         "artifact_store": ["minio"],
