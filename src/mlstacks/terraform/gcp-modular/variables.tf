@@ -31,6 +31,10 @@ variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
   default     = false
 }
+variable "enable_model_deployer_huggingface" {
+  description = "Enable Huggingface deployment"
+  default     = false
+}
 variable "enable_step_operator_vertex" {
   description = "Enable VertexAI Step Operator"
   default     = false
@@ -57,6 +61,16 @@ variable "project_id" {
   default     = ""
 }
 
+# variables for huggingface model model deployer
+variable "huggingface_token"{
+  description = "The Hugging Face authentication token."
+  default = "huggingfaceauthenticationtoken"
+}
+
+variable "huggingface_namespace" {
+  description = "The namespace where the Inference Endpoint will be created."
+  default = "huggingfacenamespace"
+}
 
 # variables for the MLflow tracking server
 variable "mlflow_bucket" {

@@ -35,6 +35,10 @@ variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
   default     = false
 }
+variable "enable_model_deployer_huggingface" {
+  description = "Enable Huggingface deployment"
+  default     = false
+}
 variable "enable_step_operator_sagemaker" {
   description = "Enable SageMaker as step operator"
   default     = false
@@ -56,6 +60,17 @@ variable "region" {
   description = "The region to deploy resources to"
   default     = "eu-west-1"
 }
+
+# variables for huggingface model model deployer
+variable "huggingface_token"{
+  description = "The Hugging Face authentication token."
+  default = "huggingfaceauthenticationtoken"
+}
+
+variable "huggingface_namespace" {
+  description = "The namespace where the Inference Endpoint will be created."
+  default = "huggingfacenamespace"
+} cb cb
 
 # variables for the MLflow tracking server
 variable "mlflow-artifact-S3-access-key" {

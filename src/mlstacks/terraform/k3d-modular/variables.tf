@@ -27,9 +27,24 @@ variable "enable_model_deployer_seldon" {
   description = "Enable Seldon deployment"
   default     = false
 }
+variable "enable_model_deployer_huggingface" {
+  description = "Enable Huggingface deployment"
+  default     = false
+}
 variable "enable_zenml" {
   description = "Enable ZenML deployment"
   default     = false
+}
+
+# variables for huggingface model model deployer
+variable "huggingface_token"{
+  description = "The Hugging Face authentication token."
+  default = "huggingfaceauthenticationtoken"
+}
+
+variable "huggingface_namespace" {
+  description = "The namespace where the Inference Endpoint will be created."
+  default = "huggingfacenamespace"
 }
 
 
@@ -62,6 +77,12 @@ variable "mlflow-password" {
 variable "seldon-secret-name" {
   description = "The Seldon Core Model Deployer Secret name"
   default     = "zenml-seldon-secret"
+  type        = string
+}
+
+variable "huggingface-secret-name" {
+  description = "The Huggingface Model Deployer Secret name"
+  default     = "zenml-huggingface-secret"
   type        = string
 }
 

@@ -23,22 +23,22 @@ output "artifact_store_configuration" {
 output "container_registry_id" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
-  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? uuid() : ""
+  var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? uuid() : ""
 }
 output "container_registry_flavor" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
-  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? "default" : ""
+  var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? "default" : ""
 }
 output "container_registry_name" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
-  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}" : ""
+  var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}" : ""
 }
 output "container_registry_configuration" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
-    var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? jsonencode({
+    var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? jsonencode({
       uri = "k3d-${local.k3d_registry.name}-${random_string.cluster_id.result}.localhost:${local.k3d_registry.port}"
   }) : ""
 }
@@ -92,30 +92,11 @@ output "experiment_tracker_configuration" {
   }) : ""
 }
 
-# if seldon is enabled, set the model_deployer outputs to the seldon values
-# otherwise, set the model_deployer outputs to empty strings
-output "model_deployer_id" {
-  value = var.enable_model_deployer_seldon ? uuid() : ""
-}
-output "model_deployer_flavor" {
-  value = var.enable_model_deployer_seldon ? "seldon" : ""
-}
-output "model_deployer_name" {
-  value = var.enable_model_deployer_seldon ? "k3d-seldon-${random_string.cluster_id.result}" : ""
-}
-output "model_deployer_configuration" {
-  value = var.enable_model_deployer_seldon ? jsonencode({
-    kubernetes_context   = "k3d-${k3d_cluster.zenml-cluster[0].name}"
-    kubernetes_namespace = local.seldon.workloads_namespace
-    base_url             = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
-  }) : ""
-}
-
 # output for the k3d cluster
 output "k3d-cluster-name" {
   value = (var.enable_container_registry || var.enable_orchestrator_kubeflow ||
     var.enable_orchestrator_tekton || var.enable_orchestrator_kubernetes ||
-  var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? k3d_cluster.zenml-cluster[0].name : ""
+  var.enable_model_deployer_huggingface || var.enable_model_deployer_seldon || var.enable_experiment_tracker_mlflow || var.enable_artifact_store || var.enable_zenml) ? k3d_cluster.zenml-cluster[0].name : ""
 }
 
 # output for container registry
@@ -163,6 +144,14 @@ output "seldon-workload-namespace" {
 }
 output "seldon-base-url" {
   value = var.enable_model_deployer_seldon ? module.istio[0].ingress-ip-address : null
+}
+
+output "huggingface-workload-namespace" {
+  value       = var.enable_model_deployer_huggingface ? local.huggingface.workloads_namespace : null
+  description = "The namespace created for hosting your Huggingface workloads"
+}
+output "huggingface-base-url" {
+  value = var.enable_model_deployer_huggingface ? module.istio[0].ingress-ip-address : null
 }
 
 # output the name of the stack YAML file created

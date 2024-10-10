@@ -38,6 +38,7 @@ class ComponentFlavorEnum(str, Enum):
 
     AWS = "aws"
     GCP = "gcp"
+    HUGGINGFACE = "huggingface"
     KUBEFLOW = "kubeflow"
     KUBERNETES = "kubernetes"
     MINIO = "minio"

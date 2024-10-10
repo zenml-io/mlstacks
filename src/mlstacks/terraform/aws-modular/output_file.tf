@@ -77,6 +77,13 @@ resource "local_file" "stack_file" {
         name: eks_seldon_model_deployer
         configuration: {"kubernetes_context": "${aws_eks_cluster.cluster[0].arn}", "kubernetes_namespace": "${local.seldon.workloads_namespace}", "base_url": "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"}}
 %{endif}
+%{if var.enable_model_deployer_huggingface}
+      model_deployer:
+        id: ${uuid()}
+        flavor: huggingface
+        name: eks_huggingface_model_deployer
+        configuration: {"kubernetes_context": "${aws_eks_cluster.cluster[0].arn}", "kubernetes_namespace": "${local.huggingface.workloads_namespace}", "base_url": "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"}}
+%{endif}
     ADD
   filename = "./aws_modular_stack_${replace(substr(timestamp(), 0, 16), ":", "_")}.yaml"
 }

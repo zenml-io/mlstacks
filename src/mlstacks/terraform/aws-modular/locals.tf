@@ -64,7 +64,7 @@ locals {
     namespace            = "seldon-system"
     workloads_namespace  = "zenml-workloads-seldon"
     service_account_name = "seldon"
-  }
+  } 
 
   zenml = {
     version                         = ""

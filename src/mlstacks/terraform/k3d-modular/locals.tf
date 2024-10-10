@@ -61,7 +61,7 @@ locals {
     workloads_namespace  = "zenml-workloads-seldon"
     service_account_name = "seldon"
   }
-
+  
   common_tags = {
     "managedBy"   = "terraform"
     "environment" = "dev"

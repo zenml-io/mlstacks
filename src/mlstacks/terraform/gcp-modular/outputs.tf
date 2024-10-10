@@ -100,25 +100,6 @@ output "experiment_tracker_configuration" {
   }) : ""
 }
 
-# if seldon is enabled, set the model deployer outputs to the seldon values
-# otherwise, set the model deployer outputs to empty strings
-output "model_deployer_id" {
-  value = var.enable_model_deployer_seldon ? uuid() : ""
-}
-output "model_deployer_flavor" {
-  value = var.enable_model_deployer_seldon ? "seldon" : ""
-}
-output "model_deployer_name" {
-  value = var.enable_model_deployer_seldon ? "gke_seldon_model_deployer_${random_string.unique.result}" : ""
-}
-output "model_deployer_configuration" {
-  value = var.enable_model_deployer_seldon ? jsonencode({
-    kubernetes_context   = "gke_${var.project_id}_${var.region}_${local.prefix}-${local.gke.cluster_name}"
-    kubernetes_namespace = local.seldon.workloads_namespace
-    base_url             = "http://${module.istio[0].ingress-ip-address}:${module.istio[0].ingress-port}"
-  }) : ""
-}
-
 # project id
 output "project-id" {
   value = var.project_id

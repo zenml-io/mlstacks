@@ -84,24 +84,6 @@ output "experiment_tracker_configuration" {
   }) : ""
 }
 
-# if seldon is enabled, set the model deployer outputs to the seldon values
-# otherwise, set the model deployer outputs to empty strings
-output "model_deployer_id" {
-  value = var.enable_model_deployer_seldon ? uuid() : ""
-}
-output "model_deployer_flavor" {
-  value = var.enable_model_deployer_seldon ? "seldon" : ""
-}
-output "model_deployer_name" {
-  value = var.enable_model_deployer_seldon ? "eks_seldon_model_deployer_${random_string.unique.result}" : ""
-}
-output "model_deployer_configuration" {
-  value = var.enable_model_deployer_seldon ? jsonencode({
-    kubernetes_context   = "${aws_eks_cluster.cluster[0].arn}"
-    kubernetes_namespace = local.seldon.workloads_namespace
-    base_url             = "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}"
-  }) : ""
-}
 
 # if sagemaker is enabled as step operator, set the step operator outputs to the sagemaker values
 # otherwise, set the step operator outputs to empty strings
@@ -160,6 +142,16 @@ output "seldon-workload-namespace" {
 
 output "seldon-base-url" {
   value = var.enable_model_deployer_seldon ? "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}" : null
+}
+
+# output for huggingface model deployer
+output "huggingface-workload-namespace" {
+  value       = var.enable_model_deployer_huggingface ? local.huggingface.workloads_namespace : null
+  description = "The namespace created for hosting your Huggingface workloads"
+}
+
+output "huggingface-base-url" {
+  value = var.enable_model_deployer_huggingface ? "http://${module.istio[0].ingress-hostname}:${module.istio[0].ingress-port}" : null
 }
 
 # output the name of the stack YAML file created
